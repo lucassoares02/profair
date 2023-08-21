@@ -67,9 +67,7 @@ class _ComponentListState extends State<ComponentList> {
               children: widget.listItems.asMap().entries.map((e) {
             return InkWell(
               onTap: () {
-                print(int.parse(DateTime.now().hour.toString()));
-                print(int.parse(widget.listItems[e.key].hour!.substring(0, 2)));
-                print(int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!.substring(0, 2)));
+                Navigator.of(context).pushNamed("/detailsattraction");
               },
               child: Container(
                 width: width,

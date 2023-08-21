@@ -51,14 +51,19 @@ class _HomePageState extends State<HomePage> {
                 AppActions(homeController: homeController),
                 const AppSpacing(),
                 const AppSpacing(),
-                if (homeController.data!.accessTargeting == 3)
-                  Column(
-                    children: [
-                      Categories(homeController: homeController),
-                      const AppSpacing(),
-                      const AppSpacing(),
-                    ],
-                  ),
+                ValueListenableBuilder(
+                    valueListenable: homeController.stateData,
+                    builder: (context, value, child) {
+                      return homeController.data!.accessTargeting == 3
+                          ? Column(
+                              children: [
+                                Categories(homeController: homeController),
+                                const AppSpacing(),
+                                const AppSpacing(),
+                              ],
+                            )
+                          : Container();
+                    }),
                 ValueListenableBuilder(
                   valueListenable: homeController.stateNotices,
                   builder: (context, value, child) {
@@ -94,52 +99,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-
-// Container(
-//                   width: double.maxFinite,
-//                   padding: EdgeInsets.all(appPadding),
-//                   margin: EdgeInsets.all(appMargin),
-//                   decoration: BoxDecoration(
-//                     border: Border.all(color: colorGrey),
-//                     borderRadius: BorderRadius.all(
-//                       Radius.circular(appRadius),
-//                     ),
-//                   ),
-//                   child: Column(
-//                     crossAxisAlignment: CrossAxisAlignment.start,
-//                     children: [
-//                       Container(
-//                         decoration: BoxDecoration(border: Border(bottom: BorderSide(color: colorGrey))),
-//                         padding: EdgeInsets.symmetric(vertical: appMargin),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                           children: [
-//                             Text(
-//                               "Teste de lyaout",
-//                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-//                             ),
-//                             Text(
-//                               "Novo",
-//                               style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
-//                             ),
-//                           ],
-//                         ),
-//                       ),
-//                       AppSpacing(),
-//                       Container(
-//                         child: Column(
-//                           crossAxisAlignment: CrossAxisAlignment.start,
-//                           children: [
-//                             Text("10 de Janeiro de 2024"),
-//                             SizedBox(height: 10),
-//                             Text(
-//                               "Hoje é 10 de janeiro, estamos realizando teste desse layhout, parece que tudo está indo bem!",
-//                               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-//                             ),
-//                           ],
-//                         ),
-//                       )
-//                     ],
-//                   ),
-//                 ),

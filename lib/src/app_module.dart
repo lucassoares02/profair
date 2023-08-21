@@ -1,5 +1,6 @@
 import 'package:profair/src/views/clients/clients.dart';
 import 'package:profair/src/views/clients_product/clients_product.dart';
+import 'package:profair/src/views/details_attraction/details_attraction.dart';
 import 'package:profair/src/views/details_recipe/details_recipe.dart';
 import 'package:profair/src/views/finish_trading/finish_trading_products.dart';
 import 'package:profair/src/views/list_attractions/list_attractions.dart';
@@ -42,6 +43,7 @@ class AppModule extends Module {
         ChildRoute('/listcategory', child: (context, args) => ListCategory(category: args.data)),
         ChildRoute('/listrequestsstores', child: (context, args) => RequestsStores(codeProvider: args.data)),
         ChildRoute('/productsprovider', child: (context, args) => ProductsProvider(codeProvider: args.data)),
+        ChildRoute('/detailsattraction', child: (context, args) => const DetailsAttractions()),
         ChildRoute('/clients',
             child: (context, args) => Clients(
                 trading: args.data["codeTrading"],
