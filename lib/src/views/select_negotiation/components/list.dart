@@ -1,0 +1,94 @@
+import 'package:profair/src/components/header_list.dart';
+import 'package:profair/src/components/loading_list.dart';
+import 'package:profair/src/models/nogotiation_model.dart';
+import 'package:profair/src/views/home/state_management.dart';
+import 'package:profair/src/utils/spacing.dart';
+import 'package:profair/src/utils/colors.dart';
+import 'package:profair/generated/l10n.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+class ComponentList extends StatefulWidget {
+  ComponentList({super.key, required this.listItems, this.description, this.codeBranch, this.codeProvider, this.codeClient, this.nameBranch, required this.state});
+
+  List<NegotiationModel> listItems;
+  final String? description;
+  final ValueListenable state;
+  final int? codeBranch;
+  final String? nameBranch;
+  final int? codeProvider;
+  final int? codeClient;
+
+  @override
+  State<ComponentList> createState() => _ComponentListState();
+}
+
+class _ComponentListState extends State<ComponentList> {
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return StateManagement(
+      width: width,
+      listenable: widget.state,
+      widgetLoading: LoadingList(icon: Icons.swap_horiz_rounded, label: S.of(context).text_trading),
+      component: Column(
+        children: [
+          HeaderList(
+            icon: Icons.swap_horiz_rounded,
+            activeSearch: false,
+            label: S.of(context).text_trading,
+          ),
+          Column(
+              children: widget.listItems.asMap().entries.map((e) {
+            return InkWell(
+              onTap: () {
+                widget.listItems[e.key].checked = true;
+                Navigator.of(context).pushNamed('tradingproducts', arguments: {
+                  "codeProvider": widget.codeProvider,
+                  "codeBranch": widget.codeBranch,
+                  "nameBranch": widget.nameBranch,
+                  "codeClient": widget.codeClient,
+                  "codeTrading": e.value.negotiation,
+                  "tradings": widget.listItems,
+                });
+              },
+              child: Container(
+                height: 90,
+                padding: const EdgeInsets.all(appMargin),
+                margin: const EdgeInsets.symmetric(horizontal: appMargin),
+                decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: colorGrey)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      e.value.title!.length < 28 ? '${e.value.title}' : e.value.title!.substring(0, 25),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          '${e.value.negotiation}',
+                          style: const TextStyle(color: colorGreyDark),
+                        ),
+                        if (e.value.confirm != null)
+                          const Icon(
+                            Icons.done_all,
+                            color: colorBlue,
+                            size: appPadding,
+                          )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList())
+        ],
+      ),
+    );
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1027894369104",
+    "project_id": "alimentado-fab76",
+    "storage_bucket": "alimentado-fab76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027894369104:android:0b4276dbcf5e2c857b2a55",
+        "android_client_info": {
+          "package_name": "br.com.profair.profair"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027894369104-8vkm23pv95t3i8hh4irgkpoqhb9vmojl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "br.com.profair.profair",
+            "certificate_hash": "54e9fc41608ebc156cdd8f838408eb0c91a31880"
+          }
+        },
+        {
+          "client_id": "1027894369104-nb2td2mlbdliv8srfckbvu4oekadju8u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSD32w4KdXidayECkRVoXJusWe8mA87Cc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027894369104-bhv9dd9ic9ovqpqf385f35c578aj5koa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

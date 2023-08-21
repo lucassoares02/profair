@@ -1,0 +1,30 @@
+{
+    "@@locale": "en",
+    "text_login": "Entrar",
+    "text_email": "E-mail",
+    "text_password": "Senha",
+    "text_not_have_account": "Não possui conta?",
+    "text_register": "Cadastre-se",
+    "text_clicking_above": "Clicando acima você aceita os",
+    "text_terms_conditions": "termos e condições.",
+    "text_welcome": "Bem-vindo",
+    "text_balance": "Saldo",
+    "text_popular": "Popular",
+    "text_shared": "Compartilhados",
+    "text_scanner": "Scanear QrCode",
+    "text_notifications": "Notificações",
+    "text_last_orders": "Últimos pedidos",
+    "text_select_branch": "Selecione a Filial",
+    "text_select_provider": "Fornecedores",
+    "text_trading": "Negociações",
+    "text_store": "Lojas",
+    "text_products": "Produtos",
+    "text_orders_placed": "Pedidos realizados",
+    "text_search": "Pesquisar",
+    "text_schedule": "Programação da Feira",
+    "text_avaiable_products": "Produtos disponíveis",
+    "text_customers": "Clientes",
+    "text_requesting_customers": "Clientes Solicitantes"
+
+
+}

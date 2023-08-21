@@ -1,0 +1,30 @@
+{
+    "@@locale": "en",
+    "text_login": "Login",
+    "text_email": "E-mail",
+    "text_password": "Password",
+    "text_not_have_account": "Not have an account?",
+    "text_register": "Register",
+    "text_clicking_above": "By clicking above you accept the",
+    "text_terms_conditions": "terms and conditions.",
+    "text_welcome": "Welcome",
+    "text_balance": "Balance",
+    "text_popular": "Popular",
+    "text_shared": "Shared",
+    "text_scanner": "Scan QrCode",
+    "text_notifications": "Notifications",
+    "text_last_orders": "Last Orders",
+    "text_select_branch": "Select the branch",
+    "text_select_provider": "Providers",
+    "text_trading": "Tradings",
+    "text_store": "Stores",
+    "text_products": "Products",
+    "text_orders_placed": "Orders placed",
+    "text_search": "Search",
+    "text_schedule": "Fair Schedule",
+    "text_avaiable_products": "Avaiable products",
+    "text_customers": "Customers",
+    "text_requesting_customers": "Requesting Clients"
+
+
+}

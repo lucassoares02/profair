@@ -1,0 +1,47 @@
+import 'package:flutter/material.dart';
+import 'package:web_socket_channel/io.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  final WebSocketChannel channel = IOWebSocketChannel.connect('ws://your_server_address:8080');
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'WebSocket Demo',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('WebSocket Demo'),
+        ),
+        body: Center(
+          child: StreamBuilder(
+            stream: channel.stream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text('Received: ${snapshot.data}');
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else {
+                return CircularProgressIndicator();
+              }
+            },
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            channel.sink.add('Hello, WebSocket!');
+          },
+          child: Icon(Icons.send),
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    channel.sink.close();
+    super.dispose();
+  }
+}
