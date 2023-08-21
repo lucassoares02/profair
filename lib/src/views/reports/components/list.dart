@@ -1,3 +1,5 @@
+import 'package:flutter/gestures.dart';
+import 'package:profair/src/views/reports/components/card_percentage.dart';
 import 'package:profair/src/views/reports/components/chart_negotiation.dart';
 import 'package:profair/src/views/reports/components/chart_product.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -33,162 +35,27 @@ class _ComponentListState extends State<ComponentList> {
           activeSearch: false,
           label: "Relatórios",
         ),
-        const AppSpacing(),
         Container(
           padding: const EdgeInsets.all(appPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Clientes Atendidos",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const AppSpacing(),
-                      const AppSpacing(),
-                      ValueListenableBuilder(
-                          valueListenable: widget.reportsController.statePercentageClients,
-                          builder: (context, value, child) {
-                            return value == StateApp.loading
-                                ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(
-                                          height: 20,
-                                          width: width,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                      const AppSpacing(),
-                                      SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(
-                                          height: 15,
-                                          width: 30,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Container(
-                                    padding: const EdgeInsets.only(bottom: appPadding),
-                                    decoration: const BoxDecoration(
-                                      border: Border(bottom: BorderSide(color: colorGrey)),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        LinearPercentIndicator(
-                                          center: Text("${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%"),
-                                          clipLinearGradient: true,
-                                          animation: true,
-                                          animationDuration: 500,
-                                          lineHeight: 20.0,
-                                          barRadius: const Radius.circular(5),
-                                          percent: (double.parse("${widget.reportsController.percentageClients!.percentage}") / 100),
-                                          backgroundColor: colorGreyLigth,
-                                          progressColor: colorPrimary,
-                                        ),
-                                        const AppSpacing(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: appMargin),
-                                          child: Text(
-                                            "${widget.reportsController.percentageClients!.parcial} | ${widget.reportsController.percentageClients!.total}",
-                                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                          }),
-                    ],
-                  ),
-                ],
+              CardPercentage(
+                title: "Clientes Atendidos",
+                content:
+                    "Nessa sessão é possível visualizar quantos associados foram atendidos até o momento em relação a quantidade total de associados presentes na feira",
+                value: "${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%",
+                footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
+                reportsController: widget.reportsController,
               ),
               const AppSpacing(),
-              const AppSpacing(),
-              const AppSpacing(),
-              Column(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Fornecedores com venda",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const AppSpacing(),
-                      const AppSpacing(),
-                      ValueListenableBuilder(
-                          valueListenable: widget.reportsController.statePercentageClients,
-                          builder: (context, value, child) {
-                            return value == StateApp.loading
-                                ? Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(
-                                          height: 20,
-                                          width: width,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                      const AppSpacing(),
-                                      SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(
-                                          height: 15,
-                                          width: 30,
-                                          borderRadius: BorderRadius.circular(10),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Container(
-                                    padding: const EdgeInsets.only(bottom: appPadding),
-                                    decoration: const BoxDecoration(
-                                      border: Border(bottom: BorderSide(color: colorGrey)),
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                      children: [
-                                        LinearPercentIndicator(
-                                          center: Text("${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%"),
-                                          clipLinearGradient: true,
-                                          animation: true,
-                                          animationDuration: 500,
-                                          lineHeight: 20.0,
-                                          barRadius: const Radius.circular(5),
-                                          percent: (double.parse("${widget.reportsController.percentageProviders!.percentage}") / 100),
-                                          backgroundColor: colorGreyLigth,
-                                          progressColor: colorPrimary,
-                                        ),
-                                        const AppSpacing(),
-                                        Padding(
-                                          padding: const EdgeInsets.only(right: appMargin),
-                                          child: Text(
-                                            "${widget.reportsController.percentageProviders!.parcial} | ${widget.reportsController.percentageProviders!.total}",
-                                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                          }),
-                    ],
-                  ),
-                ],
+              CardPercentage(
+                backgroundColor: colorRed,
+                reportsController: widget.reportsController,
+                title: "Fornecedores com venda",
+                value: "${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%",
+                footer: "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
               ),
-              const AppSpacing(),
               const AppSpacing(),
               const AppSpacing(),
               Text(

@@ -54,15 +54,17 @@ class _HomePageState extends State<HomePage> {
                 ValueListenableBuilder(
                     valueListenable: homeController.stateData,
                     builder: (context, value, child) {
-                      return homeController.data!.accessTargeting == 3
-                          ? Column(
-                              children: [
-                                Categories(homeController: homeController),
-                                const AppSpacing(),
-                                const AppSpacing(),
-                              ],
-                            )
-                          : Container();
+                      return value == StateApp.loading
+                          ? LoadingList(loadingHeader: false)
+                          : homeController.data!.accessTargeting == 3
+                              ? Column(
+                                  children: [
+                                    Categories(homeController: homeController),
+                                    const AppSpacing(),
+                                    const AppSpacing(),
+                                  ],
+                                )
+                              : Container();
                     }),
                 ValueListenableBuilder(
                   valueListenable: homeController.stateNotices,
