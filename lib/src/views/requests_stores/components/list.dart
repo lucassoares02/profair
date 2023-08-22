@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/src/controllers/requests_stores.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/components/header_list.dart';
@@ -11,12 +13,21 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ComponentList extends StatefulWidget {
-  ComponentList({super.key, this.description, required this.listItems, required this.state, required this.codeProvider, required this.requestsStoresController});
+  ComponentList({
+    super.key,
+    this.description,
+    required this.listItems,
+    required this.state,
+    required this.codeProvider,
+    this.userCode,
+    required this.requestsStoresController,
+  });
 
   Iterable<RequestsStoresModel> listItems;
   final String? description;
   final ValueListenable state;
   final int? codeProvider;
+  final int? userCode;
   final RequestsStoresController requestsStoresController;
 
   @override
@@ -46,7 +57,15 @@ class _ComponentListState extends State<ComponentList> {
                 return Column(
                     children: widget.requestsStoresController.requestsStores.map((e) {
                   return InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      if (widget.userCode != 0) {
+                        Navigator.of(context).pushNamed('selectprovider', arguments: {
+                          "codeClient": 0,
+                          "codeBranch": e.codeBranch,
+                          "codeBuyer": 0,
+                        });
+                      }
+                    },
                     child: Container(
                       width: width,
                       height: 90,
@@ -57,7 +76,7 @@ class _ComponentListState extends State<ComponentList> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
                             e.razaoClient!.length < 28 ? '${e.razaoClient}' : e.razaoClient!.substring(0, 25),

@@ -59,7 +59,8 @@ class _CategoriesState extends State<Categories> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed('selectprovider', arguments: {"codeBuyer": widget.homeController.buyers[index].codeBuyer, "codeClient": 0});
+                      Navigator.of(context)
+                          .pushNamed('selectprovider', arguments: {"codeBuyer": widget.homeController.buyers[index].codeBuyer, "codeClient": 0, "codeBranch": 0});
                     },
                     child: Container(
                       width: 200,

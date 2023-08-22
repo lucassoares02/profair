@@ -2,9 +2,12 @@ import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:profair/src/views/home/home_controller.dart';
 
 class CardNotice extends StatefulWidget {
-  const CardNotice({super.key});
+  CardNotice({super.key, required this.homeController});
+
+  HomeController homeController;
 
   @override
   State<CardNotice> createState() => _CardNoticeState();
@@ -25,7 +28,8 @@ class _CardNoticeState extends State<CardNotice> {
         width: width,
         height: 300,
         decoration: BoxDecoration(
-          color: colorTertiary,
+          // color: colorTertiary,
+          color: Color(int.parse(widget.homeController.documents!.documents.first.data["color"])),
           borderRadius: BorderRadius.circular(appRadius),
           // image: const DecorationImage(
           //   fit: BoxFit.cover,
@@ -75,9 +79,9 @@ class _CardNoticeState extends State<CardNotice> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
-                      "Feira de negócios\nMultishow",
+                      widget.homeController.documents!.documents.first.data["title"],
                       style: TextStyle(
                         fontSize: 26,
                         color: colorBlack,
@@ -86,7 +90,7 @@ class _CardNoticeState extends State<CardNotice> {
                     ),
                     AppSpacing(),
                     Text(
-                      "Momento de fazer bons negócios",
+                      widget.homeController.documents!.documents.first.data["content"],
                       style: TextStyle(
                         fontSize: 16,
                         color: colorWhite,

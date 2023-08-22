@@ -72,9 +72,20 @@ class _CardCountState extends State<CardCount> {
                   component: InkWell(
                     onTap: () {
                       if (widget.homeController.data!.accessTargeting == 3) {
-                        Navigator.of(context).pushNamed('listrequestsstores', arguments: 0);
+                        Navigator.of(context).pushNamed('listrequestsstores', arguments: {
+                          "codeProvider": 0,
+                          "userCode": 0,
+                        });
+                      } else if (widget.homeController.data!.accessTargeting == 2) {
+                        Navigator.of(context).pushNamed('listrequestsstores', arguments: {
+                          "codeProvider": 0,
+                          "userCode": widget.homeController.data!.userCode,
+                        });
                       } else {
-                        Navigator.of(context).pushNamed('listrequestsstores', arguments: widget.homeController.data!.codCompany);
+                        Navigator.of(context).pushNamed('listrequestsstores', arguments: {
+                          "codeProvider": widget.homeController.data!.codCompany,
+                          "userCode": 0,
+                        });
                       }
                     },
                     child: Container(

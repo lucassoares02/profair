@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:profair/src/models/providers_model.dart';
 
@@ -5,15 +7,18 @@ class ProvidersRepository {
   final Dio clientDio = Dio();
   final String url = "https://seller-backend.onrender.com/";
 
-  getProviders(int? code, int? codeBuyer) async {
+  getProviders(int? codeClient, int? codeBuyer, int? codeBranch) async {
     Response? response;
     try {
       if (codeBuyer != 0) {
         response = await clientDio.get("${url}providerscategories/$codeBuyer");
-      } else if (code == 0) {
+      } else if (codeClient == 0 && codeBranch == 0) {
         response = await clientDio.get("${url}suppliersinvoicing");
+      } else if (codeClient != 0) {
+        response = await clientDio.get("${url}providersconsult/$codeClient");
       } else {
-        response = await clientDio.get("${url}requestproviderclient/$code");
+        response = await clientDio.get("${url}requestproviderclient/$codeBranch");
+        inspect(response);
       }
       List list = response.data as List;
       return list.map((json) => ProvidersModel.fromJson(json)).toList();

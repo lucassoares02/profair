@@ -1,4 +1,5 @@
 import 'package:flutter/gestures.dart';
+import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/views/reports/components/card_percentage.dart';
 import 'package:profair/src/views/reports/components/chart_negotiation.dart';
 import 'package:profair/src/views/reports/components/chart_product.dart';
@@ -40,22 +41,35 @@ class _ComponentListState extends State<ComponentList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CardPercentage(
-                title: "Clientes Atendidos",
-                content:
-                    "Nessa sessão é possível visualizar quantos associados foram atendidos até o momento em relação a quantidade total de associados presentes na feira",
-                value: "${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%",
-                footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
-                reportsController: widget.reportsController,
-              ),
+              ValueListenableBuilder(
+                  valueListenable: widget.reportsController.statePercentageClients,
+                  builder: (context, value, child) {
+                    return value == StateApp.loading
+                        ? LoadingList(loadingHeader: false)
+                        : CardPercentage(
+                            title: "Clientes Atendidos",
+                            content:
+                                "Nessa sessão é possível visualizar quantos associados foram atendidos até o momento em relação a quantidade total de associados presentes na feira",
+                            value: "${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%",
+                            footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
+                            reportsController: widget.reportsController,
+                          );
+                  }),
               const AppSpacing(),
-              CardPercentage(
-                backgroundColor: colorRed,
-                reportsController: widget.reportsController,
-                title: "Fornecedores com venda",
-                value: "${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%",
-                footer: "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
-              ),
+              ValueListenableBuilder(
+                  valueListenable: widget.reportsController.stateReportsProducts,
+                  builder: (context, value, child) {
+                    return value == StateApp.loading
+                        ? LoadingList(loadingHeader: false)
+                        : CardPercentage(
+                            backgroundColor: colorRed,
+                            reportsController: widget.reportsController,
+                            title: "Fornecedores com venda",
+                            value: "${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%",
+                            footer:
+                                "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
+                          );
+                  }),
               const AppSpacing(),
               const AppSpacing(),
               Text(

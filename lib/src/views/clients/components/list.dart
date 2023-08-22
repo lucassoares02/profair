@@ -63,7 +63,7 @@ class _ComponentListState extends State<ComponentList> {
                           if (widget.accessTargenting == 3) {
                             Navigator.of(context).pushNamed(
                               "selectprovider",
-                              arguments: {"codeClient": e.relationshipCode, "codeBuyer": 0},
+                              arguments: {"codeClient": e.relationshipCode, "codeBuyer": 0, "codeBranch": 0},
                             );
                           } else {
                             Navigator.of(context).pushNamed(

@@ -45,7 +45,11 @@ class _AppActionsState extends State<AppActions> {
         navigatorRoutes(route, widget.homeController.data!.codCompany);
       }
     } else if (route == "selectprovider") {
-      navigatorRoutes(route, {"codeClient": 0, "codeBuyer": 0});
+      if (widget.homeController.data!.accessTargeting == 2) {
+        navigatorRoutes(route, {"codeClient": widget.homeController.data!.userCode, "codeBuyer": 0, "codeBranch": widget.homeController.data!.codCompany});
+      } else {
+        navigatorRoutes(route, {"codeClient": 0, "codeBuyer": 0, "codeBranch": 0});
+      }
     }
   }
 
@@ -74,7 +78,7 @@ class _AppActionsState extends State<AppActions> {
   }
 
   testeInterno() async {
-    LoginModel? response = await widget.homeController.findClient("1000000024212");
+    LoginModel? response = await widget.homeController.findClient("1000000065510");
     navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany});
   }
 
@@ -132,6 +136,7 @@ class _AppActionsState extends State<AppActions> {
                   return InkWell(
                     onTap: () {
                       actionButton(widget.homeController.categories[index].route);
+                      // testeInterno();
                     },
                     child: Container(
                       margin: EdgeInsets.only(left: (index == 0) ? 20 : appMargin, right: (index == widget.homeController.categories.length - 1) ? appMargin : 0),

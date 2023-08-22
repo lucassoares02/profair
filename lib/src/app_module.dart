@@ -41,7 +41,11 @@ class AppModule extends Module {
         ChildRoute('/selectstore', child: (context, args) => SelectStore(client: args.data["client"], codeProvider: args.data["codeProvider"])),
         ChildRoute('/listrecipe', child: (context, args) => ListRecipe(recipe: args.data)),
         ChildRoute('/listcategory', child: (context, args) => ListCategory(category: args.data)),
-        ChildRoute('/listrequestsstores', child: (context, args) => RequestsStores(codeProvider: args.data)),
+        ChildRoute('/listrequestsstores',
+            child: (context, args) => RequestsStores(
+                  codeProvider: args.data["codeProvider"],
+                  userCode: args.data["userCode"],
+                )),
         ChildRoute('/productsprovider', child: (context, args) => ProductsProvider(codeProvider: args.data)),
         ChildRoute('/detailsattraction', child: (context, args) => const DetailsAttractions()),
         ChildRoute('/clients',
@@ -50,7 +54,14 @@ class AppModule extends Module {
                 merchandise: args.data["merchandise"],
                 codeProvider: args.data["codeProvider"],
                 accessTargenting: args.data["accessTargenting"])),
-        ChildRoute('/selectprovider', child: (context, args) => Providers(codeClient: args.data["codeClient"], codeBuyer: args.data["codeBuyer"])),
+        ChildRoute(
+          '/selectprovider',
+          child: (context, args) => Providers(
+            codeClient: args.data["codeClient"],
+            codeBranch: args.data["codeBranch"],
+            codeBuyer: args.data["codeBuyer"],
+          ),
+        ),
         ChildRoute('/tradings', child: (context, args) => Tradings(codeProvider: args.data)),
         ChildRoute('/clientsproduct', child: (context, args) => ClientsProducts(codeProduct: args.data)),
         ChildRoute('/reports', child: (context, args) => Reports(codeProvider: args.data)),

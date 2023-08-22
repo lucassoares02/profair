@@ -15,10 +15,10 @@ class RequestsStoresController extends ValueNotifier<StateApp> {
 
   RequestsStoresController(super.value, this._requestsStoresRepository);
 
-  Future findRequestsStores(String? codeProvider) async {
+  Future findRequestsStores(int? codeProvider, int? userCode) async {
     stateStores.value = StateApp.loading;
     try {
-      requestsStores = await _requestsStoresRepository.getRequestsStores(codeProvider);
+      requestsStores = await _requestsStoresRepository.getRequestsStores(codeProvider, userCode);
       requests = requestsStores;
 
       stateStores.value = StateApp.success;

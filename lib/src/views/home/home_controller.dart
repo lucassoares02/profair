@@ -1,5 +1,7 @@
 import 'dart:developer';
 
+import 'package:appwrite/models.dart';
+import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -24,9 +26,11 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
   final stateData = ValueNotifier<StateApp>(StateApp.start);
   final stateNotices = ValueNotifier<StateApp>(StateApp.start);
+  final stateNoticesAppWrite = ValueNotifier<StateApp>(StateApp.start);
   final stateShared = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestsStore = ValueNotifier<StateApp>(StateApp.start);
   final HomeRepository _homeRepository;
+  DocumentList? documents;
 
   HomeController(super.value, this._homeRepository);
 
@@ -36,6 +40,7 @@ class HomeController extends ValueNotifier<StateApp> {
       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       final code = sharedPreferences.getString("codacesso");
       data = await _homeRepository.getData({"codacesso": code});
+      inspect(data);
       await findLastTradings(data!.codCompany);
       getCategories();
       if (data!.accessTargeting == 3) {
@@ -107,6 +112,40 @@ class HomeController extends ValueNotifier<StateApp> {
       stateRequestsStore.value = StateApp.error;
     }
     stateRequestsStore.value = StateApp.success;
+  }
+
+  findDoc(AppWrite appWriteSend) async {
+    stateNoticesAppWrite.value = StateApp.loading;
+    try {
+      documents = await appWriteSend.listDocumentsApp();
+
+      stateNoticesAppWrite.value = StateApp.success;
+    } catch (e) {
+      print("Error FIND DOC$e");
+      stateNoticesAppWrite.value = StateApp.error;
+    }
+  }
+
+  Future getNoticeAppWrite(AppWrite appWriteSend) async {
+    stateNoticesAppWrite.value = StateApp.loading;
+    try {
+      final subscription = await appWriteSend.listDocumentsRealTime();
+      subscription.stream.listen((response) {
+        final index = documents!.documents.indexWhere((item) => (item.$id).toString() == response.payload["\$id"].toString());
+        if (index != -1) {
+          stateNoticesAppWrite.value = StateApp.loading;
+          print(response.payload);
+          inspect(response);
+          documents!.documents[index].data["title"] = response.payload["title"];
+          documents!.documents[index].data["content"] = response.payload["content"];
+          documents!.documents[index].data["color"] = response.payload["color"];
+          stateNoticesAppWrite.value = StateApp.success;
+        }
+      });
+    } catch (e) {
+      print("Error Init Real Time:f $e");
+      stateNoticesAppWrite.value = StateApp.error;
+    }
   }
 
   String formatCurrency(double amount) {

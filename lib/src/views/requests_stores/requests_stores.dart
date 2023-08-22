@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RequestsStores extends StatefulWidget {
-  const RequestsStores({super.key, required this.codeProvider});
+  const RequestsStores({super.key, required this.codeProvider, required this.userCode});
 
   final int? codeProvider;
+  final int? userCode;
 
   @override
   State<RequestsStores> createState() => _RequestsStoresState();
@@ -21,7 +22,9 @@ class _RequestsStoresState extends State<RequestsStores> {
 
   @override
   void initState() {
-    storesController.findRequestsStores(widget.codeProvider.toString());
+    print(widget.codeProvider);
+    print(widget.userCode);
+    storesController.findRequestsStores(widget.codeProvider, widget.userCode);
     super.initState();
   }
 
@@ -36,12 +39,12 @@ class _RequestsStoresState extends State<RequestsStores> {
               valueListenable: storesController.stateStores,
               builder: (context, value, child) {
                 return ComponentList(
-                  description: S.of(context).text_select_branch,
-                  state: storesController.stateStores,
-                  codeProvider: widget.codeProvider,
-                  listItems: storesController.requestsStores,
-                  requestsStoresController: storesController,
-                );
+                    description: S.of(context).text_select_branch,
+                    state: storesController.stateStores,
+                    codeProvider: widget.codeProvider,
+                    listItems: storesController.requestsStores,
+                    requestsStoresController: storesController,
+                    userCode: widget.userCode);
               },
             ),
           ),

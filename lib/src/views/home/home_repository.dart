@@ -82,13 +82,14 @@ class HomeRepository {
           "icon": Icons.shopping_basket_rounded,
           "route": "productsprovider",
         },
-      {
-        "id": 54,
-        "title": code == 1 ? 'Clientes' : 'Assoc...',
-        "icon": Icons.groups_2_sharp,
-        "route": "clients",
-      },
       if (code == 3)
+        {
+          "id": 54,
+          "title": code == 1 ? 'Clientes' : 'Assoc...',
+          "icon": Icons.groups_2_sharp,
+          "route": "clients",
+        },
+      if (code == 3 || code == 2)
         {
           "id": 64,
           "title": 'Forne...',

@@ -2,6 +2,7 @@ class RequestsStoresModel {
   int? codeRequest;
   String? documentCompany;
   int? codeClient;
+  int? codeBranch;
   String? nameClient;
   String? razaoClient;
   double? value;
@@ -11,6 +12,7 @@ class RequestsStoresModel {
     this.codeRequest,
     this.documentCompany,
     this.codeClient,
+    this.codeBranch,
     this.nameClient,
     this.razaoClient,
     this.value,
@@ -21,6 +23,7 @@ class RequestsStoresModel {
     codeRequest = json['codPedido'];
     documentCompany = json['cnpjAssociado'];
     codeClient = json['codAssociado'];
+    codeBranch = json['codConsultRelaciona'];
     nameClient = json['nomeConsult'];
     razaoClient = json['razaoAssociado'];
     value = json['valor'].toDouble();
@@ -32,6 +35,7 @@ class RequestsStoresModel {
     data['codPedido'] = codeRequest;
     data['cnpjAssociado'] = documentCompany;
     data['codAssociado'] = codeClient;
+    data['codConsultRelaciona'] = codeBranch;
     data['nomeConsult'] = nameClient;
     data['razaoAssociado'] = razaoClient;
     data['valor'] = value;

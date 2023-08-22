@@ -1,3 +1,5 @@
+import 'package:profair/provider/appwriter.dart';
+import 'package:profair/src/components/progress_indicator.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
 import 'package:profair/src/views/home/components/card_count.dart';
 import 'package:profair/src/views/home/components/card_notice.dart';
@@ -12,6 +14,7 @@ import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,8 +30,15 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     homeController.findNotices();
     homeController.findData();
+    testeAppwrite();
 
     super.initState();
+  }
+
+  testeAppwrite() {
+    AppWrite appwrite = Provider.of<AppWrite>(context, listen: false);
+    homeController.findDoc(appwrite);
+    homeController.getNoticeAppWrite(appwrite);
   }
 
   @override
@@ -44,7 +54,11 @@ class _HomePageState extends State<HomePage> {
               children: [
                 const AppSpacing(),
                 CardWelcome(homeController: homeController),
-                const CardNotice(),
+                ValueListenableBuilder(
+                    valueListenable: homeController.stateNoticesAppWrite,
+                    builder: (context, value, child) {
+                      return value == StateApp.loading ? AppProgressIndicator() : CardNotice(homeController: homeController);
+                    }),
                 const AppSpacing(),
                 CardCount(homeController: homeController),
                 const AppSpacing(),
@@ -84,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, value, child) {
                     return value == StateApp.loading
                         ? LoadingList(loadingHeader: false)
-                        : homeController.data!.accessTargeting == 2
+                        : homeController.data!.accessTargeting == 1
                             ? LastRequests(
                                 description: S.of(context).text_last_orders,
                                 listItems: homeController.requestStores,

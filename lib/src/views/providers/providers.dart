@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Providers extends StatefulWidget {
-  const Providers({super.key, required this.codeClient, this.codeBuyer});
+  const Providers({super.key, required this.codeClient, this.codeBuyer, this.codeBranch});
 
   final int? codeClient;
   final int? codeBuyer;
+  final int? codeBranch;
 
   @override
   State<Providers> createState() => _ProvidersState();
@@ -22,7 +23,7 @@ class _ProvidersState extends State<Providers> {
 
   @override
   void initState() {
-    clientsController.findProviders(codeClient: widget.codeClient, codeBuyer: widget.codeBuyer);
+    clientsController.findProviders(codeClient: widget.codeClient, codeBuyer: widget.codeBuyer, codeBranch: widget.codeBranch);
 
     super.initState();
   }
@@ -38,13 +39,13 @@ class _ProvidersState extends State<Providers> {
               valueListenable: clientsController.stateProviders,
               builder: (context, value, child) {
                 return ComponentList(
-                  description: S.of(context).text_select_provider,
-                  state: clientsController.stateProviders,
-                  codeProvider: widget.codeClient,
-                  listItems: clientsController.providersList,
-                  clientsController: clientsController,
-                  codeClient: widget.codeClient,
-                );
+                    description: S.of(context).text_select_provider,
+                    state: clientsController.stateProviders,
+                    codeProvider: widget.codeClient,
+                    listItems: clientsController.providersList,
+                    providersController: clientsController,
+                    codeClient: widget.codeClient,
+                    codeBranch: widget.codeBranch);
               },
             ),
           ),

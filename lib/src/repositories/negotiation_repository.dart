@@ -7,6 +7,10 @@ class NegotiationRepository {
   final String url = "https://seller-backend.onrender.com/";
 
   getNegotiations(int? codeBranch, int? codeProvider) async {
+    print("-----------------------");
+    print(codeBranch);
+    print(codeProvider);
+    print("-----------------------");
     try {
       final response = await clientDio.get("${url}negotiationclient/$codeBranch/$codeProvider");
       print("RESPONSE NEGOTIATIONS ===============================");

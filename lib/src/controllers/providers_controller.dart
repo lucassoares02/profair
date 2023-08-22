@@ -15,10 +15,10 @@ class ProvidersController extends ValueNotifier<StateApp> {
 
   ProvidersController(super.value, this._providersRepository);
 
-  Future findProviders({int? codeClient, int? codeBuyer}) async {
+  Future findProviders({int? codeClient, int? codeBuyer, int? codeBranch}) async {
     stateProviders.value = StateApp.loading;
     try {
-      providersList = await _providersRepository.getProviders(codeClient!, codeBuyer);
+      providersList = await _providersRepository.getProviders(codeClient!, codeBuyer, codeBranch);
       providers = providersList;
 
       stateProviders.value = StateApp.success;

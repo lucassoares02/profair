@@ -99,8 +99,9 @@ class _ComponentListState extends State<ComponentList> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        if (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) < DateTime.now().hour &&
-                            int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!.substring(0, 2)) > DateTime.now().hour)
+                        if (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) == DateTime.now().hour ||
+                            (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) < DateTime.now().hour &&
+                                int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!.substring(0, 2)) > DateTime.now().hour))
                           Transform.translate(
                             offset: const Offset(-27, 29),
                             child: const SpinKitPulse(color: colorSecondary, size: 22),
@@ -118,10 +119,12 @@ class _ComponentListState extends State<ComponentList> {
                             ),
                           ),
                         ),
-                        Text(
-                          e.value.title!.length < 40 ? '${e.value.title}' : e.value.title!.substring(0, 35),
-                          style: const TextStyle(fontSize: 12),
-                        ),
+                        Text(e.value.title!.length < 40 ? '${e.value.title}' : e.value.title!.substring(0, 35),
+                            style: (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) == DateTime.now().hour ||
+                                    (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) < DateTime.now().hour &&
+                                        int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!.substring(0, 2)) > DateTime.now().hour))
+                                ? const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: colorSecondary)
+                                : const TextStyle(fontSize: 12)),
                         const SizedBox(height: 5),
                         Text(
                           "${e.value.hour!} - ${e.value.content!.substring(0, 30)}",
