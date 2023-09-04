@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "profair-398018",
+  "private_key_id": "82acfaf0d10689be64e0ffdb05b90bad8fe5962b",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC4mio9DyT0THOw\n7zn4vtzEJPg62Ckd7b+MIewpLcMgIFRpPd2VY1E64z0Z5CEwwOkU6YD9jozTh9NQ\njCp+hxn65yt+dpy/oFzg4GBq0mEHJu/IHIa8REDuTOSHXCEsnNKmHPYI0g3ubUUC\noZZzm2UppYF54F6Szw1X96cfSbTM0Nsmxc2ZdlwGBlXhP2K311JZQSRN8F4t8vMM\nmPKe+kSbIeQ5ldb5DB4MyBMaxNQQQgXw6Uk+VUwj5wGZfpwPFk9K8mLPJBNq+72V\n1aAxsKwn4eiZjUHmCJAN+u/TrN5z+UIX8+o34w6qTssWHL3p8JJJLMW/ZeDyOIm4\ngu1iRqKxAgMBAAECggEABFpi+W51veAJULMMytQ/XaMMinYF9DDNdfG9K/8VApkt\n5w8V06ZpqDSVwIT2u7uqKLt/4UV0Wy7xA/gmLrZ4svKyvchGFnu4LPewNlyl0UFx\nC+bmTiK4Ouurw5MKgjmO0GrO6h1/8BnPXopDw2VMRlDi49DvZ1FZcclYfXOjaeVP\nAHgCXqsOkmnIT20QBpy+g1iOW1ROPwnXu32VsUGUKc1uAW++0LJWRd7ZxPyoDxRr\n0lAxFoEbFuxB/bQqF5KZZeG1DwhU5a2ppY3IkHdjdmb1645VO6Ue3XmiKYMz8xir\ngNgvUb4+Kq6W60yfKEtCA7qxRTqDCMZLC4Voa9IktQKBgQDdyaxEVwrMwsJADBdf\ncDWzmWIQ9lhElSaZVzTCz60EH2ExxOIPg2KEvyHqNyCBiGVkoJ4jzjApEp4FXSCd\nVxVh/hbkWBBh6Ao6iuw/1tf4sKBRwngQ3ONlKtl4bFDy8dv7oUOfB3EWZUBW681J\nWPwCLlZ27FsNSsycDYlsO+A6LQKBgQDVFAu3nMRyZyrXeMyb5foHiVjPMho76Zf5\nPpEk//HIzmzB8FVC1oB0EQOa7O48kgZrDTrxTu1y6BdDR2YMkQs+XKxnW8bGHp4w\n1HqsnBDMrfKW2emCJzioT4krPDqzCmlgHAvbm4dB0Udy2Dy+cmEOAHbdhK8YaC9t\nNWXSgIRxFQKBgQDOzKEoB9E2I9NkTOHuR36LPFXIYyriqAAZssqra2F0Gp5R/bab\nqHJQPLeu4EAbB8cjEPDjifo2EfnuHmuuyehSOs21lLeR0v7Wn3qx++3dITQbiCzT\n7GLLjizAsJ66KPJpqnCW9CVqMHbRlYURAzvX/MT6lmBAAKLQT373wMzO8QKBgFJc\ncTsDyZs+7XxkIRKRjleja0SLZUCLRkb9PDVFCTxJLhi4wPwY1YYHnZEgy+V1vC1c\n68+iZn3n4DYNPxDUb7gnMiyxeN/TrenJ97EIkiXLht1wVaYNawUD2U1w9m+GMr0H\nmj3EnD+AmVF26+PhakpzO37cbqHMg6h+32DCdG8RAoGBAKytmjj4jR8PtNzJlPgv\nA/MqhBZFINwwUGzs0mImT6J5ZCmpvy7OSEKbh0fzl36NOw20LtEjIUNmCJd5GLJf\ny5mR865OGgd8K0V5HY5tRf52LhhPw6SMc7oS3hiirX76/+okzCzfLlzmFp83gesp\ntFB5nx+isP6RLlGGp5R3n7Pw\n-----END PRIVATE KEY-----\n",
+  "client_email": "profair@profair-398018.iam.gserviceaccount.com",
+  "client_id": "108308188502229001083",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/profair%40profair-398018.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
