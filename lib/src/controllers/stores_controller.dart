@@ -1,10 +1,10 @@
-import 'package:profair/src/models/clients_model.dart';
+import 'package:profair/src/models/clients_select_stores_model.dart';
 import 'package:profair/src/repositories/stores_repository.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
 class StoresController extends ValueNotifier<StateApp> {
-  List<ClientsModel> stores = [];
+  List<ClientsSelectStoreModel> stores = [];
   int? codeProvider;
 
   final stateStores = ValueNotifier<StateApp>(StateApp.start);

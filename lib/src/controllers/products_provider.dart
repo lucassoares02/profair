@@ -15,10 +15,10 @@ class ProductsProviderController extends ValueNotifier<StateApp> {
 
   ProductsProviderController(super.value, this._productsProviderRepository);
 
-  Future findProductsProvider(String? codeProvider) async {
+  Future findProductsProvider(int? codeProvider, int? codeClient) async {
     stateProducts.value = StateApp.loading;
     try {
-      productsProvider = await _productsProviderRepository.getProductsProvider(codeProvider);
+      productsProvider = await _productsProviderRepository.getProductsProvider(codeProvider, codeClient);
       requests = productsProvider;
 
       stateProducts.value = StateApp.success;

@@ -14,37 +14,47 @@ class LoginController extends ValueNotifier<StateApp> {
   final AppWrite _loginRepository;
 
   final stateLogin = ValueNotifier<StateApp>(StateApp.start);
+  final stateLoginCode = ValueNotifier<StateApp>(StateApp.start);
   LoginModel? dataUser;
   LoginRepository loginRepository = LoginRepository();
 
   Future requestLogin(Object data) async {
+    stateLoginCode.value = StateApp.loading;
     stateLogin.value = StateApp.loading;
     try {
       LoginModel? response = await loginRepository.getLogin(data);
+      print("response login model");
+      print(response);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
       if (responseShared) {
-        return true;
+        // return true;
       }
+      stateLoginCode.value = StateApp.success;
       stateLogin.value = StateApp.success;
       return false;
     } catch (e) {
+      print("$e");
+      stateLoginCode.value = StateApp.error;
       stateLogin.value = StateApp.error;
       return false;
     }
   }
 
   Future auth(String email, String password) async {
+    stateLoginCode.value = StateApp.loading;
     stateLogin.value = StateApp.loading;
     try {
-      await _loginRepository.initSession(email, password);
-      User user = await _loginRepository.getUserDetails();
-      inspect(user);
-      print(user);
-      print(user.prefs.data["code"]);
-      final teste = await requestLogin({"codacesso": user.prefs.data["code"]});
+      await _loginRepository.initSessionUser(email, password);
+      User user = await _loginRepository.getUser();
+      // inspect(user);
+      // print(user);
+      // print(user.prefs.data["code"]);
+      // final teste = await requestLogin({"codacesso": user.prefs.data["code"]});
+      stateLoginCode.value = StateApp.success;
       stateLogin.value = StateApp.success;
-      return teste;
+      return true;
     } catch (e) {
+      stateLoginCode.value = StateApp.error;
       stateLogin.value = StateApp.error;
       return false;
     }

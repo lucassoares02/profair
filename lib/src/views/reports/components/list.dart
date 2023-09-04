@@ -1,9 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/views/reports/components/card_percentage.dart';
 import 'package:profair/src/views/reports/components/chart_negotiation.dart';
 import 'package:profair/src/views/reports/components/chart_product.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:profair/src/controllers/reports_controller.dart';
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/spacing.dart';
@@ -14,9 +12,10 @@ import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
 
 class ComponentList extends StatefulWidget {
-  ComponentList({super.key, required this.reportsController, this.codeProvider});
+  ComponentList({super.key, required this.reportsController, this.codeProvider, this.accessTargeting});
 
   int? codeProvider;
+  int? accessTargeting;
 
   final ReportsController reportsController;
 
@@ -47,39 +46,45 @@ class _ComponentListState extends State<ComponentList> {
                     return value == StateApp.loading
                         ? LoadingList(loadingHeader: false)
                         : CardPercentage(
-                            title: "Clientes Atendidos",
+                            title: widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "Clientes Atendidos" : "Fornecedores visitados",
                             content:
-                                "Nessa sessão é possível visualizar quantos associados foram atendidos até o momento em relação a quantidade total de associados presentes na feira",
+                                "Nessa sessão é possível visualizar quantos ${widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes na feira",
                             value: "${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%",
                             footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
                             reportsController: widget.reportsController,
                           );
                   }),
               const AppSpacing(),
-              ValueListenableBuilder(
-                  valueListenable: widget.reportsController.stateReportsProducts,
-                  builder: (context, value, child) {
-                    return value == StateApp.loading
-                        ? LoadingList(loadingHeader: false)
-                        : CardPercentage(
-                            backgroundColor: colorRed,
-                            reportsController: widget.reportsController,
-                            title: "Fornecedores com venda",
-                            value: "${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%",
-                            footer:
-                                "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
-                          );
-                  }),
+              if (widget.accessTargeting == 3)
+                ValueListenableBuilder(
+                    valueListenable: widget.reportsController.stateReportsProducts,
+                    builder: (context, value, child) {
+                      return value == StateApp.loading
+                          ? LoadingList(loadingHeader: false)
+                          : CardPercentage(
+                              backgroundColor: colorRed,
+                              reportsController: widget.reportsController,
+                              title: "Fornecedores com venda",
+                              value: "${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%",
+                              footer:
+                                  "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
+                            );
+                    }),
               const AppSpacing(),
               const AppSpacing(),
               Text(
-                widget.codeProvider == 0 ? "Ranking de Associados" : "Ranking de Clientes",
+                widget.accessTargeting == 1
+                    ? "Ranking de Associados"
+                    : widget.accessTargeting == 2
+                        ? "Ranking de Fornecedores"
+                        : "Ranking de Clientes",
                 style: const TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const AppSpacing(),
+
               ValueListenableBuilder(
                 valueListenable: widget.reportsController.stateReports,
                 builder: (context, value, child) {
@@ -128,63 +133,65 @@ class _ComponentListState extends State<ComponentList> {
               const AppSpacing(),
               const AppSpacing(),
               const AppSpacing(),
-              Text(
-                widget.codeProvider == 0 ? "Ranking Fornecedores" : "Ranking de produtos",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              if (widget.accessTargeting == 3 || widget.accessTargeting == 1)
+                Text(
+                  widget.accessTargeting == 3 ? "Ranking Fornecedores" : "Ranking de produtos",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
               const AppSpacing(),
 
-              (widget.codeProvider == 0)
-                  ? ValueListenableBuilder(
-                      valueListenable: widget.reportsController.stateReports,
-                      builder: (context, value, child) {
-                        return value == StateApp.loading
-                            ? SkeletonAvatar(
-                                style: SkeletonAvatarStyle(
-                                  height: 300,
-                                  width: width,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              )
-                            : Container(
-                                padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
-                                height: 300,
-                                decoration: const BoxDecoration(
-                                  color: colorGreyLigth,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(appRadius),
+              if (widget.accessTargeting == 3 || widget.accessTargeting == 1)
+                (widget.accessTargeting == 3)
+                    ? ValueListenableBuilder(
+                        valueListenable: widget.reportsController.stateReportsProducts,
+                        builder: (context, value, child) {
+                          return value == StateApp.loading
+                              ? SkeletonAvatar(
+                                  style: SkeletonAvatarStyle(
+                                    height: 300,
+                                    width: width,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                ),
-                                child: BarChartTeste(reportsClients: widget.reportsController.reportsTotalProvider));
-                      },
-                    )
-                  : ValueListenableBuilder(
-                      valueListenable: widget.reportsController.stateReportsProducts,
-                      builder: (context, value, child) {
-                        return value == StateApp.loading
-                            ? SkeletonAvatar(
-                                style: SkeletonAvatarStyle(
+                                )
+                              : Container(
+                                  padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
                                   height: 300,
-                                  width: width,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              )
-                            // : BarChartTeste(listItems: widget.reportsController.reportsTotalProducts);
-                            : Container(
-                                // padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
-                                height: 300,
-                                padding: const EdgeInsets.only(top: appPadding * 3),
-                                decoration: const BoxDecoration(
-                                  color: colorGreyLigth,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(appRadius),
+                                  decoration: const BoxDecoration(
+                                    color: colorGreyLigth,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(appRadius),
+                                    ),
                                   ),
-                                ),
-                                child: BarChartSample1(reportsProducts: widget.reportsController.reportsTotalProducts));
-                      }),
+                                  child: BarChartTeste(reportsClients: widget.reportsController.reportsTotalProvider));
+                        },
+                      )
+                    : ValueListenableBuilder(
+                        valueListenable: widget.reportsController.stateReportsProducts,
+                        builder: (context, value, child) {
+                          return value == StateApp.loading
+                              ? SkeletonAvatar(
+                                  style: SkeletonAvatarStyle(
+                                    height: 300,
+                                    width: width,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                )
+                              // : BarChartTeste(listItems: widget.reportsController.reportsTotalProducts);
+                              : Container(
+                                  // padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
+                                  height: 300,
+                                  padding: const EdgeInsets.only(top: appPadding * 3),
+                                  decoration: const BoxDecoration(
+                                    color: colorGreyLigth,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(appRadius),
+                                    ),
+                                  ),
+                                  child: BarChartSample1(reportsProducts: widget.reportsController.reportsTotalProducts));
+                        }),
             ],
           ),
         ),

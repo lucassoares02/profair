@@ -5,13 +5,23 @@ import 'package:profair/src/views/select_negotiation/components/list.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/clients_select_stores_model.dart';
+
 class SelectNegotiation extends StatefulWidget {
-  const SelectNegotiation({super.key, required this.codeProvider, required this.codeBranch, required this.nameBranch, required this.codeClient});
+  const SelectNegotiation({
+    super.key,
+    required this.codeProvider,
+    required this.codeBranch,
+    required this.nameBranch,
+    required this.codeClient,
+    this.listBranchs,
+  });
 
   final int? codeProvider;
   final int? codeBranch;
   final String? nameBranch;
   final int? codeClient;
+  final List<ClientsSelectStoreModel>? listBranchs;
 
   @override
   State<SelectNegotiation> createState() => _SelectNegotiationState();
@@ -42,6 +52,7 @@ class _SelectNegotiationState extends State<SelectNegotiation> {
                 codeProvider: widget.codeProvider,
                 codeClient: widget.codeClient,
                 nameBranch: widget.nameBranch,
+                listBranchs: widget.listBranchs,
               );
             },
           ),

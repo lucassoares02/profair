@@ -18,6 +18,7 @@ class HomeRepository {
     try {
       final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
       final item = response.data[0];
+
       return LoginModel.fromJson(item);
     } catch (e) {
       print("Error getData client: $e");
@@ -51,8 +52,13 @@ class HomeRepository {
     return list.map((json) => RecipeModel.fromJson(json)).toList();
   }
 
-  getLastTradings(int? codeProvider) async {
-    final response = await clientDio.get('${url}requestsprovider/$codeProvider');
+  getLastTradings(int? codeProvider, int accessTargeting) async {
+    Response? response;
+    if (accessTargeting == 1) {
+      response = await clientDio.get('${url}requestsprovider/$codeProvider');
+    } else {
+      response = await clientDio.get('${url}requestsclients/$codeProvider');
+    }
     List list = response.data as List;
     return list.map((json) => RequestsStoresModel.fromJson(json)).toList();
   }
@@ -109,18 +115,18 @@ class HomeRepository {
         "icon": Icons.show_chart_rounded,
         "route": "reports",
       },
-      {
-        "id": 74,
-        "title": 'Dúvidas',
-        "icon": Icons.messenger_outline_outlined,
-        "route": "faq",
-      },
-      {
-        "id": 24,
-        "title": 'Contatos',
-        "icon": Icons.phone,
-        "route": "contacts",
-      },
+      // {
+      //   "id": 74,
+      //   "title": 'Dúvidas',
+      //   "icon": Icons.messenger_outline_outlined,
+      //   "route": "faq",
+      // },
+      // {
+      //   "id": 24,
+      //   "title": 'Contatos',
+      //   "icon": Icons.phone,
+      //   "route": "contacts",
+      // },
     ];
     return list.map((json) => CategoriesIcon.fromJson(json)).toList();
   }

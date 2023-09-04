@@ -25,7 +25,9 @@ class _CardWelcomeState extends State<CardWelcome> {
 
     return InkWell(
       onTap: () {
-        Navigator.of(context).pushNamed('profile');
+        // Navigator.of(context).pushNamed('profile');
+        widget.homeController.logout();
+        Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
       },
       child: Container(
         margin: const EdgeInsets.only(top: appPadding),
@@ -41,8 +43,17 @@ class _CardWelcomeState extends State<CardWelcome> {
                 valueListenable: widget.homeController.stateData,
                 builder: (context, value, child) {
                   return value == StateApp.loading
-                      ? SkeletonAvatar(
-                          style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            SkeletonAvatar(
+                              style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                            ),
+                            const SizedBox(height: 10),
+                            SkeletonAvatar(
+                              style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                            ),
+                          ],
                         )
                       : Row(
                           children: [
@@ -50,11 +61,11 @@ class _CardWelcomeState extends State<CardWelcome> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  ' ${widget.homeController.data!.nameUser}',
+                                  '${widget.homeController.data!.nameUser}',
                                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                 ),
                                 Text(
-                                  ' ${widget.homeController.data!.nameCompany}',
+                                  '${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany}',
                                   style: const TextStyle(fontSize: 16, color: colorGreyDark),
                                 ),
                               ],

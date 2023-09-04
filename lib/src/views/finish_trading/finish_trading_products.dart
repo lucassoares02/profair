@@ -7,16 +7,20 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/views/finish_trading/components/list.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/clients_select_stores_model.dart';
+
 class FinishTrading extends StatefulWidget {
-  FinishTrading(
-      {super.key,
-      required this.codeProvider,
-      required this.codeBranch,
-      required this.codeTrading,
-      required this.codeClient,
-      required this.nameBranch,
-      required this.productsTrading,
-      required this.tradings});
+  FinishTrading({
+    super.key,
+    required this.codeProvider,
+    required this.codeBranch,
+    required this.codeTrading,
+    required this.codeClient,
+    required this.nameBranch,
+    required this.productsTrading,
+    required this.tradings,
+    this.listBranchs,
+  });
 
   final int? codeProvider;
   final int? codeBranch;
@@ -25,6 +29,7 @@ class FinishTrading extends StatefulWidget {
   final int? codeClient;
   final List<ProductModel> productsTrading;
   List<NegotiationModel> tradings;
+  List<ClientsSelectStoreModel>? listBranchs;
 
   @override
   State<FinishTrading> createState() => _FinishTradingState();
@@ -35,7 +40,7 @@ class _FinishTradingState extends State<FinishTrading> {
 
   @override
   void initState() {
-    finishTradingController.checkListItems(widget.productsTrading, widget.tradings);
+    finishTradingController.checkListItems(widget.productsTrading, widget.tradings, widget.listBranchs);
     super.initState();
   }
 
@@ -55,6 +60,7 @@ class _FinishTradingState extends State<FinishTrading> {
                   codeProvider: widget.codeProvider,
                   codeClient: widget.codeClient,
                   nameBranch: widget.nameBranch,
+                  listBranchs: widget.listBranchs,
                   tradings: widget.tradings);
             },
           ),

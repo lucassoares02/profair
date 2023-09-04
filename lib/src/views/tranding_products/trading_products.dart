@@ -6,9 +6,19 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/views/tranding_products/components/list.dart';
 import 'package:flutter/material.dart';
 
+import '../../models/clients_select_stores_model.dart';
+
 class TradingProducts extends StatefulWidget {
-  const TradingProducts(
-      {super.key, required this.codeProvider, required this.codeBranch, required this.codeTrading, this.nameBranch, required this.codeClient, required this.tradings});
+  const TradingProducts({
+    super.key,
+    required this.codeProvider,
+    required this.codeBranch,
+    required this.codeTrading,
+    this.nameBranch,
+    required this.codeClient,
+    required this.tradings,
+    required this.listBranchs,
+  });
 
   final int? codeProvider;
   final int? codeBranch;
@@ -16,6 +26,7 @@ class TradingProducts extends StatefulWidget {
   final int? codeClient;
   final String? nameBranch;
   final List<NegotiationModel> tradings;
+  final List<ClientsSelectStoreModel>? listBranchs;
 
   @override
   State<TradingProducts> createState() => _TradingProductsState();
@@ -39,16 +50,18 @@ class _TradingProductsState extends State<TradingProducts> {
             valueListenable: tradingProductsController.stateProductsTrading,
             builder: (context, value, child) {
               return ComponentList(
-                  listItems: tradingProductsController.productsTrading,
-                  state: tradingProductsController.stateProductsTrading,
-                  description: S.of(context).text_select_branch,
-                  tradingProductsController: tradingProductsController,
-                  codeProvider: widget.codeProvider,
-                  codeBranch: widget.codeBranch,
-                  codeTrading: widget.codeTrading,
-                  codeClient: widget.codeClient,
-                  nameBranch: widget.nameBranch,
-                  tradings: widget.tradings);
+                listItems: tradingProductsController.productsTrading,
+                state: tradingProductsController.stateProductsTrading,
+                description: S.of(context).text_select_branch,
+                tradingProductsController: tradingProductsController,
+                codeProvider: widget.codeProvider,
+                codeBranch: widget.codeBranch,
+                codeTrading: widget.codeTrading,
+                codeClient: widget.codeClient,
+                nameBranch: widget.nameBranch,
+                tradings: widget.tradings,
+                listBranchs: widget.listBranchs,
+              );
             },
           ),
         ),

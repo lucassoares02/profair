@@ -8,6 +8,7 @@ import 'package:profair/src/views/list_category/list_category.dart';
 import 'package:profair/src/views/create_post/create_post.dart';
 import 'package:profair/src/views/list_recipe/list_recipe.dart';
 import 'package:profair/src/views/favorites/favorites.dart';
+import 'package:profair/src/views/preorder/preorder.dart';
 import 'package:profair/src/views/products_provider/products_provider.dart';
 import 'package:profair/src/views/profile/profile.dart';
 import 'package:profair/src/views/providers/providers.dart';
@@ -41,13 +42,13 @@ class AppModule extends Module {
         ChildRoute('/selectstore', child: (context, args) => SelectStore(client: args.data["client"], codeProvider: args.data["codeProvider"])),
         ChildRoute('/listrecipe', child: (context, args) => ListRecipe(recipe: args.data)),
         ChildRoute('/listcategory', child: (context, args) => ListCategory(category: args.data)),
+        ChildRoute('/preorder', child: (context, args) => PreOrder(homeController: args.data)),
         ChildRoute('/listrequestsstores',
             child: (context, args) => RequestsStores(
                   codeProvider: args.data["codeProvider"],
                   userCode: args.data["userCode"],
                 )),
-        ChildRoute('/productsprovider', child: (context, args) => ProductsProvider(codeProvider: args.data)),
-        ChildRoute('/detailsattraction', child: (context, args) => const DetailsAttractions()),
+        ChildRoute('/productsprovider', child: (context, args) => ProductsProvider(codeProvider: args.data["codeProvider"], codeClient: args.data["codeClient"])),
         ChildRoute('/clients',
             child: (context, args) => Clients(
                 trading: args.data["codeTrading"],
@@ -64,7 +65,7 @@ class AppModule extends Module {
         ),
         ChildRoute('/tradings', child: (context, args) => Tradings(codeProvider: args.data)),
         ChildRoute('/clientsproduct', child: (context, args) => ClientsProducts(codeProduct: args.data)),
-        ChildRoute('/reports', child: (context, args) => Reports(codeProvider: args.data)),
+        ChildRoute('/reports', child: (context, args) => Reports(codeProvider: args.data["codeProvider"], accessTargeting: args.data["accessTargeting"])),
         ChildRoute(
           '/selectnegotiation',
           child: (context, args) => SelectNegotiation(
@@ -72,6 +73,7 @@ class AppModule extends Module {
             nameBranch: args.data["nameBranch"],
             codeClient: args.data["codeClient"],
             codeProvider: args.data["codeProvider"],
+            listBranchs: args.data["listBranchs"],
           ),
         ),
         ChildRoute(
@@ -83,6 +85,7 @@ class AppModule extends Module {
             codeClient: args.data["codeClient"],
             codeTrading: args.data["codeTrading"],
             tradings: args.data["tradings"],
+            listBranchs: args.data["listBranchs"],
           ),
         ),
         ChildRoute(
@@ -95,8 +98,16 @@ class AppModule extends Module {
             codeClient: args.data["codeClient"],
             productsTrading: args.data["productsTrading"],
             tradings: args.data["tradings"],
+            listBranchs: args.data["listBranchs"],
           ),
         ),
+        ChildRoute('/detailsattraction',
+            child: (context, args) => DetailsAttractions(
+                  title: args.data["title"],
+                  content: args.data["content"],
+                  hour: args.data["hour"],
+                  image: args.data["image"],
+                )),
       ];
 
   static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();

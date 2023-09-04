@@ -1,5 +1,6 @@
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
+import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
@@ -114,7 +115,7 @@ class _LastRequestsState extends State<LastRequests> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'R\$ ${e.value}',
+                                formatCurrency(e.value!),
                                 style: const TextStyle(
                                   color: colorGreyDark,
                                 ),

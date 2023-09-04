@@ -1,5 +1,5 @@
+import 'package:appwrite/models.dart';
 import 'package:profair/src/views/home/state_management.dart';
-import 'package:profair/src/repositories/notice_model.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/spacing.dart';
@@ -21,7 +21,7 @@ class Notices extends StatefulWidget {
   final double? cardWidth;
   final double? cardHeigth;
   final ValueNotifier<StateApp> state;
-  final List<NoticeModel> listItems;
+  final DocumentList listItems;
 
   @override
   State<Notices> createState() => _NoticesState();
@@ -83,7 +83,7 @@ class _NoticesState extends State<Notices> {
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
-                itemCount: widget.listItems.length,
+                itemCount: widget.listItems.total,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
@@ -96,16 +96,16 @@ class _NoticesState extends State<Notices> {
                         borderRadius: BorderRadius.all(Radius.circular(appRadius)),
                       ),
                       padding: const EdgeInsets.symmetric(vertical: appMargin / 1.7),
-                      margin: EdgeInsets.only(left: appPadding, right: (widget.listItems.length - 1 == index) ? appPadding : 0),
+                      margin: EdgeInsets.only(left: appPadding, right: (widget.listItems.total - 1 == index) ? appPadding : 0),
                       child: Row(
                         children: [
                           Container(
                             width: 5,
                             height: double.maxFinite,
                             decoration: BoxDecoration(
-                              color: widget.listItems[index].priority == 5
+                              color: widget.listItems.documents[index].data["priority"] == 5
                                   ? colorRed
-                                  : widget.listItems[index].priority == 4
+                                  : widget.listItems.documents[index].data["priority"] == 4
                                       ? colorTertiary
                                       : colorGreyDark,
                               borderRadius: const BorderRadius.only(
@@ -120,9 +120,9 @@ class _NoticesState extends State<Notices> {
                             height: 60,
                             // padding: const EdgeInsets.all(5),
                             decoration: BoxDecoration(
-                              color: widget.listItems[index].priority == 5
+                              color: widget.listItems.documents[index].data["priority"] == 5
                                   ? colorRed
-                                  : widget.listItems[index].priority == 4
+                                  : widget.listItems.documents[index].data["priority"] == 4
                                       ? colorTertiary
                                       : colorGreyDark,
                               borderRadius: const BorderRadius.all(
@@ -142,11 +142,11 @@ class _NoticesState extends State<Notices> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  '${widget.listItems[index].title}',
+                                  '${widget.listItems.documents[index].data["title"]}',
                                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                                 ),
                                 Text(
-                                  '${widget.listItems[index].description}',
+                                  '${widget.listItems.documents[index].data["description"]}',
                                   style: const TextStyle(fontSize: 12),
                                 ),
                               ],

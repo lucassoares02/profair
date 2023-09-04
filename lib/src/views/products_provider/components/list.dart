@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/controllers/products_provider.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -47,10 +48,21 @@ class _ComponentListState extends State<ComponentList> {
                     children: widget.productsProviderController.productsProvider.map((e) {
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed(
-                        "/clientsproduct",
-                        arguments: e.codeProduct,
-                      );
+                      if (e.totalVolume != "0") {
+                        Navigator.of(context).pushNamed(
+                          "/clientsproduct",
+                          arguments: e.codeProduct,
+                        );
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Produto não possui pedidos!",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.CENTER,
+                            timeInSecForIosWeb: 1,
+                            backgroundColor: Colors.red,
+                            textColor: Colors.white,
+                            fontSize: 16.0);
+                      }
                     },
                     child: Container(
                       width: width,
@@ -65,15 +77,16 @@ class _ComponentListState extends State<ComponentList> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            e.nameProduct!.length < 28 ? '${e.nameProduct}' : "${e.nameProduct!.substring(0, 25)}...",
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                            e.nameProduct!.length < 35 ? '${e.nameProduct}' : "${e.nameProduct!.substring(0, 35)}...",
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                           const SizedBox(height: appMargin),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${e.packing} | ${e.coefficient}',
+                                // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
+                                formatCurrency(e.productPrice!),
                                 style: const TextStyle(color: colorGreyDark),
                               ),
                               Text(

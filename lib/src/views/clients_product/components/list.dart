@@ -1,4 +1,5 @@
 import 'package:profair/src/controllers/clients_product_controller.dart';
+import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/components/header_list.dart';
@@ -66,7 +67,7 @@ class _ComponentListState extends State<ComponentList> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                'R\$ ${e.totalValue}',
+                                formatCurrency(e.totalValue!),
                                 style: const TextStyle(color: colorGreyDark),
                               ),
                               Text(

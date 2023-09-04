@@ -60,11 +60,13 @@ class _ComponentListState extends State<ComponentList> {
                     onTap: () {
                       if (widget.onClickCard) {
                         if (e.totalValue != 0) {
-                          if (widget.accessTargenting == 3) {
-                            Navigator.of(context).pushNamed(
-                              "selectprovider",
-                              arguments: {"codeClient": e.relationshipCode, "codeBuyer": 0, "codeBranch": 0},
-                            );
+                          print("widget.accessTargenting");
+                          print(widget.accessTargenting);
+                          if (widget.accessTargenting == 3 || widget.accessTargenting == 0) {
+                            // Navigator.of(context).pushNamed(
+                            //   "selectprovider",
+                            //   arguments: {"codeClient": 0, "codeBuyer": 0, "codeBranch": e.relationshipCode},
+                            // );
                           } else {
                             Navigator.of(context).pushNamed(
                               "selectnegotiation",

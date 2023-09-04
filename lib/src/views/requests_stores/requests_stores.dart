@@ -22,8 +22,6 @@ class _RequestsStoresState extends State<RequestsStores> {
 
   @override
   void initState() {
-    print(widget.codeProvider);
-    print(widget.userCode);
     storesController.findRequestsStores(widget.codeProvider, widget.userCode);
     super.initState();
   }

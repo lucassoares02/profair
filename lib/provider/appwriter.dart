@@ -1,34 +1,25 @@
 import 'package:appwrite/appwrite.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:profair/provider/resolver.dart';
 
 class AppWrite {
   Client clientapp = Client();
+
+//=============================================================
+// AppWrite ===================================================
+//=============================================================
 
   initAppWrite() {
     clientapp.setEndpoint('https://cloud.appwrite.io/v1').setProject('64dd30b79119b5dc74d7').setSelfSigned(status: true);
   }
 
-  initSession(email, password) async {
+//=============================================================
+// Users ======================================================
+//=============================================================
+
+  initSessionUser(email, password) async {
     Account account = Account(clientapp);
     Future promise = account.createEmailSession(email: email, password: password);
     return resolvePromise(promise: promise);
-  }
-
-  getUserDetails() async {
-    Account account = Account(clientapp);
-    Future promise = account.get();
-    return resolvePromise(promise: promise);
-  }
-
-  listDocumentsApp() async {
-    Databases database = Databases(clientapp);
-    Future promise = database.listDocuments(databaseId: '64e4ebc2cce8741e7e5b', collectionId: '64e4fd339e70e9e3f1ca');
-    return resolvePromise(promise: promise);
-  }
-
-  listDocumentsRealTime() async {
-    final realtime = Realtime(clientapp);
-    return realtime.subscribe(['documents']);
   }
 
   createUser(String name, String password, String email) async {
@@ -38,22 +29,64 @@ class AppWrite {
     return resolvePromise(promise: promise, viewToast: true);
   }
 
-  resolvePromise({required Future promise, bool viewToast = false}) async {
-    return await promise.then((value) {
-      if (viewToast) toastAlert(message: "Successfully!");
-      return value;
-    }).catchError((error) {
-      print("Error Promise: $error");
-      if (viewToast) toastAlert(message: error.response["message"], isError: true);
-      return error;
-    });
+  getUser() async {
+    Account account = Account(clientapp);
+    Future promise = account.get();
+    return resolvePromise(promise: promise);
   }
 
-  toastAlert({required String message, bool isError = false}) {
-    if (isError) {
-      Fluttertoast.showToast(msg: message, webBgColor: "linear-gradient(to right, #ff0000, #ff0000)");
-    } else {
-      Fluttertoast.showToast(msg: message);
-    }
+//=============================================================
+// Documents ==================================================
+//=============================================================
+
+  createDocuments({required Map<dynamic, dynamic> data, required String collectionId}) {
+    Databases database = Databases(clientapp);
+    Future promise = database.createDocument(
+      databaseId: '64e4ebc2cce8741e7e5b',
+      collectionId: collectionId,
+      documentId: ID.unique(),
+      data: data,
+    );
+    return resolvePromise(promise: promise, viewToast: true);
+  }
+
+  getDocuments(String collectionId, List<String>? query) {
+    Databases database = Databases(clientapp);
+    Future promise = database.listDocuments(
+      databaseId: '64e4ebc2cce8741e7e5b',
+      collectionId: collectionId,
+      queries: query,
+    );
+    return resolvePromise(promise: promise);
+  }
+
+  deleteDocuments(String collectionId, String documentId) {
+    Databases database = Databases(clientapp);
+    Future promise = database.deleteDocument(
+      databaseId: '64e4ebc2cce8741e7e5b',
+      collectionId: collectionId,
+      documentId: documentId,
+    );
+    return resolvePromise(promise: promise);
+  }
+
+  updateDocuments({required String collectionId, required String documentId, required Map<dynamic, dynamic> data}) {
+    Databases database = Databases(clientapp);
+    Future promise = database.updateDocument(
+      databaseId: '64e4ebc2cce8741e7e5b',
+      collectionId: collectionId,
+      documentId: documentId,
+      data: data,
+    );
+    return resolvePromise(promise: promise);
+  }
+
+//=============================================================
+// RealTime Documents==========================================
+//=============================================================
+
+  listDocumentsRealTime() async {
+    final realtime = Realtime(clientapp);
+    return realtime.subscribe(['documents']);
   }
 }

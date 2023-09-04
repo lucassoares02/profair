@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/progress_indicator.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
@@ -12,17 +15,22 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
+import '../../../../provider/appwriter.dart';
+import '../../../models/clients_select_stores_model.dart';
+
 class ComponentList extends StatefulWidget {
-  ComponentList(
-      {super.key,
-      required this.listItems,
-      this.description,
-      required this.finishTradingController,
-      required this.tradings,
-      required this.codeClient,
-      required this.codeBranch,
-      required this.nameBranch,
-      required this.codeProvider});
+  ComponentList({
+    super.key,
+    required this.listItems,
+    this.description,
+    required this.finishTradingController,
+    required this.tradings,
+    required this.codeClient,
+    required this.codeBranch,
+    required this.nameBranch,
+    required this.codeProvider,
+    required this.listBranchs,
+  });
 
   final List<ProductModel> listItems;
   final String? description;
@@ -32,6 +40,7 @@ class ComponentList extends StatefulWidget {
   final int? codeBranch;
   final FinishTradingController finishTradingController;
   List<NegotiationModel> tradings;
+  List<ClientsSelectStoreModel>? listBranchs;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -41,7 +50,8 @@ class _ComponentListState extends State<ComponentList> {
   TextEditingController amountItem = TextEditingController();
 
   saveOrder() async {
-    await widget.finishTradingController.sendOrder(widget.listItems, widget.tradings, widget.codeBranch, widget.codeProvider, widget.codeClient);
+    await widget.finishTradingController.sendOrder(widget.listItems, widget.tradings, widget.codeBranch, widget.codeProvider, widget.codeClient, widget.listBranchs!);
+    totalCurrentTime();
     navigatorHome();
   }
 
@@ -65,22 +75,18 @@ class _ComponentListState extends State<ComponentList> {
     }
   }
 
+  totalCurrentTime() {
+    AppWrite appwrite = Provider.of<AppWrite>(context, listen: false);
+    widget.finishTradingController.notifyValueTradings(appwrite);
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.only(top: appMargin),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.arrow_back_rounded),
-              ),
-            ],
-          ),
-        ),
+        HeaderList(activeSearch: false, label: "Detalhes do pedido"),
         Container(
           width: width,
           // decoration: const BoxDecoration(color: colorGreyLigth, borderRadius: BorderRadius.all(Radius.circular(appRadius))),
@@ -91,27 +97,17 @@ class _ComponentListState extends State<ComponentList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "Detalhes do Pedido",
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Icon(Icons.shield_outlined, color: colorSecondary)
-                ],
-              ),
-              const AppSpacing(),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: const [Icon(Icons.shield_outlined, color: colorSecondary)],
+              // ),
+              // const AppSpacing(),
               const AppSpacing(),
               Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
                     child: Container(
-                      padding: const EdgeInsets.only(bottom: appPadding),
                       decoration: const BoxDecoration(
                         border: Border(bottom: BorderSide(color: colorGrey)),
                       ),
@@ -121,17 +117,44 @@ class _ComponentListState extends State<ComponentList> {
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                              Text(
-                                "${widget.nameBranch}",
-                                style: const TextStyle(fontSize: 18, color: colorGreyDark),
-                              ),
-                              Text(
-                                "${DateTime.now().hour}:${DateTime.now().minute}h",
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  color: colorGreyDark,
-                                  fontWeight: FontWeight.bold,
+                              ValueListenableBuilder(
+                                  valueListenable: widget.finishTradingController.stateTradings,
+                                  builder: (context, value, child) {
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: widget.listBranchs!.asMap().entries.map((e) {
+                                        return e.value.checked!
+                                            ? Container(
+                                                margin: const EdgeInsets.symmetric(vertical: appMargin),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      e.value.nameCompany!,
+                                                      style: const TextStyle(fontSize: 18, color: colorGreyDark, fontWeight: FontWeight.bold),
+                                                    ),
+                                                    const SizedBox(height: 5),
+                                                    Text(
+                                                      e.value.documentCompany!,
+                                                      style: const TextStyle(fontSize: 14, color: colorGreyDark),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : Container();
+                                      }).toList(),
+                                    );
+                                  }),
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child: Text(
+                                  "${DateTime.now().hour}:${DateTime.now().minute}",
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    color: colorGreyDark,
+                                  ),
                                 ),
                               ),
                             ],
@@ -166,7 +189,7 @@ class _ComponentListState extends State<ComponentList> {
                                     valueListenable: widget.finishTradingController.stateTradings,
                                     builder: (context, value, child) {
                                       return Text(
-                                        "${widget.finishTradingController.totalVolume * widget.finishTradingController.totalChecked}",
+                                        "${(widget.finishTradingController.totalVolume * widget.finishTradingController.totalChecked) * widget.finishTradingController.totalCheckedBranch}",
                                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       );
                                     },
@@ -185,13 +208,35 @@ class _ComponentListState extends State<ComponentList> {
                                     valueListenable: widget.finishTradingController.stateTradings,
                                     builder: (context, value, child) {
                                       return Text(
-                                        widget.finishTradingController
-                                            .formatCurrency(widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked),
+                                        widget.finishTradingController.formatCurrency(
+                                            (widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked) *
+                                                widget.finishTradingController.totalCheckedBranch),
                                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       );
                                     },
                                   ),
                                 ],
+                              ),
+                              const SizedBox(height: 10),
+                              Container(
+                                width: double.maxFinite,
+                                padding: const EdgeInsets.only(bottom: appPadding),
+                                decoration: const BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: colorGrey)),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const Text(
+                                      "Cliente",
+                                      style: TextStyle(fontSize: 18, color: colorGreyDark),
+                                    ),
+                                    Text(
+                                      "${widget.listBranchs!.first.nameUser}",
+                                      style: const TextStyle(fontSize: 18, color: colorGreyDark, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           );
@@ -201,6 +246,15 @@ class _ComponentListState extends State<ComponentList> {
         ),
         const AppSpacing(),
         const AppSpacing(),
+        const AppSpacing(),
+        const AppSpacing(),
+        Container(
+          padding: const EdgeInsets.all(appPadding),
+          child: const Text(
+            "Selecione as negociações desejadas",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ),
         Container(
           width: width,
           child: Column(
@@ -251,6 +305,75 @@ class _ComponentListState extends State<ComponentList> {
             );
           }).toList()),
         ),
+        const AppSpacing(),
+        if (widget.listBranchs!.length > 1)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const AppSpacing(),
+              const AppSpacing(),
+              Container(
+                padding: const EdgeInsets.all(appPadding),
+                child: const Text(
+                  "Deseja adicionar outras lojas?",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+              Container(
+                width: width,
+                child: Column(
+                  children: widget.listBranchs!.asMap().entries.map(
+                    (e) {
+                      return InkWell(
+                        onTap: () {
+                          if (e.value.checked! && widget.finishTradingController.totalCheckedBranch > 1) {
+                            widget.finishTradingController.totalCheckedBranch -= 1;
+                            widget.listBranchs![e.key].checked = !e.value.checked!;
+                          } else if (e.value.checked! == false) {
+                            widget.finishTradingController.totalCheckedBranch += 1;
+                            widget.listBranchs![e.key].checked = !e.value.checked!;
+                          }
+                          widget.finishTradingController.updateTrading();
+                        },
+                        child: Container(
+                          width: double.maxFinite,
+                          margin: const EdgeInsets.symmetric(horizontal: appMargin),
+                          decoration: const BoxDecoration(
+                            border: Border(bottom: BorderSide(color: colorGrey)),
+                          ),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              ValueListenableBuilder(
+                                  valueListenable: widget.finishTradingController.stateTradings,
+                                  builder: (context, bool value, child) {
+                                    return Checkbox(
+                                      activeColor: colorSecondary,
+                                      value: e.value.checked,
+                                      side: const BorderSide(color: colorGrey),
+                                      shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(4),
+                                        ),
+                                      ),
+                                      onChanged: (value) {},
+                                    );
+                                  }),
+                              Text(
+                                e.value.nameCompany!.length < 28 ? '${e.value.codeBranch} -  ${e.value.nameCompany}' : e.value.nameCompany!.substring(0, 25),
+                                style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+              ),
+            ],
+          ),
         const AppSpacing(),
         const AppSpacing(),
         Container(

@@ -1,4 +1,5 @@
 import 'package:profair/src/utils/colors.dart';
+import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/utils/spacing.dart';
@@ -79,9 +80,9 @@ class _CategoriesState extends State<Categories> {
                             height: 10,
                           ),
                           Text(
-                            '${widget.homeController.buyers[index].nameBuyer}',
+                            formatCurrency(widget.homeController.buyers[index].total!),
                             style: const TextStyle(
-                              color: colorGrey,
+                              color: colorWhite,
                               fontSize: 12,
                             ),
                           ),

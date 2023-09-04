@@ -1,5 +1,5 @@
 import 'package:profair/provider/appwriter.dart';
-import 'package:profair/src/components/progress_indicator.dart';
+import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
 import 'package:profair/src/views/home/components/card_count.dart';
 import 'package:profair/src/views/home/components/card_notice.dart';
@@ -15,6 +15,7 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:skeletons/skeletons.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -24,11 +25,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final HomeController homeController = HomeController(StateApp.start, HomeRepository());
+  HomeController homeController = HomeController(StateApp.start, HomeRepository());
 
   @override
   void initState() {
-    homeController.findNotices();
+    print("Passando por aqui");
     homeController.findData();
     testeAppwrite();
 
@@ -39,6 +40,7 @@ class _HomePageState extends State<HomePage> {
     AppWrite appwrite = Provider.of<AppWrite>(context, listen: false);
     homeController.findDoc(appwrite);
     homeController.getNoticeAppWrite(appwrite);
+    homeController.findAlert(appwrite);
   }
 
   @override
@@ -57,7 +59,18 @@ class _HomePageState extends State<HomePage> {
                 ValueListenableBuilder(
                     valueListenable: homeController.stateNoticesAppWrite,
                     builder: (context, value, child) {
-                      return value == StateApp.loading ? AppProgressIndicator() : CardNotice(homeController: homeController);
+                      return value == StateApp.loading
+                          ? Container(
+                              margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                              child: SkeletonAvatar(
+                                style: SkeletonAvatarStyle(
+                                  height: 300,
+                                  width: double.maxFinite,
+                                  borderRadius: BorderRadius.circular(appRadius),
+                                ),
+                              ),
+                            )
+                          : CardNotice(homeController: homeController);
                     }),
                 const AppSpacing(),
                 CardCount(homeController: homeController),
@@ -81,11 +94,11 @@ class _HomePageState extends State<HomePage> {
                               : Container();
                     }),
                 ValueListenableBuilder(
-                  valueListenable: homeController.stateNotices,
+                  valueListenable: homeController.stateAlert,
                   builder: (context, value, child) {
                     return Notices(
-                      listItems: homeController.notices,
-                      state: homeController.stateNotices,
+                      listItems: homeController.alerts!,
+                      state: homeController.stateAlert,
                       title: S.of(context).text_notifications,
                       cardHeigth: 90,
                       cardWidth: 340,
@@ -98,7 +111,7 @@ class _HomePageState extends State<HomePage> {
                   builder: (context, value, child) {
                     return value == StateApp.loading
                         ? LoadingList(loadingHeader: false)
-                        : homeController.data!.accessTargeting == 1
+                        : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
                             ? LastRequests(
                                 description: S.of(context).text_last_orders,
                                 listItems: homeController.requestStores,

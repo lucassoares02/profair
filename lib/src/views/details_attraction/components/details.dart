@@ -5,7 +5,12 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 
 class ComponentDetails extends StatefulWidget {
-  const ComponentDetails({super.key});
+  ComponentDetails({super.key, required this.title, required this.content, required this.hour, required this.image});
+
+  String title;
+  String content;
+  String hour;
+  String image;
 
   @override
   State<ComponentDetails> createState() => _ComponentDetailsState();
@@ -21,7 +26,7 @@ class _ComponentDetailsState extends State<ComponentDetails> {
       children: [
         HeaderList(
           activeSearch: false,
-          label: "Reunião",
+          label: "Detalhes do evento",
         ),
         Container(
           padding: const EdgeInsets.all(appPadding),
@@ -31,21 +36,21 @@ class _ComponentDetailsState extends State<ComponentDetails> {
               Container(
                 width: double.maxFinite,
                 height: 150,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(appRadius)),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
                   image: DecorationImage(
                     fit: BoxFit.cover,
                     opacity: 0.8,
                     image: NetworkImage(
-                      "https://images.pexels.com/photos/1855214/pexels-photo-1855214.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+                      widget.image,
                     ),
                   ),
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                "Reunião na sala Domingos Martins",
-                style: TextStyle(
+              Text(
+                widget.title,
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -59,22 +64,22 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                       border: Border.all(color: colorGrey),
                       borderRadius: const BorderRadius.all(Radius.circular(50)),
                     ),
-                    child: Row(children: const [
-                      Icon(
+                    child: Row(children: [
+                      const Icon(
                         Icons.timer,
                         size: 16,
                         color: colorTertiary,
                       ),
-                      SizedBox(width: 5),
-                      Text("10:30")
+                      const SizedBox(width: 5),
+                      Text(widget.hour)
                     ]),
                   ),
                 ],
               ),
               const AppSpacing(),
-              const Text(
-                "É com grande entusiasmo que nos reunimos hoje nesta sala de eventos para discutir estratégias e oportunidades que nos permitirão trilhar um caminho de sucesso no futuro. Esta reunião representa um marco significativo em nossa jornada, pois nos dá a oportunidade de colaborar, compartilhar ideias e planejar ações que moldarão positivamente nosso crescimento e conquistas.",
-                style: TextStyle(
+              Text(
+                widget.content,
+                style: const TextStyle(
                   color: colorGreyDark,
                   fontStyle: FontStyle.normal,
                   fontSize: 14,

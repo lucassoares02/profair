@@ -24,13 +24,15 @@ class ReportsController extends ValueNotifier<StateApp> {
 
   ReportsController(super.value, this._reportsRepository);
 
-  Future findPercentageClients(int? codeProvider) async {
+  Future findPercentageClients(int? codeProvider, int? accessTargeting) async {
     statePercentageClients.value = StateApp.loading;
     try {
-      List<PercentageClientsModel> percentage = await _reportsRepository.getPercentageClients(codeProvider);
-      List<PercentageClientsModel> percentageP = await _reportsRepository.getPercentageProviders();
+      List<PercentageClientsModel> percentage = await _reportsRepository.getPercentageClients(codeProvider, accessTargeting);
+      if (accessTargeting == 1 || accessTargeting == 3) {
+        List<PercentageClientsModel> percentageP = await _reportsRepository.getPercentageProviders();
+        percentageProviders = percentageP[0];
+      }
       percentageClients = percentage[0];
-      percentageProviders = percentageP[0];
       statePercentageClients.value = StateApp.success;
     } catch (e) {
       print("Error Controller List Attractions: $e");
@@ -38,10 +40,10 @@ class ReportsController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future findTotalValueClients(int? codeProvider) async {
+  Future findTotalValueClients(int? codeProvider, int? accessTargeting) async {
     stateReports.value = StateApp.loading;
     try {
-      reportsTotalClient = await _reportsRepository.getTotalValueClients(codeProvider);
+      reportsTotalClient = await _reportsRepository.getTotalValueClients(codeProvider, accessTargeting);
 
       stateReports.value = StateApp.success;
     } catch (e) {
@@ -50,13 +52,13 @@ class ReportsController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future findTotalValueProducts(int? codeProvider) async {
+  Future findTotalValueProducts(int? codeProvider, int accessTargeting) async {
     stateReportsProducts.value = StateApp.loading;
     try {
-      if (codeProvider == 0) {
-        reportsTotalProvider = await _reportsRepository.getTotalValueProducts(codeProvider);
+      if (accessTargeting == 3) {
+        reportsTotalProvider = await _reportsRepository.getTotalValueProducts(codeProvider, accessTargeting);
       } else {
-        reportsTotalProducts = await _reportsRepository.getTotalValueProducts(codeProvider);
+        reportsTotalProducts = await _reportsRepository.getTotalValueProducts(codeProvider, accessTargeting);
         inspect(reportsTotalProducts);
       }
 

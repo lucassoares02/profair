@@ -12,9 +12,6 @@ class RequestsStoresRepository {
         response = await clientDio.get("${url}allrequestclients");
       } else if (codeProvider == 0 && userCode != 0) {
         response = await clientDio.get("${url}stores/$userCode");
-        print("Passando pelo request ");
-        print(response);
-        print("Passando pelo request ");
       } else {
         response = await clientDio.get("${url}requestsprovider/$codeProvider");
       }

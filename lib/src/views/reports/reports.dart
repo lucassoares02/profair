@@ -7,9 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class Reports extends StatefulWidget {
-  Reports({super.key, required this.codeProvider});
+  Reports({super.key, required this.codeProvider, required this.accessTargeting});
 
   int? codeProvider;
+  int? accessTargeting;
 
   @override
   State<Reports> createState() => _ReportsState();
@@ -20,9 +21,9 @@ class _ReportsState extends State<Reports> {
 
   @override
   void initState() {
-    reportsController.findPercentageClients(widget.codeProvider);
-    reportsController.findTotalValueClients(widget.codeProvider);
-    reportsController.findTotalValueProducts(widget.codeProvider);
+    reportsController.findPercentageClients(widget.codeProvider, widget.accessTargeting);
+    reportsController.findTotalValueClients(widget.codeProvider, widget.accessTargeting);
+    reportsController.findTotalValueProducts(widget.codeProvider, widget.accessTargeting!);
     super.initState();
   }
 
@@ -39,6 +40,7 @@ class _ReportsState extends State<Reports> {
                 return ComponentList(
                   reportsController: reportsController,
                   codeProvider: widget.codeProvider,
+                  accessTargeting: widget.accessTargeting,
                 );
               },
             ),

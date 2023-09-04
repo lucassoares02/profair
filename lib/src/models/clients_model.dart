@@ -10,6 +10,8 @@ class ClientsModel {
   ClientsModel({this.relationshipCode, this.nameUser, this.nameCompany, this.codeBranch, this.documentCompany, this.totalValue, this.totalVolume});
 
   ClientsModel.fromJson(Map<String, dynamic> json) {
+    print("Clients Model");
+    print(json);
     // codeBranch = json['codAssocRelaciona'];
     codeBranch = json['codAssociado'];
     nameUser = json['nomeConsult'];

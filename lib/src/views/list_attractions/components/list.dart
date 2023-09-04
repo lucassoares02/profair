@@ -32,42 +32,66 @@ class _ComponentListState extends State<ComponentList> {
       component: Column(
         children: [
           HeaderList(label: S.of(context).text_schedule, activeSearch: false),
-          // Container(
-          //   padding: const EdgeInsets.all(appPadding),
-          //   decoration: const BoxDecoration(color: colorPrimary),
-          //   child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          //     Container(
-          //       padding: const EdgeInsets.all(appMargin),
-          //       height: 100,
-          //       width: 100,
-          //       decoration: const BoxDecoration(
-          //         color: colorSecondary,
-          //         borderRadius: BorderRadius.all(
-          //           Radius.circular(appRadius),
-          //         ),
-          //       ),
-          //       child: const Text("Dia 1"),
-          //     ),
-          //     const AppSpacing(),
-          //     Container(
-          //       padding: const EdgeInsets.all(appMargin),
-          //       height: 100,
-          //       width: 100,
-          //       decoration: const BoxDecoration(
-          //         color: colorSecondary,
-          //         borderRadius: BorderRadius.all(
-          //           Radius.circular(appRadius),
-          //         ),
-          //       ),
-          //       child: const Text("Dia 2"),
-          //     ),
-          //   ]),
-          // ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding * 3),
+            child: Flex(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                // Container(
+                //   padding: const EdgeInsets.all(appMargin),
+                //   height: 100,
+                //   width: 100,
+                //   decoration: const BoxDecoration(
+                //     color: colorSecondary,
+                //     borderRadius: BorderRadius.all(
+                //       Radius.circular(appRadius),
+                //     ),
+                //   ),
+                //   child: const Text("Dia 1"),
+                // ),
+                // const AppSpacing(),
+                // Container(
+                //   padding: const EdgeInsets.all(appMargin),
+                //   height: 100,
+                //   width: 100,
+                //   decoration: const BoxDecoration(
+                //     color: colorSecondary,
+                //     borderRadius: BorderRadius.all(
+                //       Radius.circular(appRadius),
+                //     ),
+                //   ),
+                //   child: const Text("Dia 2"),
+                // ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    Text(
+                      "Seja bem vindo!",
+                      style: TextStyle(fontSize: 16, color: colorGreyDark),
+                    ),
+                    Text(
+                      "Programação da feira Multishow!",
+                      style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           Column(
               children: widget.listItems.asMap().entries.map((e) {
             return InkWell(
               onTap: () {
-                Navigator.of(context).pushNamed("/detailsattraction");
+                Navigator.of(context).pushNamed(
+                  "/detailsattraction",
+                  arguments: {
+                    "title": e.value.title,
+                    "content": e.value.content,
+                    "hour": e.value.hour,
+                    "image": e.value.image,
+                  },
+                );
               },
               child: Container(
                 width: width,
@@ -119,16 +143,16 @@ class _ComponentListState extends State<ComponentList> {
                             ),
                           ),
                         ),
-                        Text(e.value.title!.length < 40 ? '${e.value.title}' : e.value.title!.substring(0, 35),
+                        Text(e.value.title!.length < 36 ? '${e.value.title}' : e.value.title!.substring(0, 35),
                             style: (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) == DateTime.now().hour ||
                                     (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) < DateTime.now().hour &&
                                         int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!.substring(0, 2)) > DateTime.now().hour))
-                                ? const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: colorSecondary)
-                                : const TextStyle(fontSize: 12)),
+                                ? const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorSecondary)
+                                : const TextStyle(fontSize: 14)),
                         const SizedBox(height: 5),
                         Text(
                           "${e.value.hour!} - ${e.value.content!.substring(0, 30)}",
-                          style: const TextStyle(color: colorGreyDark, fontSize: 12),
+                          style: const TextStyle(color: colorGreyDark, fontSize: 14),
                         ),
                       ],
                     ),

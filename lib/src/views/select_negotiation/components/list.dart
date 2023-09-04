@@ -8,8 +8,20 @@ import 'package:profair/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/clients_select_stores_model.dart';
+
 class ComponentList extends StatefulWidget {
-  ComponentList({super.key, required this.listItems, this.description, this.codeBranch, this.codeProvider, this.codeClient, this.nameBranch, required this.state});
+  ComponentList({
+    super.key,
+    required this.listItems,
+    this.description,
+    this.codeBranch,
+    this.codeProvider,
+    this.codeClient,
+    this.nameBranch,
+    required this.state,
+    required this.listBranchs,
+  });
 
   List<NegotiationModel> listItems;
   final String? description;
@@ -18,6 +30,7 @@ class ComponentList extends StatefulWidget {
   final String? nameBranch;
   final int? codeProvider;
   final int? codeClient;
+  final List<ClientsSelectStoreModel>? listBranchs;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -50,6 +63,7 @@ class _ComponentListState extends State<ComponentList> {
                   "codeClient": widget.codeClient,
                   "codeTrading": e.value.negotiation,
                   "tradings": widget.listItems,
+                  "listBranchs": widget.listBranchs,
                 });
               },
               child: Container(

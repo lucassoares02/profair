@@ -1,8 +1,11 @@
+import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/repositories/finish_trading_repository.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
+
+import '../models/clients_select_stores_model.dart';
 
 class FinishTradingController extends ValueNotifier<StateApp> {
   final stateFinishTrading = ValueNotifier<StateApp>(StateApp.start);
@@ -16,13 +19,22 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   double totalValue = 0.0;
   int totalVolume = 0;
   int totalChecked = 0;
+  int totalCheckedBranch = 0;
 
-  Future sendOrder(List<ProductModel> products, List<NegotiationModel> tradings, int? codeBranch, int? codeProvider, int? codeClient) async {
+  Future sendOrder(List<ProductModel> products, List<NegotiationModel> tradings, int? codeBranch, int? codeProvider, int? codeClient,
+      List<ClientsSelectStoreModel> listBranchs) async {
     stateFinishTrading.value = StateApp.loading;
     try {
-      await _negotiationsRepository.postTrading(products: products, tradings: tradings, codeBranch: codeBranch, codeProvider: codeProvider, codeClient: codeClient);
+      await _negotiationsRepository.postTrading(
+        products: products,
+        tradings: tradings,
+        codeBranch: codeBranch,
+        codeProvider: codeProvider,
+        codeClient: codeClient,
+        listBranchs: listBranchs,
+      );
     } catch (e) {
-      print("Error save order: ====> $e");
+      print("Error save order: $e");
       stateFinishTrading.value = StateApp.error;
     }
     stateFinishTrading.value = StateApp.success;
@@ -32,10 +44,23 @@ class FinishTradingController extends ValueNotifier<StateApp> {
     stateTradings.value = !stateTradings.value;
   }
 
-  checkListItems(List<ProductModel> listItems, List<NegotiationModel> tradings) {
+  notifyValueTradings(AppWrite appWrite) async {
+    try {
+      await appWrite.updateDocuments(collectionId: "64f3970485c4cdaaac64", data: {"update": "12333"}, documentId: "64f398bfe091a9995b1f");
+    } catch (e) {
+      print("$e");
+    }
+  }
+
+  checkListItems(List<ProductModel> listItems, List<NegotiationModel> tradings, List<ClientsSelectStoreModel>? listBranchs) {
     for (int i = 0; i < tradings.length; i++) {
       if (tradings[i].checked!) {
         totalChecked += 1;
+      }
+    }
+    for (int i = 0; i < listBranchs!.length; i++) {
+      if (listBranchs[i].checked!) {
+        totalCheckedBranch += 1;
       }
     }
     stateCheckList.value = StateApp.loading;

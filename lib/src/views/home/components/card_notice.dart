@@ -47,31 +47,34 @@ class _CardNoticeState extends State<CardNotice> {
             //   fit: BoxFit.contain,
             //   'assets/images/logo-client.png',
             // ),
-            Container(
-              width: 100,
-              padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: 5),
-              decoration: const BoxDecoration(
-                color: colorRed,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-              ),
-              child: Row(
-                children: const [
-                  Icon(
-                    Icons.event,
-                    size: 18,
-                    color: colorWhite,
-                  ),
-                  SizedBox(width: 5),
-                  Text(
-                    "Evento",
-                    style: TextStyle(
-                      color: colorWhite,
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: Color(int.parse(widget.homeController.documents!.documents.first.data["colorStamp"])),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(20),
                     ),
                   ),
-                ],
-              ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.event,
+                        size: 18,
+                        color: colorWhite,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        widget.homeController.documents!.documents.first.data["stamp"],
+                        style: const TextStyle(
+                          color: colorWhite,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,16 +85,16 @@ class _CardNoticeState extends State<CardNotice> {
                   children: [
                     Text(
                       widget.homeController.documents!.documents.first.data["title"],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 26,
                         color: colorBlack,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    AppSpacing(),
+                    const AppSpacing(),
                     Text(
                       widget.homeController.documents!.documents.first.data["content"],
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 16,
                         color: colorWhite,
                       ),

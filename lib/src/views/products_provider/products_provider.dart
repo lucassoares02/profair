@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProductsProvider extends StatefulWidget {
-  const ProductsProvider({super.key, required this.codeProvider});
+  const ProductsProvider({super.key, required this.codeProvider, this.codeClient});
 
   final int? codeProvider;
+  final int? codeClient;
 
   @override
   State<ProductsProvider> createState() => _ProductsProviderState();
@@ -21,7 +22,7 @@ class _ProductsProviderState extends State<ProductsProvider> {
 
   @override
   void initState() {
-    productsProviderController.findProductsProvider(widget.codeProvider.toString());
+    productsProviderController.findProductsProvider(widget.codeProvider, widget.codeClient);
     super.initState();
   }
 

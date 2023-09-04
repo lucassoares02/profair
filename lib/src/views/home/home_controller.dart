@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/login_model.dart';
@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeController extends ValueNotifier<StateApp> {
+  HomeController(super.value, this._homeRepository);
+
   List<CategoriesIcon> categories = [];
   List<NoticeModel> notices = [];
   List<RequestsStoresModel> requestStores = [];
@@ -21,27 +23,35 @@ class HomeController extends ValueNotifier<StateApp> {
   List<RecipeModel> stores = [];
   List<BuyersModel> buyers = [];
   LoginModel? data;
+  DocumentList? alerts;
+
   final stateCategories = ValueNotifier<StateApp>(StateApp.start);
   final stateBuyers = ValueNotifier<StateApp>(StateApp.start);
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
   final stateData = ValueNotifier<StateApp>(StateApp.start);
-  final stateNotices = ValueNotifier<StateApp>(StateApp.start);
+  final stateAlert = ValueNotifier<StateApp>(StateApp.start);
   final stateNoticesAppWrite = ValueNotifier<StateApp>(StateApp.start);
   final stateShared = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestsStore = ValueNotifier<StateApp>(StateApp.start);
+
   final HomeRepository _homeRepository;
   DocumentList? documents;
-
-  HomeController(super.value, this._homeRepository);
 
   Future<LoginModel?> findData() async {
     stateData.value = StateApp.loading;
     try {
       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       final code = sharedPreferences.getString("codacesso");
+
       data = await _homeRepository.getData({"codacesso": code});
-      inspect(data);
-      await findLastTradings(data!.codCompany);
+
+      int codeRequest = 0;
+      if (data!.accessTargeting == 1) {
+        codeRequest = data!.codCompany!;
+      } else if (data!.accessTargeting == 2) {
+        codeRequest = data!.userCode!;
+      }
+      await findLastTradings(codeRequest, data!.accessTargeting);
       getCategories();
       if (data!.accessTargeting == 3) {
         findBuyers();
@@ -53,10 +63,18 @@ class HomeController extends ValueNotifier<StateApp> {
     return null;
   }
 
+  Future logout() async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.clear();
+    return;
+  }
+
   Future<LoginModel?> findClient(String id) async {
     stateStore.value = StateApp.loading;
     try {
-      return await _homeRepository.getClient(id);
+      LoginModel? response = await _homeRepository.getClient(id);
+      stateStore.value = StateApp.success;
+      return response;
     } catch (e) {
       stateStore.value = StateApp.error;
     }
@@ -84,15 +102,15 @@ class HomeController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future findNotices() async {
-    stateNotices.value = StateApp.loading;
-    try {
-      notices = await _homeRepository.getNotices();
-      stateNotices.value = StateApp.success;
-    } catch (e) {
-      stateNotices.value = StateApp.error;
-    }
-  }
+  // Future findNotices() async {
+  //   stateNotices.value = StateApp.loading;
+  //   try {
+  //     notices = await _homeRepository.getNotices();
+  //     stateNotices.value = StateApp.success;
+  //   } catch (e) {
+  //     stateNotices.value = StateApp.error;
+  //   }
+  // }
 
   Future getShared() async {
     stateShared.value = StateApp.loading;
@@ -104,10 +122,10 @@ class HomeController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future findLastTradings(int? codeProvider) async {
+  Future findLastTradings(int? codeProvider, int? accessTargeting) async {
     stateRequestsStore.value = StateApp.loading;
     try {
-      requestStores = await _homeRepository.getLastTradings(codeProvider);
+      requestStores = await _homeRepository.getLastTradings(codeProvider, accessTargeting!);
     } catch (e) {
       stateRequestsStore.value = StateApp.error;
     }
@@ -117,7 +135,7 @@ class HomeController extends ValueNotifier<StateApp> {
   findDoc(AppWrite appWriteSend) async {
     stateNoticesAppWrite.value = StateApp.loading;
     try {
-      documents = await appWriteSend.listDocumentsApp();
+      documents = await appWriteSend.getDocuments("64e4fd339e70e9e3f1ca", []);
 
       stateNoticesAppWrite.value = StateApp.success;
     } catch (e) {
@@ -126,19 +144,54 @@ class HomeController extends ValueNotifier<StateApp> {
     }
   }
 
+  Future findAlert(AppWrite appWriteSend) async {
+    try {
+      alerts = await appWriteSend.getDocuments("64ea1ced75f87c91474e", [Query.orderDesc("priority")]);
+
+      stateAlert.value = StateApp.loading;
+      stateAlert.value = StateApp.success;
+    } catch (e) {
+      stateAlert.value = StateApp.error;
+    }
+  }
+
+  Future findAlertCurrentTime(AppWrite appWriteSend) async {
+    try {
+      alerts = await appWriteSend.getDocuments("64ea1ced75f87c91474e", [Query.orderDesc("priority")]);
+
+      stateAlert.value = StateApp.loading;
+      stateAlert.value = StateApp.success;
+    } catch (e) {
+      stateAlert.value = StateApp.error;
+    }
+  }
+
   Future getNoticeAppWrite(AppWrite appWriteSend) async {
     stateNoticesAppWrite.value = StateApp.loading;
     try {
       final subscription = await appWriteSend.listDocumentsRealTime();
       subscription.stream.listen((response) {
+        if (response.channels[1].toString().contains("64ea1ced75f87c91474e")) {
+          final indexAlerts = alerts!.documents.indexWhere((item) => (item.$id).toString() == response.payload["\$id"].toString());
+          if (indexAlerts != -1) {
+            findAlertCurrentTime(appWriteSend);
+            // stateAlert.value = StateApp.loading;
+            // alerts!.documents[indexAlerts].data["title"] = response.payload["title"];
+            // alerts!.documents[indexAlerts].data["time"] = response.payload["time"];
+            // alerts!.documents[indexAlerts].data["description"] = response.payload["description"];
+            // alerts!.documents[indexAlerts].data["priority"] = response.payload["priority"];
+            // stateAlert.value = StateApp.success;
+          }
+        }
+
         final index = documents!.documents.indexWhere((item) => (item.$id).toString() == response.payload["\$id"].toString());
         if (index != -1) {
           stateNoticesAppWrite.value = StateApp.loading;
-          print(response.payload);
-          inspect(response);
           documents!.documents[index].data["title"] = response.payload["title"];
           documents!.documents[index].data["content"] = response.payload["content"];
           documents!.documents[index].data["color"] = response.payload["color"];
+          documents!.documents[index].data["stamp"] = response.payload["stamp"];
+          documents!.documents[index].data["colorStamp"] = response.payload["colorStamp"];
           stateNoticesAppWrite.value = StateApp.success;
         }
       });

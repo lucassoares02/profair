@@ -5,11 +5,15 @@ class ProductsProviderRepository {
   final Dio clientDio = Dio();
   final String url = "https://seller-backend.onrender.com/";
 
-  getProductsProvider(String? codeProvider) async {
-    final response = await clientDio.get("${url}merchandiseprovider/$codeProvider");
+  getProductsProvider(int? codeProvider, int? codeClient) async {
+    Response response;
     try {
+      if (codeClient != 0) {
+        response = await clientDio.get("${url}merchandisepercustomer/$codeClient/$codeProvider");
+      } else {
+        response = await clientDio.get("${url}merchandiseprovider/$codeProvider");
+      }
       List list = response.data as List;
-
       return list.map((json) => ProductsProviderModel.fromJson(json)).toList();
     } catch (e) {
       print("Error return Stores Model Mapper: $e");

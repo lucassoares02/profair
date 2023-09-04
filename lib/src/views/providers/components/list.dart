@@ -60,23 +60,32 @@ class _ComponentListState extends State<ComponentList> {
                   return InkWell(
                     onTap: () {
                       dynamic data;
+                      print("widget.codeProvider");
+                      print(widget.codeProvider);
+                      print(e.codeProvider);
+                      print("widget.codeClient");
+                      print(widget.codeClient);
+                      print("widget.codeBranch");
+                      print(widget.codeBranch);
+                      print("widget.codeProvider");
                       if (widget.codeBranch != 0) {
-                        data = {
-                          "codeBranch": widget.codeBranch,
-                          "codeClient": widget.codeClient,
-                          "codeProvider": e.codeProvider,
-                        };
+                        Navigator.of(context).pushNamed(
+                          "productsprovider",
+                          arguments: {
+                            "codeClient": widget.codeClient,
+                            "codeProvider": e.codeProvider,
+                          },
+                        );
                       } else {
-                        data = {
-                          "codeBranch": widget.codeClient,
-                          "codeClient": 0,
-                          "codeProvider": e.codeProvider,
-                        };
+                        Navigator.of(context).pushNamed(
+                          "selectnegotiation",
+                          arguments: {
+                            "codeBranch": widget.codeClient,
+                            "codeClient": 0,
+                            "codeProvider": e.codeProvider,
+                          },
+                        );
                       }
-                      Navigator.of(context).pushNamed(
-                        "selectnegotiation",
-                        arguments: data,
-                      );
                     },
                     child: Container(
                       width: width,

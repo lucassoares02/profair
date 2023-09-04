@@ -70,70 +70,70 @@ class S {
     );
   }
 
-  /// `Password`
+  /// `Senha`
   String get text_password {
     return Intl.message(
-      'Password',
+      'Senha',
       name: 'text_password',
       desc: '',
       args: [],
     );
   }
 
-  /// `Not have an account?`
+  /// `Nâo possuí conta?`
   String get text_not_have_account {
     return Intl.message(
-      'Not have an account?',
+      'Nâo possuí conta?',
       name: 'text_not_have_account',
       desc: '',
       args: [],
     );
   }
 
-  /// `Register`
+  /// `Registro`
   String get text_register {
     return Intl.message(
-      'Register',
+      'Registro',
       name: 'text_register',
       desc: '',
       args: [],
     );
   }
 
-  /// `By clicking above you accept the`
+  /// `Ao clicar acima você aceita os`
   String get text_clicking_above {
     return Intl.message(
-      'By clicking above you accept the',
+      'Ao clicar acima você aceita os',
       name: 'text_clicking_above',
       desc: '',
       args: [],
     );
   }
 
-  /// `terms and conditions.`
+  /// `termos e condições.`
   String get text_terms_conditions {
     return Intl.message(
-      'terms and conditions.',
+      'termos e condições.',
       name: 'text_terms_conditions',
       desc: '',
       args: [],
     );
   }
 
-  /// `Welcome`
+  /// `Bem vindo`
   String get text_welcome {
     return Intl.message(
-      'Welcome',
+      'Bem vindo',
       name: 'text_welcome',
       desc: '',
       args: [],
     );
   }
 
-  /// `Balance`
+  /// `Saldo`
   String get text_balance {
     return Intl.message(
-      'Balance',
+      'Saldo',
       name: 'text_balance',
       desc: '',
       args: [],
@@ -150,150 +150,150 @@ class S {
     );
   }
 
-  /// `Shared`
+  /// `Compartilhado`
   String get text_shared {
     return Intl.message(
-      'Shared',
+      'Compartilhado',
       name: 'text_shared',
       desc: '',
       args: [],
     );
   }
 
-  /// `Scan QrCode`
+  /// `Scaneie QrCode`
   String get text_scanner {
     return Intl.message(
-      'Scan QrCode',
+      'Scaneie QrCode',
       name: 'text_scanner',
       desc: '',
       args: [],
     );
   }
 
-  /// `Notifications`
+  /// `Notificações`
   String get text_notifications {
     return Intl.message(
-      'Notifications',
+      'Notificações',
       name: 'text_notifications',
       desc: '',
       args: [],
     );
   }
 
-  /// `Last Orders`
+  /// `Últimas pedidos`
   String get text_last_orders {
     return Intl.message(
-      'Last Orders',
+      'Últimas pedidos',
       name: 'text_last_orders',
       desc: '',
       args: [],
     );
   }
 
-  /// `Select the branch`
+  /// `Selecione a loja`
   String get text_select_branch {
     return Intl.message(
-      'Select the branch',
+      'Selecione a loja',
       name: 'text_select_branch',
       desc: '',
       args: [],
     );
   }
 
-  /// `Providers`
+  /// `Fornecedores`
   String get text_select_provider {
     return Intl.message(
-      'Providers',
+      'Fornecedores',
       name: 'text_select_provider',
       desc: '',
       args: [],
     );
   }
 
-  /// `Tradings`
+  /// `Negociações`
   String get text_trading {
     return Intl.message(
-      'Tradings',
+      'Negociações',
       name: 'text_trading',
       desc: '',
       args: [],
     );
   }
 
-  /// `Stores`
+  /// `Lojas`
   String get text_store {
     return Intl.message(
-      'Stores',
+      'Lojas',
       name: 'text_store',
       desc: '',
       args: [],
     );
   }
 
-  /// `Products`
+  /// `Produtos`
   String get text_products {
     return Intl.message(
-      'Products',
+      'Produtos',
       name: 'text_products',
       desc: '',
       args: [],
     );
   }
 
-  /// `Orders placed`
+  /// `Pedidos Realizados`
   String get text_orders_placed {
     return Intl.message(
-      'Orders placed',
+      'Pedidos Realizados',
       name: 'text_orders_placed',
       desc: '',
       args: [],
     );
   }
 
-  /// `Search`
+  /// `Pesquisar`
   String get text_search {
     return Intl.message(
-      'Search',
+      'Pesquisar',
       name: 'text_search',
       desc: '',
       args: [],
     );
   }
 
-  /// `Fair Schedule`
+  /// `Programação`
   String get text_schedule {
     return Intl.message(
-      'Fair Schedule',
+      'Programação',
       name: 'text_schedule',
       desc: '',
       args: [],
     );
   }
 
-  /// `Avaiable products`
+  /// `Produtos disponíveis`
   String get text_avaiable_products {
     return Intl.message(
-      'Avaiable products',
+      'Produtos disponíveis',
       name: 'text_avaiable_products',
       desc: '',
       args: [],
     );
   }
 
-  /// `Customers`
+  /// `Clientes`
   String get text_customers {
     return Intl.message(
-      'Customers',
+      'Clientes',
       name: 'text_customers',
       desc: '',
       args: [],
     );
   }
 
-  /// `Requesting Clients`
+  /// `Pedidos de clientes`
   String get text_requesting_customers {
     return Intl.message(
-      'Requesting Clients',
+      'Pedidos de clientes',
       name: 'text_requesting_customers',
       desc: '',
       args: [],

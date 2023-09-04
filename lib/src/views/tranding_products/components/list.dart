@@ -13,19 +13,23 @@ import 'package:profair/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../../../models/clients_select_stores_model.dart';
+
 class ComponentList extends StatefulWidget {
-  const ComponentList(
-      {super.key,
-      required this.listItems,
-      this.description,
-      required this.state,
-      required this.codeProvider,
-      required this.codeBranch,
-      required this.nameBranch,
-      required this.codeTrading,
-      required this.codeClient,
-      required this.tradingProductsController,
-      required this.tradings});
+  const ComponentList({
+    super.key,
+    required this.listItems,
+    this.description,
+    required this.state,
+    required this.codeProvider,
+    required this.codeBranch,
+    required this.nameBranch,
+    required this.codeTrading,
+    required this.codeClient,
+    required this.tradingProductsController,
+    required this.tradings,
+    required this.listBranchs,
+  });
 
   final List<ProductModel> listItems;
   final String? description;
@@ -37,6 +41,7 @@ class ComponentList extends StatefulWidget {
   final int? codeClient;
   final int? codeTrading;
   final List<NegotiationModel> tradings;
+  final List<ClientsSelectStoreModel>? listBranchs;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -69,42 +74,44 @@ class _ComponentListState extends State<ComponentList> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const AppSpacing(),
-                Container(
-                  width: width,
-                  padding: const EdgeInsets.symmetric(vertical: appMargin / 2, horizontal: appPadding),
-                  decoration: const BoxDecoration(
-                    color: colorSecondary,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(appRadius),
+                if (widget.codeBranch != 0) const AppSpacing(),
+                if (widget.codeBranch != 0)
+                  Container(
+                    width: width,
+                    padding: const EdgeInsets.symmetric(vertical: appMargin / 2, horizontal: appPadding),
+                    decoration: const BoxDecoration(
+                      color: colorSecondary,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(appRadius),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Finalizar pedido",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorWhite),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pushNamed('finishtrading', arguments: {
+                                "codeProvider": widget.codeProvider,
+                                "codeBranch": widget.codeBranch,
+                                "nameBranch": widget.nameBranch,
+                                "codeClient": widget.codeClient,
+                                "codeTrading": widget.codeTrading,
+                                "productsTrading": widget.tradingProductsController.productsTrading,
+                                "tradings": widget.tradings,
+                                "listBranchs": widget.listBranchs
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.login_rounded,
+                              color: colorWhite,
+                            )),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Finalizar pedido",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorWhite),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed('finishtrading', arguments: {
-                              "codeProvider": widget.codeProvider,
-                              "codeBranch": widget.codeBranch,
-                              "nameBranch": widget.nameBranch,
-                              "codeClient": widget.codeClient,
-                              "codeTrading": widget.codeTrading,
-                              "productsTrading": widget.tradingProductsController.productsTrading,
-                              "tradings": widget.tradings
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.login_rounded,
-                            color: colorWhite,
-                          )),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
@@ -112,8 +119,6 @@ class _ComponentListState extends State<ComponentList> {
               children: widget.listItems.asMap().entries.map((e) {
             return InkWell(
               onTap: () {
-                print("e.value.codeProduct");
-                print(e.value.codeProduct);
                 if (widget.codeBranch == 0) {
                   if (e.value.amount == "0") {
                     Fluttertoast.showToast(

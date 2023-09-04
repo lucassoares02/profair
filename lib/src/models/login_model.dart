@@ -12,6 +12,9 @@ class LoginModel {
   LoginModel({this.codAccess, this.accessTargeting, this.nameCompany, this.codCompany, this.document, this.userCode, this.nameUser, this.documentUser, this.valueOrder});
 
   LoginModel.fromJson(Map<String, dynamic> json) {
+    print("map login del");
+    print(json);
+    print("======");
     codAccess = json["codAcesso"];
     accessTargeting = json["direcAcesso"];
     nameCompany = json["nomeForn"];

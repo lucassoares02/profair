@@ -1,8 +1,6 @@
-import 'dart:developer';
-
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
-import 'package:profair/src/models/clients_model.dart';
+import 'package:profair/src/models/clients_select_stores_model.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/spacing.dart';
@@ -15,7 +13,7 @@ import 'package:flutter/material.dart';
 class ComponentList extends StatefulWidget {
   const ComponentList({super.key, this.description, required this.listItems, required this.state, required this.codeProvider, required this.client});
 
-  final List<ClientsModel> listItems;
+  final List<ClientsSelectStoreModel> listItems;
   final String? description;
   final ValueListenable state;
   final int? codeProvider;
@@ -87,16 +85,18 @@ class _ComponentListState extends State<ComponentList> {
             ),
           ),
           Column(
-              children: widget.listItems.map((e) {
+              children: widget.listItems.asMap().entries.map((e) {
             return InkWell(
               onTap: () {
+                widget.listItems[e.key].checked = true;
                 Navigator.of(context).pushNamed(
                   'selectnegotiation',
                   arguments: {
                     "codeProvider": widget.codeProvider,
-                    "nameBranch": e.nameCompany,
-                    "codeBranch": e.relationshipCode,
+                    "nameBranch": e.value.nameCompany,
+                    "codeBranch": e.value.relationshipCode,
                     "codeClient": widget.client!.userCode,
+                    "listBranchs": widget.listItems,
                   },
                 );
               },
@@ -116,11 +116,11 @@ class _ComponentListState extends State<ComponentList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          e.nameCompany!.length < 28 ? '${e.nameCompany}' : e.nameCompany!.substring(0, 25),
+                          e.value.nameCompany!.length < 28 ? '${e.value.nameCompany}' : e.value.nameCompany!.substring(0, 25),
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Text(
-                          '${e.documentCompany}',
+                          '${e.value.documentCompany}',
                           style: const TextStyle(color: colorGreyDark),
                         ),
                       ],

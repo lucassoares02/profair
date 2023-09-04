@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class DetailsAttractions extends StatefulWidget {
-  const DetailsAttractions({super.key});
+  DetailsAttractions({super.key, required this.title, required this.content, required this.hour, required this.image});
+
+  String title;
+  String content;
+  String hour;
+  String image;
 
   @override
   State<DetailsAttractions> createState() => _DetailsAttractionsState();
@@ -16,9 +21,14 @@ class _DetailsAttractionsState extends State<DetailsAttractions> {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: const SafeArea(
+        child: SafeArea(
           child: SingleChildScrollView(
-            child: ComponentDetails(),
+            child: ComponentDetails(
+              title: widget.title,
+              content: widget.content,
+              hour: widget.hour,
+              image: widget.image,
+            ),
           ),
         ),
       ),

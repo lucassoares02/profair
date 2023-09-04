@@ -3,12 +3,14 @@ class ListAttractionsModel {
   String? title;
   String? content;
   String? hour;
+  String? image;
 
   ListAttractionsModel({
     this.code,
     this.title,
     this.content,
     this.hour,
+    this.image,
   });
 
   ListAttractionsModel.fromJson(Map<String, dynamic> json) {
@@ -16,6 +18,7 @@ class ListAttractionsModel {
     title = json['title'];
     content = json['content'];
     hour = json['hour'];
+    image = json['image'];
   }
 
   Map<String, dynamic> toJson() {
@@ -24,6 +27,7 @@ class ListAttractionsModel {
     data['title'] = title;
     data['content'] = content;
     data['hour'] = hour;
+    data['image'] = image;
     return data;
   }
 }
