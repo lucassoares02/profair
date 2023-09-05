@@ -1,0 +1,8 @@
+workflows:
+  ios-method-1:
+    name: IOS signing method-1 workflow
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: br.com.profair.profair
+        
