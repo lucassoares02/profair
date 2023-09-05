@@ -1,5 +1,5 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:profair/provider/appwriter.dart';
@@ -36,29 +36,29 @@ class _LoginPageState extends State<LoginPage> {
 
   String codes = "";
 
-  scannerQrCode() async {
-    dynamic permission = await accessCamPermission();
-    if (permission == PermissionStatus.granted) {
-      String code = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666",
-        "Cancelar",
-        false,
-        ScanMode.DEFAULT,
-      );
+  // scannerQrCode() async {
+  //   dynamic permission = await accessCamPermission();
+  //   if (permission == PermissionStatus.granted) {
+  //     String code = await FlutterBarcodeScanner.scanBarcode(
+  //       "#ff6666",
+  //       "Cancelar",
+  //       false,
+  //       ScanMode.DEFAULT,
+  //     );
 
-      if (code != "-1") {
-        final data = {"codacesso": code};
-        try {
-          bool response = await loginController!.requestLogin(data);
+  //     if (code != "-1") {
+  //       final data = {"codacesso": code};
+  //       try {
+  //         bool response = await loginController!.requestLogin(data);
 
-          // navigatorRoutes(response);
-          loginFunc();
-        } catch (e) {
-          debugPrint('$e');
-        }
-      }
-    }
-  }
+  //         // navigatorRoutes(response);
+  //         loginFunc();
+  //       } catch (e) {
+  //         debugPrint('$e');
+  //       }
+  //     }
+  //   }
+  // }
 
   loginCode() async {
     final data = {"codacesso": codigo.text};
@@ -163,29 +163,29 @@ class _LoginPageState extends State<LoginPage> {
                     }),
                 const AppSpacing(),
                 const AppSpacing(),
-                ValueListenableBuilder(
-                  valueListenable: loginController!.stateLogin,
-                  builder: (context, value, child) {
-                    return ValueListenableBuilder(
-                        valueListenable: teste,
-                        builder: (context, values, child) {
-                          return values != ""
-                              ? Container()
-                              : AppButton(
-                                  onPressButton: () {
-                                    // loginFunc();
-                                    scannerQrCode();
-                                    // testteInter();
-                                  },
-                                  label: S.of(context).text_scanner,
-                                  colorButton: colorSecondary,
-                                  type: 'filled',
-                                  iconButton: FontAwesomeIcons.qrcode,
-                                  loading: value == StateApp.loading,
-                                );
-                        });
-                  },
-                ),
+                // ValueListenableBuilder(
+                //   valueListenable: loginController!.stateLogin,
+                //   builder: (context, value, child) {
+                //     return ValueListenableBuilder(
+                //         valueListenable: teste,
+                //         builder: (context, values, child) {
+                //           return values != ""
+                //               ? Container()
+                //               : AppButton(
+                //                   onPressButton: () {
+                //                     // loginFunc();
+                //                     scannerQrCode();
+                //                     // testteInter();
+                //                   },
+                //                   label: S.of(context).text_scanner,
+                //                   colorButton: colorSecondary,
+                //                   type: 'filled',
+                //                   iconButton: FontAwesomeIcons.qrcode,
+                //                   loading: value == StateApp.loading,
+                //                 );
+                //         });
+                //   },
+                // ),
               ],
             ),
             const AppSpacing(),

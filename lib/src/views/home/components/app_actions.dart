@@ -5,7 +5,7 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/utils/spacing.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:skeletons/skeletons.dart';
 import 'package:flutter/material.dart';
