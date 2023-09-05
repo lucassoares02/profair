@@ -1,46 +1,46 @@
 workflows:
-  ios-method-1:
-    name: IOS signing method-1 workflow
-    environment:
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: br.com.profair.profair
-    scripts:
-      - script: keychain initialize
-      - script: keychain add-certificates
+  # ios-method-1:
+  #   name: IOS signing method-1 workflow
+  #   environment:
+  #     ios_signing:
+  #       distribution_type: app_store
+  #       bundle_identifier: br.com.profair.profair
+  #   scripts:
+  #     - script: keychain initialize
+  #     - script: keychain add-certificates
 
-      - script: xcode-project use-profiles
-      - script: flutter packages pub get
-      - name: Flutter build ipa and automatic versioning
-        script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-    artifacts:
-      - build/ios/ipa/*.ipa
-    publishing:
-      email:
-        recipients:
-          - arbian.app@gmail.com
-  ios-method-2:
-    name: IOS signing method-2 workflow
-    environment:
-      ios_signing:
-        provisioning_profiles:
-          - profair_certificate
-        certificates:
-          - profair_certificate_distribution
-    scripts:
-      - script: keychain initialize
-      - script: keychain add-certificates
+  #     - script: xcode-project use-profiles
+  #     - script: flutter packages pub get
+  #     - name: Flutter build ipa and automatic versioning
+  #       script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+  #   artifacts:
+  #     - build/ios/ipa/*.ipa
+  #   publishing:
+  #     email:
+  #       recipients:
+  #         - arbian.app@gmail.com
+  # ios-method-2:
+  #   name: IOS signing method-2 workflow
+  #   environment:
+  #     ios_signing:
+  #       provisioning_profiles:
+  #         - profair_certificate
+  #       certificates:
+  #         - profair_certificate_distribution
+  #   scripts:
+  #     - script: keychain initialize
+  #     - script: keychain add-certificates
 
-      - script: xcode-project use-profiles
-      - script: flutter packages pub get
-      - name: Flutter build ipa and automatic versioning
-        script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-    artifacts:
-      - build/ios/ipa/*.ipa
-    publishing:
-      email:
-        recipients:
-          - arbian.app@gmail.com
+  #     - script: xcode-project use-profiles
+  #     - script: flutter packages pub get
+  #     - name: Flutter build ipa and automatic versioning
+  #       script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+  #   artifacts:
+  #     - build/ios/ipa/*.ipa
+  #   publishing:
+  #     email:
+  #       recipients:
+  #         - arbian.app@gmail.com
   app-store:
     name: Publishing to App Store workflow
     environment:
