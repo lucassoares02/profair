@@ -22,11 +22,6 @@ workflows:
       email:
         recipients:
           - arbian.app@gmail.com
-
-
-
-
-
   ios-method-2:
     name: IOS signing method-2 workflow
     environment:
@@ -49,7 +44,6 @@ workflows:
       app_store_connect:
         auth: integration
         submit_to_app_store: true
-
         release_type: SCHEDULED
         copyright: 2023 profair
       email:
