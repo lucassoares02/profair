@@ -50,7 +50,7 @@ workflows:
         certificates:
           - profair_certificate_distribution
     integrations:
-      app_store_connect: KJR4B9268R
+      app_store_connect: api key profair
     scripts:
       - script: xcode-project use-profiles
       - script: flutter packages pub get
