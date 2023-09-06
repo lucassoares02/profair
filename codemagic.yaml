@@ -50,7 +50,7 @@ workflows:
         certificates:
           - profair_certificate_distribution
     integrations:
-      app_store_connect: Codemagic API keychain
+      app_store_connect: Codemagic API Key
     scripts:
       - script: xcode-project use-profiles
       - script: flutter packages pub get
