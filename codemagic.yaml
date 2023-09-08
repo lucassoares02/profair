@@ -66,18 +66,18 @@ workflows:
         copyright: 2023 Profair
 
 
-  android:
-    name: Android workflow
-    environment:
-      android_signing:
-        - profair_keystore_android
-    scripts:
-      - name: Get Flutter packages
-        script: flutter packages pub Get
-      - name: Build apk
-        script: flutter build app --release
-      - name: Set up key properties
-        script: cat >> "CM_BUILD_DIR/android/key.properties" <<EOF storePassword=$CM_KEYSTORE_PASSWORD keyPassword=$CM_KEY_PASSWORD $keyAlias=$CM_KEY_ALIAS storeFile=$CM_KEYSTORE_PATH EOF
-    artifacts:
-      - build/**/outputs/apk/**/*.apk
-      - build/**/outputs/**/*.aab
+  # android:
+  #   name: Android workflow
+  #   environment:
+  #     android_signing:
+  #       - profair_keystore_android
+  #   scripts:
+  #     - name: Get Flutter packages
+  #       script: flutter packages pub Get
+  #     - name: Build apk
+  #       script: flutter build app --release
+  #     - name: Set up key properties
+  #       script: cat >> "CM_BUILD_DIR/android/key.properties" <<EOF storePassword=$CM_KEYSTORE_PASSWORD keyPassword=$CM_KEY_PASSWORD $keyAlias=$CM_KEY_ALIAS storeFile=$CM_KEYSTORE_PATH EOF
+  #   artifacts:
+  #     - build/**/outputs/apk/**/*.apk
+  #     - build/**/outputs/**/*.aab
