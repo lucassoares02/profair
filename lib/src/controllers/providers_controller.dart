@@ -27,6 +27,18 @@ class ProvidersController extends ValueNotifier<StateApp> {
     }
   }
 
+  Future findProvidersByGroup({int? codeClient}) async {
+    stateProviders.value = StateApp.loading;
+    try {
+      providersList = await _providersRepository.getProvidersByGroup(codeClient);
+      providers = providersList;
+
+      stateProviders.value = StateApp.success;
+    } catch (e) {
+      stateProviders.value = StateApp.error;
+    }
+  }
+
   search(String? value) async {
     stateSearchProviders.value = StateApp.loading;
     try {

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:profair/provider/appwriter.dart';
@@ -37,7 +36,7 @@ class HomeController extends ValueNotifier<StateApp> {
   final HomeRepository _homeRepository;
   DocumentList? documents;
 
-  Future<LoginModel?> findData() async {
+  Future<LoginModel?> findData(AppWrite appWriteSend) async {
     stateData.value = StateApp.loading;
     try {
       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
@@ -55,6 +54,10 @@ class HomeController extends ValueNotifier<StateApp> {
       getCategories();
       if (data!.accessTargeting == 3) {
         findBuyers();
+      }
+
+      if (data!.accessTargeting != null) {
+        findAlert(appWriteSend, data!.accessTargeting!);
       }
       stateData.value = StateApp.success;
     } catch (e) {
@@ -144,11 +147,14 @@ class HomeController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future findAlert(AppWrite appWriteSend) async {
+  Future findAlert(AppWrite appWriteSend, int accessTargeting) async {
+    stateAlert.value = StateApp.loading;
     try {
-      alerts = await appWriteSend.getDocuments("64ea1ced75f87c91474e", [Query.orderDesc("priority")]);
+      alerts = await appWriteSend.getDocuments("64ea1ced75f87c91474e", [
+        Query.orderDesc("priority"),
+        Query.equal("direction", [0, accessTargeting])
+      ]);
 
-      stateAlert.value = StateApp.loading;
       stateAlert.value = StateApp.success;
     } catch (e) {
       stateAlert.value = StateApp.error;

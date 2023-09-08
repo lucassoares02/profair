@@ -12,6 +12,7 @@ import 'package:profair/src/views/preorder/preorder.dart';
 import 'package:profair/src/views/products_provider/products_provider.dart';
 import 'package:profair/src/views/profile/profile.dart';
 import 'package:profair/src/views/providers/providers.dart';
+import 'package:profair/src/views/providers_by_group/providers_by_group.dart';
 import 'package:profair/src/views/reports/reports.dart';
 import 'package:profair/src/views/requests_stores/requests_stores.dart';
 import 'package:profair/src/views/select_negotiation/select_negotiation.dart';
@@ -61,6 +62,12 @@ class AppModule extends Module {
             codeClient: args.data["codeClient"],
             codeBranch: args.data["codeBranch"],
             codeBuyer: args.data["codeBuyer"],
+          ),
+        ),
+        ChildRoute(
+          '/providerbygroup',
+          child: (context, args) => ProvidersByGroup(
+            codeClient: args.data["codeClient"],
           ),
         ),
         ChildRoute('/tradings', child: (context, args) => Tradings(codeProvider: args.data)),

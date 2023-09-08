@@ -22,8 +22,6 @@ class FinishTradingRepository {
 
     try {
       for (int h = 0; h < listBranchs.length; h++) {
-        inspect(listBranchs[h]);
-        print(listBranchs[h].checked);
         if (listBranchs[h].checked!) {
           for (int i = 0; i < tradings.length; i++) {
             if (tradings[i].checked!) {
@@ -38,7 +36,7 @@ class FinishTradingRepository {
                     "codNegociacao": tradings[i].negotiation.toString(),
                     "codOrganizacao": "158"
                   };
-                  await clientDio.post("${url}insertrequest", data: data);
+                  final respnse = await clientDio.post("${url}insertrequest", data: data);
                 }
               }
             }

@@ -50,6 +50,7 @@ class _ClientsState extends State<Clients> {
                     codeProvider: widget.codeProvider,
                     listItems: clientsController.clientsList,
                     clientsController: clientsController,
+                    onClickCard: true,
                     accessTargenting: widget.accessTargenting!);
               },
             ),

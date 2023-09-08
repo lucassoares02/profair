@@ -9,7 +9,8 @@ class ProductsProviderRepository {
     Response response;
     try {
       if (codeClient != 0) {
-        response = await clientDio.get("${url}merchandisepercustomer/$codeClient/$codeProvider");
+        // response = await clientDio.get("${url}merchandisepercustomer/$codeClient/$codeProvider");
+        response = await clientDio.get("${url}merchandiseperclient/$codeClient/$codeProvider");
       } else {
         response = await clientDio.get("${url}merchandiseprovider/$codeProvider");
       }

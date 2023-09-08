@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/providers_controller.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -57,65 +58,129 @@ class _ComponentListState extends State<ComponentList> {
               builder: (context, value, child) {
                 return Column(
                     children: widget.providersController.providersList.map((e) {
-                  return InkWell(
-                    onTap: () {
-                      dynamic data;
-                      print("widget.codeProvider");
-                      print(widget.codeProvider);
-                      print(e.codeProvider);
-                      print("widget.codeClient");
-                      print(widget.codeClient);
-                      print("widget.codeBranch");
-                      print(widget.codeBranch);
-                      print("widget.codeProvider");
-                      if (widget.codeBranch != 0) {
-                        Navigator.of(context).pushNamed(
-                          "productsprovider",
-                          arguments: {
-                            "codeClient": widget.codeClient,
-                            "codeProvider": e.codeProvider,
-                          },
-                        );
-                      } else {
-                        Navigator.of(context).pushNamed(
-                          "selectnegotiation",
-                          arguments: {
-                            "codeBranch": widget.codeClient,
-                            "codeClient": 0,
-                            "codeProvider": e.codeProvider,
-                          },
-                        );
-                      }
-                    },
-                    child: Container(
-                      width: width,
-                      height: 90,
-                      padding: const EdgeInsets.all(appMargin),
-                      margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                      decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: colorGrey)),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            e.nameProvider!.length < 28 ? '${e.nameProvider}' : "${e.nameProvider!.substring(0, 25)}...",
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                          ),
-                          const SizedBox(height: appMargin),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                formatCurrency(e.totalValue!),
-                                style: const TextStyle(color: colorGreyDark),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                  return
+                      // InkWell(
+                      //   onTap: () {
+                      // dynamic data;
+                      // if (widget.codeBranch != 0) {
+                      //   Navigator.of(context).pushNamed(
+                      //     "productsprovider",
+                      //     arguments: {
+                      //       "codeClient": widget.codeBranch,
+                      //       "codeProvider": e.codeProvider,
+                      //     },
+                      //   );
+                      // } else {
+                      //   Navigator.of(context).pushNamed(
+                      //     "selectnegotiation",
+                      //     arguments: {
+                      //       "codeBranch": widget.codeClient,
+                      //       "codeClient": 0,
+                      //       "codeProvider": e.codeProvider,
+                      //     },
+                      //   );
+                      // }
+                      // },
+                      // child:
+
+                      Container(
+                    width: width,
+                    height: 90,
+                    padding: const EdgeInsets.symmetric(horizontal: appMargin),
+                    margin: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
+                    decoration: const BoxDecoration(
+                      border: Border(bottom: BorderSide(color: colorGreyLigth)),
                     ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 50,
+                          width: 50,
+                          decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(50)),
+                            color: colorPrimary,
+                          ),
+                          child: const Center(
+                              child: Icon(
+                            Icons.domain_rounded,
+                            color: colorWhite,
+                            size: 20,
+                          )),
+                        ),
+                        const AppSpacing(),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  e.nameProvider!.length < 35 ? '${e.nameProvider}' : "${e.nameProvider!.substring(0, 34)}...",
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    // const Icon(Icons.paid, color: colorPrimary, size: 20),
+                                    Text(
+                                      formatCurrency(e.totalValue!),
+                                      style: const TextStyle(color: colorGreyDark),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TextButton(
+                                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                                    onPressed: () {
+                                      Navigator.of(context).pushNamed(
+                                        "selectnegotiation",
+                                        // arguments: {
+                                        //   "codeBranch": widget.codeClient,
+                                        //   "codeClient": 0,
+                                        //   "codeProvider": e.codeProvider,
+                                        // },
+                                        arguments: {
+                                          "codeBranch": widget.codeBranch,
+                                          "codeClient": 0,
+                                          "codeProvider": e.codeProvider,
+                                        },
+                                      );
+                                    },
+                                    child: const Text(
+                                      "Negociações",
+                                      style: TextStyle(fontWeight: FontWeight.w600),
+                                    )),
+                                // if (widget.codeBranch != 0)
+                                const AppSpacing(),
+                                // if (widget.codeBranch != 0)
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pushNamed(
+                                      "productsprovider",
+                                      arguments: {
+                                        "codeClient": widget.codeBranch,
+                                        "codeProvider": e.codeProvider,
+                                      },
+                                    );
+                                  },
+                                  child: const Text(
+                                    "Mercadorias",
+                                    style: TextStyle(fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                    // ),
                   );
                 }).toList());
               })

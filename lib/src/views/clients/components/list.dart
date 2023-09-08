@@ -59,14 +59,16 @@ class _ComponentListState extends State<ComponentList> {
                   return InkWell(
                     onTap: () {
                       if (widget.onClickCard) {
+                        print("Passando por aqui");
                         if (e.totalValue != 0) {
                           print("widget.accessTargenting");
                           print(widget.accessTargenting);
                           if (widget.accessTargenting == 3 || widget.accessTargenting == 0) {
-                            // Navigator.of(context).pushNamed(
-                            //   "selectprovider",
-                            //   arguments: {"codeClient": 0, "codeBuyer": 0, "codeBranch": e.relationshipCode},
-                            // );
+                            print(e.relationshipCode);
+                            Navigator.of(context).pushNamed(
+                              "selectprovider",
+                              arguments: {"codeClient": 0, "codeBuyer": 0, "codeBranch": e.relationshipCode},
+                            );
                           } else {
                             Navigator.of(context).pushNamed(
                               "selectnegotiation",

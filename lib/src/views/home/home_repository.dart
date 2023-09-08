@@ -95,12 +95,19 @@ class HomeRepository {
           "icon": Icons.groups_2_sharp,
           "route": "clients",
         },
-      if (code == 3 || code == 2)
+      if (code == 3)
         {
           "id": 64,
           "title": 'Forne...',
           "icon": Icons.business_rounded,
           "route": "selectprovider",
+        },
+      if (code == 2)
+        {
+          "id": 64,
+          "title": 'Forne...',
+          "icon": Icons.business_rounded,
+          "route": "providerbygroup",
         },
       if (code == 1)
         {

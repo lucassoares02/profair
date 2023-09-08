@@ -66,7 +66,10 @@ class _CardWelcomeState extends State<CardWelcome> {
                                 ),
                                 Text(
                                   '${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany}',
-                                  style: const TextStyle(fontSize: 16, color: colorGreyDark),
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: colorGreyDark,
+                                  ),
                                 ),
                               ],
                             ),

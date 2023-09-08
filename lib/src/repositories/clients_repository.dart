@@ -9,10 +9,13 @@ class ClientsRepository {
     Response? response;
     try {
       if (merchandise != 0 && trading != 0) {
+        print("step 1");
         response = await clientDio.get("${url}clientmerchandisetrading/$merchandise/$trading");
       } else if (accessTargenting == 3) {
+        print("step 2");
         response = await clientDio.get("${url}stores");
       } else {
+        print("step 3");
         response = await clientDio.get("${url}storesbyprovider/$codeProvider");
       }
       List list = response.data as List;

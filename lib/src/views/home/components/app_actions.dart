@@ -47,9 +47,23 @@ class _AppActionsState extends State<AppActions> {
         "accessTargeting": widget.homeController.data!.accessTargeting,
         "codeProvider": widget.homeController.data!.accessTargeting == 2 ? widget.homeController.data!.userCode : widget.homeController.data!.codCompany
       });
+    } else if (route == "providerbygroup") {
+      navigatorRoutes(
+        route,
+        {
+          "codeClient": widget.homeController.data!.userCode,
+        },
+      );
     } else if (route == "selectprovider") {
       if (widget.homeController.data!.accessTargeting == 2) {
-        navigatorRoutes(route, {"codeClient": widget.homeController.data!.userCode, "codeBuyer": 0, "codeBranch": widget.homeController.data!.codCompany});
+        navigatorRoutes(
+          route,
+          {
+            "codeClient": widget.homeController.data!.userCode,
+            "codeBuyer": 0,
+            "codeBranch": widget.homeController.data!.codCompany,
+          },
+        );
       } else {
         navigatorRoutes(route, {"codeClient": 0, "codeBuyer": 0, "codeBranch": 0});
       }
@@ -185,6 +199,7 @@ class _AppActionsState extends State<AppActions> {
                           ),
                           Text(
                             '${widget.homeController.categories[index].title}',
+                            style: TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),

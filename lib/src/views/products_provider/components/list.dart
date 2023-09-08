@@ -1,4 +1,5 @@
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/products_provider.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -14,7 +15,7 @@ import 'package:flutter/material.dart';
 class ComponentList extends StatefulWidget {
   ComponentList({super.key, this.description, required this.listItems, required this.state, required this.codeProvider, required this.productsProviderController});
 
-  Iterable<ProductsProviderModel> listItems;
+  List<ProductsProviderModel> listItems;
   final String? description;
   final ValueListenable state;
   final int? codeProvider;
@@ -38,6 +39,9 @@ class _ComponentListState extends State<ComponentList> {
             icon: Icons.shopping_basket_rounded,
             onSearch: (String? value) {
               widget.productsProviderController.search(value);
+            },
+            onSort: () {
+              widget.productsProviderController.sort();
             },
             label: S.of(context).text_avaiable_products,
           ),
@@ -66,36 +70,89 @@ class _ComponentListState extends State<ComponentList> {
                     },
                     child: Container(
                       width: width,
-                      height: 90,
-                      padding: const EdgeInsets.all(appMargin),
+                      padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
                       margin: const EdgeInsets.symmetric(horizontal: appMargin),
                       decoration: const BoxDecoration(
                         border: Border(bottom: BorderSide(color: colorGrey)),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            e.nameProduct!.length < 35 ? '${e.nameProduct}' : "${e.nameProduct!.substring(0, 35)}...",
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          Row(
+                            children: [
+                              Container(
+                                width: 4,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  color: e.totalVolume != "0" ? colorSecondary : colorGreyLigth,
+                                  borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
+                                ),
+                              ),
+                              // Container(
+                              //   decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.all(Radius.circular(50))),
+                              //   width: 50,
+                              //   child: Image.network("https://gifs.eco.br/wp-content/uploads/2023/05/imagens-de-agua-mineral-png-0.png"),
+                              // ),
+                              const SizedBox(width: 10),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    // e.nameProduct!.length < 35 ? '${e.nameProduct}' : "${e.nameProduct!.substring(0, 35)}...",
+                                    "${e.nameProduct}",
+                                    style: const TextStyle(fontWeight: FontWeight.bold),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
+                                    "${e.packing!} | ${e.coefficient} | ${formatCurrency(e.unitPrice!)}",
+                                    style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                                  ),
+                                  // const SizedBox(height: 5),
+                                  // Text(
+                                  //   // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
+                                  //   formatCurrency(e.productPrice!),
+                                  //   style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                                  // ),
+                                ],
+                              ),
+                            ],
                           ),
-                          const SizedBox(height: appMargin),
+                          const AppSpacing(),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
-                                formatCurrency(e.productPrice!),
-                                style: const TextStyle(color: colorGreyDark),
+                                // '${e.totalVolume} | R\$ ${e.totalValue}',
+                                // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
+                                "${formatCurrency(e.productPrice!)} | ${e.totalVolume}",
+                                style: const TextStyle(fontWeight: FontWeight.w500),
                               ),
                               Text(
                                 // '${e.totalVolume} | R\$ ${e.totalValue}',
-                                '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
-                                style: TextStyle(color: (e.totalVolume != "0") ? colorGreyDark : colorGrey, fontWeight: FontWeight.bold),
+                                // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
+                                formatCurrency(e.totalValue!),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
                             ],
-                          ),
+                          )
+                          // Flexible(
+                          //   flex: 1,
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.end,
+                          //     children: [
+                          //       Text(
+                          //         // '${e.totalVolume} | R\$ ${e.totalValue}',
+                          //         // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
+                          //         formatCurrency(e.totalValue!),
+                          //         style: const TextStyle(fontWeight: FontWeight.bold),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),

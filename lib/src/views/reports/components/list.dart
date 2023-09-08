@@ -48,7 +48,7 @@ class _ComponentListState extends State<ComponentList> {
                         : CardPercentage(
                             title: widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "Clientes Atendidos" : "Fornecedores visitados",
                             content:
-                                "Nessa sessão é possível visualizar quantos ${widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes na feira",
+                                "Nessa sessão é possível visualizar quantos ${widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes no evento.",
                             value: "${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%",
                             footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
                             reportsController: widget.reportsController,
@@ -84,7 +84,6 @@ class _ComponentListState extends State<ComponentList> {
                 ),
               ),
               const AppSpacing(),
-
               ValueListenableBuilder(
                 valueListenable: widget.reportsController.stateReports,
                 builder: (context, value, child) {
@@ -97,7 +96,7 @@ class _ComponentListState extends State<ComponentList> {
                           ),
                         )
                       : Container(
-                          padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
+                          padding: const EdgeInsets.only(top: appPadding * 3),
                           height: 300,
                           decoration: const BoxDecoration(
                             color: colorGreyLigth,
@@ -108,28 +107,6 @@ class _ComponentListState extends State<ComponentList> {
                           child: BarChartTeste(reportsClients: widget.reportsController.reportsTotalClient));
                 },
               ),
-
-              // const AppSpacing(),
-              // const AppSpacing(),
-              // const AppSpacing(),
-              // const Text(
-              //   "Linha de horários",
-              //   style: TextStyle(
-              //     fontSize: 20,
-              //     fontWeight: FontWeight.bold,
-              //   ),
-              // ),
-              // const AppSpacing(),
-              // Container(
-              //   padding: EdgeInsets.all(appMargin),
-              //   decoration: const BoxDecoration(
-              //     color: colorGreyLigth,
-              //     borderRadius: BorderRadius.all(
-              //       Radius.circular(appRadius),
-              //     ),
-              //   ),
-              //   child: LineChartSample2(),
-              // ),
               const AppSpacing(),
               const AppSpacing(),
               const AppSpacing(),
@@ -142,7 +119,6 @@ class _ComponentListState extends State<ComponentList> {
                   ),
                 ),
               const AppSpacing(),
-
               if (widget.accessTargeting == 3 || widget.accessTargeting == 1)
                 (widget.accessTargeting == 3)
                     ? ValueListenableBuilder(
@@ -157,7 +133,7 @@ class _ComponentListState extends State<ComponentList> {
                                   ),
                                 )
                               : Container(
-                                  padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
+                                  padding: const EdgeInsets.only(top: appPadding * 3),
                                   height: 300,
                                   decoration: const BoxDecoration(
                                     color: colorGreyLigth,

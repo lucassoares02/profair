@@ -59,7 +59,7 @@ class ReportsController extends ValueNotifier<StateApp> {
         reportsTotalProvider = await _reportsRepository.getTotalValueProducts(codeProvider, accessTargeting);
       } else {
         reportsTotalProducts = await _reportsRepository.getTotalValueProducts(codeProvider, accessTargeting);
-        inspect(reportsTotalProducts);
+        reportsTotalProducts.sort(((a, b) => b.total!.compareTo(a.total!)));
       }
 
       stateReportsProducts.value = StateApp.success;

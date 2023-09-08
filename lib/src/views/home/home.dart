@@ -1,4 +1,5 @@
 import 'package:profair/provider/appwriter.dart';
+import 'package:profair/src/components/loading_notices.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
 import 'package:profair/src/views/home/components/card_count.dart';
@@ -26,21 +27,21 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeController homeController = HomeController(StateApp.start, HomeRepository());
+  AppWrite? appwrite;
 
   @override
   void initState() {
-    print("Passando por aqui");
-    homeController.findData();
+    appwrite = Provider.of<AppWrite>(context, listen: false);
+    homeController.findData(appwrite!);
     testeAppwrite();
 
     super.initState();
   }
 
-  testeAppwrite() {
-    AppWrite appwrite = Provider.of<AppWrite>(context, listen: false);
-    homeController.findDoc(appwrite);
-    homeController.getNoticeAppWrite(appwrite);
-    homeController.findAlert(appwrite);
+  testeAppwrite() async {
+    homeController.findDoc(appwrite!);
+    homeController.getNoticeAppWrite(appwrite!);
+    // homeController.findAlert(appwrite!);
   }
 
   @override
@@ -96,13 +97,15 @@ class _HomePageState extends State<HomePage> {
                 ValueListenableBuilder(
                   valueListenable: homeController.stateAlert,
                   builder: (context, value, child) {
-                    return Notices(
-                      listItems: homeController.alerts!,
-                      state: homeController.stateAlert,
-                      title: S.of(context).text_notifications,
-                      cardHeigth: 90,
-                      cardWidth: 340,
-                    );
+                    return value == StateApp.loading
+                        ? LoadingNotice(cardHeigth: 90, cardWidth: 340)
+                        : Notices(
+                            listItems: homeController.alerts!,
+                            state: homeController.stateAlert,
+                            title: S.of(context).text_notifications,
+                            cardHeigth: 90,
+                            cardWidth: 340,
+                          );
                   },
                 ),
                 const AppSpacing(),

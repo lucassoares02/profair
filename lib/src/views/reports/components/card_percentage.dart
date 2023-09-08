@@ -55,7 +55,7 @@ class _CardPercentageState extends State<CardPercentage> {
           if (widget.content != null)
             Text(
               "${widget.content}",
-              style: const TextStyle(fontSize: 12, color: colorGreyLigth),
+              style: const TextStyle(fontSize: 16, color: colorGreyLigth),
             ),
           const AppSpacing(),
           const AppSpacing(),

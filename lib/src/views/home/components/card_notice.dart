@@ -67,9 +67,7 @@ class _CardNoticeState extends State<CardNotice> {
                       const SizedBox(width: 5),
                       Text(
                         widget.homeController.documents!.documents.first.data["stamp"],
-                        style: const TextStyle(
-                          color: colorWhite,
-                        ),
+                        style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
@@ -94,10 +92,7 @@ class _CardNoticeState extends State<CardNotice> {
                     const AppSpacing(),
                     Text(
                       widget.homeController.documents!.documents.first.data["content"],
-                      style: const TextStyle(
-                        fontSize: 16,
-                        color: colorWhite,
-                      ),
+                      style: const TextStyle(fontSize: 16, color: colorWhite, fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
