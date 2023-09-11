@@ -50,7 +50,6 @@ class _TradingProductsState extends State<TradingProducts> {
             valueListenable: tradingProductsController.stateProductsTrading,
             builder: (context, value, child) {
               return ComponentList(
-                listItems: tradingProductsController.productsTrading,
                 state: tradingProductsController.stateProductsTrading,
                 description: S.of(context).text_select_branch,
                 tradingProductsController: tradingProductsController,

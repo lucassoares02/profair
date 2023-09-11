@@ -86,11 +86,11 @@ class _CategoriesState extends State<Categories> {
                               fontSize: 12,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
-                            '${widget.homeController.buyers[index].category}',
+                            '${widget.homeController.buyers[index].nameBuyer}',
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,

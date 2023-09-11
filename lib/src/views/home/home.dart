@@ -95,13 +95,12 @@ class _HomePageState extends State<HomePage> {
                               : Container();
                     }),
                 ValueListenableBuilder(
-                  valueListenable: homeController.stateAlert,
+                  valueListenable: homeController.stateData,
                   builder: (context, value, child) {
                     return value == StateApp.loading
                         ? LoadingNotice(cardHeigth: 90, cardWidth: 340)
                         : Notices(
-                            listItems: homeController.alerts!,
-                            state: homeController.stateAlert,
+                            homeController: homeController,
                             title: S.of(context).text_notifications,
                             cardHeigth: 90,
                             cardWidth: 340,

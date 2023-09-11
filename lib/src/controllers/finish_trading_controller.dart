@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
@@ -15,6 +17,7 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   final FinishTradingRepository _negotiationsRepository;
 
   FinishTradingController(super.value, this._negotiationsRepository);
+  List<dynamic> actualList = [];
 
   double totalValue = 0.0;
   int totalVolume = 0;
@@ -25,8 +28,8 @@ class FinishTradingController extends ValueNotifier<StateApp> {
       List<ClientsSelectStoreModel> listBranchs) async {
     stateFinishTrading.value = StateApp.loading;
     try {
-      await _negotiationsRepository.postTrading(
-        products: products,
+      await _negotiationsRepository.postTradingNew(
+        products: actualList,
         tradings: tradings,
         codeBranch: codeBranch,
         codeProvider: codeProvider,
@@ -49,6 +52,14 @@ class FinishTradingController extends ValueNotifier<StateApp> {
       await appWrite.updateDocuments(collectionId: "64f3970485c4cdaaac64", data: {"update": "12333"}, documentId: "64f398bfe091a9995b1f");
     } catch (e) {
       print("$e");
+    }
+  }
+
+  insertInList(List<ProductModel> products) async {
+    for (int j = 0; j < products.length; j++) {
+      if (int.parse(products[j].amount!) > 0) {
+        actualList.add(products[j].toJson());
+      }
     }
   }
 

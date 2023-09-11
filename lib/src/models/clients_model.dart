@@ -19,7 +19,7 @@ class ClientsModel {
     nameCompany = json['razao'];
     documentCompany = json['cnpjAssociado'];
     totalValue = json['valorTotal'].toDouble();
-    totalVolume = json['volumeTotal'];
+    totalVolume = json['volumeTotal'].toString();
   }
 
   Map<String, dynamic> toJson() {

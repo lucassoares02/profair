@@ -28,7 +28,7 @@ class _AppActionsState extends State<AppActions> {
       // scanningQrCode(route);
       navigatorRoutes("preorder", widget.homeController);
     } else if (route == "productsprovider") {
-      navigatorRoutes(route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0});
+      navigatorRoutes(route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});
     } else if (route == "clients") {
       navigatorRoutes(
         route,

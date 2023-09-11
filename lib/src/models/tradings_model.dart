@@ -8,11 +8,14 @@ class TradingsModel {
   TradingsModel({this.code, this.title, this.provider, this.totalValue, this.totalVolume});
 
   TradingsModel.fromJson(Map<String, dynamic> json) {
+    print("=============================");
+    print(json);
+    print("=============================");
     code = json['codNegociacao'];
     title = json['descNegociacao'];
     provider = json['codFornNegociacao'];
     totalValue = json['valorTotal'];
-    totalVolume = json['volumeTotal'];
+    totalVolume = json['volumeTotal'].toString();
   }
 
   Map<String, dynamic> toJson() {

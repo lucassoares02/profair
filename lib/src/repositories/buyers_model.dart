@@ -18,7 +18,7 @@ class BuyersModel {
     nameBuyer = json['nomeCompr'];
     category = json['descCatComprador'];
     total = json['valorTotal'].toDouble();
-    volume = json['volumeTotal'];
+    volume = json['volumeTotal'].toString();
   }
 
   Map<String, dynamic> toJson() {

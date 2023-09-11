@@ -58,11 +58,18 @@ class _ComponentListState extends State<ComponentList> {
                     children: widget.requestsStoresController.requestsStores.map((e) {
                   return InkWell(
                     onTap: () {
+                      inspect(e);
                       if (widget.userCode != 0) {
                         Navigator.of(context).pushNamed('selectprovider', arguments: {
                           "codeClient": 0,
                           "codeBranch": e.codeBranch,
                           "codeBuyer": 0,
+                        });
+                      } else if (widget.codeProvider != 0) {
+                        Navigator.of(context).pushNamed('selectnegotiation', arguments: {
+                          "codeBranch": e.codeClient,
+                          "codeClient": 0,
+                          "codeProvider": widget.codeProvider,
                         });
                       }
                     },

@@ -8,7 +8,7 @@ class PercentageClientsModel {
   PercentageClientsModel.fromJson(Map<String, dynamic> json) {
     total = json['total'];
     parcial = json['realizados'];
-    percentage = json['porcentagem'];
+    percentage = json['porcentagem'].toString();
   }
 
   Map<String, dynamic> toJson() {

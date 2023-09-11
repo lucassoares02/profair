@@ -13,13 +13,22 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ComponentList extends StatefulWidget {
-  ComponentList({super.key, this.description, required this.listItems, required this.state, required this.codeProvider, required this.productsProviderController});
+  ComponentList({
+    super.key,
+    this.description,
+    required this.listItems,
+    required this.state,
+    required this.codeProvider,
+    required this.productsProviderController,
+    required this.nextScreen,
+  });
 
   List<ProductsProviderModel> listItems;
   final String? description;
   final ValueListenable state;
   final int? codeProvider;
   final ProductsProviderController productsProviderController;
+  final bool nextScreen;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -52,20 +61,22 @@ class _ComponentListState extends State<ComponentList> {
                     children: widget.productsProviderController.productsProvider.map((e) {
                   return InkWell(
                     onTap: () {
-                      if (e.totalVolume != "0") {
-                        Navigator.of(context).pushNamed(
-                          "/clientsproduct",
-                          arguments: e.codeProduct,
-                        );
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: "Produto não possui pedidos!",
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.CENTER,
-                            timeInSecForIosWeb: 1,
-                            backgroundColor: Colors.red,
-                            textColor: Colors.white,
-                            fontSize: 16.0);
+                      if (widget.nextScreen) {
+                        if (e.totalVolume != "0") {
+                          Navigator.of(context).pushNamed(
+                            "/clientsproduct",
+                            arguments: e.codeProduct,
+                          );
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Produto não possui pedidos!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
                       }
                     },
                     child: Container(

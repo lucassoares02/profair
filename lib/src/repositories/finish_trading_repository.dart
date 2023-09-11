@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:flutter/material.dart';
@@ -36,13 +34,46 @@ class FinishTradingRepository {
                     "codNegociacao": tradings[i].negotiation.toString(),
                     "codOrganizacao": "158"
                   };
-                  final respnse = await clientDio.post("${url}insertrequest", data: data);
+                  await clientDio.post("${url}insertrequestnew", data: data);
                 }
               }
             }
           }
         }
       }
+    } catch (e) {
+      debugPrint("Error return Negotiation Model Mapper: $e");
+    }
+  }
+
+  postTradingNew(
+      {required List<dynamic> products,
+      required List<NegotiationModel> tradings,
+      int? codeBranch,
+      int? codeProvider,
+      int? codeClient,
+      required List<ClientsSelectStoreModel> listBranchs}) async {
+    clientDio.options.contentType = Headers.formUrlEncodedContentType;
+
+    try {
+      for (int h = 0; h < listBranchs.length; h++) {
+        if (listBranchs[h].checked!) {
+          for (int i = 0; i < tradings.length; i++) {
+            if (tradings[i].checked!) {
+              Map<String?, dynamic> data = {
+                "codAssociado": listBranchs[h].relationshipCode.toString(),
+                "codFornecedor": codeProvider.toString(),
+                "codComprador": codeClient.toString(),
+                "codNegociacao": tradings[i].negotiation.toString(),
+                "codOrganizacao": "158",
+                "items": products
+              };
+              final response = await clientDio.post("${url}insertrequestnew", data: data);
+            }
+          }
+        }
+      }
+      return;
     } catch (e) {
       debugPrint("Error return Negotiation Model Mapper: $e");
     }

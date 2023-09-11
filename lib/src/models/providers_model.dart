@@ -9,12 +9,16 @@ class ProvidersModel {
   ProvidersModel({this.document, this.nameProvider, this.socialName, this.codeProvider, this.totalValue, this.totalVolume});
 
   ProvidersModel.fromJson(Map<String, dynamic> json) {
+    print("===================================================");
+    print("=============== PROVIDERS MODEL ===================");
+    print(json);
+    print("===================================================");
     document = json['cnpjForn'];
     nameProvider = json['nomeForn'];
     socialName = json['razao'];
     codeProvider = json['codForn'];
     totalValue = json['valorTotal'].toDouble();
-    totalVolume = json['volumeTotal'];
+    totalVolume = json['volumeTotal'].toString();
   }
 
   Map<String, dynamic> toJson() {

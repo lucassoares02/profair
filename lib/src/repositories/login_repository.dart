@@ -13,6 +13,8 @@ class LoginRepository {
     print("===========================");
     try {
       final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
+      print("response");
+      print(response);
       final list = response.data[0];
       print("repsonse getLogin");
       print(list);

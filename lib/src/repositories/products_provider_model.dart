@@ -29,15 +29,18 @@ class ProductsProviderModel {
 
     codeProvider = json['codForn'];
     nameProvider = json['nomeForn'];
-
     codeProduct = json['codMercadoria'];
     nameProduct = json['nomeMercadoria'];
     packing = json['embMercadoria'];
     coefficient = json['fatorMerc'];
-    productPrice = json['precoMercadoria'] != null ? json["precoMercadoria"].toDouble() : json["precoMercadoria"];
-    unitPrice = json['precoUnit'] != null ? json['precoUnit'].toDouble() : json['precoUnit'];
-    totalValue = json['precoMercadoria'] * double.parse(json["volumeTotal"]);
-    totalVolume = json['volumeTotal'];
+    print("step0");
+    productPrice = json['precoMercadoria'] != null ? double.parse(json["precoMercadoria"].toString()) : json["precoMercadoria"];
+    print("step1");
+    unitPrice = json['precoUnit'] != null ? double.parse(json['precoUnit'].toString()) : json['precoUnit'];
+    print("step2");
+    totalValue = json['precoMercadoria'] * double.parse(json["volumeTotal"].toString());
+    print("step3");
+    totalVolume = json['volumeTotal'].toString();
   }
 
   Map<String, dynamic> toJson() {

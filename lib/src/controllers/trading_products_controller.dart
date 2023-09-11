@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class TradingProductsController extends ValueNotifier<StateApp> {
   List<ProductModel> productsTrading = [];
-  Iterable<ProductModel> products = [];
+  List<ProductModel> products = [];
 
   ValueNotifier<bool> visibleText = ValueNotifier(false);
   ValueNotifier<int> itemSelected = ValueNotifier(-1);

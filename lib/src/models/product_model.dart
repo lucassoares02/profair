@@ -14,9 +14,9 @@ class ProductModel {
     title = json["nomeMercadoria"];
     packing = json["embMercadoria"];
     coefficient = json["fatorMerc"];
-    price = json["precoMercadoria"].toDouble();
-    amount = json["quantMercadoria"];
-    total = json["valorTotal"] != null ? json["valorTotal"].toDouble() : json["valorTotal"];
+    price = double.parse(json["precoMercadoria"].toString());
+    amount = json["quantMercadoria"].toString();
+    total = json["valorTotal"] != null ? double.parse(json["valorTotal"].toString()) : json["valorTotal"];
   }
 
   Map<String, dynamic> toJson() {

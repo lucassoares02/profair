@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart';
 import 'package:profair/provider/appwriter.dart';
@@ -41,8 +43,11 @@ class HomeController extends ValueNotifier<StateApp> {
     try {
       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       final code = sharedPreferences.getString("codacesso");
+      print(code);
 
       data = await _homeRepository.getData({"codacesso": code});
+      print(data);
+      inspect(data);
 
       int codeRequest = 0;
       if (data!.accessTargeting == 1) {

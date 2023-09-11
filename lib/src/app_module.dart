@@ -49,7 +49,14 @@ class AppModule extends Module {
                   codeProvider: args.data["codeProvider"],
                   userCode: args.data["userCode"],
                 )),
-        ChildRoute('/productsprovider', child: (context, args) => ProductsProvider(codeProvider: args.data["codeProvider"], codeClient: args.data["codeClient"])),
+        ChildRoute(
+          '/productsprovider',
+          child: (context, args) => ProductsProvider(
+            codeProvider: args.data["codeProvider"],
+            codeClient: args.data["codeClient"],
+            nextScreen: args.data["nextScreen"],
+          ),
+        ),
         ChildRoute('/clients',
             child: (context, args) => Clients(
                 trading: args.data["codeTrading"],

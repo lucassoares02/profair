@@ -163,10 +163,7 @@ class _ComponentListState extends State<ComponentList> {
                                   onPressed: () {
                                     Navigator.of(context).pushNamed(
                                       "productsprovider",
-                                      arguments: {
-                                        "codeClient": widget.codeBranch,
-                                        "codeProvider": e.codeProvider,
-                                      },
+                                      arguments: {"codeClient": widget.codeBranch, "codeProvider": e.codeProvider, "nextScreen": false},
                                     );
                                   },
                                   child: const Text(

@@ -12,7 +12,6 @@ class ClientsProductModel {
   ClientsProductModel({this.code, this.provider, this.nameProduct, this.packing, this.nameClient, this.codeClient, this.price, this.coefficient, this.totalValue});
 
   ClientsProductModel.fromJson(Map<String, dynamic> json) {
-    print(json);
     code = json['codMercadoria'];
     provider = json['codFornMerc'];
     nameProduct = json['nomeMercadoria'];
@@ -20,7 +19,7 @@ class ClientsProductModel {
     nameClient = json['razao'];
     codeClient = json['codAssociado'];
     price = json['precoMercadoria'].toDouble();
-    coefficient = json['fatorMerc'];
+    coefficient = json['fatorMerc'].toString();
     totalValue = json['valorTotal'].toDouble();
   }
 

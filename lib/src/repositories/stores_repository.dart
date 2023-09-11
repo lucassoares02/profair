@@ -1,4 +1,3 @@
-import 'package:profair/src/models/clients_model.dart';
 import 'package:dio/dio.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
 

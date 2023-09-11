@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ProductsProvider extends StatefulWidget {
-  const ProductsProvider({super.key, required this.codeProvider, this.codeClient});
+  const ProductsProvider({super.key, required this.codeProvider, this.codeClient, this.nextScreen = true});
 
   final int? codeProvider;
   final int? codeClient;
+  final bool nextScreen;
 
   @override
   State<ProductsProvider> createState() => _ProductsProviderState();
@@ -37,12 +38,12 @@ class _ProductsProviderState extends State<ProductsProvider> {
               valueListenable: productsProviderController.stateProducts,
               builder: (context, value, child) {
                 return ComponentList(
-                  description: S.of(context).text_select_branch,
-                  state: productsProviderController.stateProducts,
-                  codeProvider: widget.codeProvider,
-                  listItems: productsProviderController.productsProvider,
-                  productsProviderController: productsProviderController,
-                );
+                    description: S.of(context).text_select_branch,
+                    state: productsProviderController.stateProducts,
+                    codeProvider: widget.codeProvider,
+                    listItems: productsProviderController.productsProvider,
+                    productsProviderController: productsProviderController,
+                    nextScreen: widget.nextScreen);
               },
             ),
           ),

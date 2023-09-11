@@ -59,10 +59,7 @@ class _ComponentListState extends State<ComponentList> {
                       // if (widget.codeBranch != 0) {
                       Navigator.of(context).pushNamed(
                         "productsprovider",
-                        arguments: {
-                          "codeClient": widget.codeClient,
-                          "codeProvider": e.codeProvider,
-                        },
+                        arguments: {"codeClient": widget.codeClient, "codeProvider": e.codeProvider, "nextScreen": true},
                       );
                       // } else {
                       //   Navigator.of(context).pushNamed(

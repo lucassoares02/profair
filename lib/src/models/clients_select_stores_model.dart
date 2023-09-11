@@ -21,6 +21,7 @@ class ClientsSelectStoreModel {
 
   ClientsSelectStoreModel.fromJson(Map<String, dynamic> json) {
     try {
+      checked = false;
       codeBranch = json['codAssociado'];
       nameUser = json['nomeConsult'];
       relationshipCode = json['codConsultRelaciona'];
@@ -28,7 +29,6 @@ class ClientsSelectStoreModel {
       documentCompany = json['cnpjAssociado'];
       totalValue = json['valor'].toDouble();
       totalVolume = json['volume'];
-      checked = false;
     } catch (e) {
       print("Error Map Clients Select Store Model");
     }
