@@ -85,7 +85,7 @@ class _CardNoticeState extends State<CardNotice> {
                       widget.homeController.documents!.documents.first.data["title"],
                       style: const TextStyle(
                         fontSize: 26,
-                        color: colorBlack,
+                        color: colorWhite,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
