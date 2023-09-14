@@ -60,9 +60,9 @@ class _NoticesState extends State<Notices> {
                               },
                               child: Container(
                                 width: widget.cardWidth ?? 200,
-                                decoration: const BoxDecoration(
-                                  color: colorGreyLigth,
-                                  borderRadius: BorderRadius.all(Radius.circular(appRadius)),
+                                decoration: BoxDecoration(
+                                  color: colorGrey.withOpacity(0.5),
+                                  borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
                                 ),
                                 padding: const EdgeInsets.symmetric(vertical: appMargin / 1.7),
                                 margin: EdgeInsets.only(left: appPadding, right: (widget.homeController.alerts!.total - 1 == index) ? appPadding : 0),

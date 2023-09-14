@@ -24,7 +24,7 @@ class AppButton extends StatelessWidget {
       child: TextButton(
           onPressed: loading ? null : onPressButton,
           style: ElevatedButton.styleFrom(
-            backgroundColor: type == 'filled' ? colorWhite : colorButton ?? colorPrimary,
+            backgroundColor: type == 'filled' ? transparent : colorButton ?? colorPrimary,
             foregroundColor: type == 'filled' ? colorGrey : colorWhite,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(appRadius),

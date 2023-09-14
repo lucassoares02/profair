@@ -1,18 +1,15 @@
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:profair/provider/appwriter.dart';
-import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/home/home_controller.dart';
-import 'package:provider/provider.dart';
 
 import '../../state/state_app.dart';
 
@@ -31,46 +28,46 @@ class _PreOrderState extends State<PreOrder> {
 
   String codes = "";
 
-  // scannerQrCode() async {
-  //   dynamic permission = await accessCamPermission();
-  //   if (permission == PermissionStatus.granted) {
-  //     String code = await FlutterBarcodeScanner.scanBarcode(
-  //       "#ff6666",
-  //       "Cancelar",
-  //       false,
-  //       ScanMode.DEFAULT,
-  //     );
+  scannerQrCode() async {
+    dynamic permission = await accessCamPermission();
+    if (permission == PermissionStatus.granted) {
+      String code = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666",
+        "Cancelar",
+        false,
+        ScanMode.DEFAULT,
+      );
 
-  //     if (code != "-1") {
-  //       try {
-  //         LoginModel? response = await widget.homeController.findClient(code);
-  //         int codeUser = response!.userCode ?? 0;
-  //         if (codeUser != 0) {
-  //           navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany});
-  //         } else {
-  //           Fluttertoast.showToast(
-  //               msg: "Código inválido!",
-  //               toastLength: Toast.LENGTH_SHORT,
-  //               gravity: ToastGravity.CENTER,
-  //               timeInSecForIosWeb: 1,
-  //               backgroundColor: Colors.red,
-  //               textColor: Colors.white,
-  //               fontSize: 16.0);
-  //         }
-  //       } catch (e) {
-  //         debugPrint('Error scanning qrcodesssss: $e');
-  //         Fluttertoast.showToast(
-  //             msg: "Código inválido!",
-  //             toastLength: Toast.LENGTH_SHORT,
-  //             gravity: ToastGravity.CENTER,
-  //             timeInSecForIosWeb: 1,
-  //             backgroundColor: Colors.red,
-  //             textColor: Colors.white,
-  //             fontSize: 16.0);
-  //       }
-  //     }
-  //   }
-  // }
+      if (code != "-1") {
+        try {
+          LoginModel? response = await widget.homeController.findClient(code);
+          int codeUser = response!.userCode ?? 0;
+          if (codeUser != 0) {
+            navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany});
+          } else {
+            Fluttertoast.showToast(
+                msg: "Código inválido!",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
+          }
+        } catch (e) {
+          debugPrint('Error scanning qrcodesssss: $e');
+          Fluttertoast.showToast(
+              msg: "Código inválido!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      }
+    }
+  }
 
   loginCode() async {
     try {
@@ -147,16 +144,16 @@ class _PreOrderState extends State<PreOrder> {
                     },
                     keyboardType: TextInputType.number,
                     controller: codigo,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
                       focusColor: colorSecondary,
-                      border: OutlineInputBorder(
+                      border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
                         borderRadius: BorderRadius.all(
                           Radius.circular(appRadius),
                         ),
                       ),
-                      fillColor: colorGreyLigth,
+                      fillColor: colorGrey.withOpacity(0.5),
                       hintText: "...",
                     ),
                   ),
@@ -169,6 +166,7 @@ class _PreOrderState extends State<PreOrder> {
                           onPressButton: () {
                             loginCode();
                           },
+                          type: 'filled',
                           label: "Digite o código",
                           colorButton: colorSecondary,
                           iconButton: Icons.numbers,
@@ -177,30 +175,31 @@ class _PreOrderState extends State<PreOrder> {
                       }),
                   const AppSpacing(),
                   const AppSpacing(),
-                  // flutter_barcode_scanner
-                  // ValueListenableBuilder(
-                  //   valueListenable: widget.homeController.stateStore,
-                  //   builder: (context, value, child) {
-                  //     return ValueListenableBuilder(
-                  //         valueListenable: teste,
-                  //         builder: (context, values, child) {
-                  //           return values != ""
-                  //               ? Container()
-                  //               : AppButton(
-                  //                   onPressButton: () {
-                  //                     // loginFunc();
-                  //                     scannerQrCode();
-                  //                     // testteInter();
-                  //                   },
-                  //                   label: S.of(context).text_scanner,
-                  //                   colorButton: colorSecondary,
-                  //                   type: 'filled',
-                  //                   iconButton: FontAwesomeIcons.qrcode,
-                  //                   loading: value == StateApp.loading,
-                  //                 );
-                  //         });
-                  //   },
-                  // ),
+                  Text("ou"),
+                  const AppSpacing(),
+                  const AppSpacing(),
+                  ValueListenableBuilder(
+                    valueListenable: widget.homeController.stateStore,
+                    builder: (context, value, child) {
+                      return ValueListenableBuilder(
+                          valueListenable: teste,
+                          builder: (context, values, child) {
+                            return values != ""
+                                ? Container()
+                                : AppButton(
+                                    onPressButton: () {
+                                      // loginFunc();
+                                      scannerQrCode();
+                                      // testteInter();
+                                    },
+                                    label: S.of(context).text_scanner,
+                                    colorButton: colorSecondary,
+                                    iconButton: Icons.qr_code_rounded,
+                                    loading: value == StateApp.loading,
+                                  );
+                          });
+                    },
+                  ),
                 ],
               ),
             ),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -12,16 +14,18 @@ class HomeRepository {
   final Dio clientDio = Dio();
   final String url = "https://seller-backend.onrender.com/";
 
-  Future<LoginModel?> getData(Object data) async {
+  Future<List<LoginModel>?> getData(Object data) async {
     clientDio.options.contentType = Headers.formUrlEncodedContentType;
 
     try {
-      final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
-      final item = response.data[0];
+      // final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
+      final response = await clientDio.post("https://seller-backend.onrender.com/getusermore", data: data);
+      List list = response.data as List;
 
-      return LoginModel.fromJson(item);
+      return list.map((json) => LoginModel.fromJson(json)).toList();
     } catch (e) {
       print("Error getData client: $e");
+      return null;
     }
   }
 

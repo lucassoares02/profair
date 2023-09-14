@@ -24,7 +24,9 @@ class HomeController extends ValueNotifier<StateApp> {
   List<RecipeModel> stores = [];
   List<BuyersModel> buyers = [];
   LoginModel? data;
+  List<LoginModel>? moreData;
   DocumentList? alerts;
+  int indexSelected = 0;
 
   final stateCategories = ValueNotifier<StateApp>(StateApp.start);
   final stateBuyers = ValueNotifier<StateApp>(StateApp.start);
@@ -43,11 +45,11 @@ class HomeController extends ValueNotifier<StateApp> {
     try {
       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       final code = sharedPreferences.getString("codacesso");
-      print(code);
 
-      data = await _homeRepository.getData({"codacesso": code});
-      print(data);
-      inspect(data);
+      moreData = await _homeRepository.getData({"codacesso": code});
+      print("moreData");
+      print(moreData);
+      data = moreData![indexSelected];
 
       int codeRequest = 0;
       if (data!.accessTargeting == 1) {

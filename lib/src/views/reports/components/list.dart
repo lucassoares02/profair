@@ -98,9 +98,9 @@ class _ComponentListState extends State<ComponentList> {
                       : Container(
                           padding: const EdgeInsets.only(top: appPadding * 3),
                           height: 300,
-                          decoration: const BoxDecoration(
-                            color: colorGreyLigth,
-                            borderRadius: BorderRadius.all(
+                          decoration: BoxDecoration(
+                            color: colorGrey.withOpacity(0.5),
+                            borderRadius: const BorderRadius.all(
                               Radius.circular(appRadius),
                             ),
                           ),
@@ -135,9 +135,9 @@ class _ComponentListState extends State<ComponentList> {
                               : Container(
                                   padding: const EdgeInsets.only(top: appPadding * 3),
                                   height: 300,
-                                  decoration: const BoxDecoration(
-                                    color: colorGreyLigth,
-                                    borderRadius: BorderRadius.all(
+                                  decoration: BoxDecoration(
+                                    color: colorGrey.withOpacity(0.5),
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(appRadius),
                                     ),
                                   ),
@@ -160,9 +160,9 @@ class _ComponentListState extends State<ComponentList> {
                                   // padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
                                   height: 300,
                                   padding: const EdgeInsets.only(top: appPadding * 3),
-                                  decoration: const BoxDecoration(
-                                    color: colorGreyLigth,
-                                    borderRadius: BorderRadius.all(
+                                  decoration: BoxDecoration(
+                                    color: colorGrey.withOpacity(0.5),
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(appRadius),
                                     ),
                                   ),

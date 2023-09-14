@@ -20,6 +20,26 @@ class LoginController extends ValueNotifier<StateApp> {
 
   Future requestLogin(Object data) async {
     stateLoginCode.value = StateApp.loading;
+    try {
+      LoginModel? response = await loginRepository.getLogin(data);
+      print("response login model");
+      print(response);
+      final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
+      if (responseShared) {
+        // return true;
+      }
+
+      stateLoginCode.value = StateApp.success;
+      return false;
+    } catch (e) {
+      print("$e");
+
+      stateLoginCode.value = StateApp.error;
+      return false;
+    }
+  }
+
+  Future stateLoginQr(Object data) async {
     stateLogin.value = StateApp.loading;
     try {
       LoginModel? response = await loginRepository.getLogin(data);
@@ -29,19 +49,17 @@ class LoginController extends ValueNotifier<StateApp> {
       if (responseShared) {
         // return true;
       }
-      stateLoginCode.value = StateApp.success;
       stateLogin.value = StateApp.success;
       return false;
     } catch (e) {
       print("$e");
-      stateLoginCode.value = StateApp.error;
       stateLogin.value = StateApp.error;
+
       return false;
     }
   }
 
   Future auth(String email, String password) async {
-    stateLoginCode.value = StateApp.loading;
     stateLogin.value = StateApp.loading;
     try {
       await _loginRepository.initSessionUser(email, password);
@@ -50,11 +68,10 @@ class LoginController extends ValueNotifier<StateApp> {
       // print(user);
       // print(user.prefs.data["code"]);
       // final teste = await requestLogin({"codacesso": user.prefs.data["code"]});
-      stateLoginCode.value = StateApp.success;
+
       stateLogin.value = StateApp.success;
       return true;
     } catch (e) {
-      stateLoginCode.value = StateApp.error;
       stateLogin.value = StateApp.error;
       return false;
     }

@@ -1,7 +1,7 @@
 import 'dart:developer';
 
+import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/header_list.dart';
-import 'package:profair/src/components/progress_indicator.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
@@ -57,7 +57,8 @@ class _ComponentListState extends State<ComponentList> {
 
   navigatorHome() {
     showNotification();
-    Navigator.of(context).pushNamed("/home");
+    // Navigator.of(context).pushNamed("/home");
+    Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
   }
 
   showNotification() async {
@@ -85,6 +86,7 @@ class _ComponentListState extends State<ComponentList> {
     final width = MediaQuery.of(context).size.width;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         HeaderList(activeSearch: false, label: "Detalhes do pedido"),
         Container(
@@ -377,43 +379,59 @@ class _ComponentListState extends State<ComponentList> {
         const AppSpacing(),
         const AppSpacing(),
         Container(
-          width: width,
-          margin: const EdgeInsets.all(appMargin),
-          padding: const EdgeInsets.symmetric(vertical: appMargin / 2, horizontal: appPadding),
-          decoration: const BoxDecoration(
-            color: colorSecondary,
-            borderRadius: BorderRadius.all(
-              Radius.circular(appRadius),
-            ),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                "Finalizar pedido",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorWhite),
-              ),
-              ValueListenableBuilder(
-                valueListenable: widget.finishTradingController.stateFinishTrading,
-                builder: (context, value, child) {
-                  return value == StateApp.loading
-                      ? Container(
-                          padding: const EdgeInsets.all(14),
-                          child: AppProgressIndicator(colorItem: colorWhite),
-                        )
-                      : IconButton(
-                          onPressed: () {
-                            saveOrder();
-                          },
-                          icon: const Icon(
-                            Icons.login_rounded,
-                            color: colorWhite,
-                          ));
-                },
-              ),
-            ],
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: appPadding),
+          child: ValueListenableBuilder(
+              valueListenable: widget.finishTradingController.stateFinishTrading,
+              builder: (context, value, child) {
+                return AppButton(
+                  label: "Finalizar Pedido",
+                  colorButton: colorSecondary,
+                  iconButton: Icons.done_all,
+                  loading: value == StateApp.loading,
+                  onPressButton: () {
+                    saveOrder();
+                  },
+                );
+              }),
         ),
+        // Container(
+        //   width: width,
+        //   margin: const EdgeInsets.all(appMargin),
+        //   padding: const EdgeInsets.symmetric(vertical: appMargin / 2, horizontal: appPadding),
+        //   decoration: const BoxDecoration(
+        //     color: colorSecondary,
+        //     borderRadius: BorderRadius.all(
+        //       Radius.circular(appRadius),
+        //     ),
+        //   ),
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //     children: [
+        //       const Text(
+        //         "Finalizar pedido",
+        //         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorWhite),
+        //       ),
+        //       ValueListenableBuilder(
+        //         valueListenable: widget.finishTradingController.stateFinishTrading,
+        //         builder: (context, value, child) {
+        //           return value == StateApp.loading
+        //               ? Container(
+        //                   padding: const EdgeInsets.all(14),
+        //                   child: AppProgressIndicator(colorItem: colorWhite),
+        //                 )
+        //               : IconButton(
+        //                   onPressed: () {
+        //                     saveOrder();
+        //                   },
+        //                   icon: const Icon(
+        //                     Icons.login_rounded,
+        //                     color: colorWhite,
+        //                   ));
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
       ],
     );
   }

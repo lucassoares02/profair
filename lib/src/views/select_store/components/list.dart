@@ -48,9 +48,9 @@ class _ComponentListState extends State<ComponentList> {
                 Container(
                   width: width,
                   padding: const EdgeInsets.all(appPadding),
-                  decoration: const BoxDecoration(
-                    color: colorLight,
-                    borderRadius: BorderRadius.all(
+                  decoration: BoxDecoration(
+                    color: colorGrey.withOpacity(0.5),
+                    borderRadius: const BorderRadius.all(
                       Radius.circular(appRadius),
                     ),
                   ),

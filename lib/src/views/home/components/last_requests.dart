@@ -58,7 +58,7 @@ class _LastRequestsState extends State<LastRequests> {
       component: Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: appPadding, left: appPadding),
+            padding: const EdgeInsets.only(top: appPadding, bottom: appMargin),
             child: Row(
               children: [
                 Text(
@@ -77,11 +77,11 @@ class _LastRequestsState extends State<LastRequests> {
               child: Container(
                 width: width,
                 height: 80,
-                padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                padding: const EdgeInsets.symmetric(horizontal: appMargin),
                 // margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appPadding),
-                decoration: const BoxDecoration(
-                  color: colorLight,
-                  borderRadius: BorderRadius.all(
+                decoration: BoxDecoration(
+                  color: colorGrey.withOpacity(0.5),
+                  borderRadius: const BorderRadius.all(
                     Radius.circular(appRadius),
                   ),
                 ),
@@ -117,12 +117,12 @@ class _LastRequestsState extends State<LastRequests> {
                               Text(
                                 formatCurrency(e.value!),
                                 style: const TextStyle(
-                                  color: colorGreyDark,
-                                ),
+                                    // color: colorGreyDark,
+                                    ),
                               ),
                               Text(
                                 '${e.hour}',
-                                style: const TextStyle(color: colorGreyDark),
+                                // style: const TextStyle(color: colorGreyDark),
                               ),
                             ],
                           ),

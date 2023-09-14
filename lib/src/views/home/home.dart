@@ -44,6 +44,11 @@ class _HomePageState extends State<HomePage> {
     // homeController.findAlert(appwrite!);
   }
 
+  testeNewRequset() async {
+    await homeController.findData(appwrite!);
+    testeAppwrite();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -56,7 +61,32 @@ class _HomePageState extends State<HomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const AppSpacing(),
-                CardWelcome(homeController: homeController),
+                ValueListenableBuilder(
+                    valueListenable: homeController.stateData,
+                    builder: (context, value, child) {
+                      return value == StateApp.loading
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appMargin * 2),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  SkeletonAvatar(
+                                    style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  SkeletonAvatar(
+                                    style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : CardWelcome(
+                              homeController: homeController,
+                              action: () {
+                                testeNewRequset();
+                              },
+                            );
+                    }),
                 ValueListenableBuilder(
                     valueListenable: homeController.stateNoticesAppWrite,
                     builder: (context, value, child) {
@@ -108,19 +138,22 @@ class _HomePageState extends State<HomePage> {
                   },
                 ),
                 const AppSpacing(),
-                ValueListenableBuilder(
-                  valueListenable: homeController.stateData,
-                  builder: (context, value, child) {
-                    return value == StateApp.loading
-                        ? LoadingList(loadingHeader: false)
-                        : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
-                            ? LastRequests(
-                                description: S.of(context).text_last_orders,
-                                listItems: homeController.requestStores,
-                                state: homeController.stateRequestsStore,
-                              )
-                            : Container();
-                  },
+                Container(
+                  padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),
+                  child: ValueListenableBuilder(
+                    valueListenable: homeController.stateData,
+                    builder: (context, value, child) {
+                      return value == StateApp.loading
+                          ? LoadingList(loadingHeader: false)
+                          : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
+                              ? LastRequests(
+                                  description: S.of(context).text_last_orders,
+                                  listItems: homeController.requestStores,
+                                  state: homeController.stateRequestsStore,
+                                )
+                              : Container();
+                    },
+                  ),
                 )
               ],
             ),

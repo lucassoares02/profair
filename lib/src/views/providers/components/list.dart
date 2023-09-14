@@ -85,7 +85,7 @@ class _ComponentListState extends State<ComponentList> {
 
                       Container(
                     width: width,
-                    height: 90,
+                    // height: 90,
                     padding: const EdgeInsets.symmetric(horizontal: appMargin),
                     margin: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
                     decoration: const BoxDecoration(
