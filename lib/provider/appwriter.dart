@@ -3,6 +3,7 @@ import 'package:profair/provider/resolver.dart';
 
 class AppWrite {
   Client clientapp = Client();
+  String session = "";
 
 //=============================================================
 // AppWrite ===================================================
@@ -22,10 +23,16 @@ class AppWrite {
     return resolvePromise(promise: promise);
   }
 
+  deleteSessionUser(String sessionId) async {
+    Account account = Account(clientapp);
+    Future promise = account.deleteSession(sessionId: sessionId);
+    return resolvePromise(promise: promise);
+  }
+
   createUser(String name, String password, String email) async {
     Account account = Account(clientapp);
 
-    Future promise = account.create(userId: ID.unique(), email: email, password: password);
+    Future promise = account.create(userId: ID.unique(), email: email, password: password, name: name);
     return resolvePromise(promise: promise, viewToast: true);
   }
 

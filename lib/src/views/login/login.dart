@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/generated/l10n.dart';
@@ -33,29 +34,59 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   String codes = "";
+  String? code = "";
 
   scannerQrCode() async {
-    dynamic permission = await accessCamPermission();
-    if (permission == PermissionStatus.granted) {
-      String code = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666",
+    // dynamic permission = await accessCamPermission();
+    // if (permission == PermissionStatus.granted) {
+
+    try {
+      code = await FlutterBarcodeScanner.scanBarcode(
+        "#66ff66",
         "Cancelar",
-        false,
+        true,
         ScanMode.DEFAULT,
       );
 
       if (code != "-1") {
         final data = {"codacesso": code};
-        try {
-          bool response = await loginController!.stateLoginQr(data);
-
-          // navigatorRoutes(response);
-          loginFunc();
-        } catch (e) {
-          debugPrint('$e');
+        bool response = await loginController!.stateLoginQr(data);
+        if (loginController!.stateLogin.value == StateApp.success) {
+          navigatorRoutes(true);
+        } else {
+          Fluttertoast.showToast(
+              msg: "Não foi possível realizar login!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
+        // loginFunc();
       }
+    } on PlatformException {
+      code = "Failed to get platform version.";
     }
+    // }
+  }
+
+  loginFunc() async {
+    // bool response = await loginController!.auth("teste@profair.com", "12345678");
+    // bool response = await loginController!.auth("lucas.soares@profair.com", "12345678");
+    // navigatorRoutes(response);
+  }
+
+  navigatorRoutes(response) {
+    if (response) {
+      codigo.text = "";
+      Navigator.of(context).pushNamed('home');
+    }
+  }
+
+  accessCamPermission() async {
+    final PermissionStatus status = await Permission.camera.request();
+    return status;
   }
 
   loginCode() async {
@@ -63,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       await loginController!.requestLogin(data);
       if (loginController!.stateLoginCode.value == StateApp.success) {
-        loginFunc();
+        navigatorRoutes(true);
       } else {
         Fluttertoast.showToast(
             msg: "Não foi possível realizar login!",
@@ -77,37 +108,6 @@ class _LoginPageState extends State<LoginPage> {
     } catch (e) {
       debugPrint('$e');
     }
-  }
-
-  loginFunc() async {
-    // bool response = await loginController!.auth("teste@profair.com", "12345678");
-    bool response = await loginController!.auth("lucas.soares@profair.com", "12345678");
-    navigatorRoutes(response);
-  }
-
-  // testteInter() async {
-  //   final data = {"codacesso": "1000000024212"};
-  //   // final data = {"codacesso": "1000000063011"};
-  //   // final data = {"codacesso": "1000000059091"};
-  //   try {
-  //     bool response = await loginController.requestLogin(data);
-
-  //     navigatorRoutes(response);
-  //   } catch (e) {
-  //     debugPrint('$e');
-  //   }
-  // }
-
-  navigatorRoutes(response) {
-    if (response) {
-      codigo.text = "";
-      Navigator.of(context).pushNamed('home');
-    }
-  }
-
-  accessCamPermission() async {
-    final PermissionStatus status = await Permission.camera.request();
-    return status;
   }
 
   @override
@@ -163,29 +163,23 @@ class _LoginPageState extends State<LoginPage> {
                     }),
                 const AppSpacing(),
                 const AppSpacing(),
-                Text("ou"),
+                const Text("ou", style: TextStyle(color: colorGrey)),
                 const AppSpacing(),
                 const AppSpacing(),
                 ValueListenableBuilder(
                   valueListenable: loginController!.stateLogin,
                   builder: (context, value, child) {
-                    return ValueListenableBuilder(
-                        valueListenable: teste,
-                        builder: (context, values, child) {
-                          return values != ""
-                              ? Container()
-                              : AppButton(
-                                  onPressButton: () {
-                                    // loginFunc();
-                                    scannerQrCode();
-                                    // testteInter();
-                                  },
-                                  label: S.of(context).text_scanner,
-                                  colorButton: colorSecondary,
-                                  iconButton: Icons.qr_code_rounded,
-                                  loading: value == StateApp.loading,
-                                );
-                        });
+                    return AppButton(
+                      onPressButton: () {
+                        // loginFunc();
+                        scannerQrCode();
+                        // testteInter();
+                      },
+                      label: S.of(context).text_scanner,
+                      colorButton: colorSecondary,
+                      iconButton: Icons.qr_code_rounded,
+                      loading: value == StateApp.loading,
+                    );
                   },
                 ),
               ],

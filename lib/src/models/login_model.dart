@@ -8,8 +8,20 @@ class LoginModel {
   String? nameUser;
   String? documentUser;
   String? valueOrder;
+  String? email;
 
-  LoginModel({this.codAccess, this.accessTargeting, this.nameCompany, this.codCompany, this.document, this.userCode, this.nameUser, this.documentUser, this.valueOrder});
+  LoginModel({
+    this.codAccess,
+    this.accessTargeting,
+    this.nameCompany,
+    this.codCompany,
+    this.document,
+    this.userCode,
+    this.nameUser,
+    this.documentUser,
+    this.valueOrder,
+    this.email,
+  });
 
   LoginModel.fromJson(Map<String, dynamic> json) {
     print("map login del");
@@ -24,6 +36,7 @@ class LoginModel {
     nameUser = json["nomeConsult"];
     documentUser = json["cpfConsult"];
     valueOrder = json["valorPedido"];
+    email = json["emailConsult"];
   }
 
   Map<String, dynamic> toJson() {
@@ -38,6 +51,7 @@ class LoginModel {
     data["nomeConsult"] = nameUser;
     data["cpfConsult"] = documentUser;
     data["valorPedido"] = valueOrder;
+    data["emailConsult"] = email;
     return data;
   }
 }

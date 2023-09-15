@@ -26,7 +26,7 @@ class LoginController extends ValueNotifier<StateApp> {
       print(response);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
       if (responseShared) {
-        // return true;
+        auth(response.email!, response.codAccess!, response.nameUser);
       }
 
       stateLoginCode.value = StateApp.success;
@@ -43,27 +43,34 @@ class LoginController extends ValueNotifier<StateApp> {
     stateLogin.value = StateApp.loading;
     try {
       LoginModel? response = await loginRepository.getLogin(data);
-      print("response login model");
-      print(response);
+
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
+
+      inspect(response);
+
       if (responseShared) {
-        // return true;
+        auth(response.email!, response.codAccess!, response.nameUser);
       }
+
       stateLogin.value = StateApp.success;
       return false;
     } catch (e) {
       print("$e");
       stateLogin.value = StateApp.error;
-
       return false;
     }
   }
 
-  Future auth(String email, String password) async {
+  Future auth(String email, String password, String? nameUser) async {
     stateLogin.value = StateApp.loading;
     try {
-      await _loginRepository.initSessionUser(email, password);
+      final response = await _loginRepository.initSessionUser(email, password);
+
+      if (response.toString().contains("user_invalid_credentials")) {
+        await _loginRepository.createUser(nameUser!, password, email);
+      }
       User user = await _loginRepository.getUser();
+
       // inspect(user);
       // print(user);
       // print(user.prefs.data["code"]);
@@ -72,6 +79,7 @@ class LoginController extends ValueNotifier<StateApp> {
       stateLogin.value = StateApp.success;
       return true;
     } catch (e) {
+      print("Error return AppWrite $e");
       stateLogin.value = StateApp.error;
       return false;
     }

@@ -1,4 +1,5 @@
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,33 +30,19 @@ class _PreOrderState extends State<PreOrder> {
   String codes = "";
 
   scannerQrCode() async {
-    dynamic permission = await accessCamPermission();
-    if (permission == PermissionStatus.granted) {
+    try {
       String code = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666",
         "Cancelar",
         false,
         ScanMode.DEFAULT,
       );
-
       if (code != "-1") {
-        try {
-          LoginModel? response = await widget.homeController.findClient(code);
-          int codeUser = response!.userCode ?? 0;
-          if (codeUser != 0) {
-            navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany});
-          } else {
-            Fluttertoast.showToast(
-                msg: "Código inválido!",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 1,
-                backgroundColor: Colors.red,
-                textColor: Colors.white,
-                fontSize: 16.0);
-          }
-        } catch (e) {
-          debugPrint('Error scanning qrcodesssss: $e');
+        LoginModel? response = await widget.homeController.findClient(code);
+        int codeUser = response!.userCode ?? 0;
+        if (codeUser != 0) {
+          navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany});
+        } else {
           Fluttertoast.showToast(
               msg: "Código inválido!",
               toastLength: Toast.LENGTH_SHORT,
@@ -66,6 +53,16 @@ class _PreOrderState extends State<PreOrder> {
               fontSize: 16.0);
         }
       }
+    } on PlatformException {
+      debugPrint('Error scanning qrcode');
+      Fluttertoast.showToast(
+          msg: "Código inválido!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
     }
   }
 
@@ -95,11 +92,6 @@ class _PreOrderState extends State<PreOrder> {
       route,
       arguments: data,
     );
-  }
-
-  accessCamPermission() async {
-    final PermissionStatus status = await Permission.camera.request();
-    return status;
   }
 
   @override

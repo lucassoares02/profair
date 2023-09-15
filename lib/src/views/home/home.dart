@@ -56,106 +56,110 @@ class _HomePageState extends State<HomePage> {
       body: SafeArea(
         child: SizedBox(
           width: width,
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const AppSpacing(),
-                ValueListenableBuilder(
-                    valueListenable: homeController.stateData,
-                    builder: (context, value, child) {
-                      return value == StateApp.loading
-                          ? Container(
-                              padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appMargin * 2),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SkeletonAvatar(
-                                    style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  SkeletonAvatar(
-                                    style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
-                                  ),
-                                ],
-                              ),
-                            )
-                          : CardWelcome(
-                              homeController: homeController,
-                              action: () {
-                                testeNewRequset();
-                              },
-                            );
-                    }),
-                ValueListenableBuilder(
-                    valueListenable: homeController.stateNoticesAppWrite,
-                    builder: (context, value, child) {
-                      return value == StateApp.loading
-                          ? Container(
-                              margin: const EdgeInsets.symmetric(horizontal: appPadding),
-                              child: SkeletonAvatar(
-                                style: SkeletonAvatarStyle(
-                                  height: 300,
-                                  width: double.maxFinite,
-                                  borderRadius: BorderRadius.circular(appRadius),
-                                ),
-                              ),
-                            )
-                          : CardNotice(homeController: homeController);
-                    }),
-                const AppSpacing(),
-                CardCount(homeController: homeController),
-                const AppSpacing(),
-                AppActions(homeController: homeController),
-                const AppSpacing(),
-                const AppSpacing(),
-                ValueListenableBuilder(
-                    valueListenable: homeController.stateData,
-                    builder: (context, value, child) {
-                      return value == StateApp.loading
-                          ? LoadingList(loadingHeader: false)
-                          : homeController.data!.accessTargeting == 3
-                              ? Column(
+          child: RefreshIndicator(
+            onRefresh: () => testeNewRequset(),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const AppSpacing(),
+                  ValueListenableBuilder(
+                      valueListenable: homeController.stateData,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? Container(
+                                padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appMargin * 2),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Categories(homeController: homeController),
-                                    const AppSpacing(),
-                                    const AppSpacing(),
+                                    SkeletonAvatar(
+                                      style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    SkeletonAvatar(
+                                      style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                                    ),
                                   ],
-                                )
-                              : Container();
-                    }),
-                ValueListenableBuilder(
-                  valueListenable: homeController.stateData,
-                  builder: (context, value, child) {
-                    return value == StateApp.loading
-                        ? LoadingNotice(cardHeigth: 90, cardWidth: 340)
-                        : Notices(
-                            homeController: homeController,
-                            title: S.of(context).text_notifications,
-                            cardHeigth: 90,
-                            cardWidth: 340,
-                          );
-                  },
-                ),
-                const AppSpacing(),
-                Container(
-                  padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),
-                  child: ValueListenableBuilder(
+                                ),
+                              )
+                            : CardWelcome(
+                                homeController: homeController,
+                                action: () {
+                                  testeNewRequset();
+                                },
+                              );
+                      }),
+                  ValueListenableBuilder(
+                      valueListenable: homeController.stateNoticesAppWrite,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? Container(
+                                margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                                child: SkeletonAvatar(
+                                  style: SkeletonAvatarStyle(
+                                    height: 300,
+                                    width: double.maxFinite,
+                                    borderRadius: BorderRadius.circular(appRadius),
+                                  ),
+                                ),
+                              )
+                            : CardNotice(homeController: homeController);
+                      }),
+                  const AppSpacing(),
+                  CardCount(homeController: homeController),
+                  const AppSpacing(),
+                  AppActions(homeController: homeController),
+                  const AppSpacing(),
+                  const AppSpacing(),
+                  ValueListenableBuilder(
+                      valueListenable: homeController.stateData,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? LoadingList(loadingHeader: false)
+                            : homeController.data!.accessTargeting == 3
+                                ? Column(
+                                    children: [
+                                      Categories(homeController: homeController),
+                                      const AppSpacing(),
+                                      const AppSpacing(),
+                                    ],
+                                  )
+                                : Container();
+                      }),
+                  ValueListenableBuilder(
                     valueListenable: homeController.stateData,
                     builder: (context, value, child) {
                       return value == StateApp.loading
-                          ? LoadingList(loadingHeader: false)
-                          : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
-                              ? LastRequests(
-                                  description: S.of(context).text_last_orders,
-                                  listItems: homeController.requestStores,
-                                  state: homeController.stateRequestsStore,
-                                )
-                              : Container();
+                          ? LoadingNotice(cardHeigth: 90, cardWidth: 340)
+                          : Notices(
+                              homeController: homeController,
+                              title: S.of(context).text_notifications,
+                              cardHeigth: 90,
+                              cardWidth: 340,
+                            );
                     },
                   ),
-                )
-              ],
+                  const AppSpacing(),
+                  Container(
+                    padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),
+                    child: ValueListenableBuilder(
+                      valueListenable: homeController.stateData,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? LoadingList(loadingHeader: false)
+                            : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
+                                ? LastRequests(
+                                    description: S.of(context).text_last_orders,
+                                    listItems: homeController.requestStores,
+                                    state: homeController.stateRequestsStore,
+                                  )
+                                : Container();
+                      },
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),

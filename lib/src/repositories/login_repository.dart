@@ -8,19 +8,13 @@ class LoginRepository {
   Future getLogin(Object data) async {
     clientDio.options.contentType = Headers.formUrlEncodedContentType;
 
-    print("data login");
-    print(data);
-    print("===========================");
     try {
       final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
-      print("response");
-      print(response);
       final list = response.data[0];
-      print("repsonse getLogin");
-      print(list);
       return LoginModel.fromJson(list);
     } catch (e) {
       print("Error post login $e");
+      return e;
     }
   }
 }
