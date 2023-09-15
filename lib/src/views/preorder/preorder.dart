@@ -2,7 +2,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/components/button.dart';
