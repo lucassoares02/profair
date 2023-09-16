@@ -1,16 +1,16 @@
 import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:profair/src/utils/spacing.dart';
 
 class HeaderList extends StatefulWidget {
-  HeaderList({super.key, this.label, this.activeSearch = true, this.onSearch, this.icon, this.onSort});
+  HeaderList({super.key, this.label, this.activeSearch = true, this.onSearch, this.icon, this.onSort, this.activePop = true});
 
   String? label;
   bool? activeSearch;
   Function(String?)? onSearch;
   Function()? onSort;
   IconData? icon;
+  bool activePop;
 
   @override
   State<HeaderList> createState() => _HeaderListState();
@@ -25,8 +25,8 @@ class _HeaderListState extends State<HeaderList> {
     return Column(
       children: [
         Container(
-          decoration: const BoxDecoration(color: colorSecondary),
-          height: 65,
+          decoration: const BoxDecoration(color: transparent),
+          height: 70,
           child: ValueListenableBuilder(
             valueListenable: visibleSearch,
             builder: (context, value, child) {
@@ -38,7 +38,7 @@ class _HeaderListState extends State<HeaderList> {
                         cursorColor: colorSecondary,
                         controller: controllerSearch,
                         decoration: InputDecoration(
-                          fillColor: Colors.white,
+                          fillColor: colorWhite,
                           filled: true,
                           contentPadding: const EdgeInsets.symmetric(vertical: 0),
                           suffixIcon: IconButton(
@@ -65,19 +65,20 @@ class _HeaderListState extends State<HeaderList> {
                       children: [
                         Row(
                           children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              icon: const Icon(
-                                Icons.arrow_back_ios_new,
-                                color: colorWhite,
-                                size: 20,
+                            if (widget.activePop)
+                              IconButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios_new,
+                                  color: colorBlack,
+                                  size: 20,
+                                ),
                               ),
-                            ),
                             Text(
                               "${widget.label}",
-                              style: const TextStyle(fontSize: 20, color: colorWhite, fontWeight: FontWeight.w500),
+                              style: const TextStyle(fontSize: 20, color: colorBlack, fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
@@ -90,7 +91,7 @@ class _HeaderListState extends State<HeaderList> {
                                     }
                                   : null,
                               icon: Icon(
-                                color: widget.activeSearch! ? colorWhite : transparent,
+                                color: widget.activeSearch! ? colorBlack : transparent,
                                 Icons.search,
                               ),
                             ),
@@ -100,7 +101,7 @@ class _HeaderListState extends State<HeaderList> {
                                   widget.onSort!();
                                 },
                                 icon: const Icon(
-                                  color: colorWhite,
+                                  color: colorBlack,
                                   Icons.sort_outlined,
                                 ),
                               ),

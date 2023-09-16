@@ -104,7 +104,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )
-                            : CardNotice(homeController: homeController);
+                            : homeController.documents != null
+                                ? CardNotice(homeController: homeController)
+                                : Container();
                       }),
                   const AppSpacing(),
                   CardCount(homeController: homeController),

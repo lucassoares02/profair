@@ -1,6 +1,4 @@
 import 'dart:developer';
-
-import 'package:appwrite/models.dart';
 import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/login_repository.dart';
@@ -22,11 +20,9 @@ class LoginController extends ValueNotifier<StateApp> {
     stateLoginCode.value = StateApp.loading;
     try {
       LoginModel? response = await loginRepository.getLogin(data);
-      print("response login model");
-      print(response);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
       if (responseShared) {
-        auth(response.email!, response.codAccess!, response.nameUser);
+        await auth(response.email!, response.codAccess!, response.nameUser);
       }
 
       stateLoginCode.value = StateApp.success;
@@ -43,15 +39,12 @@ class LoginController extends ValueNotifier<StateApp> {
     stateLogin.value = StateApp.loading;
     try {
       LoginModel? response = await loginRepository.getLogin(data);
-
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
-
       inspect(response);
 
       if (responseShared) {
-        auth(response.email!, response.codAccess!, response.nameUser);
+        await auth(response.email!, response.codAccess!, response.nameUser);
       }
-
       stateLogin.value = StateApp.success;
       return false;
     } catch (e) {
@@ -68,14 +61,8 @@ class LoginController extends ValueNotifier<StateApp> {
 
       if (response.toString().contains("user_invalid_credentials")) {
         await _loginRepository.createUser(nameUser!, password, email);
+        await _loginRepository.initSessionUser(email, password);
       }
-      User user = await _loginRepository.getUser();
-
-      // inspect(user);
-      // print(user);
-      // print(user.prefs.data["code"]);
-      // final teste = await requestLogin({"codacesso": user.prefs.data["code"]});
-
       stateLogin.value = StateApp.success;
       return true;
     } catch (e) {

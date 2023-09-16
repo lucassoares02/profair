@@ -67,6 +67,8 @@ class _AppActionsState extends State<AppActions> {
       } else {
         navigatorRoutes(route, {"codeClient": 0, "codeBuyer": 0, "codeBranch": 0});
       }
+    } else if (route == "ticket") {
+      navigatorRoutes(route, widget.homeController);
     }
   }
 

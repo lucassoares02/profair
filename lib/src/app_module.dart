@@ -1,6 +1,7 @@
 import 'package:profair/src/views/clients/clients.dart';
 import 'package:profair/src/views/clients_product/clients_product.dart';
 import 'package:profair/src/views/details_attraction/details_attraction.dart';
+import 'package:profair/src/views/details_provider.dart/details_provider.dart';
 import 'package:profair/src/views/details_recipe/details_recipe.dart';
 import 'package:profair/src/views/finish_trading/finish_trading_products.dart';
 import 'package:profair/src/views/list_attractions/list_attractions.dart';
@@ -17,6 +18,7 @@ import 'package:profair/src/views/reports/reports.dart';
 import 'package:profair/src/views/requests_stores/requests_stores.dart';
 import 'package:profair/src/views/select_negotiation/select_negotiation.dart';
 import 'package:profair/src/views/select_store/select_store.dart';
+import 'package:profair/src/views/ticket/ticket.dart';
 import 'package:profair/src/views/tradings/tradings.dart';
 import 'package:profair/src/views/tranding_products/trading_products.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +74,13 @@ class AppModule extends Module {
           ),
         ),
         ChildRoute(
+          '/detailsprovider',
+          child: (context, args) => DetailsProvider(
+            codeBranch: args.data["codeBranch"],
+            codeProvider: args.data["codeProvider"],
+          ),
+        ),
+        ChildRoute(
           '/providerbygroup',
           child: (context, args) => ProvidersByGroup(
             codeClient: args.data["codeClient"],
@@ -115,13 +124,21 @@ class AppModule extends Module {
             listBranchs: args.data["listBranchs"],
           ),
         ),
-        ChildRoute('/detailsattraction',
-            child: (context, args) => DetailsAttractions(
-                  title: args.data["title"],
-                  content: args.data["content"],
-                  hour: args.data["hour"],
-                  image: args.data["image"],
-                )),
+        ChildRoute(
+          '/detailsattraction',
+          child: (context, args) => DetailsAttractions(
+            title: args.data["title"],
+            content: args.data["content"],
+            hour: args.data["hour"],
+            image: args.data["image"],
+          ),
+        ),
+        ChildRoute(
+          '/ticket',
+          child: (context, args) => Ticket(
+            homeController: args.data,
+          ),
+        ),
       ];
 
   static GlobalKey<NavigatorState>? navigatorKey = GlobalKey<NavigatorState>();

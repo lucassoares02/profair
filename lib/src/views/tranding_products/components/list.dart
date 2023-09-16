@@ -63,6 +63,9 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.tradingProductsController.search(value);
             },
+            onSort: () {
+              widget.tradingProductsController.sort();
+            },
             label: S.of(context).text_products,
           ),
           ValueListenableBuilder(
@@ -104,7 +107,7 @@ class _ComponentListState extends State<ComponentList> {
                   },
                   child: Container(
                     padding: const EdgeInsets.all(appMargin),
-                    margin: const EdgeInsets.symmetric(horizontal: appMargin),
+                    margin: const EdgeInsets.only(left: appMargin, right: appMargin, top: appMargin),
                     decoration: const BoxDecoration(
                       border: Border(bottom: BorderSide(color: colorGrey)),
                     ),
@@ -113,10 +116,49 @@ class _ComponentListState extends State<ComponentList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          e.value.title!,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                          // "${e.value.packing} | ${e.value.coefficient}",
+                          "${e.value.codeProduct} - ${e.value.complement!}",
+                          style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
                         ),
-                        const AppSpacing(),
+                        const SizedBox(height: 5),
+                        Text(
+                          e.value.title!,
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                              decoration: BoxDecoration(color: colorGreen.withOpacity(0.5), borderRadius: BorderRadius.all(Radius.circular(10))),
+                              child: Text(
+                                e.value.brand!,
+                                style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                              decoration: BoxDecoration(color: colorBlue.withOpacity(0.5), borderRadius: BorderRadius.all(Radius.circular(10))),
+                              child: Text(
+                                widget.tradingProductsController.formatCurrency(e.value.unitPrice!),
+                                style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Container(
+                              padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                              decoration: const BoxDecoration(color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                              child: Text(
+                                widget.tradingProductsController.formatCurrency(e.value.price!),
+                                style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,15 +175,22 @@ class _ComponentListState extends State<ComponentList> {
                                               Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    "${e.value.packing} | ${e.value.coefficient}",
-                                                    style: const TextStyle(color: colorGreyDark),
+                                                  Row(
+                                                    children: [
+                                                      const Text(
+                                                        "Quantidade: ",
+                                                        style: TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                                                      ),
+                                                      Text(
+                                                        e.value.amount!,
+                                                        style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.bold),
+                                                      ),
+                                                    ],
                                                   ),
-                                                  const SizedBox(height: appMargin),
-                                                  Text(
-                                                    "${widget.tradingProductsController.formatCurrency(e.value.price!)}  |  ${e.value.amount}",
-                                                    style: const TextStyle(color: colorGreyDark),
-                                                  ),
+                                                  // Text(
+                                                  //   "${widget.tradingProductsController.formatCurrency(e.value.price!)}  |  ${e.value.amount}",
+                                                  //   style: const TextStyle(color: colorGreyDark),
+                                                  // ),
                                                 ],
                                               ),
                                               widget.codeClient == 0

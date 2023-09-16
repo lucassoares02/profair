@@ -68,72 +68,83 @@ class _LastRequestsState extends State<LastRequests> {
               ],
             ),
           ),
-          Column(
-              children: widget.listItems.map((e) {
-            return InkWell(
-              onTap: () {
-                // Navigator.of(context).pushNamed('detailsrecipe', arguments: e);
-              },
-              child: Container(
-                width: width,
-                height: 80,
-                padding: const EdgeInsets.symmetric(horizontal: appMargin),
-                // margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appPadding),
-                decoration: BoxDecoration(
-                  color: colorGrey.withOpacity(0.5),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(appRadius),
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      decoration: const BoxDecoration(color: colorGreyLigth, borderRadius: BorderRadius.all(Radius.circular(50))),
-                      child: const Icon(
-                        Icons.swap_vert_outlined,
-                        color: colorPrimary,
+          widget.listItems.isEmpty
+              ? Container(
+                  child: const Row(
+                    children: [
+                      Text(
+                        "Ainda não possuí pedidos!",
+                        style: TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
                       ),
-                    ),
-                    const AppSpacing(),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    ],
+                  ),
+                )
+              : Column(
+                  children: widget.listItems.map((e) {
+                  return InkWell(
+                    onTap: () {
+                      // Navigator.of(context).pushNamed('detailsrecipe', arguments: e);
+                    },
+                    child: Container(
+                      width: width,
+                      height: 80,
+                      padding: const EdgeInsets.symmetric(horizontal: appMargin),
+                      margin: const EdgeInsets.symmetric(vertical: appMargin / 2),
+                      decoration: BoxDecoration(
+                        color: colorGrey.withOpacity(0.5),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(appRadius),
+                        ),
+                      ),
+                      child: Row(
                         children: [
-                          Row(
-                            children: [
-                              Text(
-                                e.razaoClient!.length < 28 ? '${e.razaoClient}' : e.razaoClient!.substring(0, 25),
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                              ),
-                            ],
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: const BoxDecoration(color: colorGreyLigth, borderRadius: BorderRadius.all(Radius.circular(50))),
+                            child: const Icon(
+                              Icons.swap_vert_outlined,
+                              color: colorPrimary,
+                            ),
                           ),
-                          const SizedBox(height: 5),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                formatCurrency(e.value!),
-                                style: const TextStyle(
-                                    // color: colorGreyDark,
+                          const AppSpacing(),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      e.razaoClient!.length < 28 ? '${e.razaoClient}' : e.razaoClient!.substring(0, 25),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                     ),
-                              ),
-                              Text(
-                                '${e.hour}',
-                                // style: const TextStyle(color: colorGreyDark),
-                              ),
-                            ],
+                                  ],
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      formatCurrency(e.value!),
+                                      style: const TextStyle(
+                                          // color: colorGreyDark,
+                                          ),
+                                    ),
+                                    Text(
+                                      '${e.hour}',
+                                      // style: const TextStyle(color: colorGreyDark),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            );
-          }).toList())
+                  );
+                }).toList())
         ],
       ),
     );

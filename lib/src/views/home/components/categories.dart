@@ -51,7 +51,7 @@ class _CategoriesState extends State<Categories> {
                   );
                 }),
           ),
-          component: Container(
+          component: SizedBox(
             height: 110,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,

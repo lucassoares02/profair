@@ -28,13 +28,13 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(label: S.of(context).text_schedule),
+      widgetLoading: LoadingList(label: ""),
       component: Column(
         children: [
-          HeaderList(label: S.of(context).text_schedule, activeSearch: false),
+          HeaderList(label: "", activeSearch: false),
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding * 3),
-            child: Flex(
+            padding: const EdgeInsets.symmetric(horizontal: appPadding * 2, vertical: appPadding),
+            child: const Flex(
               direction: Axis.vertical,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -65,7 +65,7 @@ class _ComponentListState extends State<ComponentList> {
                 // ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
+                  children: [
                     Text(
                       "Seja bem vindo!",
                       style: TextStyle(fontSize: 16, color: colorGreyDark),

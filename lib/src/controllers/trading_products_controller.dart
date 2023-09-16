@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/repositories/trading_products_repository.dart';
 import 'package:profair/src/state/state_app.dart';
@@ -12,6 +15,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
   final stateProductsTrading = ValueNotifier<StateApp>(StateApp.start);
   final stateSearchProductsTrading = ValueNotifier<StateApp>(StateApp.start);
   final itemTotal = ValueNotifier<StateApp>(StateApp.start);
+  int sortInt = 0;
 
   final TradingProductsRepository _negotiationsRepository;
 
@@ -71,6 +75,44 @@ class TradingProductsController extends ValueNotifier<StateApp> {
     } catch (e) {
       print("Error search Requests Stores: $e");
       stateSearchProductsTrading.value = StateApp.error;
+    }
+  }
+
+  sort() async {
+    print("sort");
+    stateProductsTrading.value = StateApp.loading;
+    String? message = "";
+    try {
+      inspect(productsTrading);
+      print("SortInt: $sortInt");
+      if (sortInt == 0) {
+        message = "Ordenado por valor de vendas!";
+        productsTrading.sort(((a, b) => (double.parse(b.amount!) * b.price!).compareTo(double.parse(a.amount!) * a.price!)));
+      } else if (sortInt == 1) {
+        message = "Ordenado volume vendido!";
+        productsTrading.sort(((a, b) => int.parse(b.amount!) - int.parse(a.amount!)));
+      } else if (sortInt == 2) {
+        message = "Ordem alfabética!";
+        productsTrading.sort(((a, b) => a.title!.compareTo(b.title!)));
+      }
+      if (sortInt == 2) {
+        sortInt = 0;
+      } else {
+        sortInt += 1;
+      }
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      stateProductsTrading.value = StateApp.success;
+    } catch (e) {
+      print("Error Sort Products: $e");
+      stateProductsTrading.value = StateApp.error;
     }
   }
 }

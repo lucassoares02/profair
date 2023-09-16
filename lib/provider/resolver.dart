@@ -2,9 +2,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 resolvePromise({required Future promise, bool viewToast = false}) async {
   return await promise.then((value) {
-    print("return promise");
-    print(value);
-    print("===================================================");
     if (viewToast) toastAlert(message: "Salvo com sucesso!");
     return value;
   }).catchError((error) {

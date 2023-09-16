@@ -126,6 +126,12 @@ class HomeRepository {
         "icon": Icons.show_chart_rounded,
         "route": "reports",
       },
+      {
+        "id": 84,
+        "title": 'Ticket',
+        "icon": Icons.qr_code_rounded,
+        "route": "ticket",
+      },
       // {
       //   "id": 74,
       //   "title": 'Dúvidas',

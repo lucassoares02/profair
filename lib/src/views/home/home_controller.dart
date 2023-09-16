@@ -145,7 +145,9 @@ class HomeController extends ValueNotifier<StateApp> {
   findDoc(AppWrite appWriteSend) async {
     stateNoticesAppWrite.value = StateApp.loading;
     try {
-      documents = await appWriteSend.getDocuments("64e4fd339e70e9e3f1ca", []);
+      // documents = await appWriteSend.getDocuments("64e4fd339e70e9e3f1ca", []);
+      final teste = await appWriteSend.getDocuments("64e4fd339e70e9e3f1ca", []);
+      documents = teste;
 
       stateNoticesAppWrite.value = StateApp.success;
     } catch (e) {

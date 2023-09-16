@@ -70,18 +70,31 @@ class _CardWelcomeState extends State<CardWelcome> {
                               ),
                               widget.homeController.moreData!.length > 1
                                   ? Container(
-                                      margin: const EdgeInsets.only(top: 5),
+                                      margin: const EdgeInsets.only(top: 10),
                                       child: DropdownButton<LoginModel>(
+                                        borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
                                         underline: Container(color: Colors.transparent),
                                         isExpanded: true,
                                         icon: const Icon(Icons.keyboard_arrow_down_sharp, size: 25),
                                         hint: Text(
-                                            "${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany!.length > 30 ? widget.homeController.data!.nameCompany!.substring(0, 30) : widget.homeController.data!.nameCompany!}"),
+                                            "${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany!.length > 35 ? "${widget.homeController.data!.nameCompany!.substring(0, 35)}..." : widget.homeController.data!.nameCompany!}"),
                                         items: widget.homeController.moreData!.map((e) {
                                           return DropdownMenuItem<LoginModel>(
                                             value: e,
-                                            child: Text(
-                                              e.nameCompany!,
+                                            child: Row(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.business_rounded,
+                                                  size: 25,
+                                                  color: colorGreyDark,
+                                                ),
+                                                const SizedBox(width: 10),
+                                                Text(
+                                                  e.nameCompany!.length > 35 ? "${e.nameCompany!.substring(0, 35)}..." : e.nameCompany!,
+                                                  style: const TextStyle(fontWeight: FontWeight.w600),
+                                                ),
+                                              ],
                                             ),
                                           );
                                         }).toList(),

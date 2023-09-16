@@ -4,6 +4,8 @@ class ProductsProviderModel {
   int? codeProduct;
   String? nameProduct;
   String? packing;
+  String? complement;
+  String? brand;
   int? coefficient;
   double? productPrice;
   double? unitPrice;
@@ -19,6 +21,8 @@ class ProductsProviderModel {
     this.coefficient,
     this.productPrice,
     this.unitPrice,
+    this.brand,
+    this.complement,
     this.totalValue,
     this.totalVolume,
   });
@@ -26,20 +30,19 @@ class ProductsProviderModel {
   ProductsProviderModel.fromJson(Map<String, dynamic> json) {
     print("===================");
     print(json);
+    print("===================");
 
     codeProvider = json['codForn'];
     nameProvider = json['nomeForn'];
     codeProduct = json['codMercadoria'];
     nameProduct = json['nomeMercadoria'];
     packing = json['embMercadoria'];
+    complement = json['complemento'];
+    brand = json['marca'];
     coefficient = json['fatorMerc'];
-    print("step0");
     productPrice = json['precoMercadoria'] != null ? double.parse(json["precoMercadoria"].toString()) : json["precoMercadoria"];
-    print("step1");
     unitPrice = json['precoUnit'] != null ? double.parse(json['precoUnit'].toString()) : json['precoUnit'];
-    print("step2");
     totalValue = json['precoMercadoria'] * double.parse(json["volumeTotal"].toString());
-    print("step3");
     totalVolume = json['volumeTotal'].toString();
   }
 
@@ -52,6 +55,8 @@ class ProductsProviderModel {
     data['fatorMerc'] = coefficient;
     data['precoMercadoria'] = productPrice;
     data['volumeTotal'] = totalVolume;
+    data['complemento'] = complement;
+    data['brand'] = brand;
     data['valorTotal'] = totalValue;
     data['precoUnit'] = unitPrice;
     data['codForn'] = codeProvider;
@@ -59,17 +64,3 @@ class ProductsProviderModel {
     return data;
   }
 }
-
-// {
-// 		"codMercadoria": 4427,
-// 		"nomeMercadoria": "Refri Coroa Mini Pet 12X250Ml Laranja",
-// 		"embMercadoria": "FD",
-// 		"fatorMerc": 12,
-// 		"precoMercadoria": 9,
-// 		"volumeTotal": "1000"
-// 		"valorTotal": 9000,
-// 		"precoUnit": 0.75,
-// 		"codForn": 333,
-// 		"nomeForn": "Refrigerantes Coroa Ltda",
-
-// 	},

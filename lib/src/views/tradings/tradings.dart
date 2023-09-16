@@ -28,22 +28,19 @@ class _TradingsState extends State<Tradings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ValueListenableBuilder(
-              valueListenable: tradingsController.stateTradings,
-              builder: (context, value, child) {
-                return ComponentList(
-                  description: S.of(context).text_select_branch,
-                  state: tradingsController.stateTradings,
-                  codeProvider: widget.codeProvider,
-                  listItems: tradingsController.tradingList,
-                  tradingsController: tradingsController,
-                );
-              },
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: ValueListenableBuilder(
+            valueListenable: tradingsController.stateTradings,
+            builder: (context, value, child) {
+              return ComponentList(
+                description: S.of(context).text_select_branch,
+                state: tradingsController.stateTradings,
+                codeProvider: widget.codeProvider,
+                listItems: tradingsController.tradingList,
+                tradingsController: tradingsController,
+              );
+            },
           ),
         ),
       ),
