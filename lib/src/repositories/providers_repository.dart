@@ -11,16 +11,12 @@ class ProvidersRepository {
     Response? response;
     try {
       if (codeBuyer != 0) {
-        print("step 1");
         response = await clientDio.get("${url}providerscategories/$codeBuyer");
       } else if (codeClient == 0 && codeBranch == 0) {
-        print("step 2");
         response = await clientDio.get("${url}suppliersinvoicing");
       } else if (codeClient != 0) {
-        print("step 3");
         response = await clientDio.get("${url}providersconsult/$codeClient");
       } else {
-        print("step 4");
         response = await clientDio.get("${url}requestproviderclient/$codeBranch");
         inspect(response);
       }

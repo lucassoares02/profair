@@ -187,46 +187,19 @@ class _TicketState extends State<Ticket> {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                Icons.qr_code_rounded,
-                                color: colorSecondary,
-                              ),
-                              AppSpacing(),
-                              Text(
-                                "Ações do Fornecedor",
-                                style: TextStyle(color: colorBlack, fontWeight: FontWeight.bold),
-                              ),
-                              AppSpacing(),
-                              Text(
-                                "1. Aponte a câmera.",
-                                style: TextStyle(color: colorBlack, fontWeight: FontWeight.w500),
-                              ),
-                              AppSpacing(),
-                              Text(
-                                "2. Realize a leitura.",
-                                style: TextStyle(color: colorBlack, fontWeight: FontWeight.w500),
-                              ),
-                              AppSpacing(),
-                              Text(
-                                "3. Confirme os dados.",
-                                style: TextStyle(color: colorBlack, fontWeight: FontWeight.w500),
-                              ),
-                              AppSpacing(),
-                              Text(
-                                "4. Faça o pedido.",
-                                style: TextStyle(color: colorBlack, fontWeight: FontWeight.w500),
-                              ),
-                            ],
-                          ),
                           QrImageView(
                             data: widget.homeController.data!.codAccess!,
                             size: 200,
                             version: QrVersions.auto,
+                          ),
+                          const Tooltip(
+                            message: "Ações do Fornecedor\n1. Aponte a câmera.\n2. Realize a leitura.\n3. Confirme os dados.\n4. Faça o pedido.",
+                            child: Icon(
+                              Icons.qr_code_rounded,
+                              color: colorSecondary,
+                            ),
                           ),
                         ],
                       ),

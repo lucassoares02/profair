@@ -1,5 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
+import 'package:flutter/services.dart';
 import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/notification/notification_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -30,6 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppWrite appWrite = Provider.of<AppWrite>(context, listen: false);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     appWrite.initAppWrite();
     Modular.setInitialRoute('/splash');
 

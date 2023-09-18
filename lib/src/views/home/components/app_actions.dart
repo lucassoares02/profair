@@ -25,7 +25,6 @@ class AppActions extends StatefulWidget {
 class _AppActionsState extends State<AppActions> {
   actionButton(String? route) {
     if (route == "selectstore") {
-      // scanningQrCode(route);
       navigatorRoutes("preorder", widget.homeController);
     } else if (route == "productsprovider") {
       navigatorRoutes(route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});
@@ -69,42 +68,6 @@ class _AppActionsState extends State<AppActions> {
       }
     } else if (route == "ticket") {
       navigatorRoutes(route, widget.homeController);
-    }
-  }
-
-  // scanningQrCode(String? route) async {
-  //   dynamic permission = await accessCamPermission();
-  //   if (permission == PermissionStatus.granted) {
-  //     String code = await FlutterBarcodeScanner.scanBarcode(
-  //       "#ff6666",
-  //       "Cancelar",
-  //       false,
-  //       ScanMode.DEFAULT,
-  //     );
-
-  //     if (code != "-1") {
-  //       try {
-  //         LoginModel? response = await widget.homeController.findClient(code);
-  //         int codeUser = response!.userCode ?? 0;
-  //         if (codeUser != 0) {
-  //           navigatorRoutes(route, {"client": response, "codeProvider": widget.homeController.data!.codCompany});
-  //         }
-  //       } catch (e) {
-  //         debugPrint('Error scanning qrcodesssss: $e');
-  //       }
-  //     }
-  //   }
-  // }
-  scanningQrCode(String? route) async {
-    try {
-      LoginModel? response = await widget.homeController.findClient("1000000065510");
-      print(response);
-      // int codeUser = response!.userCode ?? 0;
-      // if (codeUser != 0) {
-      navigatorRoutes(route, {"client": response, "codeProvider": widget.homeController.data!.codCompany});
-      // }
-    } catch (e) {
-      debugPrint('Error scanning qrcodesssss: $e');
     }
   }
 

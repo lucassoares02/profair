@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:profair/generated/l10n.dart';
 
 import 'package:profair/provider/appwriter.dart';
@@ -25,6 +26,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LoginController? loginController;
   ValueNotifier<String> teste = ValueNotifier("");
+  ValueNotifier<bool> enterCode = ValueNotifier(false);
   TextEditingController codigo = TextEditingController();
 
   @override
@@ -112,79 +114,156 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
+    print("width");
+    print(width);
+
     return Scaffold(
       body: SafeArea(
           child: Container(
         padding: const EdgeInsets.all(appPadding),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            // begin: Alignment.topLeft,
+            // end: Alignment.bottomLeft,
+            colors: [
+              colorSecondary,
+              colorBlueDark,
+            ],
+          ),
+        ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
             const AppSpacing(),
             Image.asset(
-              'assets/images/logo.png',
+              'assets/images/logowhite.png',
               height: 60,
             ),
             Column(
               children: [
-                TextFormField(
-                  onChanged: (t) {
-                    teste.value = t;
-                  },
-                  keyboardType: TextInputType.number,
-                  controller: codigo,
-                  decoration: InputDecoration(
-                    filled: true,
-                    focusColor: colorSecondary,
-                    border: const OutlineInputBorder(
-                      borderSide: BorderSide.none,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(appRadius),
-                      ),
-                    ),
-                    fillColor: colorGrey.withOpacity(0.5),
-                    hintText: "...",
-                  ),
-                ),
-                const AppSpacing(),
                 const AppSpacing(),
                 ValueListenableBuilder(
-                    valueListenable: loginController!.stateLoginCode,
-                    builder: (context, value, child) {
-                      return AppButton(
-                        type: "filled",
-                        onPressButton: () {
-                          loginCode();
-                        },
-                        label: "Acesse com código",
-                        colorButton: colorSecondary,
-                        iconButton: Icons.numbers,
-                        loading: value == StateApp.loading,
-                      );
-                    }),
-                const AppSpacing(),
-                const AppSpacing(),
-                const Text("ou", style: TextStyle(color: colorGrey)),
-                const AppSpacing(),
-                const AppSpacing(),
-                ValueListenableBuilder(
-                  valueListenable: loginController!.stateLogin,
-                  builder: (context, value, child) {
-                    return AppButton(
-                      onPressButton: () {
-                        // loginFunc();
-                        scannerQrCode();
-                        // testteInter();
-                      },
-                      label: S.of(context).text_scanner,
-                      colorButton: colorSecondary,
-                      iconButton: Icons.qr_code_rounded,
-                      loading: value == StateApp.loading,
-                    );
+                  valueListenable: enterCode,
+                  builder: (context, bool value, child) {
+                    return value == false && width < 700
+                        ? Column(
+                            children: [
+                              Lottie.asset("assets/images/qrcode2.json"),
+                              const Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Faça login com QrCode",
+                                    style: TextStyle(
+                                      color: colorWhite,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  AppSpacing(),
+                                  Text(
+                                    "Escaneie o QR Code com facilidade e tenha acesso imediato a todas as suas informações essenciais do evento!",
+                                    style: TextStyle(
+                                      color: colorGreyLigth,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const AppSpacing(),
+                              ValueListenableBuilder(
+                                valueListenable: loginController!.stateLogin,
+                                builder: (context, value, child) {
+                                  return Column(
+                                    children: [
+                                      AppButton(
+                                        onPressButton: () {
+                                          // loginFunc();
+                                          scannerQrCode();
+                                          // testteInter();
+                                        },
+                                        colorLoading: colorWhite,
+                                        label: S.of(context).text_scanner,
+                                        colorButton: colorWhite,
+                                        iconButton: Icons.qr_code_rounded,
+                                        loading: value == StateApp.loading,
+                                      ),
+                                      const AppSpacing(),
+                                      if (value != StateApp.loading)
+                                        TextButton(
+                                          onPressed: () {
+                                            enterCode.value = !enterCode.value;
+                                          },
+                                          child: const Text(
+                                            "Digitar o código",
+                                            style: TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              const AppSpacing(),
+                              const AppSpacing(),
+                              TextFormField(
+                                onChanged: (t) {
+                                  teste.value = t;
+                                },
+                                keyboardType: TextInputType.number,
+                                controller: codigo,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  focusColor: colorSecondary,
+                                  border: const OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(appRadius),
+                                    ),
+                                  ),
+                                  fillColor: colorGrey.withOpacity(0.5),
+                                  hintText: "...",
+                                ),
+                              ),
+                              const AppSpacing(),
+                              const AppSpacing(),
+                              ValueListenableBuilder(
+                                  valueListenable: loginController!.stateLoginCode,
+                                  builder: (context, value, child) {
+                                    return AppButton(
+                                      onPressButton: () {
+                                        loginCode();
+                                      },
+                                      colorLoading: colorWhite,
+                                      label: "Acessar",
+                                      colorButton: colorWhite,
+                                      iconButton: Icons.numbers,
+                                      loading: value == StateApp.loading,
+                                    );
+                                  }),
+                              const AppSpacing(),
+                              if (width < 700)
+                                TextButton(
+                                  onPressed: () {
+                                    enterCode.value = !enterCode.value;
+                                  },
+                                  child: const Text(
+                                    "Acessar com QrCode",
+                                    style: TextStyle(color: colorWhite, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                            ],
+                          );
                   },
                 ),
               ],
             ),
-            const AppSpacing(),
+            // const AppSpacing(),
           ],
         ),
       )),

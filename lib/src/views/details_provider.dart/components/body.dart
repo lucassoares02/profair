@@ -17,11 +17,15 @@ class DetailsProviderScreen extends StatefulWidget {
     required this.detailsProviderController,
     required this.codeBranch,
     required this.codeProvider,
+    required this.image,
+    required this.nameProvider,
   });
 
   final DetailsProviderController detailsProviderController;
   final int codeBranch;
   final int codeProvider;
+  final String image;
+  final String nameProvider;
 
   @override
   State<DetailsProviderScreen> createState() => _DetailsProviderState();
@@ -39,6 +43,36 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Container(
+                    height: 150,
+                    padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                    decoration: const BoxDecoration(
+                      color: colorGreyLigth,
+                    ),
+                    child: Row(
+                      children: [
+                        Stack(
+                          children: [
+                            Container(
+                              height: 70,
+                              width: 70,
+                              decoration: const BoxDecoration(
+                                color: colorGreen,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(50),
+                                ),
+                              ),
+                            ),
+                            Image.network(
+                              widget.image,
+                              width: 200,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const AppSpacing(),
                   ValueListenableBuilder(
                     valueListenable: widget.detailsProviderController.stateNegotiations,
                     builder: (context, value, child) {
@@ -47,18 +81,24 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                               padding: const EdgeInsets.symmetric(vertical: appPadding),
                               child: LoadingNotice(cardHeigth: 120, cardWidth: 200),
                             )
-                          : Padding(
-                              padding: const EdgeInsets.all(appPadding),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text("Negociações", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-                                  const AppSpacing(),
-                                  ListNegotiations(
-                                    detailsProviderController: widget.detailsProviderController,
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: appPadding),
+                                  child: Text(
+                                    "Negociações",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                                const AppSpacing(),
+                                ListNegotiations(
+                                  detailsProviderController: widget.detailsProviderController,
+                                ),
+                              ],
                             );
                     },
                   ),
@@ -80,12 +120,6 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: appPadding * 2),
-                                      child: Text(
-                                        "${widget.detailsProviderController.merchandises.length} resultados",
-                                        style: const TextStyle(color: colorGrey),
-                                      )),
                                   Column(
                                     children: widget.detailsProviderController.merchandises.map((e) {
                                       return CardProduct(

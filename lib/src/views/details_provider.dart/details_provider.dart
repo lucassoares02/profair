@@ -9,10 +9,14 @@ class DetailsProvider extends StatefulWidget {
     super.key,
     this.codeBranch,
     this.codeProvider,
+    this.imageProvider,
+    this.nameProvider,
   });
 
   final int? codeBranch;
   final int? codeProvider;
+  final String? imageProvider;
+  final String? nameProvider;
 
   @override
   State<DetailsProvider> createState() => _DetailsProviderState();
@@ -35,6 +39,8 @@ class _DetailsProviderState extends State<DetailsProvider> {
       detailsProviderController: detailsProviderController,
       codeProvider: widget.codeProvider!,
       codeBranch: widget.codeBranch!,
+      image: widget.imageProvider!,
+      nameProvider: widget.nameProvider!,
     );
   }
 }

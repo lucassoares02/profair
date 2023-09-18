@@ -5,18 +5,29 @@ class ProvidersModel {
   int? codeProvider;
   double? totalValue;
   String? totalVolume;
+  String? image;
 
-  ProvidersModel({this.document, this.nameProvider, this.socialName, this.codeProvider, this.totalValue, this.totalVolume});
+  ProvidersModel({
+    this.document,
+    this.nameProvider,
+    this.socialName,
+    this.codeProvider,
+    this.totalValue,
+    this.totalVolume,
+    this.image,
+  });
 
   ProvidersModel.fromJson(Map<String, dynamic> json) {
     print("===================================================");
     print("=============== PROVIDERS MODEL ===================");
     print(json);
     print("===================================================");
+
     document = json['cnpjForn'];
     nameProvider = json['nomeForn'];
     socialName = json['razao'];
     codeProvider = json['codForn'];
+    image = json['image'];
     totalValue = json['valorTotal'].toDouble();
     totalVolume = json['volumeTotal'].toString();
   }
@@ -29,6 +40,7 @@ class ProvidersModel {
     data['razao'] = socialName;
     data['codForn'] = codeProvider;
     data['valorTotal'] = totalValue;
+    data['image'] = image;
     data['volumeTotal'] = totalVolume;
     return data;
   }

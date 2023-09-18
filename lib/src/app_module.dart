@@ -78,6 +78,8 @@ class AppModule extends Module {
           child: (context, args) => DetailsProvider(
             codeBranch: args.data["codeBranch"],
             codeProvider: args.data["codeProvider"],
+            imageProvider: args.data["imageProvider"],
+            nameProvider: args.data["nameProvider"],
           ),
         ),
         ChildRoute(

@@ -4,7 +4,7 @@ import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
-  const AppButton({super.key, this.label, this.type, this.colorButton, this.iconButton, required this.onPressButton, this.loading = false});
+  const AppButton({super.key, this.label, this.type, this.colorButton, this.iconButton, required this.onPressButton, this.loading = false, this.colorLoading});
 
   final String? label;
   final String? type;
@@ -12,6 +12,7 @@ class AppButton extends StatelessWidget {
   final IconData? iconButton;
   final Function()? onPressButton;
   final bool loading;
+  final Color? colorLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +33,27 @@ class AppButton extends StatelessWidget {
             ),
           ),
           child: loading
-              ? Center(child: AppProgressIndicator())
+              ? Center(child: AppProgressIndicator(colorItem: colorLoading))
               : Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       iconButton,
-                      color: type == 'filled' ? colorButton : colorWhite,
+                      color: type == 'filled'
+                          ? colorButton ?? colorSecondary
+                          : colorButton != colorWhite
+                              ? colorWhite
+                              : colorSecondary,
                     ),
                     if (iconButton != null) marginWidget,
                     Text(
                       '$label',
                       style: TextStyle(
-                        color: type == 'filled' ? colorButton ?? colorPrimary : colorWhite,
+                        color: type == 'filled'
+                            ? colorButton ?? colorSecondary
+                            : colorButton != colorWhite
+                                ? colorWhite
+                                : colorSecondary,
                         fontWeight: FontWeight.bold,
                       ),
                     ),

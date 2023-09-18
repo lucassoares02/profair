@@ -72,36 +72,35 @@ class _HeaderListState extends State<HeaderList> {
                                 },
                                 icon: const Icon(
                                   Icons.arrow_back_ios_new,
-                                  color: colorBlack,
                                   size: 20,
                                 ),
                               ),
                             Text(
                               "${widget.label}",
-                              style: const TextStyle(fontSize: 20, color: colorBlack, fontWeight: FontWeight.w600),
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                             ),
                           ],
                         ),
                         Row(
                           children: [
-                            IconButton(
-                              onPressed: widget.activeSearch!
-                                  ? () {
-                                      visibleSearch.value = !visibleSearch.value;
-                                    }
-                                  : null,
-                              icon: Icon(
-                                color: widget.activeSearch! ? colorBlack : transparent,
-                                Icons.search,
-                              ),
-                            ),
+                            widget.activeSearch!
+                                ? IconButton(
+                                    onPressed: widget.activeSearch!
+                                        ? () {
+                                            visibleSearch.value = !visibleSearch.value;
+                                          }
+                                        : null,
+                                    icon: const Icon(
+                                      Icons.search,
+                                    ),
+                                  )
+                                : const Icon(Icons.search, color: transparent),
                             if (widget.onSort != null)
                               IconButton(
                                 onPressed: () {
                                   widget.onSort!();
                                 },
                                 icon: const Icon(
-                                  color: colorBlack,
                                   Icons.sort_outlined,
                                 ),
                               ),
