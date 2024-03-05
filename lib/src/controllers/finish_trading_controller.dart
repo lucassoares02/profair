@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/repositories/finish_trading_repository.dart';
@@ -24,8 +21,8 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   int totalChecked = 0;
   int totalCheckedBranch = 0;
 
-  Future sendOrder(List<ProductModel> products, List<NegotiationModel> tradings, int? codeBranch, int? codeProvider, int? codeClient,
-      List<ClientsSelectStoreModel> listBranchs) async {
+  Future sendOrder(List<ProductModel> products, List<NegotiationModel> tradings, int? codeBranch, int? codeProvider,
+      int? codeClient, List<ClientsSelectStoreModel> listBranchs) async {
     stateFinishTrading.value = StateApp.loading;
     try {
       await _negotiationsRepository.postTradingNew(
@@ -47,14 +44,6 @@ class FinishTradingController extends ValueNotifier<StateApp> {
     stateTradings.value = !stateTradings.value;
   }
 
-  notifyValueTradings(AppWrite appWrite) async {
-    try {
-      await appWrite.updateDocuments(collectionId: "64f3970485c4cdaaac64", data: {"update": "12333"}, documentId: "64f398bfe091a9995b1f");
-    } catch (e) {
-      print("$e");
-    }
-  }
-
   insertInList(List<ProductModel> products) async {
     for (int j = 0; j < products.length; j++) {
       if (int.parse(products[j].amount!) > 0) {
@@ -63,7 +52,8 @@ class FinishTradingController extends ValueNotifier<StateApp> {
     }
   }
 
-  checkListItems(List<ProductModel> listItems, List<NegotiationModel> tradings, List<ClientsSelectStoreModel>? listBranchs) {
+  checkListItems(
+      List<ProductModel> listItems, List<NegotiationModel> tradings, List<ClientsSelectStoreModel>? listBranchs) {
     for (int i = 0; i < tradings.length; i++) {
       if (tradings[i].checked!) {
         totalChecked += 1;

@@ -60,7 +60,7 @@ class _ComponentListState extends State<ComponentList> {
                         arguments: {
                           "codeClient": widget.codeClient,
                           "codeProvider": e.codeProvider,
-                          "nextScreen": true,
+                          "nextScreen": false,
                         },
                       );
                       // } else {

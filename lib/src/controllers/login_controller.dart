@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/login_repository.dart';
 import 'package:profair/src/state/state_app.dart';
@@ -7,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginController extends ValueNotifier<StateApp> {
-  LoginController(super.value, this._loginRepository);
-
-  final AppWrite _loginRepository;
+  LoginController(super.value);
 
   final stateLogin = ValueNotifier<StateApp>(StateApp.start);
   final stateLoginCode = ValueNotifier<StateApp>(StateApp.start);
@@ -22,14 +18,13 @@ class LoginController extends ValueNotifier<StateApp> {
       LoginModel? response = await loginRepository.getLogin(data);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
       if (responseShared) {
-        await auth(response.email!, response.codAccess!, response.nameUser);
+        debugPrint("Request Login (Login Controller) $responseShared");
       }
 
       stateLoginCode.value = StateApp.success;
       return false;
     } catch (e) {
-      print("$e");
-
+      debugPrint("$e");
       stateLoginCode.value = StateApp.error;
       return false;
     }
@@ -40,33 +35,13 @@ class LoginController extends ValueNotifier<StateApp> {
     try {
       LoginModel? response = await loginRepository.getLogin(data);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
-      inspect(response);
 
       if (responseShared) {
-        await auth(response.email!, response.codAccess!, response.nameUser);
+        debugPrint("State Login QR (Login Controller) $responseShared");
       }
       stateLogin.value = StateApp.success;
       return false;
     } catch (e) {
-      print("$e");
-      stateLogin.value = StateApp.error;
-      return false;
-    }
-  }
-
-  Future auth(String email, String password, String? nameUser) async {
-    stateLogin.value = StateApp.loading;
-    try {
-      final response = await _loginRepository.initSessionUser(email, password);
-
-      if (response.toString().contains("user_invalid_credentials")) {
-        await _loginRepository.createUser(nameUser!, password, email);
-        await _loginRepository.initSessionUser(email, password);
-      }
-      stateLogin.value = StateApp.success;
-      return true;
-    } catch (e) {
-      print("Error return AppWrite $e");
       stateLogin.value = StateApp.error;
       return false;
     }

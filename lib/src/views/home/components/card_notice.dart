@@ -29,7 +29,7 @@ class _CardNoticeState extends State<CardNotice> {
         height: 300,
         decoration: BoxDecoration(
           // color: colorTertiary,
-          color: Color(int.parse(widget.homeController.documents!.documents.first.data["color"])),
+          color: Color(int.parse(widget.homeController.campaign!.secondaryColor ?? "#f2f2f2")),
           borderRadius: BorderRadius.circular(appRadius),
           // image: const DecorationImage(
           //   fit: BoxFit.cover,
@@ -52,7 +52,7 @@ class _CardNoticeState extends State<CardNotice> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: 5),
                   decoration: BoxDecoration(
-                    color: Color(int.parse(widget.homeController.documents!.documents.first.data["colorStamp"])),
+                    color: Color(int.parse(widget.homeController.campaign!.primaryColor ?? "#a3a3a3")),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(20),
                     ),
@@ -66,7 +66,7 @@ class _CardNoticeState extends State<CardNotice> {
                       ),
                       const SizedBox(width: 5),
                       Text(
-                        widget.homeController.documents!.documents.first.data["stamp"],
+                        widget.homeController.campaign!.stamp ?? "",
                         style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -82,7 +82,7 @@ class _CardNoticeState extends State<CardNotice> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      widget.homeController.documents!.documents.first.data["title"],
+                      widget.homeController.campaign!.title ?? "",
                       style: const TextStyle(
                         fontSize: 26,
                         color: colorWhite,
@@ -91,8 +91,8 @@ class _CardNoticeState extends State<CardNotice> {
                     ),
                     const AppSpacing(),
                     Text(
-                      widget.homeController.documents!.documents.first.data["content"],
-                      style: const TextStyle(fontSize: 16, color: colorWhite, fontWeight: FontWeight.w500),
+                      widget.homeController.campaign!.description ?? "",
+                      style: const TextStyle(fontSize: 16, color: colorWhite, fontWeight: FontWeight.w300),
                     ),
                   ],
                 ),
@@ -100,7 +100,9 @@ class _CardNoticeState extends State<CardNotice> {
                 Container(
                   width: double.maxFinite,
                   height: 37,
-                  decoration: const BoxDecoration(color: colorWhite, borderRadius: BorderRadius.all(Radius.circular(appRadius))),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.background,
+                      borderRadius: const BorderRadius.all(Radius.circular(appRadius))),
                   child: const Center(
                       child: Text(
                     "Saiba mais",

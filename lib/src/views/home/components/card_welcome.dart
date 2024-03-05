@@ -50,11 +50,13 @@ class _CardWelcomeState extends State<CardWelcome> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SkeletonAvatar(
-                          style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                          style: SkeletonAvatarStyle(
+                              height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
                         ),
                         const SizedBox(height: 10),
                         SkeletonAvatar(
-                          style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                          style: SkeletonAvatarStyle(
+                              height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
                         ),
                       ],
                     )
@@ -91,7 +93,9 @@ class _CardWelcomeState extends State<CardWelcome> {
                                                 ),
                                                 const SizedBox(width: 10),
                                                 Text(
-                                                  e.nameCompany!.length > 35 ? "${e.nameCompany!.substring(0, 35)}..." : e.nameCompany!,
+                                                  e.nameCompany!.length > 35
+                                                      ? "${e.nameCompany!.substring(0, 35)}..."
+                                                      : e.nameCompany!,
                                                   style: const TextStyle(fontWeight: FontWeight.w600),
                                                 ),
                                               ],

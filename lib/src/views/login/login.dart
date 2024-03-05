@@ -3,8 +3,6 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:profair/generated/l10n.dart';
-
-import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:profair/src/components/spacing.dart';
@@ -12,8 +10,6 @@ import 'package:profair/src/components/button.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../../state/state_app.dart';
 
 class LoginPage extends StatefulWidget {
@@ -31,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
-    loginController = LoginController(StateApp.start, Provider.of<AppWrite>(context, listen: false));
+    loginController = LoginController(StateApp.start);
     super.initState();
   }
 
@@ -114,12 +110,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-
-    print("width");
-    print(width);
-
     return Scaffold(
       body: SafeArea(
           child: Container(

@@ -1,7 +1,6 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/services.dart';
-import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/notification/notification_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:profair/src/app_module.dart';
@@ -18,7 +17,6 @@ void main() {
         Provider<NotificationService>(
           create: (context) => NotificationService(),
         ),
-        Provider<AppWrite>(create: (context) => AppWrite())
       ],
       child: ModularApp(
         module: AppModule(),
@@ -30,9 +28,8 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-    AppWrite appWrite = Provider.of<AppWrite>(context, listen: false);
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    appWrite.initAppWrite();
+
     Modular.setInitialRoute('/splash');
 
     return MaterialApp.router(

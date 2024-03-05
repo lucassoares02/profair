@@ -1,10 +1,8 @@
 import 'dart:developer';
 
-import 'package:appwrite/appwrite.dart';
-import 'package:appwrite/models.dart';
-import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
+import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
 import 'package:profair/src/repositories/notice_model.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
@@ -23,32 +21,31 @@ class HomeController extends ValueNotifier<StateApp> {
   List<RecipeModel> shared = [];
   List<RecipeModel> stores = [];
   List<BuyersModel> buyers = [];
+  CampaignModel? campaign;
   LoginModel? data;
   List<LoginModel>? moreData;
-  DocumentList? alerts;
+
   int indexSelected = 0;
 
   final stateCategories = ValueNotifier<StateApp>(StateApp.start);
   final stateBuyers = ValueNotifier<StateApp>(StateApp.start);
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
   final stateData = ValueNotifier<StateApp>(StateApp.start);
+  final stateCampaign = ValueNotifier<StateApp>(StateApp.start);
   final stateAlert = ValueNotifier<StateApp>(StateApp.start);
-  final stateNoticesAppWrite = ValueNotifier<StateApp>(StateApp.start);
   final stateShared = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestsStore = ValueNotifier<StateApp>(StateApp.start);
 
   final HomeRepository _homeRepository;
-  DocumentList? documents;
 
-  Future<LoginModel?> findData(AppWrite appWriteSend) async {
+  Future<LoginModel?> findData() async {
     stateData.value = StateApp.loading;
     try {
       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       final code = sharedPreferences.getString("codacesso");
 
       moreData = await _homeRepository.getData({"codacesso": code});
-      print("moreData");
-      print(moreData);
+
       data = moreData![indexSelected];
 
       int codeRequest = 0;
@@ -64,10 +61,11 @@ class HomeController extends ValueNotifier<StateApp> {
       }
 
       if (data!.accessTargeting != null) {
-        findAlert(appWriteSend, data!.accessTargeting!);
+        // findAlert(appWriteSend, data!.accessTargeting!);
       }
       stateData.value = StateApp.success;
     } catch (e) {
+      debugPrint("Error User cLIE $e");
       stateData.value = StateApp.error;
     }
     return null;
@@ -87,6 +85,18 @@ class HomeController extends ValueNotifier<StateApp> {
       return response;
     } catch (e) {
       stateStore.value = StateApp.error;
+    }
+    return null;
+  }
+
+  Future findCampaign() async {
+    stateCampaign.value = StateApp.loading;
+    try {
+      List<CampaignModel?> response = await _homeRepository.getNotices();
+      campaign = response[3] ?? CampaignModel();
+      stateCampaign.value = StateApp.success;
+    } catch (e) {
+      stateCampaign.value = StateApp.error;
     }
     return null;
   }
@@ -112,16 +122,6 @@ class HomeController extends ValueNotifier<StateApp> {
     }
   }
 
-  // Future findNotices() async {
-  //   stateNotices.value = StateApp.loading;
-  //   try {
-  //     notices = await _homeRepository.getNotices();
-  //     stateNotices.value = StateApp.success;
-  //   } catch (e) {
-  //     stateNotices.value = StateApp.error;
-  //   }
-  // }
-
   Future getShared() async {
     stateShared.value = StateApp.loading;
     try {
@@ -142,79 +142,7 @@ class HomeController extends ValueNotifier<StateApp> {
     stateRequestsStore.value = StateApp.success;
   }
 
-  findDoc(AppWrite appWriteSend) async {
-    stateNoticesAppWrite.value = StateApp.loading;
-    try {
-      // documents = await appWriteSend.getDocuments("64e4fd339e70e9e3f1ca", []);
-      final teste = await appWriteSend.getDocuments("64e4fd339e70e9e3f1ca", []);
-      documents = teste;
-
-      stateNoticesAppWrite.value = StateApp.success;
-    } catch (e) {
-      print("Error FIND DOC$e");
-      stateNoticesAppWrite.value = StateApp.error;
-    }
-  }
-
-  Future findAlert(AppWrite appWriteSend, int accessTargeting) async {
-    stateAlert.value = StateApp.loading;
-    try {
-      alerts = await appWriteSend.getDocuments("64ea1ced75f87c91474e", [
-        Query.orderDesc("priority"),
-        Query.equal("direction", [0, accessTargeting])
-      ]);
-
-      stateAlert.value = StateApp.success;
-    } catch (e) {
-      stateAlert.value = StateApp.error;
-    }
-  }
-
-  Future findAlertCurrentTime(AppWrite appWriteSend) async {
-    try {
-      alerts = await appWriteSend.getDocuments("64ea1ced75f87c91474e", [Query.orderDesc("priority")]);
-
-      stateAlert.value = StateApp.loading;
-      stateAlert.value = StateApp.success;
-    } catch (e) {
-      stateAlert.value = StateApp.error;
-    }
-  }
-
-  Future getNoticeAppWrite(AppWrite appWriteSend) async {
-    stateNoticesAppWrite.value = StateApp.loading;
-    try {
-      final subscription = await appWriteSend.listDocumentsRealTime();
-      subscription.stream.listen((response) {
-        if (response.channels[1].toString().contains("64ea1ced75f87c91474e")) {
-          final indexAlerts = alerts!.documents.indexWhere((item) => (item.$id).toString() == response.payload["\$id"].toString());
-          if (indexAlerts != -1) {
-            findAlertCurrentTime(appWriteSend);
-            // stateAlert.value = StateApp.loading;
-            // alerts!.documents[indexAlerts].data["title"] = response.payload["title"];
-            // alerts!.documents[indexAlerts].data["time"] = response.payload["time"];
-            // alerts!.documents[indexAlerts].data["description"] = response.payload["description"];
-            // alerts!.documents[indexAlerts].data["priority"] = response.payload["priority"];
-            // stateAlert.value = StateApp.success;
-          }
-        }
-
-        final index = documents!.documents.indexWhere((item) => (item.$id).toString() == response.payload["\$id"].toString());
-        if (index != -1) {
-          stateNoticesAppWrite.value = StateApp.loading;
-          documents!.documents[index].data["title"] = response.payload["title"];
-          documents!.documents[index].data["content"] = response.payload["content"];
-          documents!.documents[index].data["color"] = response.payload["color"];
-          documents!.documents[index].data["stamp"] = response.payload["stamp"];
-          documents!.documents[index].data["colorStamp"] = response.payload["colorStamp"];
-          stateNoticesAppWrite.value = StateApp.success;
-        }
-      });
-    } catch (e) {
-      print("Error Init Real Time:f $e");
-      stateNoticesAppWrite.value = StateApp.error;
-    }
-  }
+  Future findAlert(int accessTargeting) async {}
 
   String formatCurrency(double amount) {
     String formattedAmount = amount.toStringAsFixed(2);

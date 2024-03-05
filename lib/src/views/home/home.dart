@@ -1,4 +1,3 @@
-import 'package:profair/provider/appwriter.dart';
 import 'package:profair/src/components/loading_notices.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
@@ -15,7 +14,6 @@ import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
 
 class HomePage extends StatefulWidget {
@@ -27,26 +25,17 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeController homeController = HomeController(StateApp.start, HomeRepository());
-  AppWrite? appwrite;
 
   @override
   void initState() {
-    appwrite = Provider.of<AppWrite>(context, listen: false);
-    homeController.findData(appwrite!);
-    testeAppwrite();
-
+    homeController.findData();
+    homeController.findCampaign();
     super.initState();
   }
 
-  testeAppwrite() async {
-    homeController.findDoc(appwrite!);
-    homeController.getNoticeAppWrite(appwrite!);
-    // homeController.findAlert(appwrite!);
-  }
-
-  testeNewRequset() async {
-    await homeController.findData(appwrite!);
-    testeAppwrite();
+  reloadScreen() async {
+    await homeController.findData();
+    homeController.findCampaign();
   }
 
   @override
@@ -57,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         child: SizedBox(
           width: width,
           child: RefreshIndicator(
-            onRefresh: () => testeNewRequset(),
+            onRefresh: () => reloadScreen(),
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
               child: Column(
@@ -74,11 +63,13 @@ class _HomePageState extends State<HomePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     SkeletonAvatar(
-                                      style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                                      style: SkeletonAvatarStyle(
+                                          height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
                                     ),
                                     const SizedBox(height: 10),
                                     SkeletonAvatar(
-                                      style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                                      style: SkeletonAvatarStyle(
+                                          height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
                                     ),
                                   ],
                                 ),
@@ -86,12 +77,12 @@ class _HomePageState extends State<HomePage> {
                             : CardWelcome(
                                 homeController: homeController,
                                 action: () {
-                                  testeNewRequset();
+                                  reloadScreen();
                                 },
                               );
                       }),
                   ValueListenableBuilder(
-                      valueListenable: homeController.stateNoticesAppWrite,
+                      valueListenable: homeController.stateCampaign,
                       builder: (context, value, child) {
                         return value == StateApp.loading
                             ? Container(
@@ -104,9 +95,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                 ),
                               )
-                            : homeController.documents != null
-                                ? CardNotice(homeController: homeController)
-                                : Container();
+                            : CardNotice(homeController: homeController);
                       }),
                   const AppSpacing(),
                   CardCount(homeController: homeController),
@@ -129,19 +118,19 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 : Container();
                       }),
-                  ValueListenableBuilder(
-                    valueListenable: homeController.stateData,
-                    builder: (context, value, child) {
-                      return value == StateApp.loading
-                          ? LoadingNotice(cardHeigth: 90, cardWidth: 340)
-                          : Notices(
-                              homeController: homeController,
-                              title: S.of(context).text_notifications,
-                              cardHeigth: 90,
-                              cardWidth: 340,
-                            );
-                    },
-                  ),
+                  // ValueListenableBuilder(
+                  //   valueListenable: homeController.stateData,
+                  //   builder: (context, value, child) {
+                  //     return value == StateApp.loading
+                  //         ? LoadingNotice(cardHeigth: 90, cardWidth: 340)
+                  //         : Notices(
+                  //             homeController: homeController,
+                  //             title: S.of(context).text_notifications,
+                  //             cardHeigth: 90,
+                  //             cardWidth: 340,
+                  //           );
+                  //   },
+                  // ),
                   const AppSpacing(),
                   Container(
                     padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),

@@ -99,9 +99,9 @@ class _CardCountState extends State<CardCount> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                S.of(context).text_balance,
-                                style: const TextStyle(
+                              const Text(
+                                "Pedidos",
+                                style: TextStyle(
                                   fontSize: 14,
                                   color: colorGreyDark,
                                   fontWeight: FontWeight.bold,
@@ -114,7 +114,7 @@ class _CardCountState extends State<CardCount> {
                               ),
                               const SizedBox(height: 5),
                               const Text(
-                                "Acompanhe os detalhes do saldo",
+                                "Clique e veja mais detalhes",
                                 style: TextStyle(fontSize: 12, color: colorGreyDark),
                               ),
                             ],

@@ -40,14 +40,6 @@ class _FinishTradingState extends State<FinishTrading> {
 
   @override
   void initState() {
-    print(widget.codeProvider);
-    print(widget.codeBranch);
-    print(widget.codeTrading);
-    print(widget.nameBranch);
-    print(widget.codeClient);
-    print(widget.productsTrading);
-    print(widget.tradings);
-    print(widget.listBranchs);
     finishTradingController.checkListItems(widget.productsTrading, widget.tradings, widget.listBranchs);
     finishTradingController.insertInList(widget.productsTrading);
     super.initState();

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
@@ -14,8 +12,6 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:skeletons/skeletons.dart';
-
-import '../../../../provider/appwriter.dart';
 import '../../../models/clients_select_stores_model.dart';
 
 class ComponentList extends StatefulWidget {
@@ -50,7 +46,8 @@ class _ComponentListState extends State<ComponentList> {
   TextEditingController amountItem = TextEditingController();
 
   saveOrder() async {
-    await widget.finishTradingController.sendOrder(widget.listItems, widget.tradings, widget.codeBranch, widget.codeProvider, widget.codeClient, widget.listBranchs!);
+    await widget.finishTradingController.sendOrder(widget.listItems, widget.tradings, widget.codeBranch,
+        widget.codeProvider, widget.codeClient, widget.listBranchs!);
     totalCurrentTime();
     navigatorHome();
   }
@@ -66,8 +63,8 @@ class _ComponentListState extends State<ComponentList> {
       Provider.of<NotificationService>(context, listen: false).showNotification(
         CustomNotification(
           id: 1,
-          title: "✅ ${widget.codeClient} - Pedido Realizado com sucesso!",
-          body: "Lucas seu pedido foi realizado, código ${widget.codeBranch}",
+          title: "✅ ${widget.nameBranch}",
+          body: "Pedido foi realizado com sucesso!",
           payload: "/home",
         ),
       );
@@ -77,8 +74,7 @@ class _ComponentListState extends State<ComponentList> {
   }
 
   totalCurrentTime() {
-    AppWrite appwrite = Provider.of<AppWrite>(context, listen: false);
-    widget.finishTradingController.notifyValueTradings(appwrite);
+    // PARA NOTIFICAR A ATUALIZAÇÃO DO ESTADO DO SALDO
   }
 
   @override
@@ -135,7 +131,10 @@ class _ComponentListState extends State<ComponentList> {
                                                   children: [
                                                     Text(
                                                       e.value.nameCompany!,
-                                                      style: const TextStyle(fontSize: 18, color: colorGreyDark, fontWeight: FontWeight.bold),
+                                                      style: const TextStyle(
+                                                          fontSize: 18,
+                                                          color: colorGreyDark,
+                                                          fontWeight: FontWeight.bold),
                                                     ),
                                                     const SizedBox(height: 5),
                                                     Text(
@@ -211,7 +210,8 @@ class _ComponentListState extends State<ComponentList> {
                                     builder: (context, value, child) {
                                       return Text(
                                         widget.finishTradingController.formatCurrency(
-                                            (widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked) *
+                                            (widget.finishTradingController.totalValue *
+                                                    widget.finishTradingController.totalChecked) *
                                                 widget.finishTradingController.totalCheckedBranch),
                                         style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       );
@@ -235,7 +235,8 @@ class _ComponentListState extends State<ComponentList> {
                                     ),
                                     Text(
                                       "${widget.listBranchs!.first.nameUser}",
-                                      style: const TextStyle(fontSize: 18, color: colorGreyDark, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                          fontSize: 18, color: colorGreyDark, fontWeight: FontWeight.bold),
                                     ),
                                   ],
                                 ),
@@ -298,7 +299,9 @@ class _ComponentListState extends State<ComponentList> {
                           );
                         }),
                     Text(
-                      e.value.title!.length < 28 ? '${e.value.negotiation} -  ${e.value.title}' : e.value.title!.substring(0, 25),
+                      e.value.title!.length < 28
+                          ? '${e.value.negotiation} -  ${e.value.title}'
+                          : e.value.title!.substring(0, 25),
                       style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
                     ),
                   ],
@@ -363,7 +366,9 @@ class _ComponentListState extends State<ComponentList> {
                                     );
                                   }),
                               Text(
-                                e.value.nameCompany!.length < 28 ? '${e.value.codeBranch} -  ${e.value.nameCompany}' : e.value.nameCompany!.substring(0, 25),
+                                e.value.nameCompany!.length < 28
+                                    ? '${e.value.codeBranch} -  ${e.value.nameCompany}'
+                                    : e.value.nameCompany!.substring(0, 25),
                                 style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
                               ),
                             ],

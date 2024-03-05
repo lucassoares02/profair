@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
+import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
 import 'package:profair/src/repositories/categories_model.dart';
 import 'package:profair/src/repositories/notice_model.dart';
@@ -20,6 +21,8 @@ class HomeRepository {
     try {
       // final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
       final response = await clientDio.post("https://seller-backend.onrender.com/getusermore", data: data);
+      inspect(response);
+
       List list = response.data as List;
 
       return list.map((json) => LoginModel.fromJson(json)).toList();
@@ -45,9 +48,13 @@ class HomeRepository {
   }
 
   getNotices() async {
-    final response = await clientDio.get('${url}notices');
-    List list = response.data as List;
-    return list.map((json) => NoticeModel.fromJson(json)).toList();
+    try {
+      final response = await clientDio.get('${url}notices');
+      List list = response.data as List;
+      return list.map((json) => CampaignModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Get Notices (Home Repository) Error: $e");
+    }
   }
 
   getSharedHome() async {

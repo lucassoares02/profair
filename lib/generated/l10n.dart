@@ -160,10 +160,10 @@ class S {
     );
   }
 
-  /// `Scaneie QrCode`
+  /// `Escanear QrCode`
   String get text_scanner {
     return Intl.message(
-      'Scaneie QrCode',
+      'Escanear QrCode',
       name: 'text_scanner',
       desc: '',
       args: [],

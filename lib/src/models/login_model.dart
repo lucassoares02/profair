@@ -27,16 +27,20 @@ class LoginModel {
     print("map login del");
     print(json);
     print("======");
-    codAccess = json["codAcesso"];
-    accessTargeting = json["direcAcesso"];
-    nameCompany = json["nomeForn"];
-    document = json["cnpjForn"];
-    userCode = json["codUsuario"];
-    codCompany = json["codForn"];
-    nameUser = json["nomeConsult"];
-    documentUser = json["cpfConsult"];
-    valueOrder = json["valorPedido"];
-    email = json["emailConsult"];
+    try {
+      codAccess = json["codAcesso"];
+      accessTargeting = json["direcAcesso"];
+      nameCompany = json["nomeForn"];
+      document = json["cnpjForn"];
+      userCode = json["codUsuario"];
+      codCompany = json["codForn"];
+      nameUser = json["nomeConsult"];
+      documentUser = json["cpfConsult"];
+      valueOrder = json["valorPedido"];
+      email = json["emailConsult"];
+    } catch (e) {
+      print("Error login model: $e");
+    }
   }
 
   Map<String, dynamic> toJson() {
