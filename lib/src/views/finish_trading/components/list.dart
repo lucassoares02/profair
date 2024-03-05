@@ -63,8 +63,8 @@ class _ComponentListState extends State<ComponentList> {
       Provider.of<NotificationService>(context, listen: false).showNotification(
         CustomNotification(
           id: 1,
-          title: "✅ ${widget.nameBranch}",
-          body: "Pedido foi realizado com sucesso!",
+          title: "✅ Bom Trabalho!",
+          body: "Pedido realizado com sucesso!",
           payload: "/home",
         ),
       );

@@ -3,7 +3,8 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class HeaderList extends StatefulWidget {
-  HeaderList({super.key, this.label, this.activeSearch = true, this.onSearch, this.icon, this.onSort, this.activePop = true});
+  HeaderList(
+      {super.key, this.label, this.activeSearch = true, this.onSearch, this.icon, this.onSort, this.activePop = true});
 
   String? label;
   bool? activeSearch;
@@ -37,8 +38,12 @@ class _HeaderListState extends State<HeaderList> {
                         autofocus: true,
                         cursorColor: colorSecondary,
                         controller: controllerSearch,
+                        onSubmitted: (value) {
+                          if (value == "") {
+                            visibleSearch.value = false;
+                          }
+                        },
                         decoration: InputDecoration(
-                          fillColor: colorWhite,
                           filled: true,
                           contentPadding: const EdgeInsets.symmetric(vertical: 0),
                           suffixIcon: IconButton(

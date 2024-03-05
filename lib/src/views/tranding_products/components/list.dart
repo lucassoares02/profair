@@ -48,6 +48,8 @@ class ComponentList extends StatefulWidget {
 
 class _ComponentListState extends State<ComponentList> {
   TextEditingController amountItem = TextEditingController();
+  FocusNode selectedProduct = FocusNode();
+  FocusNode searchBar = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class _ComponentListState extends State<ComponentList> {
           HeaderList(
             icon: Icons.shopping_basket_rounded,
             onSearch: (String? value) {
+              widget.tradingProductsController.visibleText.value = false;
               widget.tradingProductsController.search(value);
             },
             onSort: () {
@@ -89,19 +92,31 @@ class _ComponentListState extends State<ComponentList> {
                         } else {
                           Navigator.of(context).pushNamed(
                             "clients",
-                            arguments: {"merchandise": e.value.codeProduct, "codeProvider": 0, "accessTargenting": 0, "codeTrading": widget.codeTrading},
+                            arguments: {
+                              "merchandise": e.value.codeProduct,
+                              "codeProvider": 0,
+                              "accessTargenting": 0,
+                              "codeTrading": widget.codeTrading
+                            },
                           );
                         }
                       }
                     } else {
+                      print("Produto selecionado");
+                      // selectedProduct.requestFocus();
+                      FocusManager.instance.primaryFocus?.unfocus();
+
                       amountItem.text = e.value.amount == "0" ? "" : "${e.value.amount}";
 
                       if (e.key != widget.tradingProductsController.itemSelected.value) {
+                        print("Entrando no IF");
                         widget.tradingProductsController.itemSelected.value = e.key;
                         widget.tradingProductsController.visibleText.value = false;
                         widget.tradingProductsController.visibleText.value = true;
                       } else {
-                        widget.tradingProductsController.visibleText.value = !widget.tradingProductsController.visibleText.value;
+                        print("Entrando no ELSE");
+                        widget.tradingProductsController.visibleText.value =
+                            !widget.tradingProductsController.visibleText.value;
                       }
                     }
                   },
@@ -131,7 +146,9 @@ class _ComponentListState extends State<ComponentList> {
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                              decoration: BoxDecoration(color: colorGreen.withOpacity(0.5), borderRadius: BorderRadius.all(Radius.circular(10))),
+                              decoration: BoxDecoration(
+                                  color: colorGreen.withOpacity(0.5),
+                                  borderRadius: const BorderRadius.all(Radius.circular(10))),
                               child: Text(
                                 e.value.brand!,
                                 style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -140,7 +157,9 @@ class _ComponentListState extends State<ComponentList> {
                             const SizedBox(width: 5),
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                              decoration: BoxDecoration(color: colorBlue.withOpacity(0.5), borderRadius: BorderRadius.all(Radius.circular(10))),
+                              decoration: BoxDecoration(
+                                  color: colorBlue.withOpacity(0.5),
+                                  borderRadius: const BorderRadius.all(Radius.circular(10))),
                               child: Text(
                                 widget.tradingProductsController.formatCurrency(e.value.unitPrice!),
                                 style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -149,7 +168,8 @@ class _ComponentListState extends State<ComponentList> {
                             const SizedBox(width: 5),
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                              decoration: const BoxDecoration(color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                              decoration: const BoxDecoration(
+                                  color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
                               child: Text(
                                 widget.tradingProductsController.formatCurrency(e.value.price!),
                                 style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -179,11 +199,13 @@ class _ComponentListState extends State<ComponentList> {
                                                     children: [
                                                       const Text(
                                                         "Quantidade: ",
-                                                        style: TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                                                        style: TextStyle(
+                                                            color: colorGreyDark, fontWeight: FontWeight.w500),
                                                       ),
                                                       Text(
                                                         e.value.amount!,
-                                                        style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.bold),
+                                                        style: const TextStyle(
+                                                            color: colorGreyDark, fontWeight: FontWeight.bold),
                                                       ),
                                                     ],
                                                   ),
@@ -195,15 +217,20 @@ class _ComponentListState extends State<ComponentList> {
                                               ),
                                               widget.codeClient == 0
                                                   ? Text(
-                                                      widget.tradingProductsController.formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                      widget.tradingProductsController.formatCurrency(
+                                                          (double.parse(e.value.amount!) * e.value.price!)),
                                                       style: const TextStyle(
                                                         fontSize: 14,
                                                       ),
                                                     )
                                                   : Text(
-                                                      widget.tradingProductsController.formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                      widget.tradingProductsController.formatCurrency(
+                                                          (double.parse(e.value.amount!) * e.value.price!)),
                                                       style: TextStyle(
-                                                        fontWeight: (double.parse(e.value.amount!) * e.value.price!) == 0.0 ? FontWeight.normal : FontWeight.w600,
+                                                        fontWeight:
+                                                            (double.parse(e.value.amount!) * e.value.price!) == 0.0
+                                                                ? FontWeight.normal
+                                                                : FontWeight.w600,
                                                         fontSize: 14,
                                                       ),
                                                     ),
@@ -218,19 +245,26 @@ class _ComponentListState extends State<ComponentList> {
                                               SizedBox(
                                                 width: width / 3,
                                                 child: TextField(
+                                                  // focusNode: selectedProduct,
                                                   controller: amountItem,
                                                   autofocus: true,
-                                                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))
+                                                  ],
                                                   decoration: InputDecoration(
                                                     fillColor: colorGrey.withOpacity(0.5),
                                                     filled: true,
-                                                    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                                                    contentPadding:
+                                                        const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
                                                     hintText: "0",
-                                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+                                                    border: OutlineInputBorder(
+                                                        borderRadius: BorderRadius.circular(10),
+                                                        borderSide: BorderSide.none),
                                                   ),
                                                   keyboardType: TextInputType.number,
                                                   onChanged: (value) {
-                                                    widget.tradingProductsController.updateProductsTrading(value, e.key);
+                                                    widget.tradingProductsController
+                                                        .updateProductsTrading(value, e.key);
                                                   },
                                                 ),
                                               ),
@@ -239,11 +273,13 @@ class _ComponentListState extends State<ComponentList> {
                                                   builder: (context, values, child) {
                                                     return values == StateApp.start
                                                         ? Text(
-                                                            widget.tradingProductsController.formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                            widget.tradingProductsController.formatCurrency(
+                                                                (double.parse(e.value.amount!) * e.value.price!)),
                                                             style: const TextStyle(fontSize: 14),
                                                           )
                                                         : Text(
-                                                            widget.tradingProductsController.formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                            widget.tradingProductsController.formatCurrency(
+                                                                (double.parse(e.value.amount!) * e.value.price!)),
                                                             style: const TextStyle(fontSize: 14),
                                                           );
                                                   }),
@@ -275,13 +311,16 @@ class _ComponentListState extends State<ComponentList> {
                     colorButton: colorSecondary,
                     iconButton: Icons.check,
                     onPressButton: () {
+                      // widget.tradingProductsController.visibleText.value = false;
+                      // widget.tradingProductsController.search("");
                       Navigator.of(context).pushNamed('finishtrading', arguments: {
                         "codeProvider": widget.codeProvider,
                         "codeBranch": widget.codeBranch,
                         "nameBranch": widget.nameBranch,
                         "codeClient": widget.codeClient,
                         "codeTrading": widget.codeTrading,
-                        "productsTrading": widget.tradingProductsController.productsTrading,
+                        // "productsTrading": widget.tradingProductsController.productsTrading,
+                        "productsTrading": widget.tradingProductsController.products,
                         "tradings": widget.tradings,
                         "listBranchs": widget.listBranchs
                       });

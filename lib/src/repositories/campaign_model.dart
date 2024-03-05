@@ -33,6 +33,7 @@ class CampaignModel {
     primaryColor = json['primaryColor'];
     secondaryColor = json['secondaryColor'];
     priority = json['priority'];
+    stamp = json['stamp'];
     type = json['type'];
   }
 
