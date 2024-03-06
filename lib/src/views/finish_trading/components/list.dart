@@ -77,6 +77,17 @@ class _ComponentListState extends State<ComponentList> {
     // PARA NOTIFICAR A ATUALIZAÇÃO DO ESTADO DO SALDO
   }
 
+  handleChangeCheckbox(MapEntry<int, NegotiationModel> trading) {
+    if (trading.value.checked! && widget.finishTradingController.totalChecked > 1) {
+      widget.finishTradingController.totalChecked -= 1;
+      widget.tradings[trading.key].checked = !trading.value.checked!;
+    } else if (!trading.value.checked!) {
+      widget.finishTradingController.totalChecked += 1;
+      widget.tradings[trading.key].checked = !trading.value.checked!;
+    }
+    widget.finishTradingController.updateTrading();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -258,21 +269,12 @@ class _ComponentListState extends State<ComponentList> {
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
         ),
-        Container(
+        SizedBox(
           width: width,
           child: Column(
-              children: widget.tradings.asMap().entries.map((e) {
+              children: widget.tradings.asMap().entries.map((trading) {
             return InkWell(
-              onTap: () {
-                if (e.value.checked! && widget.finishTradingController.totalChecked > 1) {
-                  widget.finishTradingController.totalChecked -= 1;
-                  widget.tradings[e.key].checked = !e.value.checked!;
-                } else if (!e.value.checked!) {
-                  widget.finishTradingController.totalChecked += 1;
-                  widget.tradings[e.key].checked = !e.value.checked!;
-                }
-                widget.finishTradingController.updateTrading();
-              },
+              onTap: () => handleChangeCheckbox(trading),
               child: Container(
                 width: double.maxFinite,
                 margin: const EdgeInsets.symmetric(horizontal: appMargin),
@@ -288,20 +290,22 @@ class _ComponentListState extends State<ComponentList> {
                         builder: (context, bool value, child) {
                           return Checkbox(
                             activeColor: colorSecondary,
-                            value: e.value.checked,
+                            value: trading.value.checked,
                             side: const BorderSide(color: colorGrey),
                             shape: const RoundedRectangleBorder(
                               borderRadius: BorderRadius.all(
                                 Radius.circular(4),
                               ),
                             ),
-                            onChanged: (value) {},
+                            onChanged: (value) {
+                              handleChangeCheckbox(trading);
+                            },
                           );
                         }),
                     Text(
-                      e.value.title!.length < 28
-                          ? '${e.value.negotiation} -  ${e.value.title}'
-                          : e.value.title!.substring(0, 25),
+                      trading.value.title!.length < 28
+                          ? '${trading.value.negotiation} -  ${trading.value.title}'
+                          : trading.value.title!.substring(0, 25),
                       style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
                     ),
                   ],
@@ -324,7 +328,7 @@ class _ComponentListState extends State<ComponentList> {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              Container(
+              SizedBox(
                 width: width,
                 child: Column(
                   children: widget.listBranchs!.asMap().entries.map(

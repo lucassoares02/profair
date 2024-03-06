@@ -1,3 +1,4 @@
 {
-    "dart.flutterSdkPath": "/home/lucas/fvm/versions/3.13.1"
+    "dart.flutterSdkPath": "/home/lucas/fvm/versions/3.13.1",
+    "editor.fontFamily": "'Jetbrains Mono', 'monospace', monospace"
 }

@@ -46,6 +46,12 @@ class HomeController extends ValueNotifier<StateApp> {
 
       moreData = await _homeRepository.getData({"codacesso": code});
 
+      print("================================================================");
+      print(moreData);
+      print("================================================================");
+      inspect(moreData);
+      print("================================================================");
+
       data = moreData![indexSelected];
 
       int codeRequest = 0;
@@ -65,7 +71,7 @@ class HomeController extends ValueNotifier<StateApp> {
       }
       stateData.value = StateApp.success;
     } catch (e) {
-      debugPrint("Error User cLIE $e");
+      debugPrint("Find Data (Home Controller) Error: $e");
       stateData.value = StateApp.error;
     }
     return null;

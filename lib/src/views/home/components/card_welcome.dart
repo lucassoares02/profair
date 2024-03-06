@@ -32,9 +32,10 @@ class _CardWelcomeState extends State<CardWelcome> {
 
     return InkWell(
       onTap: () {
-        // Navigator.of(context).pushNamed('profile');
-        widget.homeController.logout();
-        Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+        Navigator.of(context).pushNamed(
+          "ticket",
+          arguments: widget.homeController,
+        );
       },
       child: Container(
         margin: const EdgeInsets.all(appPadding),
@@ -65,14 +66,33 @@ class _CardWelcomeState extends State<CardWelcome> {
                   : Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Seja Bem-vindo!',
-                          style: TextStyle(fontSize: 16, color: Colors.grey),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          '${widget.homeController.data!.nameUser}',
-                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            // const AppSpacing(),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  'Seja Bem-vindo!',
+                                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                                ),
+                                Text(
+                                  '${widget.homeController.data!.nameUser}',
+                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                              child: const Icon(Icons.person_outline),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 10),
                         Row(
@@ -85,7 +105,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                       ? Container(
                                           padding: const EdgeInsets.symmetric(horizontal: appMargin),
                                           decoration: BoxDecoration(
-                                            color: Colors.grey[200],
+                                            color: Colors.grey.withOpacity(0.2),
                                             borderRadius: BorderRadius.circular(appRadius),
                                           ),
                                           child: DropdownButton<LoginModel>(
@@ -132,7 +152,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                           padding:
                                               const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
                                           decoration: BoxDecoration(
-                                            color: Colors.grey[200],
+                                            color: Colors.grey.withOpacity(0.2),
                                             borderRadius: BorderRadius.circular(appRadius),
                                           ),
                                           child: Text(

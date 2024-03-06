@@ -5,7 +5,6 @@ import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
 import 'package:profair/src/repositories/categories_model.dart';
-import 'package:profair/src/repositories/notice_model.dart';
 import 'package:profair/src/repositories/recipe_model.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:dio/dio.dart';
@@ -25,9 +24,13 @@ class HomeRepository {
 
       List list = response.data as List;
 
+      print("Get Data (Home Repository) List ===");
+      print(list);
+      print("====================================");
+
       return list.map((json) => LoginModel.fromJson(json)).toList();
     } catch (e) {
-      print("Error getData client: $e");
+      print("Get Data (Home Repository) Error: $e");
       return null;
     }
   }

@@ -5,7 +5,6 @@ import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletons/skeletons.dart';
 

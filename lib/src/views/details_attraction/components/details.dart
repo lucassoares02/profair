@@ -104,13 +104,19 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: colorGreyLigth))),
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: colorGreyLigth,
+                          ),
+                        ),
+                      ),
                       padding: const EdgeInsets.only(bottom: appMargin, top: 5),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: const [
                           Text(
-                            "Teste de lyaout",
+                            "Informações adicionais",
                             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
                           ),
                           Icon(
@@ -138,11 +144,8 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                         Container(
                           margin: EdgeInsets.symmetric(vertical: 5),
                           height: 20,
-                          decoration: const BoxDecoration(border: Border(left: BorderSide(color: colorGreyLigth, width: 3))),
-                          child: Text(
-                            "sdf",
-                            style: TextStyle(color: colorWhite),
-                          ),
+                          decoration:
+                              const BoxDecoration(border: Border(left: BorderSide(color: colorGreyLigth, width: 3))),
                         ),
                         Text("10 de Janeiro, 10:40", style: TextStyle(color: colorGrey, fontSize: 12)),
                         SizedBox(height: 10),
