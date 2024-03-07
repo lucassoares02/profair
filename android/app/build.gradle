@@ -33,8 +33,11 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
+    androidExtensions {
+            experimental = true
+    }
     // compileSdkVersion flutter.compileSdkVersion
-    compileSdkVersion 23
+    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
