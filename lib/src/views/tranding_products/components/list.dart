@@ -102,19 +102,13 @@ class _ComponentListState extends State<ComponentList> {
                         }
                       }
                     } else {
-                      print("Produto selecionado");
-                      // selectedProduct.requestFocus();
                       FocusManager.instance.primaryFocus?.unfocus();
-
                       amountItem.text = e.value.amount == "0" ? "" : "${e.value.amount}";
-
                       if (e.key != widget.tradingProductsController.itemSelected.value) {
-                        print("Entrando no IF");
                         widget.tradingProductsController.itemSelected.value = e.key;
                         widget.tradingProductsController.visibleText.value = false;
                         widget.tradingProductsController.visibleText.value = true;
                       } else {
-                        print("Entrando no ELSE");
                         widget.tradingProductsController.visibleText.value =
                             !widget.tradingProductsController.visibleText.value;
                       }

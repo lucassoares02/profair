@@ -1,4 +1,3 @@
-import 'package:profair/src/components/loading_notices.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
 import 'package:profair/src/views/home/components/card_count.dart';
@@ -6,7 +5,7 @@ import 'package:profair/src/views/home/components/card_notice.dart';
 import 'package:profair/src/views/home/components/card_welcome.dart';
 import 'package:profair/src/views/home/components/categories.dart';
 import 'package:profair/src/views/home/components/last_requests.dart';
-import 'package:profair/src/views/home/components/notices.dart';
+import 'package:profair/src/views/home/components/list_providers.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/home_repository.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -132,6 +131,29 @@ class _HomePageState extends State<HomePage> {
                   //   },
                   // ),
                   const AppSpacing(),
+
+                  Container(
+                    margin: const EdgeInsets.only(bottom: appPadding),
+                    child: ValueListenableBuilder(
+                      valueListenable: homeController.stateData,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? LoadingList(loadingHeader: false)
+                            : homeController.data!.accessTargeting == 2
+                                ? Column(
+                                    children: [
+                                      ListProviders(
+                                        homeController: homeController,
+                                        description: "Fornecedores",
+                                      ),
+                                      const AppSpacing(),
+                                      const Divider(),
+                                    ],
+                                  )
+                                : Container();
+                      },
+                    ),
+                  ),
                   Container(
                     padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),
                     child: ValueListenableBuilder(
@@ -148,7 +170,7 @@ class _HomePageState extends State<HomePage> {
                                 : Container();
                       },
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

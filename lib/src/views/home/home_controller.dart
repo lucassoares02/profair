@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:profair/src/models/login_model.dart';
+import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -20,6 +21,7 @@ class HomeController extends ValueNotifier<StateApp> {
   List<RequestsStoresModel> requestStores = [];
   List<RecipeModel> shared = [];
   List<RecipeModel> stores = [];
+  List<ProvidersModel> topProviders = [];
   List<BuyersModel> buyers = [];
   CampaignModel? campaign;
   LoginModel? data;
@@ -32,6 +34,7 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
   final stateData = ValueNotifier<StateApp>(StateApp.start);
   final stateCampaign = ValueNotifier<StateApp>(StateApp.start);
+  final stateTopProvider = ValueNotifier<StateApp>(StateApp.start);
   final stateAlert = ValueNotifier<StateApp>(StateApp.start);
   final stateShared = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestsStore = ValueNotifier<StateApp>(StateApp.start);
@@ -45,12 +48,6 @@ class HomeController extends ValueNotifier<StateApp> {
       final code = sharedPreferences.getString("codacesso");
 
       moreData = await _homeRepository.getData({"codacesso": code});
-
-      print("================================================================");
-      print(moreData);
-      print("================================================================");
-      inspect(moreData);
-      print("================================================================");
 
       data = moreData![indexSelected];
 
@@ -105,6 +102,18 @@ class HomeController extends ValueNotifier<StateApp> {
       stateCampaign.value = StateApp.error;
     }
     return null;
+  }
+
+  Future findTopProviders() async {
+    stateTopProvider.value = StateApp.loading;
+    try {
+      topProviders = await _homeRepository.getTopFourProviders(data!.codCompany!);
+      inspect(topProviders);
+      stateTopProvider.value = StateApp.success;
+    } catch (error) {
+      debugPrint("Find Top Providers (Home Controller) Error: $error");
+      stateTopProvider.value = StateApp.error;
+    }
   }
 
   Future<LoginModel?> findBuyers() async {

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:profair/src/models/login_model.dart';
+import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -24,13 +25,9 @@ class HomeRepository {
 
       List list = response.data as List;
 
-      print("Get Data (Home Repository) List ===");
-      print(list);
-      print("====================================");
-
       return list.map((json) => LoginModel.fromJson(json)).toList();
     } catch (e) {
-      print("Get Data (Home Repository) Error: $e");
+      debugPrint("Get Data (Home Repository) Error: $e");
       return null;
     }
   }
@@ -57,6 +54,17 @@ class HomeRepository {
       return list.map((json) => CampaignModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Get Notices (Home Repository) Error: $e");
+    }
+  }
+
+  getTopFourProviders(int codBranch) async {
+    try {
+      final response = await clientDio.get('${url}requesttopproviderclient/$codBranch');
+      List list = response.data as List;
+      return list.map((json) => ProvidersModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Get Top Four Providers (Home Repository) Error: $e");
+      rethrow;
     }
   }
 
@@ -115,13 +123,6 @@ class HomeRepository {
           "title": 'Forne...',
           "icon": Icons.business_rounded,
           "route": "selectprovider",
-        },
-      if (code == 2)
-        {
-          "id": 64,
-          "title": 'Forne...',
-          "icon": Icons.business_rounded,
-          "route": "providerbygroup",
         },
       if (code == 1)
         {

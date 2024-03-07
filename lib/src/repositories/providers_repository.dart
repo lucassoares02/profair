@@ -18,7 +18,6 @@ class ProvidersRepository {
         response = await clientDio.get("${url}providersconsult/$codeClient");
       } else {
         response = await clientDio.get("${url}requestproviderclient/$codeBranch");
-        inspect(response);
       }
       List list = response.data as List;
       return list.map((json) => ProvidersModel.fromJson(json)).toList();

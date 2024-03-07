@@ -26,7 +26,7 @@ class _CardNoticeState extends State<CardNotice> {
         margin: const EdgeInsets.symmetric(horizontal: appPadding),
         padding: const EdgeInsets.all(20),
         width: width,
-        height: 300,
+        height: 240,
         decoration: BoxDecoration(
           // color: colorTertiary,
           color: Color(int.parse(widget.homeController.campaign!.secondaryColor ?? "#f2f2f2")),
@@ -100,13 +100,12 @@ class _CardNoticeState extends State<CardNotice> {
                 Container(
                   width: double.maxFinite,
                   height: 37,
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.background,
-                      borderRadius: const BorderRadius.all(Radius.circular(appRadius))),
+                  decoration: const BoxDecoration(
+                      color: colorSecondary, borderRadius: BorderRadius.all(Radius.circular(appRadius))),
                   child: const Center(
                       child: Text(
                     "Saiba mais",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                   )),
                 )
               ],

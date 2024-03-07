@@ -48,7 +48,8 @@ class _LastRequestsState extends State<LastRequests> {
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
                     child: SkeletonAvatar(
-                      style: SkeletonAvatarStyle(height: 90, width: width, borderRadius: BorderRadius.circular(appRadius)),
+                      style:
+                          SkeletonAvatarStyle(height: 90, width: width, borderRadius: BorderRadius.circular(appRadius)),
                     ),
                   );
                 }),
@@ -91,19 +92,19 @@ class _LastRequestsState extends State<LastRequests> {
                       padding: const EdgeInsets.symmetric(horizontal: appMargin),
                       margin: const EdgeInsets.symmetric(vertical: appMargin / 2),
                       decoration: BoxDecoration(
-                        color: colorGrey.withOpacity(0.5),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(appRadius),
+                        border: Border(
+                          bottom: BorderSide(
+                            color: Colors.grey.withOpacity(0.2),
+                          ),
                         ),
                       ),
                       child: Row(
                         children: [
                           Container(
-                            width: 50,
-                            height: 50,
-                            decoration: const BoxDecoration(color: colorGreyLigth, borderRadius: BorderRadius.all(Radius.circular(50))),
+                            width: 30,
+                            height: 30,
                             child: const Icon(
-                              Icons.swap_vert_outlined,
+                              Icons.receipt_long_outlined,
                               color: colorPrimary,
                             ),
                           ),

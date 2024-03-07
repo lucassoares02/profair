@@ -31,7 +31,7 @@ class _StateManagementState extends State<StateManagement> {
   }
 
   _error() {
-    return const Text('error');
+    return const Center(child: Text('Ops! Tivemos um problema!'));
   }
 
   _loading() {

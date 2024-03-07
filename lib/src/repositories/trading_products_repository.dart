@@ -8,13 +8,12 @@ class TradingProductsRepository {
 
   getTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading, int? codeClient) async {
     Response? response;
-    print(codeClient);
-    print(codeBranch);
     try {
       if (codeClient == 0 && codeBranch == 0) {
         response = await clientDio.get("${url}merchandisenegotiationprovider/$codeProvider/$codeTrading");
       } else if (codeClient == 0) {
-        response = await clientDio.get("${url}merchandiseclientprovidernegotiation/$codeBranch/$codeProvider/$codeTrading");
+        response =
+            await clientDio.get("${url}merchandiseclientprovidernegotiation/$codeBranch/$codeProvider/$codeTrading");
       } else {
         response = await clientDio.get("${url}merchandiseproviderifclient/$codeBranch/$codeProvider/$codeTrading");
       }
