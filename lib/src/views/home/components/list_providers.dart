@@ -99,7 +99,7 @@ class _ListProvidersState extends State<ListProviders> {
                         ),
                       )
                     : SizedBox(
-                        height: 200,
+                        height: 210,
                         child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             itemCount: widget.homeController.topProviders.length,
