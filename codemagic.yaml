@@ -71,6 +71,7 @@ workflows:
     environment:
       android_signing:
         - profair_keystore_android
+      flutter: 3.16.9
     scripts:
       - name: Get Flutter packages
         script: flutter packages pub get
