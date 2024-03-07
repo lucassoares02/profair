@@ -73,7 +73,7 @@ workflows:
         - profair_keystore_android
     scripts:
       - name: Get Flutter packages
-        script: flutter packages pub Get
+        script: flutter packages pub get
       - name: Build apk
         script: flutter build app --release
       - name: Set up key properties
