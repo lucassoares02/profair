@@ -72,6 +72,8 @@ workflows:
       android_signing:
         - profair_keystore_android
     scripts:
+      - name: Flutter Clean
+        script: flutter clean
       - name: Get Flutter packages
         script: flutter packages pub get
       - name: Build apk
