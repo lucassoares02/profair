@@ -32,20 +32,21 @@ dependencies:
   firebase_core: ^2.15.1
   firebase_messaging: ^14.6.6
   url_launcher: ^6.1.14
-  flutter_native_splash: ^2.3.2
+  flutter_native_splash: ^2.3.10
   flutter_launcher_icons: ^0.13.1
   flutter_barcode_scanner: ^2.0.0
   qr_flutter: ^4.1.0
   lottie: ^2.6.0
+  intl: ^0.18.1
 
 
 flutter_native_splash:
-  color: "#0070f3"
+  color: "#ffffff"
   image: "assets/app/splash.png"
   android: true
   ios: true
 
-flutter_icons:
+flutter_launcher_icons:
   image_path: "assets/app/icon.png"
   ios: true
   remove_alpha_ios: true

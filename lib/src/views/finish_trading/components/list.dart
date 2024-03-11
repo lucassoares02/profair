@@ -106,76 +106,126 @@ class _ComponentListState extends State<ComponentList> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              //   children: const [Icon(Icons.shield_outlined, color: colorSecondary)],
-              // ),
-              // const AppSpacing(),
-              const AppSpacing(),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: colorGrey)),
-                      ),
+              if (widget.listBranchs!.length > 1)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Deseja adicionar outras lojas?",
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "Importante! Caso outras opções sejam selecionadas, o mesmo pedido será replicado para as demais filiais, confira a diferença de valor na sessão abaixo em 'Valor Total'.",
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      width: width,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              ValueListenableBuilder(
-                                  valueListenable: widget.finishTradingController.stateTradings,
-                                  builder: (context, value, child) {
-                                    return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: widget.listBranchs!.asMap().entries.map((e) {
-                                        return e.value.checked!
-                                            ? Container(
-                                                margin: const EdgeInsets.symmetric(vertical: appMargin),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      e.value.nameCompany!,
-                                                      style: const TextStyle(
-                                                          fontSize: 18,
-                                                          color: colorGreyDark,
-                                                          fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const SizedBox(height: 5),
-                                                    Text(
-                                                      e.value.documentCompany!,
-                                                      style: const TextStyle(fontSize: 14, color: colorGreyDark),
-                                                    ),
-                                                  ],
-                                                ),
-                                              )
-                                            : Container();
-                                      }).toList(),
-                                    );
-                                  }),
-                              Container(
-                                padding: EdgeInsets.symmetric(vertical: 10),
-                                child: Text(
-                                  "${DateTime.now().hour}:${DateTime.now().minute}",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: colorGreyDark,
-                                  ),
+                        children: widget.listBranchs!.asMap().entries.map(
+                          (e) {
+                            return InkWell(
+                              onTap: () {
+                                if (e.value.checked! && widget.finishTradingController.totalCheckedBranch > 1) {
+                                  widget.finishTradingController.totalCheckedBranch -= 1;
+                                  widget.listBranchs![e.key].checked = !e.value.checked!;
+                                } else if (e.value.checked! == false) {
+                                  widget.finishTradingController.totalCheckedBranch += 1;
+                                  widget.listBranchs![e.key].checked = !e.value.checked!;
+                                }
+                                widget.finishTradingController.updateTrading();
+                              },
+                              child: Container(
+                                width: double.maxFinite,
+                                decoration: const BoxDecoration(
+                                  border: Border(bottom: BorderSide(color: colorGrey)),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    ValueListenableBuilder(
+                                        valueListenable: widget.finishTradingController.stateTradings,
+                                        builder: (context, bool value, child) {
+                                          return Checkbox(
+                                            activeColor: colorSecondary,
+                                            value: e.value.checked,
+                                            side: const BorderSide(color: colorGrey),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(4),
+                                              ),
+                                            ),
+                                            onChanged: (value) {},
+                                          );
+                                        }),
+                                    Text(
+                                      e.value.nameCompany!.length < 28
+                                          ? '${e.value.nameCompany}'
+                                          : e.value.nameCompany!.substring(0, 25),
+                                      style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
+                            );
+                          },
+                        ).toList(),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              const AppSpacing(),
+              Container(
+                decoration: const BoxDecoration(
+                  border: Border(bottom: BorderSide(color: colorGrey)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        ValueListenableBuilder(
+                            valueListenable: widget.finishTradingController.stateTradings,
+                            builder: (context, value, child) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: widget.listBranchs!.asMap().entries.map((e) {
+                                  return e.value.checked!
+                                      ? Container(
+                                          margin: const EdgeInsets.symmetric(vertical: appMargin),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                e.value.documentCompany!,
+                                                style: const TextStyle(
+                                                    fontSize: 18, color: colorGreyDark, fontWeight: FontWeight.bold),
+                                                overflow: TextOverflow.fade,
+                                              ),
+                                              // const SizedBox(height: 5),
+                                              // Text(
+                                              //   e.value.documentCompany.toString(),
+                                              //   style: const TextStyle(fontSize: 14, color: colorGreyDark),
+                                              // ),
+                                            ],
+                                          ),
+                                        )
+                                      : Container();
+                                }).toList(),
+                              );
+                            }),
+                      ],
+                    ),
+                  ],
+                ),
               ),
               const AppSpacing(),
               ValueListenableBuilder(
@@ -252,139 +302,84 @@ class _ComponentListState extends State<ComponentList> {
                                   ],
                                 ),
                               ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    child: Text(
+                                      "${DateTime.now().hour}:${DateTime.now().minute}",
+                                      style: const TextStyle(
+                                        fontSize: 14,
+                                        color: colorGreyDark,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ],
                           );
                   })
             ],
           ),
         ),
-        const AppSpacing(),
-        const AppSpacing(),
-        const AppSpacing(),
-        const AppSpacing(),
-        Container(
-          padding: const EdgeInsets.all(appPadding),
-          child: const Text(
-            "Selecione as negociações desejadas",
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
-        SizedBox(
-          width: width,
-          child: Column(
-              children: widget.tradings.asMap().entries.map((trading) {
-            return InkWell(
-              onTap: () => handleChangeCheckbox(trading),
-              child: Container(
-                width: double.maxFinite,
-                margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: colorGrey)),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    ValueListenableBuilder(
-                        valueListenable: widget.finishTradingController.stateTradings,
-                        builder: (context, bool value, child) {
-                          return Checkbox(
-                            activeColor: colorSecondary,
-                            value: trading.value.checked,
-                            side: const BorderSide(color: colorGrey),
-                            shape: const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(4),
-                              ),
-                            ),
-                            onChanged: (value) {
-                              handleChangeCheckbox(trading);
-                            },
-                          );
-                        }),
-                    Text(
-                      trading.value.title!.length < 28
-                          ? '${trading.value.negotiation} -  ${trading.value.title}'
-                          : trading.value.title!.substring(0, 25),
-                      style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          }).toList()),
-        ),
-        const AppSpacing(),
-        if (widget.listBranchs!.length > 1)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const AppSpacing(),
-              const AppSpacing(),
-              Container(
-                padding: const EdgeInsets.all(appPadding),
-                child: const Text(
-                  "Deseja adicionar outras lojas?",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(
-                width: width,
-                child: Column(
-                  children: widget.listBranchs!.asMap().entries.map(
-                    (e) {
-                      return InkWell(
-                        onTap: () {
-                          if (e.value.checked! && widget.finishTradingController.totalCheckedBranch > 1) {
-                            widget.finishTradingController.totalCheckedBranch -= 1;
-                            widget.listBranchs![e.key].checked = !e.value.checked!;
-                          } else if (e.value.checked! == false) {
-                            widget.finishTradingController.totalCheckedBranch += 1;
-                            widget.listBranchs![e.key].checked = !e.value.checked!;
-                          }
-                          widget.finishTradingController.updateTrading();
-                        },
-                        child: Container(
-                          width: double.maxFinite,
-                          margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                          decoration: const BoxDecoration(
-                            border: Border(bottom: BorderSide(color: colorGrey)),
-                          ),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              ValueListenableBuilder(
-                                  valueListenable: widget.finishTradingController.stateTradings,
-                                  builder: (context, bool value, child) {
-                                    return Checkbox(
-                                      activeColor: colorSecondary,
-                                      value: e.value.checked,
-                                      side: const BorderSide(color: colorGrey),
-                                      shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                          Radius.circular(4),
-                                        ),
-                                      ),
-                                      onChanged: (value) {},
-                                    );
-                                  }),
-                              Text(
-                                e.value.nameCompany!.length < 28
-                                    ? '${e.value.codeBranch} -  ${e.value.nameCompany}'
-                                    : e.value.nameCompany!.substring(0, 25),
-                                style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  ).toList(),
-                ),
-              ),
-            ],
-          ),
+        // const AppSpacing(),
+        // const AppSpacing(),
+        // const AppSpacing(),
+        // const AppSpacing(),
+        // Container(
+        //   padding: const EdgeInsets.all(appPadding),
+        //   child: const Text(
+        //     "Selecione as negociações desejadas",
+        //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        //   ),
+        // ),
+        // SizedBox(
+        //   width: width,
+        //   child: Column(
+        //       children: widget.tradings.asMap().entries.map((trading) {
+        //     return InkWell(
+        //       onTap: () => handleChangeCheckbox(trading),
+        //       child: Container(
+        //         width: double.maxFinite,
+        //         margin: const EdgeInsets.symmetric(horizontal: appMargin),
+        //         decoration: const BoxDecoration(
+        //           border: Border(bottom: BorderSide(color: colorGrey)),
+        //         ),
+        //         child: Row(
+        //           crossAxisAlignment: CrossAxisAlignment.center,
+        //           mainAxisAlignment: MainAxisAlignment.start,
+        //           children: [
+        //             ValueListenableBuilder(
+        //                 valueListenable: widget.finishTradingController.stateTradings,
+        //                 builder: (context, bool value, child) {
+        //                   return Checkbox(
+        //                     activeColor: colorSecondary,
+        //                     value: trading.value.checked,
+        //                     side: const BorderSide(color: colorGrey),
+        //                     shape: const RoundedRectangleBorder(
+        //                       borderRadius: BorderRadius.all(
+        //                         Radius.circular(4),
+        //                       ),
+        //                     ),
+        //                     onChanged: (value) {
+        //                       handleChangeCheckbox(trading);
+        //                     },
+        //                   );
+        //                 }),
+        //             Text(
+        //               trading.value.title!.length < 28
+        //                   ? '${trading.value.negotiation} -  ${trading.value.title}'
+        //                   : trading.value.title!.substring(0, 25),
+        //               style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+        //             ),
+        //           ],
+        //         ),
+        //       ),
+        //     );
+        //   }).toList()),
+        // ),
+
         const AppSpacing(),
         const AppSpacing(),
         Container(

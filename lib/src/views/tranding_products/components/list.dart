@@ -315,6 +315,7 @@ class _ComponentListState extends State<ComponentList> {
                         "codeTrading": widget.codeTrading,
                         // "productsTrading": widget.tradingProductsController.productsTrading,
                         "productsTrading": widget.tradingProductsController.products,
+                        "initialListProducts": widget.tradingProductsController.initialListproducts,
                         "tradings": widget.tradings,
                         "listBranchs": widget.listBranchs
                       });

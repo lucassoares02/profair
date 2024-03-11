@@ -1,46 +1,4 @@
 workflows:
-  # ios-method-1:
-  #   name: IOS signing method-1 workflow
-  #   environment:
-  #     ios_signing:
-  #       distribution_type: app_store
-  #       bundle_identifier: br.com.profair.profair
-  #   scripts:
-  #     - script: keychain initialize
-  #     - script: keychain add-certificates
-
-  #     - script: xcode-project use-profiles
-  #     - script: flutter packages pub get
-  #     - name: Flutter build ipa and automatic versioning
-  #       script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-  #   artifacts:
-  #     - build/ios/ipa/*.ipa
-  #   publishing:
-  #     email:
-  #       recipients:
-  #         - arbian.app@gmail.com
-  # ios-method-2:
-  #   name: IOS signing method-2 workflow
-  #   environment:
-  #     ios_signing:
-  #       provisioning_profiles:
-  #         - profair_certificate
-  #       certificates:
-  #         - profair_certificate_distribution
-  #   scripts:
-  #     - script: keychain initialize
-  #     - script: keychain add-certificates
-
-  #     - script: xcode-project use-profiles
-  #     - script: flutter packages pub get
-  #     - name: Flutter build ipa and automatic versioning
-  #       script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-  #   artifacts:
-  #     - build/ios/ipa/*.ipa
-  #   publishing:
-  #     email:
-  #       recipients:
-  #         - arbian.app@gmail.com
   app-store:
     name: Publishing to App Store workflow
     environment:
@@ -71,32 +29,16 @@ workflows:
     environment:
       android_signing:
         - profair_keystore_android
-      flutter: 3.16.9
-    # scripts:
-    #   - name: Get Flutter packages
-    #     script: flutter packages pub get
-    #   - name: Build apk
-    #     script: flutter build appbundle --release
-    #   - name: Set up key properties
-    #     script: cat >> "CM_BUILD_DIR/android/key.properties" <<EOF storePassword=$CM_KEYSTORE_PASSWORD keyPassword=$CM_KEY_PASSWORD $keyAlias=$CM_KEY_ALIAS storeFile=$CM_KEYSTORE_PATH EOF
-    # artifacts:
-    #   - build/**/outputs/apk/**/*.apk
-    #   - build/**/outputs/**/*.aab
-    #    - flutter_drive.log
     scripts:
-    - name: Set up local.properties
-      script: 
-        echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
-    - name: Get Flutter packages
-      script: 
-        flutter packages pub get
-    - name: Build AAB with Flutter
-      script: 
-        flutter build appbundle --release
+      - name: Get Flutter packages
+        script: flutter packages pub get
+      - name: Build apk
+        script: flutter build appbundle --release
+      - name: Set up key properties
+        script: cat >> "CM_BUILD_DIR/android/key.properties" <<EOF storePassword=$CM_KEYSTORE_PASSWORD keyPassword=$CM_KEY_PASSWORD $keyAlias=$CM_KEY_ALIAS storeFile=$CM_KEYSTORE_PATH EOF
     artifacts:
+      - build/**/outputs/apk/**/*.apk
       - build/**/outputs/**/*.aab
-      - build/**/outputs/**/mapping.txt
-      - flutter_drive.log
-
+       - flutter_drive.log
 
        

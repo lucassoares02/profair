@@ -52,10 +52,8 @@ class HomeController extends ValueNotifier<StateApp> {
       data = moreData![indexSelected];
 
       int codeRequest = 0;
-      if (data!.accessTargeting == 1) {
+      if (data!.accessTargeting == 1 || data!.accessTargeting == 2) {
         codeRequest = data!.codCompany!;
-      } else if (data!.accessTargeting == 2) {
-        codeRequest = data!.userCode!;
       }
       await findLastTradings(codeRequest, data!.accessTargeting);
       getCategories();

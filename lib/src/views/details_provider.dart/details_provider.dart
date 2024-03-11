@@ -10,6 +10,7 @@ class DetailsProvider extends StatefulWidget {
     this.codeBranch,
     this.codeProvider,
     this.imageProvider,
+    this.color,
     this.nameProvider,
   });
 
@@ -17,19 +18,20 @@ class DetailsProvider extends StatefulWidget {
   final int? codeProvider;
   final String? imageProvider;
   final String? nameProvider;
+  final String? color;
 
   @override
   State<DetailsProvider> createState() => _DetailsProviderState();
 }
 
 class _DetailsProviderState extends State<DetailsProvider> {
-  final DetailsProviderController detailsProviderController = DetailsProviderController(StateApp.start, DetailsProviderRepository());
+  final DetailsProviderController detailsProviderController =
+      DetailsProviderController(StateApp.start, DetailsProviderRepository());
 
   @override
   void initState() {
-    print("init state detils");
     detailsProviderController.findNegotiations(widget.codeBranch!, widget.codeProvider!);
-    detailsProviderController.findMerchandises(widget.codeBranch!, widget.codeProvider!);
+
     super.initState();
   }
 
@@ -39,8 +41,9 @@ class _DetailsProviderState extends State<DetailsProvider> {
       detailsProviderController: detailsProviderController,
       codeProvider: widget.codeProvider!,
       codeBranch: widget.codeBranch!,
-      image: widget.imageProvider!,
+      image: widget.imageProvider,
       nameProvider: widget.nameProvider!,
+      color: widget.color,
     );
   }
 }

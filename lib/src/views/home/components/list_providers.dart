@@ -1,4 +1,3 @@
-import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/utils/spacing.dart';
@@ -107,13 +106,21 @@ class _ListProvidersState extends State<ListProviders> {
                               final lastItem = widget.homeController.topProviders.length - 1 == index;
                               return InkWell(
                                 onTap: () {
-                                  // Navigator.of(context).pushNamed('detailsrecipe', arguments: e);
+                                  Navigator.of(context).pushNamed(
+                                    "detailsprovider",
+                                    arguments: {
+                                      "codeProvider": widget.homeController.topProviders[index].codeProvider,
+                                      "imageProvider": widget.homeController.topProviders[index].image,
+                                      "nameProvider": widget.homeController.topProviders[index].nameProvider,
+                                      "codeBranch": widget.homeController.data!.codCompany,
+                                      "color": widget.homeController.topProviders[index].color
+                                    },
+                                  );
                                 },
                                 child: Container(
                                   width: 250,
                                   margin: EdgeInsets.only(left: appMargin, right: lastItem ? appMargin : 0),
                                   decoration: BoxDecoration(
-                                    color: colorGrey.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(appRadius),
                                   ),
                                   child: Row(
@@ -125,24 +132,29 @@ class _ListProvidersState extends State<ListProviders> {
                                           children: [
                                             Container(
                                               decoration: BoxDecoration(
-                                                color: widget.homeController.topProviders[index].color != null
-                                                    ? Color(int.parse(widget.homeController.topProviders[index].color!))
-                                                    : colorPrimary,
-                                                borderRadius: const BorderRadius.only(
-                                                  topLeft: Radius.circular(appRadius),
-                                                  topRight: Radius.circular(appRadius),
-                                                ),
-                                              ),
+                                                  color: widget.homeController.topProviders[index].color != null
+                                                      ? Color(
+                                                          int.parse(widget.homeController.topProviders[index].color!))
+                                                      : colorPrimary,
+                                                  borderRadius: BorderRadius.circular(appRadius)),
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
                                                 children: [
-                                                  if (widget.homeController.topProviders[index].image != null)
-                                                    Image.network(
-                                                      widget.homeController.topProviders[index].image!,
-                                                      width: 100,
-                                                      height: 100,
-                                                    ),
+                                                  widget.homeController.topProviders[index].image != null
+                                                      ? Image.network(
+                                                          widget.homeController.topProviders[index].image!,
+                                                          width: 100,
+                                                          height: 100,
+                                                        )
+                                                      : Container(
+                                                          width: 100,
+                                                          height: 100,
+                                                          child: Icon(
+                                                            Icons.image_not_supported_outlined,
+                                                            color: colorWhite.withOpacity(0.3),
+                                                          ),
+                                                        )
                                                 ],
                                               ),
                                             ),

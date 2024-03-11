@@ -20,6 +20,7 @@ class ComponentList extends StatefulWidget {
     this.codeClient,
     this.nameBranch,
     required this.state,
+    this.balance = true,
     required this.listBranchs,
   });
 
@@ -30,6 +31,7 @@ class ComponentList extends StatefulWidget {
   final String? nameBranch;
   final int? codeProvider;
   final int? codeClient;
+  final bool balance;
   final List<ClientsSelectStoreModel>? listBranchs;
 
   @override
@@ -53,53 +55,55 @@ class _ComponentListState extends State<ComponentList> {
           ),
           Column(
               children: widget.listItems.asMap().entries.map((e) {
-            return InkWell(
-              onTap: () {
-                widget.listItems[e.key].checked = true;
-                Navigator.of(context).pushNamed('tradingproducts', arguments: {
-                  "codeProvider": widget.codeProvider,
-                  "codeBranch": widget.codeBranch,
-                  "nameBranch": widget.nameBranch,
-                  "codeClient": widget.codeClient,
-                  "codeTrading": e.value.negotiation,
-                  "tradings": widget.listItems,
-                  "listBranchs": widget.listBranchs,
-                });
-              },
-              child: Container(
-                height: 90,
-                padding: const EdgeInsets.all(appMargin),
-                margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: colorGrey)),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      e.value.title!.length < 28 ? '${e.value.title}' : e.value.title!.substring(0, 25),
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            return e.value.confirm == null && widget.balance
+                ? Container()
+                : InkWell(
+                    onTap: () {
+                      widget.listItems[e.key].checked = true;
+                      Navigator.of(context).pushNamed('tradingproducts', arguments: {
+                        "codeProvider": widget.codeProvider,
+                        "codeBranch": widget.codeBranch,
+                        "nameBranch": widget.nameBranch,
+                        "codeClient": widget.codeClient,
+                        "codeTrading": e.value.negotiation,
+                        "tradings": widget.listItems,
+                        "listBranchs": widget.listBranchs,
+                      });
+                    },
+                    child: Container(
+                      height: 90,
+                      padding: const EdgeInsets.all(appMargin),
+                      margin: const EdgeInsets.symmetric(horizontal: appMargin),
+                      decoration: const BoxDecoration(
+                        border: Border(bottom: BorderSide(color: colorGrey)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            e.value.title!.length < 28 ? '${e.value.title}' : e.value.title!.substring(0, 25),
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '${e.value.negotiation}',
+                                style: const TextStyle(color: colorGreyDark),
+                              ),
+                              if (e.value.confirm != null)
+                                const Icon(
+                                  Icons.done_all,
+                                  color: colorBlue,
+                                  size: appPadding,
+                                )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '${e.value.negotiation}',
-                          style: const TextStyle(color: colorGreyDark),
-                        ),
-                        if (e.value.confirm != null)
-                          const Icon(
-                            Icons.done_all,
-                            color: colorBlue,
-                            size: appPadding,
-                          )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
+                  );
           }).toList())
         ],
       ),

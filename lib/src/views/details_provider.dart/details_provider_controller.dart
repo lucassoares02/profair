@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
@@ -13,6 +15,7 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
   List<ProductsProviderModel> merchandisesBackup = [];
   final stateNegotiations = ValueNotifier<StateApp>(StateApp.start);
   final stateMerchandises = ValueNotifier<StateApp>(StateApp.start);
+  ValueNotifier<int> indexNegotiationSelected = ValueNotifier(0);
   final DetailsProviderRepository _detailsProviderRepository;
   int sortInt = 0;
 
@@ -21,20 +24,23 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
     try {
       negotiations = await _detailsProviderRepository.getNegotiations(codeBranch, codeProvider);
       stateNegotiations.value = StateApp.success;
+      if (negotiations.isNotEmpty && negotiations[indexNegotiationSelected.value].negotiation != null) {
+        findMerchandises(codeBranch, codeProvider, negotiations[indexNegotiationSelected.value].negotiation!);
+      }
     } catch (e) {
-      print("Error Find Negotiations: $e");
+      debugPrint("Find Negotiations (Details Provider Controller) Error: $e");
       stateNegotiations.value = StateApp.error;
     }
   }
 
-  Future findMerchandises(int codeClient, int codeProvider) async {
+  Future findMerchandises(int codeBranch, int codeProvider, int codeNegotiation) async {
     stateMerchandises.value = StateApp.loading;
     try {
-      merchandises = await _detailsProviderRepository.getMerchandises(codeClient, codeProvider);
+      merchandises = await _detailsProviderRepository.getMerchandises(codeBranch, codeProvider, codeNegotiation);
       merchandisesBackup = merchandises;
       stateMerchandises.value = StateApp.success;
     } catch (e) {
-      print("Error Find Merchandises: $e");
+      debugPrint("Find Merhcandises (Details Provider Controller) Error: $e");
       stateMerchandises.value = StateApp.error;
     }
   }

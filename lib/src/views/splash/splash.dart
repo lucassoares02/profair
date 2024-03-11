@@ -1,4 +1,5 @@
 import 'package:profair/src/components/progress_indicator.dart';
+import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/splash_controller.dart';
 import 'package:profair/src/repositories/login_repository.dart';
 import 'package:profair/src/state/state_app.dart';
@@ -37,17 +38,17 @@ class _SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: colorSecondary,
+      backgroundColor: colorWhite,
       body: SafeArea(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Image.asset(
-                'assets/images/iconwhite.png',
-                height: 60,
+                'assets/images/iconblue.png',
+                height: 100,
               ),
-              AppProgressIndicator(colorItem: colorWhite),
+              AppProgressIndicator(colorItem: colorPrimary),
             ],
           ),
         ),

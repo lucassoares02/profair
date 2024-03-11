@@ -1,3 +1,4 @@
+import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
 import 'package:profair/src/views/home/components/card_count.dart';
@@ -96,11 +97,48 @@ class _HomePageState extends State<HomePage> {
                               )
                             : CardNotice(homeController: homeController);
                       }),
-                  const AppSpacing(),
                   CardCount(homeController: homeController),
                   const AppSpacing(),
-                  AppActions(homeController: homeController),
-                  const AppSpacing(),
+                  ValueListenableBuilder(
+                      valueListenable: homeController.stateData,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? LoadingList(loadingHeader: false)
+                            : homeController.data!.accessTargeting == 3 || homeController.data!.accessTargeting == 1
+                                ? Column(
+                                    children: [
+                                      AppActions(homeController: homeController),
+                                      const AppSpacing(),
+                                    ],
+                                  )
+                                : Container();
+                      }),
+                  InkWell(
+                    onTap: () {
+                      Navigator.of(context).pushNamed("reports", arguments: {
+                        "accessTargeting": homeController.data!.accessTargeting,
+                        "codeProvider": homeController.data!.accessTargeting == 2
+                            ? homeController.data!.userCode
+                            : homeController.data!.codCompany
+                      });
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.all(appMargin),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(appRadius)),
+                      padding: const EdgeInsets.all(appPadding * 1.1),
+                      child: const Row(children: [
+                        Icon(
+                          Icons.bar_chart,
+                        ),
+                        AppSpacing(),
+                        Text(
+                          "Acompanhe suas estastísticas no evento",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ]),
+                    ),
+                  ),
                   const AppSpacing(),
                   ValueListenableBuilder(
                       valueListenable: homeController.stateData,
@@ -109,7 +147,16 @@ class _HomePageState extends State<HomePage> {
                             ? LoadingList(loadingHeader: false)
                             : homeController.data!.accessTargeting == 3
                                 ? Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      const Padding(
+                                        padding: EdgeInsets.only(left: appPadding, bottom: appPadding),
+                                        child: Text(
+                                          "Carteiras",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
+                                        ),
+                                      ),
                                       Categories(homeController: homeController),
                                       const AppSpacing(),
                                       const AppSpacing(),
@@ -117,21 +164,6 @@ class _HomePageState extends State<HomePage> {
                                   )
                                 : Container();
                       }),
-                  // ValueListenableBuilder(
-                  //   valueListenable: homeController.stateData,
-                  //   builder: (context, value, child) {
-                  //     return value == StateApp.loading
-                  //         ? LoadingNotice(cardHeigth: 90, cardWidth: 340)
-                  //         : Notices(
-                  //             homeController: homeController,
-                  //             title: S.of(context).text_notifications,
-                  //             cardHeigth: 90,
-                  //             cardWidth: 340,
-                  //           );
-                  //   },
-                  // ),
-                  const AppSpacing(),
-
                   Container(
                     margin: const EdgeInsets.only(bottom: appPadding),
                     child: ValueListenableBuilder(

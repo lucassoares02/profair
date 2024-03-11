@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:profair/src/controllers/requests_stores_controller.dart';
+import 'package:profair/src/controllers/details_balance_controller.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -20,7 +20,7 @@ class ComponentList extends StatefulWidget {
     required this.state,
     required this.codeProvider,
     this.userCode,
-    required this.requestsStoresController,
+    required this.balanceController,
   });
 
   Iterable<RequestsStoresModel> listItems;
@@ -28,7 +28,7 @@ class ComponentList extends StatefulWidget {
   final ValueListenable state;
   final int? codeProvider;
   final int? userCode;
-  final RequestsStoresController requestsStoresController;
+  final DetailsBalanceController balanceController;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -47,36 +47,20 @@ class _ComponentListState extends State<ComponentList> {
           HeaderList(
             icon: Icons.handshake,
             onSearch: (String? value) {
-              widget.requestsStoresController.search(value);
+              widget.balanceController.search(value);
             },
             label: S.of(context).text_orders_placed,
           ),
           ValueListenableBuilder(
-              valueListenable: widget.requestsStoresController.stateSearchStore,
+              valueListenable: widget.balanceController.stateSearchStore,
               builder: (context, value, child) {
                 return Column(
-                    children: widget.requestsStoresController.requestsStores.map((e) {
+                    children: widget.balanceController.requestsStores.map((e) {
                   return InkWell(
-                    onTap: () {
-                      inspect(e);
-                      if (widget.userCode != 0) {
-                        Navigator.of(context).pushNamed('selectprovider', arguments: {
-                          "codeClient": 0,
-                          "codeBranch": e.codeBranch,
-                          "codeBuyer": 0,
-                        });
-                      } else if (widget.codeProvider != 0) {
-                        Navigator.of(context).pushNamed('selectnegotiation', arguments: {
-                          "codeBranch": e.codeClient,
-                          "codeClient": 0,
-                          "codeProvider": widget.codeProvider,
-                          "balance": true,
-                        });
-                      }
-                    },
+                    onTap: () {},
                     child: Container(
                       width: width,
-                      height: 90,
+                      height: 100,
                       padding: const EdgeInsets.all(appMargin),
                       margin: const EdgeInsets.symmetric(horizontal: appMargin),
                       decoration: const BoxDecoration(
@@ -86,17 +70,26 @@ class _ComponentListState extends State<ComponentList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                e.descriptionNegotiation!,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                            ],
+                          ),
                           Text(
-                            e.documentCompany!,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                            e.nameForn!,
+                            style: const TextStyle(color: colorGreyDark),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Text(
-                              //   '${e.documentCompany}',
-                              //   style: const TextStyle(color: colorGreyDark),
-                              // ),
+                              Text(
+                                e.hour!,
+                                style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w300),
+                              ),
                               Text(
                                 formatCurrency(e.value!),
                                 style: const TextStyle(color: colorGreyDark),

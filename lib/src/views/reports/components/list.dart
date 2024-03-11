@@ -46,11 +46,15 @@ class _ComponentListState extends State<ComponentList> {
                     return value == StateApp.loading
                         ? LoadingList(loadingHeader: false)
                         : CardPercentage(
-                            title: widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "Clientes Atendidos" : "Fornecedores visitados",
+                            title: widget.accessTargeting == 1 || widget.accessTargeting == 3
+                                ? "Clientes Atendidos"
+                                : "Fornecedores visitados",
                             content:
                                 "Nessa sessão é possível visualizar quantos ${widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes no evento.",
-                            value: "${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%",
-                            footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
+                            value:
+                                "${double.parse("${widget.reportsController.percentageClients!.percentage}").toStringAsFixed(0)}%",
+                            footer:
+                                "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
                             reportsController: widget.reportsController,
                           );
                   }),
@@ -65,7 +69,8 @@ class _ComponentListState extends State<ComponentList> {
                               backgroundColor: colorRed,
                               reportsController: widget.reportsController,
                               title: "Fornecedores com venda",
-                              value: "${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%",
+                              value:
+                                  "${double.parse("${widget.reportsController.percentageProviders!.percentage}").toStringAsFixed(0)}%",
                               footer:
                                   "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
                             );
@@ -166,7 +171,8 @@ class _ComponentListState extends State<ComponentList> {
                                       Radius.circular(appRadius),
                                     ),
                                   ),
-                                  child: BarChartSample1(reportsProducts: widget.reportsController.reportsTotalProducts));
+                                  child:
+                                      BarChartSample1(reportsProducts: widget.reportsController.reportsTotalProducts));
                         }),
             ],
           ),

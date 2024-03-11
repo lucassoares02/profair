@@ -1,29 +1,29 @@
-import 'package:profair/src/repositories/requests_stores_repository.dart';
-import 'package:profair/src/views/requests_stores/components/list.dart';
-import 'package:profair/src/controllers/requests_stores_controller.dart';
+import 'package:profair/src/repositories/details_balance_repository.dart';
+import 'package:profair/src/views/details_balance/components/list.dart';
+import 'package:profair/src/controllers/details_balance_controller.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class RequestsStores extends StatefulWidget {
-  const RequestsStores({super.key, required this.codeProvider, required this.userCode});
+class DetailsBalance extends StatefulWidget {
+  const DetailsBalance({super.key, required this.codeProvider, required this.userCode});
 
   final int? codeProvider;
   final int? userCode;
 
   @override
-  State<RequestsStores> createState() => _RequestsStoresState();
+  State<DetailsBalance> createState() => _DetailsBalanceState();
 }
 
-class _RequestsStoresState extends State<RequestsStores> {
-  final RequestsStoresController storesController =
-      RequestsStoresController(StateApp.start, RequestsStoresRepository());
+class _DetailsBalanceState extends State<DetailsBalance> {
+  final DetailsBalanceController balanceController =
+      DetailsBalanceController(StateApp.start, DetailsBalanceRepository());
 
   @override
   void initState() {
-    storesController.findRequestsStores(widget.codeProvider, widget.userCode);
+    balanceController.findRequests(widget.codeProvider, widget.userCode);
     super.initState();
   }
 
@@ -35,14 +35,14 @@ class _RequestsStoresState extends State<RequestsStores> {
         child: SafeArea(
           child: SingleChildScrollView(
             child: ValueListenableBuilder(
-              valueListenable: storesController.stateStores,
+              valueListenable: balanceController.stateStores,
               builder: (context, value, child) {
                 return ComponentList(
                     description: S.of(context).text_select_branch,
-                    state: storesController.stateStores,
+                    state: balanceController.stateStores,
                     codeProvider: widget.codeProvider,
-                    listItems: storesController.requestsStores,
-                    requestsStoresController: storesController,
+                    listItems: balanceController.requestsStores,
+                    balanceController: balanceController,
                     userCode: widget.userCode);
               },
             ),

@@ -27,7 +27,8 @@ class _AppActionsState extends State<AppActions> {
     if (route == "selectstore") {
       navigatorRoutes("preorder", widget.homeController);
     } else if (route == "productsprovider") {
-      navigatorRoutes(route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});
+      navigatorRoutes(
+          route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});
     } else if (route == "clients") {
       navigatorRoutes(
         route,
@@ -44,7 +45,9 @@ class _AppActionsState extends State<AppActions> {
       inspect(widget.homeController.data);
       navigatorRoutes(route, {
         "accessTargeting": widget.homeController.data!.accessTargeting,
-        "codeProvider": widget.homeController.data!.accessTargeting == 2 ? widget.homeController.data!.userCode : widget.homeController.data!.codCompany
+        "codeProvider": widget.homeController.data!.accessTargeting == 2
+            ? widget.homeController.data!.userCode
+            : widget.homeController.data!.codCompany
       });
     } else if (route == "providerbygroup") {
       navigatorRoutes(
@@ -133,7 +136,9 @@ class _AppActionsState extends State<AppActions> {
                       // testeInterno();
                     },
                     child: Container(
-                      margin: EdgeInsets.only(left: (index == 0) ? 20 : appMargin, right: (index == widget.homeController.categories.length - 1) ? appMargin : 0),
+                      margin: EdgeInsets.only(
+                          left: (index == 0) ? 20 : appMargin,
+                          right: (index == widget.homeController.categories.length - 1) ? appMargin : 0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [

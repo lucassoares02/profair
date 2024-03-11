@@ -60,31 +60,49 @@ class _CategoriesState extends State<Categories> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context)
-                          .pushNamed('selectprovider', arguments: {"codeBuyer": widget.homeController.buyers[index].codeBuyer, "codeClient": 0, "codeBranch": 0});
+                      Navigator.of(context).pushNamed('selectprovider', arguments: {
+                        "codeBuyer": widget.homeController.buyers[index].codeBuyer,
+                        "codeClient": 0,
+                        "codeBranch": 0
+                      });
                     },
                     child: Container(
                       width: 200,
                       padding: const EdgeInsets.all(appPadding),
-                      margin: EdgeInsets.only(left: appMargin, right: index == widget.homeController.buyers.length - 1 ? appMargin : 0),
-                      decoration: const BoxDecoration(color: colorSecondary, borderRadius: BorderRadius.all(Radius.circular(appRadius))),
+                      margin: EdgeInsets.only(
+                          left: appMargin, right: index == widget.homeController.buyers.length - 1 ? appMargin : 0),
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.2),
+                          borderRadius: const BorderRadius.all(Radius.circular(appRadius))),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(
-                            Icons.handshake_outlined,
-                            color: colorWhite,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            formatCurrency(widget.homeController.buyers[index].total!),
-                            style: const TextStyle(
-                              color: colorWhite,
-                              fontSize: 12,
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                widget.homeController.buyers[index].category!,
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              ),
+                              Container(
+                                padding: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                    color: widget.homeController.buyers[index].color != null
+                                        ? Color(int.parse("0X51A${widget.homeController.buyers[index].color}"))
+                                        : Colors.grey.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(appRadius)),
+                                child: Icon(
+                                  Icons.category_outlined,
+                                  size: 20,
+                                  color: widget.homeController.buyers[index].color != null
+                                      ? Color(int.parse("0XFF${widget.homeController.buyers[index].color}"))
+                                      : Colors.black,
+                                ),
+                              ),
+                            ],
                           ),
                           const SizedBox(
                             height: 10,
@@ -94,7 +112,12 @@ class _CategoriesState extends State<Categories> {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
-                              color: colorWhite,
+                            ),
+                          ),
+                          Text(
+                            formatCurrency(widget.homeController.buyers[index].total!),
+                            style: const TextStyle(
+                              fontSize: 12,
                             ),
                           ),
                         ],

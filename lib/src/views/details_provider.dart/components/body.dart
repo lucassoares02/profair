@@ -17,14 +17,16 @@ class DetailsProviderScreen extends StatefulWidget {
     required this.detailsProviderController,
     required this.codeBranch,
     required this.codeProvider,
-    required this.image,
+    this.image,
+    this.color,
     required this.nameProvider,
   });
 
   final DetailsProviderController detailsProviderController;
   final int codeBranch;
   final int codeProvider;
-  final String image;
+  final String? image;
+  final String? color;
   final String nameProvider;
 
   @override
@@ -32,47 +34,79 @@ class DetailsProviderScreen extends StatefulWidget {
 }
 
 class _DetailsProviderState extends State<DetailsProviderScreen> {
+  bool headerProvider = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: Column(
             children: [
-              HeaderList(label: "Informações", activeSearch: false),
+              HeaderList(
+                  label: "Detalhes do Fornecedor",
+                  onCloseInfo: () {
+                    setState(() {
+                      headerProvider = !headerProvider;
+                    });
+                  },
+                  activeSearch: true,
+                  onSearch: (value) => widget.detailsProviderController.search(value),
+                  onSort: () => widget.detailsProviderController.sort()),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    height: 150,
-                    padding: const EdgeInsets.symmetric(horizontal: appPadding),
-                    decoration: const BoxDecoration(
-                      color: colorGreyLigth,
-                    ),
-                    child: Row(
+                  if (headerProvider)
+                    Column(
                       children: [
-                        Stack(
-                          children: [
-                            Container(
-                              height: 70,
-                              width: 70,
-                              decoration: const BoxDecoration(
-                                color: colorGreen,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(50),
+                        if (widget.image != null)
+                          Container(
+                            margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                            height: 150,
+                            padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                            decoration: BoxDecoration(
+                                color: widget.color != null ? Color(int.parse(widget.color!)) : colorPrimary,
+                                borderRadius: BorderRadius.circular(appRadius)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.network(
+                                  widget.image!,
+                                  width: 200,
                                 ),
+                              ],
+                            ),
+                          ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                          child: Wrap(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 5),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    "${widget.codeProvider}",
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                  Text(
+                                    widget.nameProvider,
+                                    overflow: TextOverflow.fade,
+                                    softWrap: true,
+                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                                  ),
+                                  const AppSpacing(),
+                                  const Divider(),
+                                  const AppSpacing(),
+                                ],
                               ),
-                            ),
-                            Image.network(
-                              widget.image,
-                              width: 200,
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  const AppSpacing(),
                   ValueListenableBuilder(
                     valueListenable: widget.detailsProviderController.stateNegotiations,
                     builder: (context, value, child) {
@@ -87,42 +121,43 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                 const Padding(
                                   padding: EdgeInsets.symmetric(horizontal: appPadding),
                                   child: Text(
-                                    "Negociações",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20,
-                                    ),
+                                    "Prazos",
+                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
                                   ),
                                 ),
                                 const AppSpacing(),
                                 ListNegotiations(
+                                  codeBranch: widget.codeBranch,
+                                  codeProvider: widget.codeProvider,
                                   detailsProviderController: widget.detailsProviderController,
                                 ),
                               ],
                             );
                     },
                   ),
+                  const AppSpacing(),
                   const Divider(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: appPadding),
-                    child: HeaderList(
-                        activeSearch: true,
-                        label: "Mercadorias",
-                        activePop: false,
-                        onSearch: (value) => widget.detailsProviderController.search(value),
-                        onSort: () => widget.detailsProviderController.sort()),
-                  ),
                   ValueListenableBuilder(
                       valueListenable: widget.detailsProviderController.stateMerchandises,
                       builder: (context, value, child) {
+                        final noEmptyList = widget.detailsProviderController.merchandises.isNotEmpty;
                         return value == StateApp.loading
                             ? LoadingList(loadingHeader: false)
                             : Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: appPadding, left: appPadding),
+                                    child: Text(
+                                      noEmptyList ? "Mercadorias" : "Nenhum resultado!",
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
+                                    ),
+                                  ),
                                   Column(
                                     children: widget.detailsProviderController.merchandises.map((e) {
                                       return CardProduct(
+                                          visibleActions: false,
                                           description: e.nameProduct!,
                                           code: e.codeProduct.toString(),
                                           brand: e.brand!,

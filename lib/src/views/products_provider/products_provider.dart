@@ -19,11 +19,13 @@ class ProductsProvider extends StatefulWidget {
 }
 
 class _ProductsProviderState extends State<ProductsProvider> {
-  final ProductsProviderController productsProviderController = ProductsProviderController(StateApp.start, ProductsProviderRepository());
+  final ProductsProviderController productsProviderController =
+      ProductsProviderController(StateApp.start, ProductsProviderRepository());
 
   @override
   void initState() {
     productsProviderController.findProductsProvider(widget.codeProvider, widget.codeClient);
+    print("DENTRO DO PRODUCTWS PROVIDER");
     super.initState();
   }
 

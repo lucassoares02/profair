@@ -97,17 +97,30 @@ class _CardNoticeState extends State<CardNotice> {
                   ],
                 ),
                 const AppSpacing(),
-                Container(
-                  width: double.maxFinite,
-                  height: 37,
-                  decoration: const BoxDecoration(
-                      color: colorSecondary, borderRadius: BorderRadius.all(Radius.circular(appRadius))),
-                  child: const Center(
-                      child: Text(
-                    "Saiba mais",
-                    style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                  )),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Saiba mais",
+                      style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    SizedBox(width: 5),
+                    Icon(
+                      Icons.arrow_forward,
+                      size: 20,
+                      color: colorWhite,
+                    )
+                  ],
                 )
+                // Container(
+                //   width: double.maxFinite,
+                //   height: 37,
+                //   decoration: const BoxDecoration(
+                //       color: colorSecondary, borderRadius: BorderRadius.all(Radius.circular(appRadius))),
+                //   child: const Center(
+                //       child:
+                //   ),
+                // )
               ],
             ),
           ],

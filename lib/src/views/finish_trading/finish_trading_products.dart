@@ -19,6 +19,7 @@ class FinishTrading extends StatefulWidget {
     required this.nameBranch,
     required this.productsTrading,
     required this.tradings,
+    required this.initialListProducts,
     this.listBranchs,
   });
 
@@ -28,6 +29,7 @@ class FinishTrading extends StatefulWidget {
   final String? nameBranch;
   final int? codeClient;
   final List<ProductModel> productsTrading;
+  final List<ProductModel> initialListProducts;
   List<NegotiationModel> tradings;
   List<ClientsSelectStoreModel>? listBranchs;
 
@@ -36,12 +38,13 @@ class FinishTrading extends StatefulWidget {
 }
 
 class _FinishTradingState extends State<FinishTrading> {
-  final FinishTradingController finishTradingController = FinishTradingController(StateApp.start, FinishTradingRepository());
+  final FinishTradingController finishTradingController =
+      FinishTradingController(StateApp.start, FinishTradingRepository());
 
   @override
   void initState() {
     finishTradingController.checkListItems(widget.productsTrading, widget.tradings, widget.listBranchs);
-    finishTradingController.insertInList(widget.productsTrading);
+    finishTradingController.insertInList(widget.productsTrading, widget.initialListProducts);
     super.initState();
   }
 

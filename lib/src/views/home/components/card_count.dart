@@ -76,8 +76,8 @@ class _CardCountState extends State<CardCount> {
                           "userCode": 0,
                         });
                       } else if (widget.homeController.data!.accessTargeting == 2) {
-                        Navigator.of(context).pushNamed('listrequestsstores', arguments: {
-                          "codeProvider": 0,
+                        Navigator.of(context).pushNamed('listrequestsstorenegotiation', arguments: {
+                          "codeProvider": widget.homeController.data!.codCompany,
                           "userCode": widget.homeController.data!.userCode,
                         });
                       } else {

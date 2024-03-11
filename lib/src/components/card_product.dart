@@ -13,6 +13,7 @@ class CardProduct extends StatefulWidget {
       required this.unitPrice,
       required this.amount,
       required this.total,
+      this.visibleActions = true,
       this.action});
 
   String description;
@@ -23,6 +24,7 @@ class CardProduct extends StatefulWidget {
   String unitPrice;
   String amount;
   String total;
+  bool visibleActions;
   Function()? action;
 
   @override
@@ -59,7 +61,8 @@ class _CardProductState extends State<CardProduct> {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: BoxDecoration(color: colorGreen.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  decoration: BoxDecoration(
+                      color: colorGreen.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.brand,
                     style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -68,7 +71,8 @@ class _CardProductState extends State<CardProduct> {
                 const SizedBox(width: 5),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: BoxDecoration(color: colorBlue.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  decoration: BoxDecoration(
+                      color: colorBlue.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.unitPrice,
                     style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -77,7 +81,8 @@ class _CardProductState extends State<CardProduct> {
                 const SizedBox(width: 5),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: const BoxDecoration(color: colorBlue, borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  decoration:
+                      const BoxDecoration(color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.price,
                     style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -87,44 +92,45 @@ class _CardProductState extends State<CardProduct> {
               ],
             ),
             const SizedBox(height: 20),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              const Text(
-                                "Quantidade: ",
-                                style: TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
-                              ),
-                              Text(
-                                widget.amount,
-                                style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Text(
-                        widget.total,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14,
+            if (widget.visibleActions)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  "Quantidade: ",
+                                  style: TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  widget.amount,
+                                  style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                        Text(
+                          widget.total,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
           ],
         ),
       ),

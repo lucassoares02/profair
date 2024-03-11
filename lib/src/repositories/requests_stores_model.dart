@@ -7,6 +7,8 @@ class RequestsStoresModel {
   String? razaoClient;
   double? value;
   String? hour;
+  String? descriptionNegotiation;
+  String? nameForn;
 
   RequestsStoresModel({
     this.codeRequest,
@@ -17,6 +19,8 @@ class RequestsStoresModel {
     this.razaoClient,
     this.value,
     this.hour,
+    this.descriptionNegotiation,
+    this.nameForn,
   });
 
   RequestsStoresModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +32,8 @@ class RequestsStoresModel {
     razaoClient = json['razaoAssociado'];
     value = json['valor'].toDouble();
     hour = json['horas'];
+    nameForn = json["nomeForn"];
+    descriptionNegotiation = json["descNegociacao"];
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +46,8 @@ class RequestsStoresModel {
     data['razaoAssociado'] = razaoClient;
     data['valor'] = value;
     data['horas'] = hour;
+    data['descriptionNegotiation'] = descriptionNegotiation;
+    data['nameForn'] = nameForn;
     return data;
   }
 }

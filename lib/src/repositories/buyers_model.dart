@@ -4,6 +4,7 @@ class BuyersModel {
   String? category;
   double? total;
   String? volume;
+  String? color;
 
   BuyersModel({
     this.codeBuyer,
@@ -11,12 +12,14 @@ class BuyersModel {
     this.category,
     this.total,
     this.volume,
+    this.color,
   });
 
   BuyersModel.fromJson(Map<String, dynamic> json) {
     codeBuyer = json['codCompr'];
     nameBuyer = json['nomeCompr'];
     category = json['descCatComprador'];
+    color = json['color'];
     total = json['valorTotal'].toDouble();
     volume = json['volumeTotal'].toString();
   }
@@ -27,6 +30,7 @@ class BuyersModel {
     data['nomeCompr'] = nameBuyer;
     data['descCatComprador'] = category;
     data['valorTotal'] = total;
+    data['color'] = color;
     data['volumeTotal'] = volume;
     return data;
   }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
 import 'package:dio/dio.dart';
@@ -12,14 +13,14 @@ class DetailsProviderRepository {
       List list = response.data as List;
       return list.map((json) => NegotiationModel.fromJson(json)).toList();
     } catch (e) {
-      print("Error Find Negotiations: $e");
+      debugPrint("Get Negotiation (Details Provider Repository) Error: $e");
       return e;
     }
   }
 
-  getMerchandises(int codeClient, int codeProvider) async {
+  getMerchandises(int codeClient, int codeProvider, int codeNegotiation) async {
     try {
-      final response = await clientDio.get("${url}merchandiseperclient/$codeClient/$codeProvider");
+      final response = await clientDio.get("${url}merchandiseperclient/$codeClient/$codeProvider/$codeNegotiation");
       List list = response.data as List;
       return list.map((json) => ProductsProviderModel.fromJson(json)).toList();
     } catch (e) {

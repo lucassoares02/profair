@@ -3,13 +3,24 @@ class NegotiationModel {
   String? title;
   int? confirm;
   bool? checked;
+  String? term;
+  String? observation;
 
-  NegotiationModel({this.negotiation, this.title, this.confirm, this.checked});
+  NegotiationModel({
+    this.negotiation,
+    this.title,
+    this.confirm,
+    this.checked,
+    this.term,
+    this.observation,
+  });
 
   NegotiationModel.fromJson(Map<String, dynamic> json) {
     negotiation = json["codNegociacao"];
     title = json["descNegociacao"];
     confirm = json["confirma"];
+    term = json["prazo"];
+    observation = json["observacao"];
     checked = false;
   }
 
@@ -19,6 +30,8 @@ class NegotiationModel {
     data["codNegociacao"] = negotiation;
     data["descNegociacao"] = title;
     data["confirma"] = confirm;
+    data["prazo"] = term;
+    data["observacao"] = observation;
     data["checked"] = false;
     return data;
   }

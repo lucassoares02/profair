@@ -4,12 +4,20 @@ import 'package:flutter/material.dart';
 
 class HeaderList extends StatefulWidget {
   HeaderList(
-      {super.key, this.label, this.activeSearch = true, this.onSearch, this.icon, this.onSort, this.activePop = true});
+      {super.key,
+      this.label,
+      this.activeSearch = true,
+      this.onSearch,
+      this.icon,
+      this.onSort,
+      this.activePop = true,
+      this.onCloseInfo});
 
   String? label;
   bool? activeSearch;
   Function(String?)? onSearch;
   Function()? onSort;
+  Function()? onCloseInfo;
   IconData? icon;
   bool activePop;
 
@@ -41,6 +49,7 @@ class _HeaderListState extends State<HeaderList> {
                         onSubmitted: (value) {
                           if (value == "") {
                             visibleSearch.value = false;
+                            if (widget.onCloseInfo != null) widget.onCloseInfo!();
                           }
                         },
                         decoration: InputDecoration(
@@ -51,6 +60,7 @@ class _HeaderListState extends State<HeaderList> {
                                 visibleSearch.value = !visibleSearch.value;
                                 controllerSearch.text = "";
                                 widget.onSearch!("");
+                                if (widget.onCloseInfo != null) widget.onCloseInfo!();
                               },
                               icon: const Icon(Icons.close)),
                           prefixIcon: const Icon(Icons.search),
@@ -93,6 +103,7 @@ class _HeaderListState extends State<HeaderList> {
                                     onPressed: widget.activeSearch!
                                         ? () {
                                             visibleSearch.value = !visibleSearch.value;
+                                            if (widget.onCloseInfo != null) widget.onCloseInfo!();
                                           }
                                         : null,
                                     icon: const Icon(
@@ -141,5 +152,3 @@ class _HeaderListState extends State<HeaderList> {
     );
   }
 }
-
-class Tuple2 {}

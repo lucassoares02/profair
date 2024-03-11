@@ -31,7 +31,14 @@ class _StateManagementState extends State<StateManagement> {
   }
 
   _error() {
-    return const Center(child: Text('Ops! Tivemos um problema!'));
+    return const Padding(
+      padding: EdgeInsets.all(appPadding),
+      child: Center(
+          child: Text(
+        'Ops! Tivemos um problema!',
+        style: TextStyle(fontSize: 18),
+      )),
+    );
   }
 
   _loading() {

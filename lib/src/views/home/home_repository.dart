@@ -78,6 +78,8 @@ class HomeRepository {
     Response? response;
     if (accessTargeting == 1) {
       response = await clientDio.get('${url}requestsprovider/$codeProvider');
+    } else if (accessTargeting == 2) {
+      response = await clientDio.get('${url}requestsnegotiationbyclient/$codeProvider');
     } else {
       response = await clientDio.get('${url}requestsclients/$codeProvider');
     }
@@ -87,9 +89,6 @@ class HomeRepository {
 
   getBuyers() async {
     final response = await clientDio.get('${url}buyers');
-    print("RESPONES BUYERS");
-    print(response);
-    print("RESPONES BUYERS");
     List list = response.data as List;
     return list.map((json) => BuyersModel.fromJson(json)).toList();
   }
@@ -131,19 +130,19 @@ class HomeRepository {
           "icon": Icons.swap_horiz_rounded,
           "route": "tradings",
         },
-      {
-        "id": 84,
-        "title": 'Relatórios',
-        "icon": Icons.show_chart_rounded,
-        "route": "reports",
-      },
-      if (code == 2)
-        {
-          "id": 94,
-          "title": 'Ticket',
-          "icon": Icons.qr_code_rounded,
-          "route": "ticket",
-        },
+      // {
+      //   "id": 84,
+      //   "title": 'Relatórios',
+      //   "icon": Icons.show_chart_rounded,
+      //   "route": "reports",
+      // },
+      // if (code == 2)
+      //   {
+      //     "id": 94,
+      //     "title": 'Ticket',
+      //     "icon": Icons.qr_code_rounded,
+      //     "route": "ticket",
+      //   },
       // {
       //   "id": 74,
       //   "title": 'Dúvidas',

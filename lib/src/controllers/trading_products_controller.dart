@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 class TradingProductsController extends ValueNotifier<StateApp> {
   List<ProductModel> productsTrading = [];
   List<ProductModel> products = [];
+  List<ProductModel> initialListproducts = [];
 
   ValueNotifier<bool> visibleText = ValueNotifier(false);
   ValueNotifier<int> itemSelected = ValueNotifier(-1);
@@ -24,8 +25,10 @@ class TradingProductsController extends ValueNotifier<StateApp> {
   Future findTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading, int? codeClient) async {
     stateProductsTrading.value = StateApp.loading;
     try {
-      productsTrading = await _negotiationsRepository.getTradingProducts(codeBranch, codeProvider, codeTrading, codeClient);
+      productsTrading =
+          await _negotiationsRepository.getTradingProducts(codeBranch, codeProvider, codeTrading, codeClient);
       products = productsTrading;
+      initialListproducts = [...productsTrading];
       stateProductsTrading.value = StateApp.success;
     } catch (e) {
       stateProductsTrading.value = StateApp.error;
@@ -87,7 +90,8 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       print("SortInt: $sortInt");
       if (sortInt == 0) {
         message = "Ordenado por valor de vendas!";
-        productsTrading.sort(((a, b) => (double.parse(b.amount!) * b.price!).compareTo(double.parse(a.amount!) * a.price!)));
+        productsTrading
+            .sort(((a, b) => (double.parse(b.amount!) * b.price!).compareTo(double.parse(a.amount!) * a.price!)));
       } else if (sortInt == 1) {
         message = "Ordenado volume vendido!";
         productsTrading.sort(((a, b) => int.parse(b.amount!) - int.parse(a.amount!)));
