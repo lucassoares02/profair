@@ -10,6 +10,7 @@ import 'package:profair/src/views/list_category/list_category.dart';
 import 'package:profair/src/views/create_post/create_post.dart';
 import 'package:profair/src/views/list_recipe/list_recipe.dart';
 import 'package:profair/src/views/favorites/favorites.dart';
+import 'package:profair/src/views/order_details/order_details.dart';
 import 'package:profair/src/views/preorder/preorder.dart';
 import 'package:profair/src/views/products_provider/products_provider.dart';
 import 'package:profair/src/views/profile/profile.dart';
@@ -65,6 +66,12 @@ class AppModule extends Module {
             codeProvider: args.data["codeProvider"],
             codeClient: args.data["codeClient"],
             nextScreen: args.data["nextScreen"],
+          ),
+        ),
+        ChildRoute(
+          '/orderdetails',
+          child: (context, args) => OrderDetails(
+            order: args.data["order"],
           ),
         ),
         ChildRoute('/clients',

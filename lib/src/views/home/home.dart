@@ -43,6 +43,7 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SizedBox(
           width: width,
           child: RefreshIndicator(
@@ -89,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                                 margin: const EdgeInsets.symmetric(horizontal: appPadding),
                                 child: SkeletonAvatar(
                                   style: SkeletonAvatarStyle(
-                                    height: 300,
+                                    height: 240,
                                     width: double.maxFinite,
                                     borderRadius: BorderRadius.circular(appRadius),
                                   ),

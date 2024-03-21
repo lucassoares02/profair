@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/controllers/details_balance_controller.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/components/header_list.dart';
@@ -57,7 +55,14 @@ class _ComponentListState extends State<ComponentList> {
                 return Column(
                     children: widget.balanceController.requestsStores.map((e) {
                   return InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed(
+                        "orderdetails",
+                        arguments: {
+                          "order": e,
+                        },
+                      );
+                    },
                     child: Container(
                       width: width,
                       height: 100,

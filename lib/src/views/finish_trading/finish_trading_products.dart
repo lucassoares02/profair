@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
@@ -43,6 +45,8 @@ class _FinishTradingState extends State<FinishTrading> {
 
   @override
   void initState() {
+    inspect(widget.productsTrading);
+    inspect(widget.initialListProducts);
     finishTradingController.checkListItems(widget.productsTrading, widget.tradings, widget.listBranchs);
     finishTradingController.insertInList(widget.productsTrading, widget.initialListProducts);
     super.initState();

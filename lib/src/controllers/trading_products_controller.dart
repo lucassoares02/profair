@@ -28,7 +28,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       productsTrading =
           await _negotiationsRepository.getTradingProducts(codeBranch, codeProvider, codeTrading, codeClient);
       products = productsTrading;
-      initialListproducts = [...productsTrading];
+      initialListproducts = productsTrading.map<ProductModel>((product) => ProductModel.clone(product)).toList();
       stateProductsTrading.value = StateApp.success;
     } catch (e) {
       stateProductsTrading.value = StateApp.error;

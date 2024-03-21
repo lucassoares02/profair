@@ -9,8 +9,8 @@ class BarChartSample1 extends StatefulWidget {
   List<ProductModel> reportsProducts;
 
   final Color barBackgroundColor = transparent;
-  final Color barColor = colorSecondary;
-  final Color touchedBarColor = colorTertiary;
+  final Color barColor = colorBlue;
+  final Color touchedBarColor = colorBlueDark;
 
   @override
   State<StatefulWidget> createState() => BarChartSample1State();
@@ -112,11 +112,13 @@ class BarChartSample1State extends State<BarChartSample1> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(widget.reportsProducts.length > 10 ? 10 : widget.reportsProducts.length, (e) {
+  List<BarChartGroupData> showingGroups() =>
+      List.generate(widget.reportsProducts.length > 10 ? 10 : widget.reportsProducts.length, (e) {
         return makeGroupData(e, widget.reportsProducts[e].total!, isTouched: e == touchedIndex);
       });
 
-  BarChartGroupData makeGroupData(int x, double y, {bool isTouched = false, Color? barColor, double width = 10, List<int> showTooltips = const []}) {
+  BarChartGroupData makeGroupData(int x, double y,
+      {bool isTouched = false, Color? barColor, double width = 20, List<int> showTooltips = const []}) {
     barColor ??= widget.barColor;
     return BarChartGroupData(
       x: x,
@@ -124,8 +126,10 @@ class BarChartSample1State extends State<BarChartSample1> {
         BarChartRodData(
           toY: isTouched ? y + 0 : y,
           color: isTouched ? widget.touchedBarColor : barColor,
+          borderRadius: BorderRadius.circular(3),
           width: width,
-          borderSide: isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
+          borderSide:
+              isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 20,
@@ -140,6 +144,7 @@ class BarChartSample1State extends State<BarChartSample1> {
   Widget getTitles(double value, TitleMeta meta) {
     const style = TextStyle(
       color: colorBlue,
+      fontWeight: FontWeight.bold,
       fontSize: 14,
     );
     Widget text;

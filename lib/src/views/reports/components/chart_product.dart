@@ -4,13 +4,19 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class BarChartTeste extends StatefulWidget {
-  BarChartTeste({super.key, required this.reportsClients});
+  BarChartTeste({
+    super.key,
+    required this.reportsClients,
+    this.barColor = colorPrimary,
+    this.barBackgroundColor = transparent,
+    this.touchedBarColor = colorSecondary,
+  });
 
   List<TotalValueClients> reportsClients;
 
-  final Color barBackgroundColor = transparent;
-  final Color barColor = colorSecondary;
-  final Color touchedBarColor = colorTertiary;
+  final Color barBackgroundColor;
+  Color? barColor;
+  final Color touchedBarColor;
 
   @override
   State<StatefulWidget> createState() => BarChartTesteState();
@@ -50,7 +56,7 @@ class BarChartTesteState extends State<BarChartTeste> {
     return BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: colorGreyDark,
+          tooltipBgColor: widget.touchedBarColor,
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: 5,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -112,11 +118,13 @@ class BarChartTesteState extends State<BarChartTeste> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(widget.reportsClients.length < 10 ? widget.reportsClients.length : 10, (e) {
+  List<BarChartGroupData> showingGroups() =>
+      List.generate(widget.reportsClients.length < 10 ? widget.reportsClients.length : 10, (e) {
         return makeGroupData(e, widget.reportsClients[e].total!, isTouched: e == touchedIndex);
       });
 
-  BarChartGroupData makeGroupData(int x, double y, {bool isTouched = false, Color? barColor, double width = 10, List<int> showTooltips = const []}) {
+  BarChartGroupData makeGroupData(int x, double y,
+      {bool isTouched = false, Color? barColor, double width = 20, List<int> showTooltips = const []}) {
     barColor ??= widget.barColor;
     return BarChartGroupData(
       x: x,
@@ -125,7 +133,9 @@ class BarChartTesteState extends State<BarChartTeste> {
           toY: isTouched ? y + 0 : y,
           color: isTouched ? widget.touchedBarColor : barColor,
           width: width,
-          borderSide: isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
+          borderRadius: BorderRadius.circular(3),
+          borderSide:
+              isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 20,
@@ -138,8 +148,9 @@ class BarChartTesteState extends State<BarChartTeste> {
   }
 
   Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: colorBlue,
+    final style = TextStyle(
+      color: widget.barColor,
+      fontWeight: FontWeight.bold,
       fontSize: 14,
     );
     Widget text;

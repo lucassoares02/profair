@@ -30,9 +30,17 @@ class _ReportsState extends State<Reports> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: AppBar(
+      //   backgroundColor: colorSecondary,
+      //   foregroundColor: colorWhite,
+      //   title: const Text(
+      //     "Relatórios",
+      //   ),
+      // ),
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
         child: SafeArea(
+          bottom: false,
           child: SingleChildScrollView(
             child: ValueListenableBuilder(
               valueListenable: reportsController.statePercentageClients,

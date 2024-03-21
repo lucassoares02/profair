@@ -14,7 +14,7 @@ class CardPercentage extends StatefulWidget {
     required this.title,
     this.content,
     required this.value,
-    this.backgroundColor = colorSecondary,
+    this.backgroundColor = colorBlueDark,
     required this.footer,
   });
 
@@ -30,88 +30,101 @@ class CardPercentage extends StatefulWidget {
 }
 
 class _CardPercentageState extends State<CardPercentage> {
+  bool visibleContent = false;
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return Container(
-      padding: const EdgeInsets.all(appPadding),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
-        color: widget.backgroundColor,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "${widget.title}",
-            style: const TextStyle(
-              fontSize: 18,
-              color: colorWhite,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const AppSpacing(),
-          if (widget.content != null)
+    return InkWell(
+      onTap: () {
+        setState(() {
+          visibleContent = !visibleContent;
+        });
+      },
+      child: Container(
+        padding: const EdgeInsets.all(appPadding),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
+          color: widget.backgroundColor,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Text(
-              "${widget.content}",
-              style: const TextStyle(fontSize: 16, color: colorGreyLigth),
+              "${widget.title}",
+              style: const TextStyle(
+                fontSize: 18,
+                color: colorWhite,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          const AppSpacing(),
-          const AppSpacing(),
-          ValueListenableBuilder(
-              valueListenable: widget.reportsController.statePercentageClients,
-              builder: (context, value, child) {
-                return value == StateApp.loading
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          SkeletonAvatar(
-                            style: SkeletonAvatarStyle(
-                              height: 20,
-                              width: width,
-                              borderRadius: BorderRadius.circular(10),
+            if (visibleContent)
+              Column(
+                children: [
+                  const AppSpacing(),
+                  if (widget.content != null)
+                    Text(
+                      "${widget.content}",
+                      style: const TextStyle(fontSize: 16, color: colorWhite),
+                    ),
+                  const AppSpacing(),
+                ],
+              ),
+            const AppSpacing(),
+            ValueListenableBuilder(
+                valueListenable: widget.reportsController.statePercentageClients,
+                builder: (context, value, child) {
+                  return value == StateApp.loading
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SkeletonAvatar(
+                              style: SkeletonAvatarStyle(
+                                height: 20,
+                                width: width,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          ),
-                          const AppSpacing(),
-                          SkeletonAvatar(
-                            style: SkeletonAvatarStyle(
-                              height: 15,
-                              width: 30,
-                              borderRadius: BorderRadius.circular(10),
+                            const AppSpacing(),
+                            SkeletonAvatar(
+                              style: SkeletonAvatarStyle(
+                                height: 15,
+                                width: 30,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          LinearPercentIndicator(
-                            animation: true,
-                            trailing: Text(
-                              "${widget.value}",
-                              style: const TextStyle(color: colorWhite, fontSize: 12),
+                          ],
+                        )
+                      : Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            LinearPercentIndicator(
+                              animation: true,
+                              trailing: Text(
+                                "${double.parse(widget.value.toString()).toStringAsFixed(0)}%",
+                                style: const TextStyle(color: colorWhite, fontSize: 12),
+                              ),
+                              animationDuration: 500,
+                              padding: const EdgeInsets.only(right: 10),
+                              lineHeight: visibleContent ? 8 : 10,
+                              barRadius: const Radius.circular(5),
+                              percent: (double.parse("${widget.value}") / 100),
+                              backgroundColor: Colors.white24,
+                              progressColor: colorWhite,
                             ),
-                            animationDuration: 500,
-                            padding: const EdgeInsets.only(right: 10),
-                            lineHeight: 8.0,
-                            barRadius: const Radius.circular(5),
-                            percent: (double.parse("${widget.reportsController.percentageClients!.percentage}") / 100),
-                            backgroundColor: Colors.white24,
-                            progressColor: colorWhite,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "${widget.footer}",
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: colorGreyLigth,
+                            const SizedBox(height: 10),
+                            Text(
+                              "${widget.footer}",
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: colorWhite,
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-              }),
-        ],
+                          ],
+                        );
+                }),
+          ],
+        ),
       ),
     );
   }

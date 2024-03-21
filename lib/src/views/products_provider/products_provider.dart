@@ -25,7 +25,6 @@ class _ProductsProviderState extends State<ProductsProvider> {
   @override
   void initState() {
     productsProviderController.findProductsProvider(widget.codeProvider, widget.codeClient);
-    print("DENTRO DO PRODUCTWS PROVIDER");
     super.initState();
   }
 

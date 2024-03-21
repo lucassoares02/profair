@@ -160,7 +160,17 @@ class _ComponentListState extends State<ComponentList> {
                                                 Radius.circular(4),
                                               ),
                                             ),
-                                            onChanged: (value) {},
+                                            onChanged: (value) {
+                                              if (e.value.checked! &&
+                                                  widget.finishTradingController.totalCheckedBranch > 1) {
+                                                widget.finishTradingController.totalCheckedBranch -= 1;
+                                                widget.listBranchs![e.key].checked = !e.value.checked!;
+                                              } else if (e.value.checked! == false) {
+                                                widget.finishTradingController.totalCheckedBranch += 1;
+                                                widget.listBranchs![e.key].checked = !e.value.checked!;
+                                              }
+                                              widget.finishTradingController.updateTrading();
+                                            },
                                           );
                                         }),
                                     Text(
@@ -200,6 +210,7 @@ class _ComponentListState extends State<ComponentList> {
                                 children: widget.listBranchs!.asMap().entries.map((e) {
                                   return e.value.checked!
                                       ? Container(
+                                          width: double.maxFinite,
                                           margin: const EdgeInsets.symmetric(vertical: appMargin),
                                           child: Column(
                                             crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,4 +1,4 @@
-class ProductModel {
+class OrderDetailsModel {
   int? codeProduct;
   String? title;
   String? packing;
@@ -10,7 +10,7 @@ class ProductModel {
   double? total;
   double? unitPrice;
 
-  ProductModel(
+  OrderDetailsModel(
       {this.codeProduct,
       this.title,
       this.packing,
@@ -22,7 +22,7 @@ class ProductModel {
       this.brand,
       this.complement});
 
-  ProductModel.fromJson(Map<String, dynamic> json) {
+  OrderDetailsModel.fromJson(Map<String, dynamic> json) {
     codeProduct = json["codMercadoria"];
     title = json["nomeMercadoria"];
     packing = json["embMercadoria"];
@@ -33,21 +33,6 @@ class ProductModel {
     amount = json["quantMercadoria"].toString();
     unitPrice = json["precoUnit"];
     total = json["valorTotal"] != null ? double.parse(json["valorTotal"].toString()) : json["valorTotal"];
-  }
-
-  factory ProductModel.clone(ProductModel product) {
-    return ProductModel(
-      amount: product.amount,
-      brand: product.brand,
-      codeProduct: product.codeProduct,
-      coefficient: product.coefficient,
-      complement: product.complement,
-      packing: product.packing,
-      price: product.price,
-      title: product.title,
-      total: product.total,
-      unitPrice: product.unitPrice,
-    );
   }
 
   Map<String, dynamic> toJson() {

@@ -11,6 +11,8 @@ class HeaderList extends StatefulWidget {
       this.icon,
       this.onSort,
       this.activePop = true,
+      this.color,
+      this.iconColor,
       this.onCloseInfo});
 
   String? label;
@@ -18,6 +20,8 @@ class HeaderList extends StatefulWidget {
   Function(String?)? onSearch;
   Function()? onSort;
   Function()? onCloseInfo;
+  Color? color;
+  Color? iconColor;
   IconData? icon;
   bool activePop;
 
@@ -34,7 +38,7 @@ class _HeaderListState extends State<HeaderList> {
     return Column(
       children: [
         Container(
-          decoration: const BoxDecoration(color: transparent),
+          decoration: BoxDecoration(color: widget.color ?? transparent),
           height: 70,
           child: ValueListenableBuilder(
             valueListenable: visibleSearch,
@@ -85,9 +89,10 @@ class _HeaderListState extends State<HeaderList> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.arrow_back_ios_new,
                                   size: 20,
+                                  color: widget.iconColor,
                                 ),
                               ),
                             Text(
@@ -106,8 +111,9 @@ class _HeaderListState extends State<HeaderList> {
                                             if (widget.onCloseInfo != null) widget.onCloseInfo!();
                                           }
                                         : null,
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.search,
+                                      color: widget.iconColor,
                                     ),
                                   )
                                 : const Icon(Icons.search, color: transparent),
@@ -116,8 +122,9 @@ class _HeaderListState extends State<HeaderList> {
                                 onPressed: () {
                                   widget.onSort!();
                                 },
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.sort_outlined,
+                                  color: widget.iconColor,
                                 ),
                               ),
                           ],

@@ -91,73 +91,73 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                 padding: const EdgeInsets.only(bottom: appMargin, top: 5),
               ),
               const AppSpacing(),
-              Container(
-                width: double.maxFinite,
-                padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appMargin),
-                decoration: BoxDecoration(
-                  border: Border.all(color: colorGreyLigth),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(appRadius),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: colorGreyLigth,
-                          ),
-                        ),
-                      ),
-                      padding: const EdgeInsets.only(bottom: appMargin, top: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            "Informações adicionais",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                          ),
-                          Icon(
-                            Icons.check_circle,
-                            size: 16,
-                            color: Colors.green,
-                          )
-                          // Text(
-                          //   "Novo",
-                          //   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
-                          // ),
-                        ],
-                      ),
-                    ),
-                    const AppSpacing(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("10 de Janeiro de 2024", style: TextStyle(color: colorGrey, fontSize: 12)),
-                        SizedBox(height: 10),
-                        Text(
-                          "Hoje é 10 de janeiro, estamos realizando teste desse layhout, parece que tudo está indo bem!",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        Container(
-                          margin: EdgeInsets.symmetric(vertical: 5),
-                          height: 20,
-                          decoration:
-                              const BoxDecoration(border: Border(left: BorderSide(color: colorGreyLigth, width: 3))),
-                        ),
-                        Text("10 de Janeiro, 10:40", style: TextStyle(color: colorGrey, fontSize: 12)),
-                        SizedBox(height: 10),
-                        Text(
-                          "Hoje é 10 de janeiro, estamos realizando teste desse layhout, parece que tudo está indo bem!",
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
+              // Container(
+              //   width: double.maxFinite,
+              //   padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appMargin),
+              //   decoration: BoxDecoration(
+              //     border: Border.all(color: colorGreyLigth),
+              //     borderRadius: const BorderRadius.all(
+              //       Radius.circular(appRadius),
+              //     ),
+              //   ),
+              //   child: Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       Container(
+              //         decoration: const BoxDecoration(
+              //           border: Border(
+              //             bottom: BorderSide(
+              //               color: colorGreyLigth,
+              //             ),
+              //           ),
+              //         ),
+              //         padding: const EdgeInsets.only(bottom: appMargin, top: 5),
+              //         child: Row(
+              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //           children: const [
+              //             Text(
+              //               "Informações adicionais",
+              //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+              //             ),
+              //             Icon(
+              //               Icons.check_circle,
+              //               size: 16,
+              //               color: Colors.green,
+              //             )
+              //             // Text(
+              //             //   "Novo",
+              //             //   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
+              //             // ),
+              //           ],
+              //         ),
+              //       ),
+              //       const AppSpacing(),
+              //       Column(
+              //         crossAxisAlignment: CrossAxisAlignment.start,
+              //         children: [
+              //           Text("10 de Janeiro de 2024", style: TextStyle(color: colorGrey, fontSize: 12)),
+              //           SizedBox(height: 10),
+              //           Text(
+              //             "Hoje é 10 de janeiro, estamos realizando teste desse layhout, parece que tudo está indo bem!",
+              //             style: TextStyle(fontSize: 12),
+              //           ),
+              //           Container(
+              //             margin: EdgeInsets.symmetric(vertical: 5),
+              //             height: 20,
+              //             decoration:
+              //                 const BoxDecoration(border: Border(left: BorderSide(color: colorGreyLigth, width: 3))),
+              //           ),
+              //           Text("10 de Janeiro, 10:40", style: TextStyle(color: colorGrey, fontSize: 12)),
+              //           SizedBox(height: 10),
+              //           Text(
+              //             "Hoje é 10 de janeiro, estamos realizando teste desse layhout, parece que tudo está indo bem!",
+              //             style: TextStyle(fontSize: 12),
+              //           ),
+              //         ],
+              //       )
+              //     ],
+              //   ),
+              // ),
             ],
           ),
         )

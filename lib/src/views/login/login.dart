@@ -1,7 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lottie/lottie.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -24,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   ValueNotifier<String> teste = ValueNotifier("");
   ValueNotifier<bool> enterCode = ValueNotifier(false);
   TextEditingController codigo = TextEditingController();
+  bool logoVisible = true;
 
   @override
   void initState() {
@@ -115,27 +115,29 @@ class _LoginPageState extends State<LoginPage> {
       body: Container(
         // padding: const EdgeInsets.all(appPadding),
         decoration: const BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(
+                  "https://www.viavini.com.br/blog-de-vinhos/wp-content/uploads/2020/01/comprar-vinhos-para-grandes-eventos-1200x799.jpg"),
+              fit: BoxFit.cover,
+              opacity: 0.1),
           gradient: LinearGradient(
             // begin: Alignment.topLeft,
             // end: Alignment.bottomLeft,
             colors: [
               colorSecondary,
-              colorBlueDark,
+              colorRedDark,
             ],
           ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // const AppSpacing(),
-            // Image.asset(
-            //   'assets/images/logowhite.png',
-            //   height: 60,
-            // ),
             Image.asset(
-              'assets/images/back.png',
-              width: width,
+              'assets/images/adegablack.png',
+              width: width / 2,
             ),
+            const AppSpacing(),
+            const AppSpacing(),
             Padding(
               padding: const EdgeInsets.all(appPadding),
               child: Column(

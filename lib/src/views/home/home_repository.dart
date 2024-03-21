@@ -126,7 +126,7 @@ class HomeRepository {
       if (code == 1)
         {
           "id": 84,
-          "title": 'Negociações',
+          "title": 'Prazos',
           "icon": Icons.swap_horiz_rounded,
           "route": "tradings",
         },

@@ -87,7 +87,7 @@ class _ComponentListState extends State<ComponentList> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            e.documentCompany!,
+                            e.razaoClient!,
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                           ),
                           Row(
