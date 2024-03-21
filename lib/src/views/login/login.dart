@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lottie/lottie.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -132,12 +133,10 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Image.asset(
-              'assets/images/adegablack.png',
-              width: width / 2,
-            ),
-            const AppSpacing(),
-            const AppSpacing(),
+            // Image.asset(
+            //   'assets/images/iconwhite.png',
+            //   width: width / 2,
+            // ),
             Padding(
               padding: const EdgeInsets.all(appPadding),
               child: Column(
@@ -149,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
                       return value == false && width < 700
                           ? Column(
                               children: [
-                                // Lottie.asset("assets/images/qrcode2.json"),
+                                Lottie.asset("assets/images/qrcode2.json"),
                                 const Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
