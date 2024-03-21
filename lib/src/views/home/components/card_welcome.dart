@@ -114,7 +114,9 @@ class _CardWelcomeState extends State<CardWelcome> {
                                             isExpanded: true,
                                             icon: const Icon(Icons.keyboard_arrow_down_sharp, size: 25),
                                             hint: Text(
-                                                "${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany!.length > 35 ? "${widget.homeController.data!.nameCompany!.substring(0, 35)}..." : widget.homeController.data!.nameCompany!}"),
+                                              "${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany!.length > 35 ? "${widget.homeController.data!.nameCompany!.substring(0, 35)}..." : widget.homeController.data!.nameCompany!}",
+                                              style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                                            ),
                                             items: widget.homeController.moreData!.map((e) {
                                               return DropdownMenuItem<LoginModel>(
                                                 value: e,
@@ -157,9 +159,9 @@ class _CardWelcomeState extends State<CardWelcome> {
                                           ),
                                           child: Text(
                                             '${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany}',
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 16,
-                                              color: colorGreyDark,
+                                              color: Theme.of(context).colorScheme.onBackground,
                                             ),
                                           ),
                                         ),

@@ -64,43 +64,48 @@ class _TicketState extends State<Ticket> {
                       children: [
                         const Divider(),
                         const AppSpacing(),
-                        const Text(
-                          "Agilize seus pedidos",
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const AppSpacing(),
-                        const Text(
-                          "Utilize o código abaixo, para que o fornecedor possa identificar o seu acesso!",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: colorGreyDark,
-                          ),
-                        ),
-                        const AppSpacing(),
-                        Container(
-                          padding: const EdgeInsets.all(appPadding),
-                          decoration: BoxDecoration(
-                            color: colorGreyLigth.withOpacity(0.5),
-                            borderRadius: const BorderRadius.all(
-                              Radius.circular(appRadius),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                        if (widget.homeController.data!.accessTargeting == 2)
+                          Column(
                             children: [
-                              QrImageView(
-                                data: widget.homeController.data!.codAccess!,
-                                size: size.width - 150,
-                                version: QrVersions.auto,
+                              const Text(
+                                "Agilize seus pedidos",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const AppSpacing(),
+                              const Text(
+                                "Utilize o código abaixo, para que o fornecedor possa identificar o seu acesso!",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: colorGreyDark,
+                                ),
+                              ),
+                              const AppSpacing(),
+                              Container(
+                                padding: const EdgeInsets.all(appPadding),
+                                decoration: BoxDecoration(
+                                  color: colorGreyLigth.withOpacity(0.5),
+                                  borderRadius: const BorderRadius.all(
+                                    Radius.circular(appRadius),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    QrImageView(
+                                      data: widget.homeController.data!.codAccess!,
+                                      size: size.width - 150,
+                                      version: QrVersions.auto,
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
-                        ),
                         const AppSpacing(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,23 +131,24 @@ class _TicketState extends State<Ticket> {
                                 ),
                               ],
                             ),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-                              decoration: const BoxDecoration(
-                                color: colorGreen,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(appRadius),
+                            if (widget.homeController.data!.accessTargeting == 2)
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                                decoration: const BoxDecoration(
+                                  color: colorGreen,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(appRadius),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Associado",
+                                  style: TextStyle(
+                                    color: colorWhite,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
                               ),
-                              child: const Text(
-                                "Associado",
-                                style: TextStyle(
-                                  color: colorWhite,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
                         const AppSpacing(),
@@ -199,29 +205,19 @@ class _TicketState extends State<Ticket> {
                         const AppSpacing(),
                         const Divider(),
                         const AppSpacing(),
-                        const AppSpacing(),
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: appPadding),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[100],
-                            borderRadius: BorderRadius.circular(
-                              appRadius,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            TextButton.icon(
+                              icon: const Icon(Icons.logout),
+                              onPressed: () {
+                                widget.homeController.logout();
+                                Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+                              },
+                              label: const Text("Sair"),
                             ),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              TextButton.icon(
-                                icon: const Icon(Icons.logout),
-                                onPressed: () {
-                                  widget.homeController.logout();
-                                  Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-                                },
-                                label: const Text("Sair"),
-                              ),
-                            ],
-                          ),
+                          ],
                         )
                       ],
                     ),
