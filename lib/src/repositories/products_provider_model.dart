@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class ProductsProviderModel {
   int? codeProvider;
   String? nameProvider;
@@ -31,19 +33,23 @@ class ProductsProviderModel {
     print("===================");
     print(json);
     print("===================");
-
-    codeProvider = json['codForn'];
-    nameProvider = json['nomeForn'];
-    codeProduct = json['codMercadoria'];
-    nameProduct = json['nomeMercadoria'];
-    packing = json['embMercadoria'];
-    complement = json['complemento'];
-    brand = json['marca'];
-    coefficient = json['fatorMerc'];
-    productPrice = json['precoMercadoria'] != null ? double.parse(json["precoMercadoria"].toString()) : json["precoMercadoria"];
-    unitPrice = json['precoUnit'] != null ? double.parse(json['precoUnit'].toString()) : json['precoUnit'];
-    totalValue = json['precoMercadoria'] * double.parse(json["volumeTotal"].toString());
-    totalVolume = json['volumeTotal'].toString();
+    try {
+      codeProvider = json['codForn'];
+      nameProvider = json['nomeForn'];
+      codeProduct = json['codMercadoria'];
+      nameProduct = json['nomeMercadoria'];
+      packing = json['embMercadoria'];
+      complement = json['complemento'];
+      brand = json['marca'];
+      coefficient = json['fatorMerc'];
+      productPrice =
+          json['precoMercadoria'] != null ? double.parse(json["precoMercadoria"].toString()) : json["precoMercadoria"];
+      unitPrice = json['precoUnit'] != null ? double.parse(json['precoUnit'].toString()) : json['precoUnit'];
+      totalValue = json['precoMercadoria'] * double.parse(json["volumeTotal"].toString());
+      totalVolume = json['volumeTotal'].toString();
+    } catch (e) {
+      debugPrint("Error (Products Provider Model) Error: $e");
+    }
   }
 
   Map<String, dynamic> toJson() {

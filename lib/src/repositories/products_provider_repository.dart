@@ -15,6 +15,7 @@ class ProductsProviderRepository {
         response = await clientDio.get("${url}merchandiseprovider/$codeProvider");
       }
       List list = response.data as List;
+      print(list);
       return list.map((json) => ProductsProviderModel.fromJson(json)).toList();
     } catch (e) {
       print("Error return Stores Model Mapper: $e");

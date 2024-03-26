@@ -59,7 +59,13 @@ class _ComponentListState extends State<ComponentList> {
                 ? Container()
                 : InkWell(
                     onTap: () {
-                      widget.listItems[e.key].checked = true;
+                      for (var i = 0; i < widget.listItems.length; i++) {
+                        if (i == e.key) {
+                          widget.listItems[e.key].checked = true;
+                        } else {
+                          widget.listItems[i].checked = false;
+                        }
+                      }
                       Navigator.of(context).pushNamed('tradingproducts', arguments: {
                         "codeProvider": widget.codeProvider,
                         "codeBranch": widget.codeBranch,
