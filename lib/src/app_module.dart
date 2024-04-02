@@ -21,6 +21,7 @@ import 'package:profair/src/views/requests_stores/requests_stores.dart';
 import 'package:profair/src/views/select_negotiation/select_negotiation.dart';
 import 'package:profair/src/views/select_store/select_store.dart';
 import 'package:profair/src/views/ticket/ticket.dart';
+import 'package:profair/src/views/trading_success/trading_sucess.dart';
 import 'package:profair/src/views/tradings/tradings.dart';
 import 'package:profair/src/views/tranding_products/trading_products.dart';
 import 'package:flutter/material.dart';
@@ -44,9 +45,14 @@ class AppModule extends Module {
         ChildRoute('/profile', child: (context, args) => const Profile()),
         ChildRoute('/detailsrecipe', child: (context, args) => DetailsRecipe(recipe: args.data)),
         ChildRoute('/listattractions', child: (context, args) => const ListAttractions()),
-        ChildRoute('/selectstore',
-            child: (context, args) =>
-                SelectStore(client: args.data["client"], codeProvider: args.data["codeProvider"])),
+        ChildRoute(
+          '/selectstore',
+          child: (context, args) => SelectStore(
+            client: args.data["client"],
+            codeConsult: args.data["consult"],
+            codeProvider: args.data["codeProvider"],
+          ),
+        ),
         ChildRoute('/listrecipe', child: (context, args) => ListRecipe(recipe: args.data)),
         ChildRoute('/listcategory', child: (context, args) => ListCategory(category: args.data)),
         ChildRoute('/preorder', child: (context, args) => PreOrder(homeController: args.data)),
@@ -54,6 +60,9 @@ class AppModule extends Module {
             child: (context, args) => RequestsStores(
                   codeProvider: args.data["codeProvider"],
                   userCode: args.data["userCode"],
+                  visibleBuyers: args.data["visibleBuyers"],
+                  codeNegotiation: args.data["codeNegotiation"],
+                  homeController: args.data["homeController"],
                 )),
         ChildRoute('/listrequestsstorenegotiation',
             child: (context, args) => DetailsBalance(
@@ -104,8 +113,15 @@ class AppModule extends Module {
             codeClient: args.data["codeClient"],
           ),
         ),
-        ChildRoute('/tradings', child: (context, args) => Tradings(codeProvider: args.data)),
-        ChildRoute('/clientsproduct', child: (context, args) => ClientsProducts(codeProduct: args.data)),
+        ChildRoute(
+          '/tradingsuccess',
+          child: (context, args) => TradingSucess(hour: args.data["hour"], value: args.data["value"]),
+        ),
+        ChildRoute('/tradings',
+            child: (context, args) => Tradings(
+                  homeController: args.data,
+                )),
+        ChildRoute('/clientsproduct', child: (context, args) => ClientsProducts(product: args.data)),
         ChildRoute('/reports',
             child: (context, args) =>
                 Reports(codeProvider: args.data["codeProvider"], accessTargeting: args.data["accessTargeting"])),
@@ -117,6 +133,7 @@ class AppModule extends Module {
               codeClient: args.data["codeClient"],
               codeProvider: args.data["codeProvider"],
               listBranchs: args.data["listBranchs"],
+              codeConsult: args.data["consult"],
               balance: args.data["balance"]),
         ),
         ChildRoute(
@@ -128,6 +145,7 @@ class AppModule extends Module {
             codeClient: args.data["codeClient"],
             codeTrading: args.data["codeTrading"],
             tradings: args.data["tradings"],
+            codeConsult: args.data["codeConsult"],
             listBranchs: args.data["listBranchs"],
           ),
         ),
@@ -142,6 +160,7 @@ class AppModule extends Module {
             productsTrading: args.data["productsTrading"],
             tradings: args.data["tradings"],
             listBranchs: args.data["listBranchs"],
+            codeConsult: args.data["codeConsult"],
             initialListProducts: args.data["initialListProducts"],
           ),
         ),

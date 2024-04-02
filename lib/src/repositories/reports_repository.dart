@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/models/total_value_clients.dart';
+import 'package:profair/src/models/value_minute_graph.dart';
 import 'package:profair/src/repositories/percentage_clients_model.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:dio/dio.dart';
@@ -70,6 +71,19 @@ class ReportsRepository {
         List list = response.data as List;
         return list.map((json) => ProductModel.fromJson(json)).toList();
       }
+    } catch (e) {
+      print("Error return Stores Model Mapper: $e");
+    }
+  }
+
+  getTotalSellProvider(int? codeProvider) async {
+    Response? response;
+    try {
+      response = await clientDio.get("${url}valueminutegraphprovider/$codeProvider");
+      List list = response.data as List;
+      print(list);
+      inspect(list);
+      return list.map((json) => ValueMinutesGraph.fromJson(json)).toList();
     } catch (e) {
       print("Error return Stores Model Mapper: $e");
     }

@@ -1,16 +1,15 @@
 import 'package:profair/src/repositories/tradings_repository.dart';
 import 'package:profair/src/controllers/tradings_controller.dart';
+import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/tradings/components/list.dart';
 import 'package:profair/src/state/state_app.dart';
-import 'package:profair/src/utils/colors.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Tradings extends StatefulWidget {
-  const Tradings({super.key, required this.codeProvider});
+  const Tradings({super.key, required this.homeController});
 
-  final int? codeProvider;
+  final HomeController homeController;
 
   @override
   State<Tradings> createState() => _TradingsState();
@@ -21,7 +20,7 @@ class _TradingsState extends State<Tradings> {
 
   @override
   void initState() {
-    tradingsController.findTradings(widget.codeProvider.toString());
+    tradingsController.findTradings(widget.homeController.data!.codCompany.toString());
     super.initState();
   }
 
@@ -36,7 +35,7 @@ class _TradingsState extends State<Tradings> {
               return ComponentList(
                 description: S.of(context).text_select_branch,
                 state: tradingsController.stateTradings,
-                codeProvider: widget.codeProvider,
+                homeController: widget.homeController,
                 listItems: tradingsController.tradingList,
                 tradingsController: tradingsController,
               );

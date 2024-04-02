@@ -12,6 +12,7 @@ class SelectNegotiation extends StatefulWidget {
     super.key,
     required this.codeProvider,
     required this.codeBranch,
+    this.codeConsult,
     required this.nameBranch,
     required this.codeClient,
     this.listBranchs,
@@ -22,6 +23,7 @@ class SelectNegotiation extends StatefulWidget {
   final int? codeBranch;
   final String? nameBranch;
   final int? codeClient;
+  final int? codeConsult;
   final List<ClientsSelectStoreModel>? listBranchs;
   final bool? balance;
 
@@ -56,6 +58,7 @@ class _SelectNegotiationState extends State<SelectNegotiation> {
                 nameBranch: widget.nameBranch,
                 balance: widget.balance ?? false,
                 listBranchs: widget.listBranchs,
+                codeConsult: widget.codeConsult,
               );
             },
           ),

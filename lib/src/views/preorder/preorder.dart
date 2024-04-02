@@ -32,17 +32,23 @@ class _PreOrderState extends State<PreOrder> {
 
   scannerQrCode() async {
     try {
-      String code = await FlutterBarcodeScanner.scanBarcode(
+      String codeD = await FlutterBarcodeScanner.scanBarcode(
         "#ff6666",
         "Cancelar",
         false,
         ScanMode.DEFAULT,
       );
-      if (code != "-1") {
+      if (codeD != "-1") {
+        String code = codeD.replaceAll("0x9E89738274392874.", "");
+        code = code.replaceAll(".9327329847372939", "");
         LoginModel? response = await widget.homeController.findClient(code);
         int codeUser = response!.userCode ?? 0;
         if (codeUser != 0) {
-          navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany});
+          navigatorRoutes("selectstore", {
+            "client": response,
+            "codeProvider": widget.homeController.data!.codCompany,
+            "consult": widget.homeController.data!.userCode
+          });
         } else {
           Fluttertoast.showToast(
               msg: "Código inválido!",
@@ -73,7 +79,14 @@ class _PreOrderState extends State<PreOrder> {
       int codeUser = response!.userCode ?? 0;
       print(response);
       if (codeUser != null) {
-        navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany});
+        navigatorRoutes(
+          "selectstore",
+          {
+            "client": response,
+            "codeProvider": widget.homeController.data!.codCompany,
+            "consult": widget.homeController.data!.userCode
+          },
+        );
       } else {}
     } catch (e) {
       debugPrint('Error scanning qrcodesssss: $e');

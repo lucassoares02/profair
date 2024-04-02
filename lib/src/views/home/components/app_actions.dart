@@ -40,9 +40,8 @@ class _AppActionsState extends State<AppActions> {
         },
       );
     } else if (route == "tradings") {
-      navigatorRoutes(route, widget.homeController.data!.codCompany);
+      navigatorRoutes(route, widget.homeController);
     } else if (route == "reports") {
-      inspect(widget.homeController.data);
       navigatorRoutes(route, {
         "accessTargeting": widget.homeController.data!.accessTargeting,
         "codeProvider": widget.homeController.data!.accessTargeting == 2

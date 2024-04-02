@@ -24,6 +24,10 @@ class _ReportsState extends State<Reports> {
     reportsController.findPercentageClients(widget.codeProvider, widget.accessTargeting);
     reportsController.findTotalValueClients(widget.codeProvider, widget.accessTargeting);
     reportsController.findTotalValueProducts(widget.codeProvider, widget.accessTargeting!);
+    if (widget.accessTargeting == 1) {
+      reportsController.findGraphLineSellProvider(widget.codeProvider);
+    }
+
     super.initState();
   }
 

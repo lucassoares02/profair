@@ -11,6 +11,7 @@ class RequestsStoresModel {
   String? nameForn;
   int? codeNegotiation;
   int? codeForn;
+  int? codeConsult;
 
   RequestsStoresModel({
     this.codeRequest,
@@ -23,6 +24,7 @@ class RequestsStoresModel {
     this.hour,
     this.descriptionNegotiation,
     this.nameForn,
+    this.codeConsult,
     this.codeNegotiation,
     this.codeForn,
   });
@@ -36,6 +38,7 @@ class RequestsStoresModel {
     razaoClient = json['razaoAssociado'];
     value = json['valor'].toDouble();
     hour = json['horas'];
+    codeConsult = json["codConsultPedido"];
     nameForn = json["nomeForn"];
     codeForn = json["codForn"];
     codeNegotiation = json["codNegociacao"];
@@ -54,6 +57,7 @@ class RequestsStoresModel {
     data['horas'] = hour;
     data['codForn'] = codeForn;
     data['codNegociacao'] = codeNegotiation;
+    data['codConsultPedido'] = codeConsult;
     data['descriptionNegotiation'] = descriptionNegotiation;
     data['nameForn'] = nameForn;
     return data;

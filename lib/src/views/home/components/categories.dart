@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -10,9 +12,13 @@ class Categories extends StatefulWidget {
   const Categories({
     super.key,
     required this.homeController,
+    this.index,
+    this.filter,
   });
 
   final HomeController homeController;
+  final Function(int?)? filter;
+  final int? index;
 
   @override
   State<Categories> createState() => _CategoriesState();
@@ -28,7 +34,9 @@ class _CategoriesState extends State<Categories> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final organization = widget.homeController.data!.accessTargeting == 3;
 
+    inspect(widget.homeController.data);
     return ValueListenableBuilder(
       valueListenable: widget.homeController.stateBuyers,
       builder: (context, value, _) {
@@ -52,73 +60,87 @@ class _CategoriesState extends State<Categories> {
                 }),
           ),
           component: SizedBox(
-            height: 110,
+            height: organization ? 110 : 50,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
+                // shrinkWrap: true,
                 itemCount: widget.homeController.buyers.length,
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed('selectprovider', arguments: {
-                        "codeBuyer": widget.homeController.buyers[index].codeBuyer,
-                        "codeClient": 0,
-                        "codeBranch": 0
-                      });
+                      if (widget.homeController.data!.accessTargeting == 3) {
+                        Navigator.of(context).pushNamed('selectprovider', arguments: {
+                          "codeBuyer": widget.homeController.buyers[index].codeBuyer,
+                          "codeClient": 0,
+                          "codeBranch": 0
+                        });
+                      } else {
+                        widget.filter!(widget.homeController.buyers[index].codeBuyer);
+                      }
                     },
                     child: Container(
-                      width: 200,
-                      padding: const EdgeInsets.all(appPadding),
+                      width: organization ? 200 : null,
+                      padding: organization
+                          ? const EdgeInsets.all(appPadding)
+                          : const EdgeInsets.symmetric(horizontal: appPadding * 1.5),
                       margin: EdgeInsets.only(
                           left: appMargin, right: index == widget.homeController.buyers.length - 1 ? appMargin : 0),
                       decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.2),
-                          borderRadius: const BorderRadius.all(Radius.circular(appRadius))),
+                          color: widget.index == widget.homeController.buyers[index].codeBuyer
+                              ? colorSecondary
+                              : Colors.grey.withOpacity(0.2),
+                          borderRadius: BorderRadius.all(Radius.circular(organization ? appRadius : appRadius * 3))),
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: organization ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                widget.homeController.buyers[index].category!,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.all(5),
-                                decoration: BoxDecoration(
+                          if (organization)
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                // Text(
+                                //   widget.homeController.buyers[index].category!,
+                                //   style: const TextStyle(
+                                //     fontSize: 12,
+                                //   ),
+                                // ),
+                                Container(
+                                  padding: const EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                      color: widget.homeController.buyers[index].color != null
+                                          ? Color(int.parse("0X51A${widget.homeController.buyers[index].color}"))
+                                          : Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(appRadius)),
+                                  child: Icon(
+                                    Icons.category_outlined,
+                                    size: 20,
                                     color: widget.homeController.buyers[index].color != null
-                                        ? Color(int.parse("0X51A${widget.homeController.buyers[index].color}"))
-                                        : Colors.grey.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(appRadius)),
-                                child: Icon(
-                                  Icons.category_outlined,
-                                  size: 20,
-                                  color: widget.homeController.buyers[index].color != null
-                                      ? Color(int.parse("0XFF${widget.homeController.buyers[index].color}"))
-                                      : Colors.black,
+                                        ? Color(int.parse("0XFF${widget.homeController.buyers[index].color}"))
+                                        : Theme.of(context).colorScheme.primary,
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                              ],
+                            ),
+                          if (organization)
+                            const SizedBox(
+                              height: 10,
+                            ),
                           Text(
                             '${widget.homeController.buyers[index].nameBuyer}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: widget.index == widget.homeController.buyers[index].codeBuyer
+                                    ? Colors.white
+                                    : null),
                           ),
                           Text(
                             formatCurrency(widget.homeController.buyers[index].total!),
-                            style: const TextStyle(
-                              fontSize: 12,
-                            ),
+                            style: TextStyle(
+                                fontSize: 12,
+                                color: widget.index == widget.homeController.buyers[index].codeBuyer
+                                    ? Colors.white
+                                    : null),
                           ),
                         ],
                       ),

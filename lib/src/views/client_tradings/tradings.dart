@@ -1,6 +1,6 @@
 import 'package:profair/src/repositories/tradings_repository.dart';
 import 'package:profair/src/controllers/tradings_controller.dart';
-import 'package:profair/src/views/tradings/components/list.dart';
+import 'package:profair/src/views/client_tradings/components/list.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/generated/l10n.dart';

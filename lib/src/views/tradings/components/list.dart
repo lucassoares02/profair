@@ -1,4 +1,6 @@
+import 'package:intl/intl.dart';
 import 'package:profair/src/controllers/tradings_controller.dart';
+import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/components/header_list.dart';
@@ -15,13 +17,15 @@ class ComponentList extends StatefulWidget {
       this.description,
       required this.listItems,
       required this.state,
-      required this.codeProvider,
+      required this.homeController,
+      this.codeNegotiation,
       required this.tradingsController});
 
   Iterable<TradingsModel> listItems;
   final String? description;
   final ValueListenable state;
-  final int? codeProvider;
+  final HomeController homeController;
+  final int? codeNegotiation;
   final TradingsController tradingsController;
 
   @override
@@ -43,7 +47,7 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.tradingsController.search(value);
             },
-            label: S.of(context).text_trading,
+            label: "Negociações",
           ),
           ValueListenableBuilder(
               valueListenable: widget.tradingsController.stateSearchTrandings,
@@ -51,7 +55,15 @@ class _ComponentListState extends State<ComponentList> {
                 return Column(
                     children: widget.tradingsController.tradingList.map((e) {
                   return InkWell(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.of(context).pushNamed('listrequestsstores', arguments: {
+                        "codeProvider": e.provider,
+                        "userCode": 0,
+                        "codeNegotiation": e.code,
+                        "homeController": widget.homeController,
+                        "visibleBuyers": false
+                      });
+                    },
                     child: Container(
                       width: width,
                       height: 90,
@@ -65,16 +77,32 @@ class _ComponentListState extends State<ComponentList> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            e.title!.length < 28 ? '${e.title}' : "${e.title!.substring(0, 25)}...",
+                            '${e.code}',
+                            style: const TextStyle(color: colorGreyDark),
+                          ),
+                          Text(
+                            "${e.title}",
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
-                          const SizedBox(height: appMargin),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
-                                '${e.provider} ',
-                                style: const TextStyle(color: colorGreyDark),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.date_range,
+                                    size: 18,
+                                    color: Colors.grey,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    DateFormat("dd/MM/yyyy").format(DateTime.parse(e.term!)),
+                                    style: TextStyle(
+                                      color: (e.totalVolume != "0") ? colorGreyDark : colorGrey,
+                                    ),
+                                  ),
+                                ],
                               ),
                               Text(
                                 '${e.totalVolume} | R\$ ${e.totalValue}',

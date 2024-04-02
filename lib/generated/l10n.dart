@@ -290,10 +290,10 @@ class S {
     );
   }
 
-  /// `Pedidos de clientes`
+  /// `Pedidos de Clientes`
   String get text_requesting_customers {
     return Intl.message(
-      'Pedidos de clientes',
+      'Pedidos de Clientes',
       name: 'text_requesting_customers',
       desc: '',
       args: [],

@@ -1,3 +1,5 @@
+import 'package:profair/src/components/line_chart.dart';
+import 'package:profair/src/components/line_chart3.dart';
 import 'package:profair/src/views/reports/components/card_percentage.dart';
 import 'package:profair/src/views/reports/components/chart_negotiation.dart';
 import 'package:profair/src/views/reports/components/chart_product.dart';
@@ -23,6 +25,32 @@ class ComponentList extends StatefulWidget {
 }
 
 class _ComponentListState extends State<ComponentList> {
+  double maxValue = 10000;
+  double horizontalInterval = 5000;
+  double maxValuePeriod = 20000;
+  double horizontalIntervalPeriod = 5000;
+
+  getMaxValue() {
+    for (int i = 0; i < widget.reportsController.reportValueMinutes.length; i++) {
+      if (widget.reportsController.reportValueMinutes[i].totalValue! > maxValue) {
+        maxValue = widget.reportsController.reportValueMinutes[i].totalValue! +
+            widget.reportsController.reportValueMinutes[i].totalValue!;
+      }
+    }
+    print("MaxValue $maxValue");
+    horizontalInterval = maxValue / 5;
+  }
+
+  getMaxValuePeriod() {
+    for (int i = 0; i < widget.reportsController.reportValueMinutes.length; i++) {
+      if (widget.reportsController.reportValueMinutes[i].value! > maxValuePeriod) {
+        maxValuePeriod = widget.reportsController.reportValueMinutes[i].value! +
+            widget.reportsController.reportValueMinutes[i].value! * 0.2;
+      }
+    }
+    horizontalIntervalPeriod = maxValuePeriod / 5;
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -230,6 +258,78 @@ class _ComponentListState extends State<ComponentList> {
               ),
               const AppSpacing(),
               const AppSpacing(),
+              if (widget.accessTargeting == 1)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text("Evolução das vendas",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    const AppSpacing(),
+                    ValueListenableBuilder(
+                      valueListenable: widget.reportsController.stateReportsSells,
+                      builder: (context, value, child) {
+                        getMaxValue();
+                        return value == StateApp.loading
+                            ? SkeletonAvatar(
+                                style: SkeletonAvatarStyle(
+                                  height: 250,
+                                  width: width,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              )
+                            : widget.reportsController.reportValueMinutes.isNotEmpty
+                                ? Container(
+                                    width: double.maxFinite,
+                                    height: 250,
+                                    padding: const EdgeInsets.all(5),
+                                    child: LineChartSample3(
+                                      values: widget.reportsController.reportValueMinutes,
+                                      maxValue: maxValue,
+                                      horizontalInterval: horizontalInterval,
+                                    ),
+                                  )
+                                : Container();
+                      },
+                    ),
+                    const AppSpacing(),
+                    const AppSpacing(),
+                    const Text("Venda por período",
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        )),
+                    const AppSpacing(),
+                    ValueListenableBuilder(
+                      valueListenable: widget.reportsController.stateReportsSells,
+                      builder: (context, value, child) {
+                        getMaxValuePeriod();
+                        return value == StateApp.loading
+                            ? SkeletonAvatar(
+                                style: SkeletonAvatarStyle(
+                                  height: 250,
+                                  width: width,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              )
+                            : widget.reportsController.reportValueMinutes.isNotEmpty
+                                ? Container(
+                                    width: double.maxFinite,
+                                    height: 250,
+                                    padding: const EdgeInsets.all(5),
+                                    child: LineChartSample2(
+                                      values: widget.reportsController.reportValueMinutes,
+                                      maxValue: maxValuePeriod,
+                                      horizontalInterval: horizontalIntervalPeriod,
+                                    ),
+                                  )
+                                : Container();
+                      },
+                    ),
+                  ],
+                )
             ],
           ),
         ),

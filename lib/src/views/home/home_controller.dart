@@ -57,8 +57,12 @@ class HomeController extends ValueNotifier<StateApp> {
       }
       await findLastTradings(codeRequest, data!.accessTargeting);
       getCategories();
-      if (data!.accessTargeting == 3) {
-        findBuyers();
+      if (data!.accessTargeting == 3 || data!.accessTargeting == 1) {
+        if (data!.accessTargeting == 1) {
+          findBuyers(codeProvider: data!.codCompany);
+        } else {
+          findBuyers();
+        }
       }
 
       if (data!.accessTargeting != null) {
@@ -114,10 +118,15 @@ class HomeController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future<LoginModel?> findBuyers() async {
+  Future<LoginModel?> findBuyers({int? codeProvider}) async {
     stateBuyers.value = StateApp.loading;
     try {
-      buyers = await _homeRepository.getBuyers();
+      buyers = await _homeRepository.getBuyers(codeProvider: codeProvider);
+      double soma = 0;
+      for (var item in buyers) {
+        soma += item.total ?? 0;
+      }
+      buyers.insert(0, BuyersModel(total: soma, nameBuyer: "Todos", codeBuyer: 0));
       stateBuyers.value = StateApp.success;
     } catch (e) {
       stateBuyers.value = StateApp.error;

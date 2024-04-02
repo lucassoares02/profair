@@ -24,10 +24,9 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   int totalCheckedBranch = 0;
 
   Future sendOrder(List<ProductModel> products, List<NegotiationModel> tradings, int? codeBranch, int? codeProvider,
-      int? codeClient, List<ClientsSelectStoreModel> listBranchs) async {
+      int? codeClient, List<ClientsSelectStoreModel> listBranchs, int? codeConsult) async {
     stateFinishTrading.value = StateApp.loading;
 
-    inspect(actualList);
     try {
       await _negotiationsRepository.postTradingNew(
         products: actualList,
@@ -36,6 +35,7 @@ class FinishTradingController extends ValueNotifier<StateApp> {
         codeProvider: codeProvider,
         codeClient: codeClient,
         listBranchs: listBranchs,
+        codeConsult: codeConsult,
       );
     } catch (e) {
       print("Error save order: $e");
@@ -55,6 +55,7 @@ class FinishTradingController extends ValueNotifier<StateApp> {
         actualList.add(products[j].toJson());
       }
     }
+    inspect(actualList);
   }
 
   checkListItems(

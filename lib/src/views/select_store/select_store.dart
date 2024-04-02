@@ -9,10 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SelectStore extends StatefulWidget {
-  const SelectStore({super.key, required this.client, required this.codeProvider});
+  const SelectStore({super.key, required this.client, required this.codeProvider, required this.codeConsult});
 
   final LoginModel? client;
   final int? codeProvider;
+  final int? codeConsult;
 
   @override
   State<SelectStore> createState() => _SelectStoreState();
@@ -39,12 +40,12 @@ class _SelectStoreState extends State<SelectStore> {
               valueListenable: storesController.stateStores,
               builder: (context, value, child) {
                 return ComponentList(
-                  description: S.of(context).text_select_branch,
-                  state: storesController.stateStores,
-                  codeProvider: widget.codeProvider,
-                  listItems: storesController.stores,
-                  client: widget.client,
-                );
+                    description: S.of(context).text_select_branch,
+                    state: storesController.stateStores,
+                    codeProvider: widget.codeProvider,
+                    listItems: storesController.stores,
+                    client: widget.client,
+                    consult: widget.codeConsult);
               },
             ),
           ),

@@ -26,3 +26,6 @@ const colorRedDark = Color(0xFF731b53);
 
 const colorSecondary = Color(0xFFAA015A);
 const colorPrimary = Color(0xFFF4663D);
+
+// #F61A64
+// #321146

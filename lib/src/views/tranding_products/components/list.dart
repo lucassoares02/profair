@@ -24,6 +24,7 @@ class ComponentList extends StatefulWidget {
     required this.codeProvider,
     required this.codeBranch,
     required this.nameBranch,
+    this.codeConsult,
     required this.codeTrading,
     required this.codeClient,
     required this.tradingProductsController,
@@ -36,10 +37,11 @@ class ComponentList extends StatefulWidget {
   final TradingProductsController tradingProductsController;
   final int? codeProvider;
   final int? codeBranch;
+  final int? codeConsult;
   final String? nameBranch;
   final int? codeClient;
   final int? codeTrading;
-  final List<NegotiationModel> tradings;
+  final List<NegotiationModel>? tradings;
   final List<ClientsSelectStoreModel>? listBranchs;
 
   @override
@@ -69,7 +71,7 @@ class _ComponentListState extends State<ComponentList> {
             onSort: () {
               widget.tradingProductsController.sort();
             },
-            label: S.of(context).text_products,
+            label: "Produtos",
           ),
           ValueListenableBuilder(
             valueListenable: widget.tradingProductsController.stateSearchProductsTrading,
@@ -301,26 +303,44 @@ class _ComponentListState extends State<ComponentList> {
                 if (widget.codeBranch != 0 && widget.listBranchs != null) const AppSpacing(),
                 if (widget.codeBranch != 0 && widget.listBranchs != null)
                   AppButton(
-                    label: "Próximo",
-                    colorButton: colorSecondary,
-                    iconButton: Icons.check,
-                    onPressButton: () {
-                      // widget.tradingProductsController.visibleText.value = false;
-                      // widget.tradingProductsController.search("");
-                      Navigator.of(context).pushNamed('finishtrading', arguments: {
-                        "codeProvider": widget.codeProvider,
-                        "codeBranch": widget.codeBranch,
-                        "nameBranch": widget.nameBranch,
-                        "codeClient": widget.codeClient,
-                        "codeTrading": widget.codeTrading,
-                        // "productsTrading": widget.tradingProductsController.productsTrading,
-                        "productsTrading": widget.tradingProductsController.products,
-                        "initialListProducts": widget.tradingProductsController.initialListproducts,
-                        "tradings": widget.tradings,
-                        "listBranchs": widget.listBranchs
-                      });
-                    },
-                  ),
+                      label: "Próximo",
+                      colorButton: colorSecondary,
+                      iconButton: Icons.check,
+                      onPressButton: () {
+                        // widget.tradingProductsController.visibleText.value = false;
+                        // widget.tradingProductsController.search("");
+                        bool filled = false;
+                        for (var i = 0; i < widget.tradingProductsController.products.length; i++) {
+                          if (int.parse(widget.tradingProductsController.products[i].amount!) > 0) {
+                            filled = true;
+                            break;
+                          }
+                        }
+                        if (filled) {
+                          Navigator.of(context).pushNamed('finishtrading', arguments: {
+                            "codeProvider": widget.codeProvider,
+                            "codeBranch": widget.codeBranch,
+                            "nameBranch": widget.nameBranch,
+                            "codeClient": widget.codeClient,
+                            "codeTrading": widget.codeTrading,
+                            "codeConsult": widget.codeConsult,
+                            // "productsTrading": widget.tradingProductsController.productsTrading,
+                            "productsTrading": widget.tradingProductsController.products,
+                            "initialListProducts": widget.tradingProductsController.initialListproducts,
+                            "tradings": widget.tradings,
+                            "listBranchs": widget.listBranchs
+                          });
+                        } else {
+                          Fluttertoast.showToast(
+                              msg: "Nenhum pedido adicionado!",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.CENTER,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                      }),
                 // if (widget.codeBranch != 0 && widget.listBranchs != null) const AppSpacing(),
                 // if (widget.codeBranch != 0 && widget.listBranchs != null)
                 //   Container(

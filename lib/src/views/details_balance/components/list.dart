@@ -39,7 +39,7 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(label: S.of(context).text_orders_placed, icon: Icons.handshake),
+      widgetLoading: LoadingList(label: "Pedidos Realizados", icon: Icons.handshake),
       component: Column(
         children: [
           HeaderList(
@@ -47,7 +47,7 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.balanceController.search(value);
             },
-            label: S.of(context).text_orders_placed,
+            label: "Pedidos Realizados",
           ),
           ValueListenableBuilder(
               valueListenable: widget.balanceController.stateSearchStore,

@@ -1,5 +1,4 @@
 import 'package:profair/generated/l10n.dart';
-import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/controllers/trading_products_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/repositories/trading_products_repository.dart';
@@ -16,6 +15,7 @@ class TradingProducts extends StatefulWidget {
     required this.codeBranch,
     required this.codeTrading,
     this.nameBranch,
+    this.codeConsult,
     required this.codeClient,
     required this.tradings,
     required this.listBranchs,
@@ -25,8 +25,9 @@ class TradingProducts extends StatefulWidget {
   final int? codeBranch;
   final int? codeTrading;
   final int? codeClient;
+  final int? codeConsult;
   final String? nameBranch;
-  final List<NegotiationModel> tradings;
+  final List<NegotiationModel>? tradings;
   final List<ClientsSelectStoreModel>? listBranchs;
 
   @override
@@ -63,6 +64,7 @@ class _TradingProductsState extends State<TradingProducts> {
                 nameBranch: widget.nameBranch,
                 tradings: widget.tradings,
                 listBranchs: widget.listBranchs,
+                codeConsult: widget.codeConsult,
               );
             },
           ),

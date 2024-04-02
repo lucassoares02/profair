@@ -1,4 +1,5 @@
 import 'package:profair/src/controllers/clients_product_controller.dart';
+import 'package:profair/src/repositories/products_provider_model.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -11,10 +12,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ComponentList extends StatefulWidget {
-  ComponentList({super.key, this.description, required this.listItems, required this.state, required this.clientsProductController});
+  ComponentList(
+      {super.key, this.product, required this.listItems, required this.state, required this.clientsProductController});
 
   Iterable<ClientsProductModel> listItems;
-  final String? description;
+  final ProductsProviderModel? product;
   final ValueListenable state;
   final ClientsProductController clientsProductController;
 
@@ -29,7 +31,8 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(icon: Icons.shopping_cart_checkout_rounded, label: S.of(context).text_requesting_customers),
+      widgetLoading:
+          LoadingList(icon: Icons.shopping_cart_checkout_rounded, label: S.of(context).text_requesting_customers),
       component: Column(
         children: [
           HeaderList(
@@ -56,23 +59,24 @@ class _ComponentListState extends State<ComponentList> {
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            e.nameClient!.length < 28 ? '${e.nameClient}' : "${e.nameClient!.substring(0, 25)}...",
+                            "${e.codeClient}- ${e.nameClient!}",
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
-                          const SizedBox(height: appMargin),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                formatCurrency(e.totalValue!),
-                                style: const TextStyle(color: colorGreyDark),
+                                '${e.coefficient} ${e.packing}',
+                                style: TextStyle(
+                                  color: (e.totalValue != "0") ? colorGreyDark : colorGrey,
+                                ),
                               ),
                               Text(
-                                '${e.coefficient} | ${e.packing}',
-                                style: TextStyle(color: (e.totalValue != "0") ? colorGreyDark : colorGrey, fontWeight: FontWeight.bold),
+                                formatCurrency(e.totalValue!),
+                                style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),

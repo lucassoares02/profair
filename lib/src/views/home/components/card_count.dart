@@ -84,6 +84,8 @@ class _CardCountState extends State<CardCount> {
                         Navigator.of(context).pushNamed('listrequestsstores', arguments: {
                           "codeProvider": widget.homeController.data!.codCompany,
                           "userCode": 0,
+                          "visibleBuyers": true,
+                          "homeController": widget.homeController
                         });
                       }
                     },

@@ -46,13 +46,15 @@ class FinishTradingRepository {
     }
   }
 
-  postTradingNew(
-      {required List<dynamic> products,
-      required List<NegotiationModel> tradings,
-      int? codeBranch,
-      int? codeProvider,
-      int? codeClient,
-      required List<ClientsSelectStoreModel> listBranchs}) async {
+  postTradingNew({
+    required List<dynamic> products,
+    required List<NegotiationModel> tradings,
+    int? codeBranch,
+    int? codeProvider,
+    int? codeClient,
+    required List<ClientsSelectStoreModel> listBranchs,
+    int? codeConsult,
+  }) async {
     clientDio.options.contentType = Headers.formUrlEncodedContentType;
 
     try {
@@ -65,14 +67,12 @@ class FinishTradingRepository {
                 "codFornecedor": codeProvider.toString(),
                 "codComprador": codeClient.toString(),
                 "codNegociacao": tradings[i].negotiation.toString(),
+                "codeConsult": codeConsult,
                 "codOrganizacao": "158",
                 "items": products
               };
-              print("===============================================");
-              print("DATA");
-              print("===============================================");
+              print("==============================");
               print(data);
-              print("===============================================");
               final response = await clientDio.post("${url}insertrequestnew", data: data);
             }
           }

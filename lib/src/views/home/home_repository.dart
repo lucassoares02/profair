@@ -87,8 +87,13 @@ class HomeRepository {
     return list.map((json) => RequestsStoresModel.fromJson(json)).toList();
   }
 
-  getBuyers() async {
-    final response = await clientDio.get('${url}buyers');
+  getBuyers({int? codeProvider}) async {
+    Response? response;
+    if (codeProvider != null) {
+      response = await clientDio.get('${url}buyersprovider/$codeProvider');
+    } else {
+      response = await clientDio.get('${url}buyers');
+    }
     List list = response.data as List;
     return list.map((json) => BuyersModel.fromJson(json)).toList();
   }

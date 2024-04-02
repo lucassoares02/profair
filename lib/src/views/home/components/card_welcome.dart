@@ -87,7 +87,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                               width: 40,
                               height: 40,
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.2),
+                                color: Colors.grey.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(50),
                               ),
                               child: const Icon(Icons.person_outline),
@@ -154,7 +154,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                           padding:
                                               const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
                                           decoration: BoxDecoration(
-                                            color: Colors.grey.withOpacity(0.2),
+                                            color: Colors.grey.withOpacity(0.1),
                                             borderRadius: BorderRadius.circular(appRadius),
                                           ),
                                           child: Text(

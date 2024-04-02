@@ -18,6 +18,7 @@ class FinishTrading extends StatefulWidget {
     required this.codeBranch,
     required this.codeTrading,
     required this.codeClient,
+    this.codeConsult,
     required this.nameBranch,
     required this.productsTrading,
     required this.tradings,
@@ -28,6 +29,7 @@ class FinishTrading extends StatefulWidget {
   final int? codeProvider;
   final int? codeBranch;
   final int? codeTrading;
+  final int? codeConsult;
   final String? nameBranch;
   final int? codeClient;
   final List<ProductModel> productsTrading;
@@ -45,8 +47,6 @@ class _FinishTradingState extends State<FinishTrading> {
 
   @override
   void initState() {
-    inspect(widget.productsTrading);
-    inspect(widget.initialListProducts);
     finishTradingController.checkListItems(widget.productsTrading, widget.tradings, widget.listBranchs);
     finishTradingController.insertInList(widget.productsTrading, widget.initialListProducts);
     super.initState();
@@ -69,6 +69,7 @@ class _FinishTradingState extends State<FinishTrading> {
                   codeClient: widget.codeClient,
                   nameBranch: widget.nameBranch,
                   listBranchs: widget.listBranchs,
+                  codeConsult: widget.codeConsult,
                   tradings: widget.tradings);
             },
           ),

@@ -71,7 +71,7 @@ class _ComponentListState extends State<ComponentList> {
                           if (e.totalVolume != "0") {
                             Navigator.of(context).pushNamed(
                               "/clientsproduct",
-                              arguments: e.codeProduct,
+                              arguments: e,
                             );
                           } else {
                             Fluttertoast.showToast(

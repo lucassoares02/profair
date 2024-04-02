@@ -19,6 +19,7 @@ class ComponentList extends StatefulWidget {
     this.codeProvider,
     this.codeClient,
     this.nameBranch,
+    this.codeConsult,
     required this.state,
     this.balance = true,
     required this.listBranchs,
@@ -28,6 +29,7 @@ class ComponentList extends StatefulWidget {
   final String? description;
   final ValueListenable state;
   final int? codeBranch;
+  final int? codeConsult;
   final String? nameBranch;
   final int? codeProvider;
   final int? codeClient;
@@ -51,7 +53,7 @@ class _ComponentListState extends State<ComponentList> {
           HeaderList(
             icon: Icons.swap_horiz_rounded,
             activeSearch: false,
-            label: S.of(context).text_trading,
+            label: "Negociações",
           ),
           Column(
               children: widget.listItems.asMap().entries.map((e) {
@@ -74,6 +76,7 @@ class _ComponentListState extends State<ComponentList> {
                         "codeTrading": e.value.negotiation,
                         "tradings": widget.listItems,
                         "listBranchs": widget.listBranchs,
+                        "codeConsult": widget.codeConsult,
                       });
                     },
                     child: Container(

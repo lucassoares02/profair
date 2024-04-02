@@ -150,11 +150,11 @@ class _HomePageState extends State<HomePage> {
                                 ? Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Padding(
-                                        padding: EdgeInsets.only(left: appPadding, bottom: appPadding),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: appPadding, bottom: appPadding),
                                         child: Text(
-                                          "Carteiras",
-                                          style: TextStyle(
+                                          homeController.data!.accessTargeting == 3 ? "Carteiras" : "Consultores",
+                                          style: const TextStyle(
                                               fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
                                         ),
                                       ),

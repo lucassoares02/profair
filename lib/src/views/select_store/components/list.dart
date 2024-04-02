@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
@@ -19,12 +17,14 @@ class ComponentList extends StatefulWidget {
       required this.listItems,
       required this.state,
       required this.codeProvider,
+      this.consult,
       required this.client});
 
   final List<ClientsSelectStoreModel> listItems;
   final String? description;
   final ValueListenable state;
   final int? codeProvider;
+  final int? consult;
   final LoginModel? client;
 
   @override
@@ -111,6 +111,7 @@ class _ComponentListState extends State<ComponentList> {
                     "codeBranch": e.value.relationshipCode,
                     "codeClient": widget.client!.userCode,
                     "listBranchs": widget.listItems,
+                    "consult": widget.consult,
                   },
                 );
               },

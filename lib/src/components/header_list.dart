@@ -10,6 +10,7 @@ class HeaderList extends StatefulWidget {
       this.onSearch,
       this.icon,
       this.onSort,
+      this.onOpenSearch,
       this.activePop = true,
       this.color,
       this.iconColor,
@@ -20,6 +21,7 @@ class HeaderList extends StatefulWidget {
   Function(String?)? onSearch;
   Function()? onSort;
   Function()? onCloseInfo;
+  Function()? onOpenSearch;
   Color? color;
   Color? iconColor;
   IconData? icon;
@@ -97,6 +99,7 @@ class _HeaderListState extends State<HeaderList> {
                               ),
                             Text(
                               "${widget.label}",
+                              overflow: TextOverflow.clip,
                               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                             ),
                           ],
@@ -109,6 +112,7 @@ class _HeaderListState extends State<HeaderList> {
                                         ? () {
                                             visibleSearch.value = !visibleSearch.value;
                                             if (widget.onCloseInfo != null) widget.onCloseInfo!();
+                                            if (widget.onOpenSearch != null) widget.onOpenSearch!();
                                           }
                                         : null,
                                     icon: Icon(

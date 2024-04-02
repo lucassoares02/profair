@@ -66,6 +66,7 @@ class _TicketState extends State<Ticket> {
                         const AppSpacing(),
                         if (widget.homeController.data!.accessTargeting == 2)
                           Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               const Text(
                                 "Agilize seus pedidos",
@@ -97,7 +98,8 @@ class _TicketState extends State<Ticket> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     QrImageView(
-                                      data: widget.homeController.data!.codAccess!,
+                                      data:
+                                          "0x9E89738274392874.${widget.homeController.data!.codAccess!}.9327329847372939",
                                       size: size.width - 150,
                                       version: QrVersions.auto,
                                     ),
@@ -123,7 +125,8 @@ class _TicketState extends State<Ticket> {
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  widget.homeController.data!.userCode.toString(),
+                                  widget.homeController.data!.codAccess!,
+                                  // widget.homeController.data!.userCode.toString(),
                                   style: const TextStyle(
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold,

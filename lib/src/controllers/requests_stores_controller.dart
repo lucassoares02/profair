@@ -15,15 +15,37 @@ class RequestsStoresController extends ValueNotifier<StateApp> {
 
   RequestsStoresController(super.value, this._requestsStoresRepository);
 
-  Future findRequestsStores(int? codeProvider, int? userCode) async {
+  ValueNotifier<int?> filterValue = ValueNotifier(0);
+  ValueNotifier<bool> visibleSearch = ValueNotifier(false);
+
+  Future findRequestsStores(int? codeProvider, int? userCode, int? codeNegotiation) async {
     stateStores.value = StateApp.loading;
     try {
-      requestsStores = await _requestsStoresRepository.getRequestsStores(codeProvider, userCode);
+      requestsStores = await _requestsStoresRepository.getRequestsStores(codeProvider, userCode, codeNegotiation);
       requests = requestsStores;
 
       stateStores.value = StateApp.success;
     } catch (e) {
       stateStores.value = StateApp.error;
+    }
+  }
+
+  filter(int? value) {
+    stateSearchStore.value = StateApp.loading;
+    try {
+      if (value == 0) {
+        requestsStores = requests;
+      } else {
+        requestsStores = requests.where((item) {
+          return item.codeConsult! == value;
+        });
+      }
+      filterValue.value = value;
+
+      stateSearchStore.value = StateApp.success;
+    } catch (e) {
+      print("Error filter Requests Stores: $e");
+      stateSearchStore.value = StateApp.error;
     }
   }
 
