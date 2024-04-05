@@ -39,8 +39,8 @@ class _CardProductState extends State<CardProduct> {
       child: Container(
         padding: const EdgeInsets.all(appMargin),
         margin: const EdgeInsets.only(left: appMargin, right: appMargin, top: appMargin),
-        decoration: const BoxDecoration(
-          border: Border(bottom: BorderSide(color: colorGrey)),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: colorGrey.withOpacity(0.3))),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

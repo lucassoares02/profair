@@ -128,6 +128,13 @@ class HomeRepository {
           "icon": Icons.business_rounded,
           "route": "selectprovider",
         },
+      if (code == 3)
+        {
+          "id": 94,
+          "title": 'Usuários',
+          "icon": Icons.group_outlined,
+          "route": "users",
+        },
       if (code == 1)
         {
           "id": 84,

@@ -128,8 +128,8 @@ class _CategoriesState extends State<Categories> {
                           Text(
                             '${widget.homeController.buyers[index].nameBuyer}',
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
                                 color: widget.index == widget.homeController.buyers[index].codeBuyer
                                     ? Colors.white
                                     : null),
@@ -137,7 +137,8 @@ class _CategoriesState extends State<Categories> {
                           Text(
                             formatCurrency(widget.homeController.buyers[index].total!),
                             style: TextStyle(
-                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
                                 color: widget.index == widget.homeController.buyers[index].codeBuyer
                                     ? Colors.white
                                     : null),

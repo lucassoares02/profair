@@ -8,8 +8,8 @@ class ValueMinutesGraph {
   ValueMinutesGraph.fromJson(Map<String, dynamic> json) {
     // codeBranch = json['codAssocRelaciona'];
     hour = json['hour'];
-    value = json['value'];
-    totalValue = json['total_value'];
+    value = double.parse(json['value'].toString());
+    totalValue = double.parse(json['total_value'].toString());
   }
 
   Map<String, dynamic> toJson() {

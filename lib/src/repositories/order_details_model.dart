@@ -31,7 +31,7 @@ class OrderDetailsModel {
     brand = json["marca"];
     price = double.parse(json["precoMercadoria"].toString());
     amount = json["quantMercadoria"].toString();
-    unitPrice = json["precoUnit"];
+    unitPrice = double.parse(json["precoUnit"].toString());
     total = json["valorTotal"] != null ? double.parse(json["valorTotal"].toString()) : json["valorTotal"];
   }
 

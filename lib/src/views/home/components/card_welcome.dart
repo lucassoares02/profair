@@ -115,7 +115,9 @@ class _CardWelcomeState extends State<CardWelcome> {
                                             icon: const Icon(Icons.keyboard_arrow_down_sharp, size: 25),
                                             hint: Text(
                                               "${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany!.length > 35 ? "${widget.homeController.data!.nameCompany!.substring(0, 35)}..." : widget.homeController.data!.nameCompany!}",
-                                              style: TextStyle(color: Theme.of(context).colorScheme.onBackground),
+                                              style: TextStyle(
+                                                  color: Theme.of(context).colorScheme.onBackground,
+                                                  fontWeight: FontWeight.w500),
                                             ),
                                             items: widget.homeController.moreData!.map((e) {
                                               return DropdownMenuItem<LoginModel>(
@@ -161,6 +163,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                             '${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany}',
                                             style: TextStyle(
                                               fontSize: 16,
+                                              fontWeight: FontWeight.w500,
                                               color: Theme.of(context).colorScheme.onBackground,
                                             ),
                                           ),

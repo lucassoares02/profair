@@ -16,6 +16,7 @@ class NegotiationModel {
   });
 
   NegotiationModel.fromJson(Map<String, dynamic> json) {
+    print(json);
     negotiation = json["codNegociacao"];
     title = json["descNegociacao"];
     confirm = json["confirma"];

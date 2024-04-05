@@ -2,10 +2,8 @@ import 'package:profair/src/repositories/details_balance_repository.dart';
 import 'package:profair/src/views/details_balance/components/list.dart';
 import 'package:profair/src/controllers/details_balance_controller.dart';
 import 'package:profair/src/state/state_app.dart';
-import 'package:profair/src/utils/colors.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class DetailsBalance extends StatefulWidget {
   const DetailsBalance({super.key, required this.codeProvider, required this.userCode});
@@ -30,22 +28,19 @@ class _DetailsBalanceState extends State<DetailsBalance> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ValueListenableBuilder(
-              valueListenable: balanceController.stateStores,
-              builder: (context, value, child) {
-                return ComponentList(
-                    description: S.of(context).text_select_branch,
-                    state: balanceController.stateStores,
-                    codeProvider: widget.codeProvider,
-                    listItems: balanceController.requestsStores,
-                    balanceController: balanceController,
-                    userCode: widget.userCode);
-              },
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: ValueListenableBuilder(
+            valueListenable: balanceController.stateStores,
+            builder: (context, value, child) {
+              return ComponentList(
+                  description: S.of(context).text_select_branch,
+                  state: balanceController.stateStores,
+                  codeProvider: widget.codeProvider,
+                  listItems: balanceController.requestsStores,
+                  balanceController: balanceController,
+                  userCode: widget.userCode);
+            },
           ),
         ),
       ),

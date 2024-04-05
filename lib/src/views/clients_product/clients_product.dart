@@ -29,21 +29,18 @@ class _ClientsProductsState extends State<ClientsProducts> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ValueListenableBuilder(
-              valueListenable: clientsProductController.stateClientProduct,
-              builder: (context, value, child) {
-                return ComponentList(
-                  product: widget.product,
-                  state: clientsProductController.stateClientProduct,
-                  listItems: clientsProductController.clientsProductList,
-                  clientsProductController: clientsProductController,
-                );
-              },
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: ValueListenableBuilder(
+            valueListenable: clientsProductController.stateClientProduct,
+            builder: (context, value, child) {
+              return ComponentList(
+                product: widget.product,
+                state: clientsProductController.stateClientProduct,
+                listItems: clientsProductController.clientsProductList,
+                clientsProductController: clientsProductController,
+              );
+            },
           ),
         ),
       ),

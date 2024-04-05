@@ -11,12 +11,9 @@ class DetailsBalanceRepository {
     try {
       response = await clientDio.get('${url}requestsnegotiationbyclient/$codeProvider');
       List list = response.data as List;
-      print("==================================              ===========================");
-      print(list);
-      print("==================================              ===========================");
       return list.map((json) => RequestsStoresModel.fromJson(json)).toList();
     } catch (e) {
-      debugPrint("Error return Stores Model Mapper: $e");
+      debugPrint("Get Request Stores (Details Balance Repository) Error: $e");
     }
   }
 }

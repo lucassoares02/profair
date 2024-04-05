@@ -32,25 +32,30 @@ class _SelectStoreState extends State<SelectStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ValueListenableBuilder(
-              valueListenable: storesController.stateStores,
-              builder: (context, value, child) {
-                return ComponentList(
-                    description: S.of(context).text_select_branch,
-                    state: storesController.stateStores,
-                    codeProvider: widget.codeProvider,
-                    listItems: storesController.stores,
-                    client: widget.client,
-                    consult: widget.codeConsult);
-              },
-            ),
+      body:
+          // ALTERAR COR NOTIFICATIONBAR
+          // AnnotatedRegion<SystemUiOverlayStyle>(
+          //   value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
+          //   child:
+
+          SafeArea(
+        child: SingleChildScrollView(
+          child: ValueListenableBuilder(
+            valueListenable: storesController.stateStores,
+            builder: (context, value, child) {
+              return ComponentList(
+                  description: S.of(context).text_select_branch,
+                  state: storesController.stateStores,
+                  codeProvider: widget.codeProvider,
+                  listItems: storesController.stores,
+                  client: widget.client,
+                  consult: widget.codeConsult);
+            },
           ),
         ),
       ),
     );
+    //   ),
+    // );
   }
 }

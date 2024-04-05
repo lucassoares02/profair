@@ -1,7 +1,5 @@
 import 'package:profair/src/views/details_attraction/components/details.dart';
-import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class DetailsAttractions extends StatefulWidget {
   DetailsAttractions({super.key, required this.title, required this.content, required this.hour, required this.image});
@@ -19,16 +17,13 @@ class _DetailsAttractionsState extends State<DetailsAttractions> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ComponentDetails(
-              title: widget.title,
-              content: widget.content,
-              hour: widget.hour,
-              image: widget.image,
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: ComponentDetails(
+            title: widget.title,
+            content: widget.content,
+            hour: widget.hour,
+            image: widget.image,
           ),
         ),
       ),

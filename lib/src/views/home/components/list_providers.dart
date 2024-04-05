@@ -75,7 +75,7 @@ class _ListProvidersState extends State<ListProviders> {
                             Navigator.of(context).pushNamed(
                               "selectprovider",
                               arguments: {
-                                "codeClient": widget.homeController.data!.userCode,
+                                "codeClient": 0,
                                 "codeBuyer": 0,
                                 "codeBranch": widget.homeController.data!.codCompany,
                               },
@@ -131,6 +131,7 @@ class _ListProvidersState extends State<ListProviders> {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Container(
+                                              padding: const EdgeInsets.symmetric(vertical: appPadding),
                                               decoration: BoxDecoration(
                                                   color: widget.homeController.topProviders[index].color != null
                                                       ? Color(
@@ -144,8 +145,7 @@ class _ListProvidersState extends State<ListProviders> {
                                                   widget.homeController.topProviders[index].image != null
                                                       ? Image.network(
                                                           widget.homeController.topProviders[index].image!,
-                                                          width: 100,
-                                                          height: 100,
+                                                          height: 80,
                                                         )
                                                       : Container(
                                                           width: 100,
@@ -170,7 +170,7 @@ class _ListProvidersState extends State<ListProviders> {
                                                   ),
                                                   const SizedBox(height: 5),
                                                   const Text(
-                                                    "Conheça um pouco mais nossos produtos!",
+                                                    "Saiba mais!",
                                                     softWrap: true,
                                                     overflow: TextOverflow.fade,
                                                     style: TextStyle(

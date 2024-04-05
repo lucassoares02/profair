@@ -37,23 +37,20 @@ class _ClientsState extends State<Clients> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ValueListenableBuilder(
-              valueListenable: clientsController.stateClients,
-              builder: (context, value, child) {
-                return ComponentList(
-                    description: S.of(context).text_select_branch,
-                    state: clientsController.stateClients,
-                    codeProvider: widget.codeProvider,
-                    listItems: clientsController.clientsList,
-                    clientsController: clientsController,
-                    onClickCard: true,
-                    accessTargenting: widget.accessTargenting!);
-              },
-            ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: ValueListenableBuilder(
+            valueListenable: clientsController.stateClients,
+            builder: (context, value, child) {
+              return ComponentList(
+                  description: S.of(context).text_select_branch,
+                  state: clientsController.stateClients,
+                  codeProvider: widget.codeProvider,
+                  listItems: clientsController.clientsList,
+                  clientsController: clientsController,
+                  onClickCard: true,
+                  accessTargenting: widget.accessTargenting!);
+            },
           ),
         ),
       ),

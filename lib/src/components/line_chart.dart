@@ -92,7 +92,7 @@ class _LineChartSample2State extends State<LineChartSample2> {
           barWidth: 3,
           isStrokeCapRound: true,
           dotData: FlDotData(
-            show: false,
+            show: true,
           ),
           belowBarData: BarAreaData(
             show: true,

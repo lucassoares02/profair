@@ -63,28 +63,23 @@ class _ComponentListState extends State<ComponentList> {
             children: [
               const AppSpacing(),
               CardInfo(order: widget.order),
-              Container(
-                margin: const EdgeInsets.all(appMargin),
-                decoration:
-                    BoxDecoration(color: Colors.grey.withOpacity(0.05), borderRadius: BorderRadius.circular(appRadius)),
-                child: ValueListenableBuilder(
-                    valueListenable: widget.orderDetailsController.stateSearchProducts,
-                    builder: (context, value, child) {
-                      return Column(
-                          children: widget.orderDetailsController.orderDetails.map((e) {
-                        return CardProduct(
-                            description: e.title!,
-                            code: e.codeProduct.toString(),
-                            brand: e.brand!,
-                            complement: e.complement!,
-                            price: formatCurrency(e.price!),
-                            unitPrice: formatCurrency(e.unitPrice!),
-                            amount: e.amount!,
-                            total: formatCurrency(e.total!),
-                            action: () {});
-                      }).toList());
-                    }),
-              ),
+              ValueListenableBuilder(
+                  valueListenable: widget.orderDetailsController.stateSearchProducts,
+                  builder: (context, value, child) {
+                    return Column(
+                        children: widget.orderDetailsController.orderDetails.map((e) {
+                      return CardProduct(
+                          description: e.title!,
+                          code: e.codeProduct.toString(),
+                          brand: e.brand!,
+                          complement: e.complement!,
+                          price: formatCurrency(e.price!),
+                          unitPrice: formatCurrency(e.unitPrice!),
+                          amount: e.amount!,
+                          total: formatCurrency(e.total!),
+                          action: () {});
+                    }).toList());
+                  }),
             ],
           )
         ],

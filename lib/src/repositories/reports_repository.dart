@@ -85,7 +85,7 @@ class ReportsRepository {
       inspect(list);
       return list.map((json) => ValueMinutesGraph.fromJson(json)).toList();
     } catch (e) {
-      print("Error return Stores Model Mapper: $e");
+      print("Get Total Sell Provider (Reports Repository) Error: $e");
     }
   }
 

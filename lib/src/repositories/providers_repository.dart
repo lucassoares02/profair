@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 import 'package:profair/src/models/providers_model.dart';
 
@@ -8,15 +6,24 @@ class ProvidersRepository {
   final String url = "https://seller-backend.onrender.com/";
 
   getProviders(int? codeClient, int? codeBuyer, int? codeBranch) async {
+    print("--------------------------------------");
+    print(codeClient);
+    print(codeBuyer);
+    print(codeBranch);
+    print("--------------------------------------");
     Response? response;
     try {
       if (codeBuyer != 0) {
+        print("1");
         response = await clientDio.get("${url}providerscategories/$codeBuyer");
       } else if (codeClient == 0 && codeBranch == 0) {
+        print("2");
         response = await clientDio.get("${url}suppliersinvoicing");
       } else if (codeClient != 0) {
+        print("3");
         response = await clientDio.get("${url}providersconsult/$codeClient");
       } else {
+        print("4");
         response = await clientDio.get("${url}requestproviderclient/$codeBranch");
       }
       List list = response.data as List;

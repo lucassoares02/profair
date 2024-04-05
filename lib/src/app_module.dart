@@ -31,6 +31,7 @@ import 'package:profair/src/views/splash/splash.dart';
 import 'package:profair/src/views/login/login.dart';
 import 'package:profair/src/views/home/home.dart';
 import 'package:profair/src/views/app.dart';
+import 'package:profair/src/views/users/users.dart';
 
 class AppModule extends Module {
   @override
@@ -97,6 +98,7 @@ class AppModule extends Module {
             codeBuyer: args.data["codeBuyer"],
           ),
         ),
+        ChildRoute('/users', child: (context, args) => const Users()),
         ChildRoute(
           '/detailsprovider',
           child: (context, args) => DetailsProvider(

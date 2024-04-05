@@ -71,8 +71,6 @@ class FinishTradingRepository {
                 "codOrganizacao": "158",
                 "items": products
               };
-              print("==============================");
-              print(data);
               final response = await clientDio.post("${url}insertrequestnew", data: data);
             }
           }

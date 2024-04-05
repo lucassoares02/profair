@@ -24,7 +24,9 @@ class AppActions extends StatefulWidget {
 
 class _AppActionsState extends State<AppActions> {
   actionButton(String? route) {
-    if (route == "selectstore") {
+    if (route == "users") {
+      navigatorRoutes(route, {});
+    } else if (route == "selectstore") {
       navigatorRoutes("preorder", widget.homeController);
     } else if (route == "productsprovider") {
       navigatorRoutes(

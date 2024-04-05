@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
+import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider_repository.dart';
@@ -13,8 +14,11 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
   List<NegotiationModel> negotiations = [];
   List<ProductsProviderModel> merchandises = [];
   List<ProductsProviderModel> merchandisesBackup = [];
+  List<RequestsStoresModel> requestsStores = [];
+  RequestsStoresModel? request;
   final stateNegotiations = ValueNotifier<StateApp>(StateApp.start);
   final stateMerchandises = ValueNotifier<StateApp>(StateApp.start);
+  final stateRequestStores = ValueNotifier<StateApp>(StateApp.start);
   ValueNotifier<int> indexNegotiationSelected = ValueNotifier(0);
   final DetailsProviderRepository _detailsProviderRepository;
   int sortInt = 0;
@@ -26,6 +30,7 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
       stateNegotiations.value = StateApp.success;
       if (negotiations.isNotEmpty && negotiations[indexNegotiationSelected.value].negotiation != null) {
         findMerchandises(codeBranch, codeProvider, negotiations[indexNegotiationSelected.value].negotiation!);
+        findRequestStores(codeBranch, codeProvider);
       }
     } catch (e) {
       debugPrint("Find Negotiations (Details Provider Controller) Error: $e");
@@ -45,6 +50,20 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
     }
   }
 
+  Future findRequestStores(int codeBranch, int codeProvider) async {
+    stateRequestStores.value = StateApp.loading;
+    try {
+      requestsStores = await _detailsProviderRepository.getRequestsStores(codeBranch, codeProvider);
+      stateRequestStores.value = StateApp.success;
+      if (negotiations.isNotEmpty) {
+        searchNegotiation(negotiations[0].negotiation!);
+      }
+    } catch (e) {
+      debugPrint("Find Request Stores (Details Provider Controller) Error: $e");
+      stateRequestStores.value = StateApp.error;
+    }
+  }
+
   search(String? value) async {
     stateMerchandises.value = StateApp.loading;
     try {
@@ -59,6 +78,21 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
     } catch (e) {
       print("Error search Requests Stores: $e");
       stateMerchandises.value = StateApp.error;
+    }
+  }
+
+  searchNegotiation(int value) async {
+    stateRequestStores.value = StateApp.loading;
+    try {
+      for (var i = 0; i < requestsStores.length; i++) {
+        if (requestsStores[i].codeNegotiation == value) {
+          request = requestsStores[i];
+        }
+      }
+      stateRequestStores.value = StateApp.success;
+    } catch (e) {
+      print("Error search Negotiation: $e");
+      stateRequestStores.value = StateApp.error;
     }
   }
 

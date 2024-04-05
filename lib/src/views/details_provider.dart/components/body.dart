@@ -58,85 +58,108 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                 children: [
                   if (headerProvider)
                     Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (widget.image != null)
                           Container(
-                            margin: const EdgeInsets.symmetric(horizontal: appPadding),
-                            height: 150,
+                            height: 250,
                             padding: const EdgeInsets.symmetric(horizontal: appPadding),
                             decoration: BoxDecoration(
-                                color: widget.color != null ? Color(int.parse(widget.color!)) : colorPrimary,
-                                borderRadius: BorderRadius.circular(appRadius)),
+                              color: widget.color != null ? Color(int.parse(widget.color!)) : colorPrimary,
+                            ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.network(
                                   widget.image!,
-                                  width: 200,
+                                  width: 150,
                                 ),
                               ],
                             ),
                           ),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: appPadding),
-                          child: Wrap(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(height: 5),
-                                  const SizedBox(height: 5),
-                                  Text(
-                                    "${widget.codeProvider}",
-                                    style: const TextStyle(color: Colors.grey),
-                                  ),
-                                  Text(
-                                    widget.nameProvider,
-                                    overflow: TextOverflow.fade,
-                                    softWrap: true,
-                                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                                  ),
-                                  const AppSpacing(),
-                                  const Divider(),
-                                  const AppSpacing(),
-                                ],
+                              const SizedBox(height: 5),
+                              const SizedBox(height: 5),
+                              Text(
+                                "${widget.codeProvider}",
+                                style: const TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                widget.nameProvider,
+                                overflow: TextOverflow.fade,
+                                softWrap: true,
+                                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
                         ),
                       ],
                     ),
-                  ValueListenableBuilder(
-                    valueListenable: widget.detailsProviderController.stateNegotiations,
-                    builder: (context, value, child) {
-                      return value == StateApp.loading
-                          ? Padding(
-                              padding: const EdgeInsets.symmetric(vertical: appPadding),
-                              child: LoadingNotice(cardHeigth: 120, cardWidth: 200),
-                            )
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: appPadding),
-                                  child: Text(
-                                    "Prazos",
-                                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
-                                  ),
-                                ),
-                                const AppSpacing(),
-                                ListNegotiations(
-                                  codeBranch: widget.codeBranch,
-                                  codeProvider: widget.codeProvider,
-                                  detailsProviderController: widget.detailsProviderController,
-                                ),
-                              ],
-                            );
-                    },
-                  ),
-                  const AppSpacing(),
-                  const Divider(),
+                  if (headerProvider)
+                    const Column(
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: appPadding),
+                          child: Row(
+                            children: [
+                              Text(
+                                "Responsável ",
+                                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
+                              ),
+                              Text(
+                                "",
+                                style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                        ),
+                        AppSpacing(),
+                        Divider(),
+                        AppSpacing(),
+                      ],
+                    ),
+                  if (headerProvider)
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        ValueListenableBuilder(
+                          valueListenable: widget.detailsProviderController.stateNegotiations,
+                          builder: (context, value, child) {
+                            return value == StateApp.loading
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 0),
+                                    child: LoadingNotice(cardHeigth: 120, cardWidth: 300),
+                                  )
+                                : Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: appPadding),
+                                        child: Text(
+                                          "Negociações / Prazos",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
+                                        ),
+                                      ),
+                                      const AppSpacing(),
+                                      ListNegotiations(
+                                        codeBranch: widget.codeBranch,
+                                        codeProvider: widget.codeProvider,
+                                        detailsProviderController: widget.detailsProviderController,
+                                      ),
+                                    ],
+                                  );
+                          },
+                        ),
+                        const AppSpacing(),
+                        const Divider(),
+                      ],
+                    ),
                   ValueListenableBuilder(
                       valueListenable: widget.detailsProviderController.stateMerchandises,
                       builder: (context, value, child) {
