@@ -1,5 +1,4 @@
 import 'package:profair/src/components/progress_indicator.dart';
-import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/splash_controller.dart';
 import 'package:profair/src/repositories/login_repository.dart';
 import 'package:profair/src/state/state_app.dart';

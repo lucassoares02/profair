@@ -44,7 +44,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
           child: Column(
             children: [
               HeaderList(
-                  label: "Detalhes do Fornecedor",
+                  label: "Fornecedor",
                   onCloseInfo: () {
                     setState(() {
                       headerProvider = !headerProvider;

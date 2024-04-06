@@ -50,11 +50,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// import 'dart:developer';
-
 // import 'package:flutter/material.dart';
 // import 'package:firebase_core/firebase_core.dart';
 // import 'package:firebase_messaging/firebase_messaging.dart';
+// import 'package:flutter_modular/flutter_modular.dart';
+// import 'package:profair/src/app_module.dart';
+// import 'package:profair/src/components/button.dart';
 // import 'package:profair/src/notification/notification_model.dart';
 // import 'package:profair/src/notification/notification_service.dart';
 // import 'package:provider/provider.dart';
@@ -62,11 +63,16 @@ class MyApp extends StatelessWidget {
 // void main() async {
 //   WidgetsFlutterBinding.ensureInitialized();
 //   await Firebase.initializeApp();
-//   runApp(MultiProvider(providers: [
-//     Provider<NotificationService>(
-//       create: (context) => NotificationService(),
-//     )
-//   ], child: MyApp()));
+//   runApp(MultiProvider(
+//       providers: [
+//         Provider<NotificationService>(
+//           create: (context) => NotificationService(),
+//         ),
+//       ],
+//       child: ModularApp(
+//         module: AppModule(),
+//         child: MyApp(),
+//       )));
 // }
 
 // class MyApp extends StatefulWidget {
@@ -80,6 +86,7 @@ class MyApp extends StatelessWidget {
 //   @override
 //   void initState() {
 //     super.initState();
+//     print("Iniciando");
 //     _firebaseMessaging.requestPermission();
 //     _firebaseMessaging.getToken().then((token) {
 //       print("FCM Token: $token");
@@ -88,7 +95,6 @@ class MyApp extends StatelessWidget {
 //     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
 //       print("onMessage: ${message.notification?.body}");
 //       showNotification(message.notification?.title, message.notification?.body);
-//       inspect(message.notification?.android);
 //     });
 
 //     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
@@ -120,7 +126,17 @@ class MyApp extends StatelessWidget {
 //           title: Text('FCM Example'),
 //         ),
 //         body: Center(
-//           child: Text('Flutter with FCM'),
+//           child: Column(
+//             children: [
+//               Text('Flutter with FCM'),
+//               AppButton(
+//                 onPressButton: () {
+//                   showNotification("Teste", "Lucas");
+//                 },
+//                 label: "Notificação",
+//               )
+//             ],
+//           ),
 //         ),
 //       ),
 //     );

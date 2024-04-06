@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/models/total_value_clients.dart';
 import 'package:profair/src/models/value_minute_graph.dart';
@@ -64,7 +62,6 @@ class ReportsRepository {
       if (accessTargeting == 3) {
         response = await clientDio.get("${url}suppliersinvoicing");
         List list = response.data as List;
-        inspect(list);
         return list.map((json) => TotalValueClients.fromJson(json)).toList();
       } else {
         response = await clientDio.get("${url}merchandiseprovider/$codeProvider");
@@ -81,8 +78,6 @@ class ReportsRepository {
     try {
       response = await clientDio.get("${url}valueminutegraphprovider/$codeProvider");
       List list = response.data as List;
-      print(list);
-      inspect(list);
       return list.map((json) => ValueMinutesGraph.fromJson(json)).toList();
     } catch (e) {
       print("Get Total Sell Provider (Reports Repository) Error: $e");

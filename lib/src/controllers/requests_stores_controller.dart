@@ -10,8 +10,10 @@ class RequestsStoresController extends ValueNotifier<StateApp> {
   final stateSearchStore = ValueNotifier<StateApp>(StateApp.start);
 
   final stateStores = ValueNotifier<StateApp>(StateApp.start);
+  final stateShare = ValueNotifier<StateApp>(StateApp.start);
 
   final RequestsStoresRepository _requestsStoresRepository;
+  int? codeBuyer;
 
   RequestsStoresController(super.value, this._requestsStoresRepository);
 
@@ -35,13 +37,14 @@ class RequestsStoresController extends ValueNotifier<StateApp> {
     try {
       if (value == 0) {
         requestsStores = requests;
+        codeBuyer = null;
       } else {
         requestsStores = requests.where((item) {
           return item.codeConsult! == value;
         });
+        codeBuyer = value;
       }
       filterValue.value = value;
-
       stateSearchStore.value = StateApp.success;
     } catch (e) {
       print("Error filter Requests Stores: $e");
@@ -64,5 +67,16 @@ class RequestsStoresController extends ValueNotifier<StateApp> {
       print("Error search Requests Stores: $e");
       stateSearchStore.value = StateApp.error;
     }
+  }
+
+  Future exportData(int? codeProvider, int? codeNegotiation) async {
+    stateShare.value = StateApp.loading;
+    try {
+      await _requestsStoresRepository.exportDataProvider(
+          codeProvider: codeProvider, codeBuyer: codeBuyer, codeNegotiation: codeNegotiation);
+    } catch (e) {
+      stateShare.value = StateApp.error;
+    }
+    stateShare.value = StateApp.success;
   }
 }

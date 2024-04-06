@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
@@ -110,7 +108,6 @@ class HomeController extends ValueNotifier<StateApp> {
     stateTopProvider.value = StateApp.loading;
     try {
       topProviders = await _homeRepository.getTopFourProviders(data!.codCompany!);
-      inspect(topProviders);
       stateTopProvider.value = StateApp.success;
     } catch (error) {
       debugPrint("Find Top Providers (Home Controller) Error: $error");

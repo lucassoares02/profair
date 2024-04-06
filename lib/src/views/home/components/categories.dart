@@ -35,8 +35,6 @@ class _CategoriesState extends State<Categories> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     final organization = widget.homeController.data!.accessTargeting == 3;
-
-    inspect(widget.homeController.data);
     return ValueListenableBuilder(
       valueListenable: widget.homeController.stateBuyers,
       builder: (context, value, _) {

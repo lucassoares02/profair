@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
@@ -21,7 +19,6 @@ class HomeRepository {
     try {
       // final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
       final response = await clientDio.post("https://seller-backend.onrender.com/getusermore", data: data);
-      inspect(response);
 
       List list = response.data as List;
 

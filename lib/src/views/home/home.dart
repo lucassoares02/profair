@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:profair/src/components/button.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
@@ -140,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           AppSpacing(),
                           Text(
-                            "Acompanhe suas estastísticas no evento",
+                            "Suas estastísticas no evento",
                             style: TextStyle(fontWeight: FontWeight.bold),
                           )
                         ]),

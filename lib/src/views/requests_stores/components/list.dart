@@ -56,6 +56,18 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.requestsStoresController.search(value);
             },
+            aditionAction: Row(
+              children: [
+                if ((widget.visibleBuyers != null && widget.visibleBuyers! == false))
+                  IconButton(
+                      onPressed: () {
+                        widget.requestsStoresController.exportData(widget.codeProvider, widget.codeNegotiation);
+                      },
+                      icon: const Icon(
+                        Icons.share_rounded,
+                      ))
+              ],
+            ),
             onOpenSearch: () {
               widget.requestsStoresController.filterValue.value = 0;
               widget.requestsStoresController.visibleSearch.value = true;
@@ -76,57 +88,74 @@ class _ComponentListState extends State<ComponentList> {
                         widget.homeController!.buyers.length > 2 &&
                         (widget.visibleBuyers != null && widget.visibleBuyers! == true))
                       ValueListenableBuilder(
-                          valueListenable: widget.requestsStoresController.visibleSearch,
-                          builder: (context, bool searchActive, child) {
-                            return searchActive
-                                ? Container()
-                                : Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.all(appPadding),
-                                        child: Text(
-                                          "Consultores",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.grey,
-                                            fontSize: 18,
-                                          ),
+                        valueListenable: widget.requestsStoresController.visibleSearch,
+                        builder: (context, bool searchActive, child) {
+                          return searchActive
+                              ? Container()
+                              : Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Padding(
+                                      padding: EdgeInsets.all(appPadding),
+                                      child: Text(
+                                        "Consultores",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey,
+                                          fontSize: 18,
                                         ),
                                       ),
-                                      ValueListenableBuilder(
-                                          valueListenable: widget.requestsStoresController.filterValue,
-                                          builder: (context, int? indexFilter, child) {
-                                            return Categories(
-                                              index: indexFilter,
-                                              homeController: widget.homeController!,
-                                              filter: (value) {
-                                                widget.requestsStoresController.filter(value);
-                                              },
-                                            );
-                                          }),
-                                      if (widget.homeController != null && widget.homeController!.buyers.length > 1)
-                                        const AppSpacing(),
-                                      const Divider(),
-                                    ],
-                                  );
-                          }),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: appPadding),
-                      child: Text(
-                        "Pedidos",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey,
-                          fontSize: 18,
+                                    ),
+                                    ValueListenableBuilder(
+                                        valueListenable: widget.requestsStoresController.filterValue,
+                                        builder: (context, int? indexFilter, child) {
+                                          return Categories(
+                                            index: indexFilter,
+                                            homeController: widget.homeController!,
+                                            filter: (value) {
+                                              widget.requestsStoresController.filter(value);
+                                            },
+                                          );
+                                        }),
+                                    if (widget.homeController != null && widget.homeController!.buyers.length > 1)
+                                      const AppSpacing(),
+                                    const Divider(),
+                                  ],
+                                );
+                        },
+                      ),
+                    if (widget.homeController != null &&
+                        widget.homeController!.buyers.length > 2 &&
+                        (widget.visibleBuyers != null && widget.visibleBuyers! == true))
+                      Padding(
+                        padding: const EdgeInsets.only(left: appPadding),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            const Text(
+                              "Pedidos",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey,
+                                fontSize: 18,
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {
+                                  widget.requestsStoresController
+                                      .exportData(widget.codeProvider, widget.codeNegotiation);
+                                },
+                                icon: const Icon(
+                                  Icons.share_rounded,
+                                  color: Colors.grey,
+                                ))
+                          ],
                         ),
                       ),
-                    ),
                     Column(
                         children: widget.requestsStoresController.requestsStores.map((e) {
                       return InkWell(
                         onTap: () {
-                          inspect(e);
                           if (widget.userCode != 0) {
                             Navigator.of(context).pushNamed('selectprovider', arguments: {
                               "codeClient": 0,

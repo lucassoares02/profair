@@ -86,7 +86,6 @@ class TradingProductsController extends ValueNotifier<StateApp> {
     stateProductsTrading.value = StateApp.loading;
     String? message = "";
     try {
-      inspect(productsTrading);
       print("SortInt: $sortInt");
       if (sortInt == 0) {
         message = "Ordenado por valor de vendas!";

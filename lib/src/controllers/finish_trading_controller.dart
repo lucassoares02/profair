@@ -49,13 +49,11 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   }
 
   insertInList(List<ProductModel> products, List<ProductModel> initialListProducts) async {
-    inspect(initialListProducts);
     for (int j = 0; j < products.length; j++) {
       if (int.parse(products[j].amount!) > 0 || int.parse(initialListProducts[j].amount!) > 0) {
         actualList.add(products[j].toJson());
       }
     }
-    inspect(actualList);
   }
 
   checkListItems(

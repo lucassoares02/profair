@@ -14,6 +14,7 @@ class HeaderList extends StatefulWidget {
       this.activePop = true,
       this.color,
       this.iconColor,
+      this.aditionAction,
       this.onCloseInfo});
 
   String? label;
@@ -26,6 +27,7 @@ class HeaderList extends StatefulWidget {
   Color? iconColor;
   IconData? icon;
   bool activePop;
+  Widget? aditionAction;
 
   @override
   State<HeaderList> createState() => _HeaderListState();
@@ -106,6 +108,7 @@ class _HeaderListState extends State<HeaderList> {
                         ),
                         Row(
                           children: [
+                            if (widget.aditionAction != null) widget.aditionAction!,
                             widget.activeSearch!
                                 ? IconButton(
                                     onPressed: widget.activeSearch!
