@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 
 class OrderDetailsRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   getOrderDetails(int? codeClient, int? codeProvider, int? codeNegotiation) async {
     Response response;

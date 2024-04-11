@@ -16,18 +16,18 @@ class CardInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: appMargin),
+      padding: const EdgeInsets.symmetric(horizontal: appPadding),
       width: double.maxFinite,
       decoration: BoxDecoration(
         color: Colors.grey.withOpacity(0.05),
         // border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(appRadius),
+        // borderRadius: BorderRadius.circular(appRadius),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: appPadding, right: appPadding, top: appPadding),
+            padding: const EdgeInsets.only(top: appPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,7 +46,7 @@ class CardInfo extends StatelessWidget {
           const Divider(),
           const AppSpacing(),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: appPadding),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -56,7 +56,7 @@ class CardInfo extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: appPadding),
+            padding: const EdgeInsets.symmetric(horizontal: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -71,7 +71,7 @@ class CardInfo extends StatelessWidget {
           const AppSpacing(),
           const Divider(),
           Padding(
-            padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),
+            padding: const EdgeInsets.only(bottom: appPadding),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

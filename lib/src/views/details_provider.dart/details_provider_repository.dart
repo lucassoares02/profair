@@ -6,7 +6,7 @@ import 'package:profair/src/repositories/requests_stores_model.dart';
 
 class DetailsProviderRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   getNegotiations(int codeBranch, int codeProvider) async {
     print("codebranch ${codeBranch}");

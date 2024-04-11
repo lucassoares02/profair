@@ -11,17 +11,14 @@ import 'package:flutter/material.dart';
 
 class HomeRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   Future<List<LoginModel>?> getData(Object data) async {
     clientDio.options.contentType = Headers.formUrlEncodedContentType;
 
     try {
-      // final response = await clientDio.post("https://seller-backend.onrender.com/getuser", data: data);
-      final response = await clientDio.post("https://seller-backend.onrender.com/getusermore", data: data);
-
+      final response = await clientDio.post("https://profair.click/getusermore", data: data);
       List list = response.data as List;
-
       return list.map((json) => LoginModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Get Data (Home Repository) Error: $e");

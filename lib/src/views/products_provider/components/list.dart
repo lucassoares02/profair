@@ -61,6 +61,8 @@ class _ComponentListState extends State<ComponentList> {
                       description: e.nameProduct!,
                       code: e.codeProduct.toString(),
                       brand: e.brand!,
+                      packing: e.packing!,
+                      factor: e.coefficient!,
                       complement: e.complement!,
                       price: formatCurrency(e.productPrice!),
                       unitPrice: formatCurrency(e.unitPrice!),

@@ -7,7 +7,7 @@ import '../models/clients_select_stores_model.dart';
 
 class FinishTradingRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   postTrading(
       {required List<ProductModel> products,

@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 
 class ClientsProductRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   getClientProduct(int codeProduct) async {
     try {

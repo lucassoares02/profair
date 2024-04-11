@@ -3,7 +3,7 @@ import 'package:profair/src/models/clients_select_stores_model.dart';
 
 class StoresRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   getStores(String? userCode) async {
     final response = await clientDio.get("${url}stores/$userCode");

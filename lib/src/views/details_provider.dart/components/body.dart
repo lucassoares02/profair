@@ -181,6 +181,8 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                     children: widget.detailsProviderController.merchandises.map((e) {
                                       return CardProduct(
                                           visibleActions: false,
+                                          packing: e.packing!,
+                                          factor: e.coefficient!,
                                           description: e.nameProduct!,
                                           code: e.codeProduct.toString(),
                                           brand: e.brand!,

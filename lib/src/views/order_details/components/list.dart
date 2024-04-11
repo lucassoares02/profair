@@ -69,6 +69,8 @@ class _ComponentListState extends State<ComponentList> {
                     return Column(
                         children: widget.orderDetailsController.orderDetails.map((e) {
                       return CardProduct(
+                          factor: e.coefficient!,
+                          packing: e.packing!,
                           description: e.title!,
                           code: e.codeProduct.toString(),
                           brand: e.brand!,

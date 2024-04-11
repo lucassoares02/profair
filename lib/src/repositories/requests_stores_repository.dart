@@ -7,7 +7,7 @@ import 'package:share_plus/share_plus.dart';
 
 class RequestsStoresRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   getRequestsStores(int? codeProvider, int? userCode, int? codeNegotiation) async {
     Response? response;

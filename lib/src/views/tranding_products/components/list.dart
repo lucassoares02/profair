@@ -126,10 +126,19 @@ class _ComponentListState extends State<ComponentList> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          // "${e.value.packing} | ${e.value.coefficient}",
-                          "${e.value.codeProduct} - ${e.value.complement!}",
-                          style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              // "${e.value.packing} | ${e.value.coefficient}",
+                              "${e.value.codeProduct} - ${e.value.complement!}",
+                              style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                            ),
+                            Text(
+                              "${e.value.packing} | ${e.value.coefficient}",
+                              style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 5),
                         Text(

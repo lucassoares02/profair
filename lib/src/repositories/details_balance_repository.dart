@@ -4,7 +4,7 @@ import 'package:profair/src/repositories/requests_stores_model.dart';
 
 class DetailsBalanceRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   getRequestsStores(int? codeProvider, int? userCode) async {
     Response? response;

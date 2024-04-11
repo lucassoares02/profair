@@ -46,8 +46,12 @@ class HomeController extends ValueNotifier<StateApp> {
       final code = sharedPreferences.getString("codacesso");
 
       moreData = await _homeRepository.getData({"codacesso": code});
+      print("moreData-----------------------");
+      print(moreData);
 
       data = moreData![indexSelected];
+
+      print(data);
 
       int codeRequest = 0;
       if (data!.accessTargeting == 1 || data!.accessTargeting == 2) {

@@ -3,7 +3,7 @@ import 'package:profair/src/models/providers_model.dart';
 
 class ProvidersRepository {
   final Dio clientDio = Dio();
-  final String url = "https://seller-backend.onrender.com/";
+  final String url = "https://profair.click/";
 
   getProviders(int? codeClient, int? codeBuyer, int? codeBranch) async {
     Response? response;

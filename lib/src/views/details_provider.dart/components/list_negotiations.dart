@@ -160,20 +160,32 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                                   })
                             ],
                           ),
-                          TextButton(
-                            onPressed: () async {
-                              Navigator.of(context).pushNamed(
-                                "orderdetails",
-                                arguments: {
-                                  "order": widget.detailsProviderController.request,
-                                },
-                              );
-                            },
-                            child: const Text(
-                              "Saiba mais",
-                              style: TextStyle(color: colorBlue),
-                            ),
-                          ),
+                          ValueListenableBuilder(
+                              valueListenable: widget.detailsProviderController.stateRequestStores,
+                              builder: (context, stateRequest, value) {
+                                return stateRequest == StateApp.success
+                                    ? TextButton(
+                                        onPressed: () async {
+                                          Navigator.of(context).pushNamed(
+                                            "orderdetails",
+                                            arguments: {
+                                              "order": widget.detailsProviderController.request,
+                                            },
+                                          );
+                                        },
+                                        child: const Text(
+                                          "Saiba mais",
+                                          style: TextStyle(color: colorBlue),
+                                        ),
+                                      )
+                                    : const Padding(
+                                        padding: EdgeInsets.all(appPadding),
+                                        child: Text(
+                                          "Saiba mais",
+                                          style: TextStyle(fontWeight: FontWeight.w500),
+                                        ),
+                                      );
+                              }),
                         ],
                       ),
                     ],

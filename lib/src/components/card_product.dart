@@ -13,6 +13,8 @@ class CardProduct extends StatefulWidget {
       required this.unitPrice,
       required this.amount,
       required this.total,
+      required this.packing,
+      required this.factor,
       this.visibleActions = true,
       this.action});
 
@@ -23,6 +25,8 @@ class CardProduct extends StatefulWidget {
   String price;
   String unitPrice;
   String amount;
+  String packing;
+  int factor;
   String total;
   bool visibleActions;
   Function()? action;
@@ -46,9 +50,18 @@ class _CardProductState extends State<CardProduct> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              "${widget.code} - ${widget.complement}",
-              style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${widget.code} - ${widget.complement}",
+                  style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  "${widget.packing} | ${widget.factor}",
+                  style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                ),
+              ],
             ),
             const SizedBox(height: 5),
             Text(
