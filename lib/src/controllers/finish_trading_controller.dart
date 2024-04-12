@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/repositories/finish_trading_repository.dart';
@@ -12,6 +10,7 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   final stateFinishTrading = ValueNotifier<StateApp>(StateApp.start);
   final stateTradings = ValueNotifier<bool>(false);
   final stateCheckList = ValueNotifier<StateApp>(StateApp.start);
+  final stateShare = ValueNotifier<StateApp>(StateApp.start);
 
   final FinishTradingRepository _negotiationsRepository;
 
@@ -54,6 +53,17 @@ class FinishTradingController extends ValueNotifier<StateApp> {
         actualList.add(products[j].toJson());
       }
     }
+  }
+
+  Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch) async {
+    stateShare.value = StateApp.loading;
+    try {
+      await _negotiationsRepository.exportDataProvider(
+          codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch);
+    } catch (e) {
+      stateShare.value = StateApp.error;
+    }
+    stateShare.value = StateApp.success;
   }
 
   checkListItems(

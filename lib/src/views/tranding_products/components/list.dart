@@ -68,6 +68,19 @@ class _ComponentListState extends State<ComponentList> {
               widget.tradingProductsController.visibleText.value = false;
               widget.tradingProductsController.search(value);
             },
+            aditionAction: Row(
+              children: [
+                if (widget.codeClient == 0)
+                  IconButton(
+                      onPressed: () {
+                        widget.tradingProductsController
+                            .exportData(widget.codeProvider, widget.codeTrading, widget.codeBranch);
+                      },
+                      icon: const Icon(
+                        Icons.share_rounded,
+                      ))
+              ],
+            ),
             onSort: () {
               widget.tradingProductsController.sort();
             },

@@ -41,15 +41,18 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(icon: Icons.groups_2_sharp, label: S.of(context).text_customers),
+      widgetLoading: LoadingList(icon: Icons.groups_2_sharp, label: "Lojas"),
       component: Column(
         children: [
           HeaderList(
             icon: Icons.groups_2_sharp,
+            onSort: () {
+              widget.clientsController.sort();
+            },
             onSearch: (String? value) {
               widget.clientsController.search(value);
             },
-            label: S.of(context).text_customers,
+            label: "Lojas",
           ),
           ValueListenableBuilder(
               valueListenable: widget.clientsController.stateSearchClients,
@@ -59,15 +62,11 @@ class _ComponentListState extends State<ComponentList> {
                   return InkWell(
                     onTap: () {
                       if (widget.onClickCard) {
-                        print("Passando por aqui");
                         if (e.totalValue != 0) {
-                          print("widget.accessTargenting");
-                          print(widget.accessTargenting);
                           if (widget.accessTargenting == 3 || widget.accessTargenting == 0) {
-                            print(e.relationshipCode);
                             Navigator.of(context).pushNamed(
                               "selectprovider",
-                              arguments: {"codeClient": 0, "codeBuyer": 0, "codeBranch": e.relationshipCode},
+                              arguments: {"codeClient": 0, "codeBuyer": 0, "codeBranch": e.codeBranch},
                             );
                           } else {
                             Navigator.of(context).pushNamed(
@@ -93,7 +92,7 @@ class _ComponentListState extends State<ComponentList> {
                     },
                     child: Container(
                       width: width,
-                      height: 90,
+                      height: 100,
                       padding: const EdgeInsets.all(appMargin),
                       margin: const EdgeInsets.symmetric(horizontal: appMargin),
                       decoration: const BoxDecoration(
@@ -104,13 +103,24 @@ class _ComponentListState extends State<ComponentList> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           Text(
-                            e.nameCompany!.length < 28 ? '${e.nameCompany}' : "${e.nameCompany!.substring(0, 25)}...",
+                            "${e.codeBranch}",
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                          Text(
+                            "${e.nameCompany}",
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
                           ),
-                          const SizedBox(height: appMargin),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    "Volume de compra: ${e.totalVolume!}",
+                                    style: const TextStyle(color: colorGreyDark),
+                                  ),
+                                ],
+                              ),
                               Text(
                                 formatCurrency(e.totalValue!),
                                 style: const TextStyle(color: colorGreyDark),

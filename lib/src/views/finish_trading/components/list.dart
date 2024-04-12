@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/header_list.dart';
@@ -57,7 +59,18 @@ class _ComponentListState extends State<ComponentList> {
   }
 
   navigatorHome() {
+    int trade = 0;
+    for (int i = 0; i < widget.tradings.length; i++) {
+      if (widget.tradings[i].checked!) {
+        trade = widget.tradings[i].negotiation!;
+        break;
+      }
+    }
     Navigator.of(context).pushNamed("/tradingsuccess", arguments: {
+      "trading": trade,
+      "provider": widget.codeProvider,
+      "branch": widget.codeBranch,
+      "finishTradingController": widget.finishTradingController,
       "value": widget.finishTradingController.formatCurrency(
           (widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked) *
               widget.finishTradingController.totalCheckedBranch),

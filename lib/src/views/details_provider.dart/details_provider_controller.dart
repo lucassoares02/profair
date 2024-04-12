@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';

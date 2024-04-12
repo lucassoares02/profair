@@ -108,7 +108,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                           child: Row(
                             children: [
                               Text(
-                                "Responsável ",
+                                "Responsável",
                                 style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w500),
                               ),
                               Text(
@@ -180,7 +180,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                   Column(
                                     children: widget.detailsProviderController.merchandises.map((e) {
                                       return CardProduct(
-                                          visibleActions: false,
+                                          visibleActions: (widget.codeBranch == 0),
                                           packing: e.packing!,
                                           factor: e.coefficient!,
                                           description: e.nameProduct!,

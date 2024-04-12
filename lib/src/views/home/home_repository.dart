@@ -111,17 +111,17 @@ class HomeRepository {
       if (code == 3)
         {
           "id": 54,
-          "title": code == 1 ? 'Clientes' : 'Assoc...',
-          "icon": Icons.groups_2_sharp,
+          "title": code == 1 ? 'Clientes' : 'Lojas',
+          "icon": Icons.store,
           "route": "clients",
         },
-      if (code == 3)
-        {
-          "id": 64,
-          "title": 'Forne...',
-          "icon": Icons.business_rounded,
-          "route": "selectprovider",
-        },
+      // if (code == 3)
+      //   {
+      //     "id": 64,
+      //     "title": 'Fornecedores',
+      //     "icon": Icons.business_rounded,
+      //     "route": "selectprovider",
+      //   },
       if (code == 3)
         {
           "id": 94,

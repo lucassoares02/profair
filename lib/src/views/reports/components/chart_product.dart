@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/src/models/total_value_clients.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -68,7 +70,7 @@ class BarChartTesteState extends State<BarChartTeste> {
               ),
               children: <TextSpan>[
                 TextSpan(
-                  text: formatCurrency(rod.toY - 1),
+                  text: formatCurrency(rod.toY),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 14,

@@ -131,6 +131,7 @@ class _ListProvidersState extends State<ListProviders> {
                                           mainAxisAlignment: MainAxisAlignment.start,
                                           children: [
                                             Container(
+                                              height: 120,
                                               padding: const EdgeInsets.symmetric(vertical: appPadding),
                                               decoration: BoxDecoration(
                                                   color: widget.homeController.topProviders[index].color != null
@@ -167,15 +168,6 @@ class _ListProvidersState extends State<ListProviders> {
                                                     "${widget.homeController.topProviders[index].nameProvider}",
                                                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                                     overflow: TextOverflow.fade,
-                                                  ),
-                                                  const SizedBox(height: 5),
-                                                  const Text(
-                                                    "Saiba mais!",
-                                                    softWrap: true,
-                                                    overflow: TextOverflow.fade,
-                                                    style: TextStyle(
-                                                      color: colorGreyDark,
-                                                    ),
                                                   ),
                                                 ],
                                               ),

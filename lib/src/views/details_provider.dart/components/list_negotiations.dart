@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:profair/src/components/spacing.dart';
@@ -166,6 +168,7 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                                 return stateRequest == StateApp.success
                                     ? TextButton(
                                         onPressed: () async {
+                                          inspect(widget.detailsProviderController.request);
                                           Navigator.of(context).pushNamed(
                                             "orderdetails",
                                             arguments: {

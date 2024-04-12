@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -13,12 +14,16 @@ class RequestsStoresRepository {
     Response? response;
     try {
       if (codeNegotiation != null) {
+        print("step 1");
         response = await clientDio.get("${url}requestsprovidernegotiation/$codeNegotiation");
       } else if (codeProvider == 0 && userCode == 0) {
+        print("step 2");
         response = await clientDio.get("${url}allrequestclients");
       } else if (codeProvider == 0 && userCode != 0) {
+        print("step 3");
         response = await clientDio.get("${url}stores/$userCode");
       } else {
+        print("step 4");
         response = await clientDio.get("${url}requestsprovider/$codeProvider");
       }
       List list = response.data as List;
@@ -27,21 +32,5 @@ class RequestsStoresRepository {
     } catch (e) {
       print("Error return Stores Model Mapper: $e");
     }
-  }
-
-  exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation}) async {
-    Response? response;
-    response = await clientDio.get('${url}exportnegotiationsprovider/$codeProvider/$codeBuyer/$codeNegotiation');
-
-    Directory tempDir = await getTemporaryDirectory();
-
-    File tempFile = File('${tempDir.path}/${(DateTime.now().toString().replaceAll(RegExp("[.: -]"), "_"))}.csv');
-
-    await tempFile.writeAsString(response.data);
-
-    await Share.shareXFiles([XFile(tempFile.path)],
-        text: 'Compartilhando Negociações Profair', subject: 'Arquivo de pedidos Profair');
-
-    return response;
   }
 }

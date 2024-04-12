@@ -1,4 +1,3 @@
-import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/providers_controller.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -49,7 +48,10 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.providersController.search(value);
             },
-            label: widget.description,
+            onSort: () {
+              widget.providersController.sort();
+            },
+            label: "Fornecedores",
           ),
           ValueListenableBuilder(
               valueListenable: widget.providersController.stateSearchProviders,
@@ -68,107 +70,60 @@ class _ComponentListState extends State<ComponentList> {
                           "color": e.color
                         },
                       );
-
-                      // dynamic data;
-                      // if (widget.codeBranch != 0) {
-                      //   Navigator.of(context).pushNamed(
-                      //     "productsprovider",
-                      //     arguments: {
-                      //       "codeClient": widget.codeBranch,
-                      //       "codeProvider": e.codeProvider,
-                      //     },
-                      //   );
-                      // } else {
-                      //   Navigator.of(context).pushNamed(
-                      //     "selectnegotiation",
-                      //     arguments: {
-                      //       "codeBranch": widget.codeClient,
-                      //       "codeClient": 0,
-                      //       "codeProvider": e.codeProvider,
-                      //     },
-                      //   );
-                      // }
                     },
                     child: Container(
                       width: width,
+                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: colorGrey.withOpacity(0.3)))),
                       // height: 90,
-                      padding: const EdgeInsets.symmetric(horizontal: appMargin),
-                      margin: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
-
+                      padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
+                      // height: 100,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    e.nameProvider!.length < 35
-                                        ? '${e.nameProvider}'
-                                        : "${e.nameProvider!.substring(0, 34)}...",
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                  ),
-                                  const SizedBox(height: 5),
-                                  Row(
-                                    children: [
-                                      // const Icon(Icons.paid, color: colorPrimary, size: 20),
-                                      Text(
-                                        formatCurrency(e.totalValue!),
-                                        style: const TextStyle(color: colorGreyDark),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                          if (e.image != null)
+                            Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                  color: e.color != null ? Color(int.parse(e.color!)) : colorTertiary,
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: Container(
+                                padding: const EdgeInsets.all(appMargin),
+                                decoration: BoxDecoration(
+                                    border: Border.all(color: colorWhite, width: 2),
+                                    color: e.color != null ? Color(int.parse(e.color!)) : colorTertiary,
+                                    borderRadius: BorderRadius.circular(50)),
+                                child: Image.network(
+                                  e.image!,
+                                  width: 30,
+                                ),
                               ),
-                              // Row(
-                              //   mainAxisAlignment: MainAxisAlignment.start,
-                              //   children: [
-                              //     TextButton(
-                              //         style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                              //         onPressed: () {
-                              //           Navigator.of(context).pushNamed(
-                              //             "selectnegotiation",
-                              //             // arguments: {
-                              //             //   "codeBranch": widget.codeClient,
-                              //             //   "codeClient": 0,
-                              //             //   "codeProvider": e.codeProvider,
-                              //             // },
-                              //             arguments: {
-                              //               "codeBranch": widget.codeBranch,
-                              //               "codeClient": 0,
-                              //               "codeProvider": e.codeProvider,
-                              //             },
-                              //           );
-                              //         },
-                              //         child: const Text(
-                              //           "Negociações",
-                              //           style: TextStyle(fontWeight: FontWeight.w600),
-                              //         )),
-                              //     // if (widget.codeBranch != 0)
-                              //     const AppSpacing(),
-                              //     // if (widget.codeBranch != 0)
-                              //     TextButton(
-                              //       onPressed: () {
-                              //         Navigator.of(context).pushNamed(
-                              //           "productsprovider",
-                              //           arguments: {
-                              //             "codeClient": widget.codeBranch,
-                              //             "codeProvider": e.codeProvider,
-                              //             "nextScreen": false
-                              //           },
-                              //         );
-                              //       },
-                              //       child: const Text(
-                              //         "Mercadorias",
-                              //         style: TextStyle(fontWeight: FontWeight.w600),
-                              //       ),
-                              //     ),
-                              //   ],
-                              // )
-                            ],
+                            ),
+                          const SizedBox(width: appMargin),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  e.codeProvider.toString(),
+                                  style: const TextStyle(fontWeight: FontWeight.w500),
+                                ),
+                                Text(
+                                  e.nameProvider!,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      formatCurrency(e.totalValue!),
+                                      style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

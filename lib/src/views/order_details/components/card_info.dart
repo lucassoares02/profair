@@ -15,79 +15,130 @@ class CardInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: appPadding),
-      width: double.maxFinite,
-      decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.05),
-        // border: Border.all(color: Colors.grey),
-        // borderRadius: BorderRadius.circular(appRadius),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: appPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    overflow: TextOverflow.fade,
-                    order.nameForn!,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                  ),
-                ),
-                const Icon(Icons.verified, color: colorBlue, size: 20),
-              ],
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: appPadding),
+          width: double.maxFinite,
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.05),
+            // border: Border.all(color: Colors.grey),
+            // borderRadius: BorderRadius.circular(appRadius),
           ),
-          const Divider(),
-          const AppSpacing(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(order.razaoClient!),
-                Text(order.descriptionNegotiation!),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(order.nameClient!),
-                Text(
-                  order.hour!,
-                  style: const TextStyle(fontWeight: FontWeight.w300),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: appPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        overflow: TextOverflow.fade,
+                        order.nameForn!,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                    ),
+                    const Icon(Icons.verified, color: colorBlue, size: 20),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          const AppSpacing(),
-          const Divider(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: appPadding),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Total:",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const Divider(),
+              const AppSpacing(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Cliente",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          order.razaoClient!,
+                        ),
+                      ],
+                    ),
+                    const AppSpacing(),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Negociação",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          "${order.codeNegotiation} - ${order.descriptionNegotiation!}",
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                Text(
-                  formatCurrency(order.value!),
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
+              const AppSpacing(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Responsável",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(order.nameClient!),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Horário",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        Text(order.hour!),
+                      ],
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+              const AppSpacing(),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: appPadding),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Total:",
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    Text(
+                      formatCurrency(order.value!),
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+        const Padding(
+          padding: EdgeInsets.only(top: appPadding, left: appPadding, right: appPadding),
+          child: Text(
+            "Mercadorias",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.grey, fontSize: 16),
+          ),
+        )
+      ],
     );
   }
 }

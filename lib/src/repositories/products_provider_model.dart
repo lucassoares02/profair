@@ -30,6 +30,7 @@ class ProductsProviderModel {
   });
 
   ProductsProviderModel.fromJson(Map<String, dynamic> json) {
+    print(json);
     try {
       codeProvider = json['codForn'];
       nameProvider = json['nomeForn'];

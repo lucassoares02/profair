@@ -1,18 +1,19 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/repositories/clients_repository.dart';
 import 'package:profair/src/models/clients_model.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
 class ClientsController extends ValueNotifier<StateApp> {
-  Iterable<ClientsModel> clientsList = [];
-  Iterable<ClientsModel> clients = [];
+  List<ClientsModel> clientsList = [];
+  List<ClientsModel> clients = [];
 
   final stateSearchClients = ValueNotifier<StateApp>(StateApp.start);
 
   final stateClients = ValueNotifier<StateApp>(StateApp.start);
 
   final ClientsRepository _clientsRepository;
-
+  int sortInt = 0;
   ClientsController(super.value, this._clientsRepository);
 
   Future findClients({String? codeProvider, int? accessTargenting, int? merchandise, int? trading}) async {
@@ -35,12 +36,47 @@ class ClientsController extends ValueNotifier<StateApp> {
       }
       clientsList = clients.where((item) {
         return item.nameCompany!.toLowerCase().contains(value.toLowerCase());
-      });
+      }).toList();
 
       stateSearchClients.value = StateApp.success;
     } catch (e) {
       print("Error search Requests Stores: $e");
       stateSearchClients.value = StateApp.error;
+    }
+  }
+
+  sort() async {
+    stateClients.value = StateApp.loading;
+    String? message = "";
+    try {
+      if (sortInt == 0) {
+        clients.sort(((a, b) => b.totalValue!.compareTo(a.totalValue!)));
+        message = "Ordenado por valor total de vendas!";
+      } else if (sortInt == 1) {
+        clients.sort(((a, b) => int.parse(b.totalVolume!) - int.parse(a.totalVolume!)));
+        message = "Ordenado volume vendido!";
+      } else if (sortInt == 2) {
+        clients.sort(((a, b) => a.nameCompany!.compareTo(b.nameCompany!)));
+        message = "Ordenado por ordem alfabética!";
+      }
+      if (sortInt == 2) {
+        sortInt = 0;
+      } else {
+        sortInt += 1;
+      }
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      stateClients.value = StateApp.success;
+    } catch (e) {
+      print("Error Sort Stores: $e");
+      stateClients.value = StateApp.error;
     }
   }
 }

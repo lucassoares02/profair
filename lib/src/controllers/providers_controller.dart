@@ -1,13 +1,15 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/repositories/providers_repository.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
 class ProvidersController extends ValueNotifier<StateApp> {
-  Iterable<ProvidersModel> providersList = [];
-  Iterable<ProvidersModel> providers = [];
+  List<ProvidersModel> providersList = [];
+  List<ProvidersModel> providers = [];
 
   final stateSearchProviders = ValueNotifier<StateApp>(StateApp.start);
+  int sortInt = 0;
 
   final stateProviders = ValueNotifier<StateApp>(StateApp.start);
 
@@ -47,11 +49,47 @@ class ProvidersController extends ValueNotifier<StateApp> {
       }
       providersList = providers.where((item) {
         return item.nameProvider!.toLowerCase().contains(value.toLowerCase());
-      });
+      }).toList();
 
       stateSearchProviders.value = StateApp.success;
     } catch (e) {
       print("Error search Requests Stores: $e");
+      stateSearchProviders.value = StateApp.error;
+    }
+  }
+
+  sort() async {
+    print("sort");
+    stateSearchProviders.value = StateApp.loading;
+    String? message = "";
+    try {
+      if (sortInt == 0) {
+        providersList.sort(((a, b) => a.nameProvider!.compareTo(b.nameProvider!)));
+        message = "Ordenado por ordem alfabética!";
+      } else if (sortInt == 1) {
+        providersList.sort(((a, b) => int.parse(b.totalVolume!) - int.parse(a.totalVolume!)));
+        message = "Ordenado volume vendido!";
+      } else if (sortInt == 2) {
+        providersList.sort(((a, b) => b.totalValue!.compareTo(a.totalValue!)));
+        message = "Ordenado por valor total de vendas!";
+      }
+      if (sortInt == 2) {
+        sortInt = 0;
+      } else {
+        sortInt += 1;
+      }
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+
+      stateSearchProviders.value = StateApp.success;
+    } catch (e) {
+      print("Error Sort Stores: $e");
       stateSearchProviders.value = StateApp.error;
     }
   }

@@ -117,7 +117,13 @@ class AppModule extends Module {
         ),
         ChildRoute(
           '/tradingsuccess',
-          child: (context, args) => TradingSucess(hour: args.data["hour"], value: args.data["value"]),
+          child: (context, args) => TradingSucess(
+              trading: args.data["trading"],
+              provider: args.data["provider"],
+              branch: args.data["branch"],
+              hour: args.data["hour"],
+              value: args.data["value"],
+              finishTradingController: args.data["finishTradingController"]),
         ),
         ChildRoute('/tradings',
             child: (context, args) => Tradings(

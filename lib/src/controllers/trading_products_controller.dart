@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/repositories/trading_products_repository.dart';
@@ -15,6 +13,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
   ValueNotifier<int> itemSelected = ValueNotifier(-1);
   final stateProductsTrading = ValueNotifier<StateApp>(StateApp.start);
   final stateSearchProductsTrading = ValueNotifier<StateApp>(StateApp.start);
+  final stateShare = ValueNotifier<StateApp>(StateApp.start);
   final itemTotal = ValueNotifier<StateApp>(StateApp.start);
   int sortInt = 0;
 
@@ -117,5 +116,16 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       print("Error Sort Products: $e");
       stateProductsTrading.value = StateApp.error;
     }
+  }
+
+  Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch) async {
+    stateShare.value = StateApp.loading;
+    try {
+      await _negotiationsRepository.exportDataProvider(
+          codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch);
+    } catch (e) {
+      stateShare.value = StateApp.error;
+    }
+    stateShare.value = StateApp.success;
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/requests_stores_controller.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
@@ -56,18 +55,6 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.requestsStoresController.search(value);
             },
-            aditionAction: Row(
-              children: [
-                if ((widget.visibleBuyers != null && widget.visibleBuyers! == false))
-                  IconButton(
-                      onPressed: () {
-                        widget.requestsStoresController.exportData(widget.codeProvider, widget.codeNegotiation);
-                      },
-                      icon: const Icon(
-                        Icons.share_rounded,
-                      ))
-              ],
-            ),
             onOpenSearch: () {
               widget.requestsStoresController.filterValue.value = 0;
               widget.requestsStoresController.visibleSearch.value = true;
@@ -127,12 +114,12 @@ class _ComponentListState extends State<ComponentList> {
                     if (widget.homeController != null &&
                         widget.homeController!.buyers.length > 2 &&
                         (widget.visibleBuyers != null && widget.visibleBuyers! == true))
-                      Padding(
-                        padding: const EdgeInsets.only(left: appPadding),
+                      const Padding(
+                        padding: EdgeInsets.only(left: appPadding),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
+                            Text(
                               "Pedidos",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
@@ -140,15 +127,6 @@ class _ComponentListState extends State<ComponentList> {
                                 fontSize: 18,
                               ),
                             ),
-                            IconButton(
-                                onPressed: () {
-                                  widget.requestsStoresController
-                                      .exportData(widget.codeProvider, widget.codeNegotiation);
-                                },
-                                icon: const Icon(
-                                  Icons.share_rounded,
-                                  color: Colors.grey,
-                                ))
                           ],
                         ),
                       ),
@@ -180,11 +158,18 @@ class _ComponentListState extends State<ComponentList> {
                               "codeProvider": widget.codeProvider,
                               "balance": true,
                             });
+                          } else {
+                            Navigator.of(context).pushNamed(
+                              "orderdetails",
+                              arguments: {
+                                "order": e,
+                              },
+                            );
                           }
                         },
                         child: Container(
                           width: double.maxFinite,
-                          height: 80,
+                          height: 100,
                           padding: const EdgeInsets.all(appMargin),
                           margin: const EdgeInsets.symmetric(horizontal: appMargin),
                           decoration: BoxDecoration(
@@ -198,6 +183,12 @@ class _ComponentListState extends State<ComponentList> {
                                 e.razaoClient!,
                                 style: const TextStyle(fontSize: 16),
                               ),
+                              const SizedBox(height: 5),
+                              if (e.nameForn != null)
+                                Text(
+                                  e.nameForn!,
+                                  style: const TextStyle(color: colorGreyDark),
+                                ),
                               const SizedBox(height: 5),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

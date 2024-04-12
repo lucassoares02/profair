@@ -61,7 +61,6 @@ class _ComponentListState extends State<ComponentList> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const AppSpacing(),
               CardInfo(order: widget.order),
               ValueListenableBuilder(
                   valueListenable: widget.orderDetailsController.stateSearchProducts,
