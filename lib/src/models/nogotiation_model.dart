@@ -1,3 +1,5 @@
+import 'package:profair/src/models/product_model.dart';
+
 class NegotiationModel {
   int? negotiation;
   String? title;
@@ -5,6 +7,7 @@ class NegotiationModel {
   bool? checked;
   String? term;
   String? observation;
+  List<ProductModel>? merchandises;
 
   NegotiationModel({
     this.negotiation,
@@ -13,6 +16,7 @@ class NegotiationModel {
     this.checked,
     this.term,
     this.observation,
+    this.merchandises,
   });
 
   NegotiationModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,21 @@ class NegotiationModel {
     term = json["prazo"];
     observation = json["observacao"];
     checked = false;
+    if (json["merchandises"] != null) {
+      merchandises = List<ProductModel>.from(json["merchandises"].map((x) => ProductModel.fromJson(x)));
+    }
+  }
+
+  NegotiationModel clone() {
+    return NegotiationModel(
+      negotiation: negotiation,
+      title: title,
+      confirm: confirm,
+      checked: checked,
+      term: term,
+      observation: observation,
+      merchandises: merchandises,
+    );
   }
 
   Map<String, dynamic> toJson() {

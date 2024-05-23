@@ -1,5 +1,6 @@
-import 'dart:developer';
-
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -23,11 +24,57 @@ class AppActions extends StatefulWidget {
 }
 
 class _AppActionsState extends State<AppActions> {
+  scannerQrCode() async {
+    try {
+      String codeD = await FlutterBarcodeScanner.scanBarcode(
+        "#ff6666",
+        "Cancelar",
+        true,
+        ScanMode.DEFAULT,
+      );
+
+      if (codeD != "-1") {
+        String code = codeD.replaceAll("0x9E89738274392874.", "");
+        code = code.replaceAll(".9327329847372939", "");
+        LoginModel? response = await widget.homeController.findClient(code);
+        int codeUser = response!.userCode ?? 0;
+        if (codeUser != 0) {
+          navigatorRoutes("selectstore", {
+            "client": response,
+            "codeProvider": widget.homeController.data!.codCompany,
+            "consult": widget.homeController.data!.userCode
+          });
+        } else {
+          Fluttertoast.showToast(
+              msg: "Código inválido!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+        }
+      } else {
+        navigatorRoutes("preorder", widget.homeController);
+      }
+    } on PlatformException {
+      Fluttertoast.showToast(
+          msg: "Código inválido!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0);
+    }
+  }
+
   actionButton(String? route) {
     if (route == "users") {
       navigatorRoutes(route, {});
     } else if (route == "selectstore") {
-      navigatorRoutes("preorder", widget.homeController);
+      scannerQrCode();
+      // navigatorRoutes("preorder", widget.homeController);
     } else if (route == "productsprovider") {
       navigatorRoutes(
           route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});

@@ -10,17 +10,7 @@ class ProductModel {
   double? total;
   double? unitPrice;
 
-  ProductModel(
-      {this.codeProduct,
-      this.title,
-      this.packing,
-      this.coefficient,
-      this.price,
-      this.amount,
-      this.total,
-      this.unitPrice,
-      this.brand,
-      this.complement});
+  ProductModel({this.codeProduct, this.title, this.packing, this.coefficient, this.price, this.amount, this.total, this.unitPrice, this.brand, this.complement});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     codeProduct = json["codMercadoria"];
@@ -47,6 +37,21 @@ class ProductModel {
       title: product.title,
       total: product.total,
       unitPrice: product.unitPrice,
+    );
+  }
+
+  ProductModel clone() {
+    return ProductModel(
+      amount: amount,
+      brand: brand,
+      codeProduct: codeProduct,
+      coefficient: coefficient,
+      complement: complement,
+      packing: packing,
+      price: price,
+      title: title,
+      total: total,
+      unitPrice: unitPrice,
     );
   }
 

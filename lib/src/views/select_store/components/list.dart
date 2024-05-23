@@ -11,14 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ComponentList extends StatefulWidget {
-  const ComponentList(
-      {super.key,
-      this.description,
-      required this.listItems,
-      required this.state,
-      required this.codeProvider,
-      this.consult,
-      required this.client});
+  const ComponentList({super.key, this.description, required this.listItems, required this.state, required this.codeProvider, this.consult, required this.client});
 
   final List<ClientsSelectStoreModel> listItems;
   final String? description;
@@ -106,6 +99,7 @@ class _ComponentListState extends State<ComponentList> {
                 Navigator.of(context).pushNamed(
                   'selectnegotiation',
                   arguments: {
+                    "new": 1,
                     "codeProvider": widget.codeProvider,
                     "nameBranch": e.value.nameCompany,
                     "codeBranch": e.value.relationshipCode,
@@ -131,9 +125,7 @@ class _ComponentListState extends State<ComponentList> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          e.value.nameCompany!.length < 28
-                              ? '${e.value.nameCompany}'
-                              : e.value.nameCompany!.substring(0, 25),
+                          e.value.nameCompany!.length < 28 ? '${e.value.nameCompany}' : e.value.nameCompany!.substring(0, 25),
                           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                         Text(

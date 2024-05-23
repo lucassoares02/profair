@@ -1,16 +1,21 @@
-# profair
 
-A new Flutter project.
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Atividades
+✅ Adicionar opção de rota para as negociaçẽos
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+✅ Colocar o botão no final da tela de resumo do pedido
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Enviar os dados para o backend
+- ✅ Separar somente os produtos que foram pedidos
+- ✅ Enviar a lista de objetos para o backend
+- ✅ Alterar o método de recebimento do backend
+- ✅ Salvar as informações no banco
+- ✅ Redirecionar o usuário para tela de sucesso
+
+Criar card para separar valor por negociação
+
+Adicionar detalhes da negociação em cada aba
+
+Tratar os casos em que o produto precisa ser removido do pedido passando 0

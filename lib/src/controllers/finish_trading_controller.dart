@@ -1,3 +1,4 @@
+import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/repositories/finish_trading_repository.dart';
@@ -11,19 +12,21 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   final stateTradings = ValueNotifier<bool>(false);
   final stateCheckList = ValueNotifier<StateApp>(StateApp.start);
   final stateShare = ValueNotifier<StateApp>(StateApp.start);
+  final stateClient = ValueNotifier<StateApp>(StateApp.start);
 
   final FinishTradingRepository _negotiationsRepository;
 
   FinishTradingController(super.value, this._negotiationsRepository);
   List<dynamic> actualList = [];
+  LoginModel? client;
 
   double totalValue = 0.0;
   int totalVolume = 0;
   int totalChecked = 0;
   int totalCheckedBranch = 0;
 
-  Future sendOrder(List<ProductModel> products, List<NegotiationModel> tradings, int? codeBranch, int? codeProvider,
-      int? codeClient, List<ClientsSelectStoreModel> listBranchs, int? codeConsult) async {
+  Future sendOrder(
+      List<ProductModel> products, List<NegotiationModel> tradings, int? codeBranch, int? codeProvider, int? codeClient, List<ClientsSelectStoreModel> listBranchs, int? codeConsult) async {
     stateFinishTrading.value = StateApp.loading;
 
     try {
@@ -58,16 +61,14 @@ class FinishTradingController extends ValueNotifier<StateApp> {
   Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch) async {
     stateShare.value = StateApp.loading;
     try {
-      await _negotiationsRepository.exportDataProvider(
-          codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch);
+      await _negotiationsRepository.exportDataProvider(codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch);
     } catch (e) {
       stateShare.value = StateApp.error;
     }
     stateShare.value = StateApp.success;
   }
 
-  checkListItems(
-      List<ProductModel> listItems, List<NegotiationModel> tradings, List<ClientsSelectStoreModel>? listBranchs) {
+  checkListItems(List<ProductModel> listItems, List<NegotiationModel> tradings, List<ClientsSelectStoreModel>? listBranchs) {
     for (int i = 0; i < tradings.length; i++) {
       if (tradings[i].checked!) {
         totalChecked += 1;
@@ -112,5 +113,16 @@ class FinishTradingController extends ValueNotifier<StateApp> {
     }
 
     return 'R\$$formattedIntegerPart,$decimalPart';
+  }
+
+  Future<LoginModel?> findClient(String id) async {
+    stateClient.value = StateApp.loading;
+    try {
+      client = await _negotiationsRepository.getClient(id);
+      stateClient.value = StateApp.success;
+    } catch (e) {
+      stateClient.value = StateApp.error;
+    }
+    return null;
   }
 }

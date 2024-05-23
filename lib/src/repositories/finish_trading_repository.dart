@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
+import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:flutter/material.dart';
@@ -123,5 +124,12 @@ class FinishTradingRepository {
       print('Erro: $e');
       return null;
     }
+  }
+
+  Future<LoginModel> getClient(String id) async {
+    clientDio.options.contentType = Headers.formUrlEncodedContentType;
+    final response = await clientDio.get("${url}client/$id");
+    final item = response.data[0];
+    return LoginModel.fromJson(item);
   }
 }

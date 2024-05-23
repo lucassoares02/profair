@@ -24,8 +24,10 @@ const colorQuartiary = Color(0xFffe9677);
 // const colorBlueDark = Color(0xFFAA015A);
 const colorRedDark = Color(0xFF731b53);
 
-const colorSecondary = Color(0xFFAA015A);
-const colorPrimary = Color(0xFFF4663D);
+// const colorSecondary = Color(0xFFAA015A);
+// const colorPrimary = Color(0xFFF4663D);
+const colorSecondary = Color(0xFF0000ff);
+const colorPrimary = Color(0xFF00ff00);
 
 // #F61A64
 // #321146

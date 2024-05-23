@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';

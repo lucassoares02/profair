@@ -23,6 +23,7 @@ import 'package:profair/src/views/select_store/select_store.dart';
 import 'package:profair/src/views/ticket/ticket.dart';
 import 'package:profair/src/views/trading_success/trading_sucess.dart';
 import 'package:profair/src/views/tradings/tradings.dart';
+import 'package:profair/src/views/tradings_provider/tradings_provider.dart';
 import 'package:profair/src/views/tranding_products/trading_products.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -85,11 +86,8 @@ class AppModule extends Module {
           ),
         ),
         ChildRoute('/clients',
-            child: (context, args) => Clients(
-                trading: args.data["codeTrading"],
-                merchandise: args.data["merchandise"],
-                codeProvider: args.data["codeProvider"],
-                accessTargenting: args.data["accessTargenting"])),
+            child: (context, args) =>
+                Clients(trading: args.data["codeTrading"], merchandise: args.data["merchandise"], codeProvider: args.data["codeProvider"], accessTargenting: args.data["accessTargenting"])),
         ChildRoute(
           '/selectprovider',
           child: (context, args) => Providers(
@@ -118,6 +116,8 @@ class AppModule extends Module {
         ChildRoute(
           '/tradingsuccess',
           child: (context, args) => TradingSucess(
+              client: args.data["client"],
+              consult: args.data["consult"],
               trading: args.data["trading"],
               provider: args.data["provider"],
               branch: args.data["branch"],
@@ -130,20 +130,38 @@ class AppModule extends Module {
                   homeController: args.data,
                 )),
         ChildRoute('/clientsproduct', child: (context, args) => ClientsProducts(product: args.data)),
-        ChildRoute('/reports',
-            child: (context, args) =>
-                Reports(codeProvider: args.data["codeProvider"], accessTargeting: args.data["accessTargeting"])),
-        ChildRoute(
-          '/selectnegotiation',
-          child: (context, args) => SelectNegotiation(
-              codeBranch: args.data["codeBranch"],
-              nameBranch: args.data["nameBranch"],
-              codeClient: args.data["codeClient"],
-              codeProvider: args.data["codeProvider"],
-              listBranchs: args.data["listBranchs"],
-              codeConsult: args.data["consult"],
-              balance: args.data["balance"]),
-        ),
+        ChildRoute('/reports', child: (context, args) => Reports(codeProvider: args.data["codeProvider"], accessTargeting: args.data["accessTargeting"])),
+
+        // ChildRoute(
+        //   '/selectnegotiation',
+        //   child: (context, args) => SelectNegotiation(
+        //       codeBranch: args.data["codeBranch"],
+        //       nameBranch: args.data["nameBranch"],
+        //       codeClient: args.data["codeClient"],
+        //       codeProvider: args.data["codeProvider"],
+        //       listBranchs: args.data["listBranchs"],
+        //       codeConsult: args.data["consult"],
+        //       balance: args.data["balance"]),
+        // ),
+        ChildRoute('/selectnegotiation', child: (context, args) {
+          return args.data["new"] != null
+              ? TradingsProvider(
+                  codeBranch: args.data["codeBranch"],
+                  nameBranch: args.data["nameBranch"],
+                  codeClient: args.data["codeClient"],
+                  codeProvider: args.data["codeProvider"],
+                  listBranchs: args.data["listBranchs"],
+                  codeConsult: args.data["consult"],
+                  balance: args.data["balance"])
+              : SelectNegotiation(
+                  codeBranch: args.data["codeBranch"],
+                  nameBranch: args.data["nameBranch"],
+                  codeClient: args.data["codeClient"],
+                  codeProvider: args.data["codeProvider"],
+                  listBranchs: args.data["listBranchs"],
+                  codeConsult: args.data["consult"],
+                  balance: args.data["balance"]);
+        }),
         ChildRoute(
           '/tradingproducts',
           child: (context, args) => TradingProducts(

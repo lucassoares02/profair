@@ -67,6 +67,8 @@ class _ComponentListState extends State<ComponentList> {
       }
     }
     Navigator.of(context).pushNamed("/tradingsuccess", arguments: {
+      "client": widget.codeClient,
+      "consult": widget.codeConsult,
       "trading": trade,
       "provider": widget.codeProvider,
       "branch": widget.codeBranch,

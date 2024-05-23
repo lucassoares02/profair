@@ -11,6 +11,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
 
   ValueNotifier<bool> visibleText = ValueNotifier(false);
   ValueNotifier<int> itemSelected = ValueNotifier(-1);
+
   final stateProductsTrading = ValueNotifier<StateApp>(StateApp.start);
   final stateSearchProductsTrading = ValueNotifier<StateApp>(StateApp.start);
   final stateShare = ValueNotifier<StateApp>(StateApp.start);
@@ -24,8 +25,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
   Future findTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading, int? codeClient) async {
     stateProductsTrading.value = StateApp.loading;
     try {
-      productsTrading =
-          await _negotiationsRepository.getTradingProducts(codeBranch, codeProvider, codeTrading, codeClient);
+      productsTrading = await _negotiationsRepository.getTradingProducts(codeBranch, codeProvider, codeTrading, codeClient);
       products = productsTrading;
       initialListproducts = productsTrading.map<ProductModel>((product) => ProductModel.clone(product)).toList();
       stateProductsTrading.value = StateApp.success;
@@ -88,8 +88,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       print("SortInt: $sortInt");
       if (sortInt == 0) {
         message = "Ordenado por valor de vendas!";
-        productsTrading
-            .sort(((a, b) => (double.parse(b.amount!) * b.price!).compareTo(double.parse(a.amount!) * a.price!)));
+        productsTrading.sort(((a, b) => (double.parse(b.amount!) * b.price!).compareTo(double.parse(a.amount!) * a.price!)));
       } else if (sortInt == 1) {
         message = "Ordenado volume vendido!";
         productsTrading.sort(((a, b) => int.parse(b.amount!) - int.parse(a.amount!)));
@@ -102,14 +101,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(
-          msg: message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
 
       stateProductsTrading.value = StateApp.success;
     } catch (e) {
@@ -121,8 +113,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
   Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch) async {
     stateShare.value = StateApp.loading;
     try {
-      await _negotiationsRepository.exportDataProvider(
-          codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch);
+      await _negotiationsRepository.exportDataProvider(codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch);
     } catch (e) {
       stateShare.value = StateApp.error;
     }

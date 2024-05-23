@@ -3,18 +3,20 @@ import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/utils/colors.dart';
 
 class HeaderActions extends StatefulWidget {
-  HeaderActions(
-      {super.key,
-      this.label,
-      this.activeSearch = true,
-      this.onSearch,
-      this.icon,
-      this.onSort,
-      this.onOpenSearch,
-      this.activePop = true,
-      this.color,
-      this.iconColor,
-      this.onCloseInfo});
+  HeaderActions({
+    super.key,
+    this.label,
+    this.activeSearch = true,
+    this.onSearch,
+    this.icon,
+    this.onSort,
+    this.onOpenSearch,
+    this.activePop = true,
+    this.color,
+    this.iconColor,
+    this.onCloseInfo,
+    this.addIcon,
+  });
 
   String? label;
   bool? activeSearch;
@@ -26,6 +28,7 @@ class HeaderActions extends StatefulWidget {
   Color? iconColor;
   IconData? icon;
   bool activePop;
+  Widget? addIcon;
 
   @override
   State<HeaderActions> createState() => _HeaderActionsState();
@@ -131,6 +134,7 @@ class _HeaderActionsState extends State<HeaderActions> {
                               color: widget.iconColor,
                             ),
                           ),
+                        if (widget.addIcon != null) widget.addIcon!
                       ],
                     )
                   ],
