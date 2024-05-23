@@ -1,19 +1,13 @@
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 import 'package:profair/src/controllers/tradings_provider_controller.dart';
-import 'package:profair/src/controllers/users_controller.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
-import 'package:profair/src/models/product_model.dart';
-import 'package:profair/src/models/users_model.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/format_currency.dart';
-import 'package:profair/src/views/home/state_management.dart';
-import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:flutter/foundation.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/material.dart';
 
 class ComponentList extends StatefulWidget {
@@ -34,6 +28,7 @@ class _ComponentListState extends State<ComponentList> {
   TextEditingController amountItem = TextEditingController();
   FocusNode selectedProduct = FocusNode();
   FocusNode searchBar = FocusNode();
+  final DateFormat formatter = DateFormat('dd/MM/yyyy');
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +36,53 @@ class _ComponentListState extends State<ComponentList> {
     return SingleChildScrollView(
       child: Column(
         children: [
+          Container(
+            margin: const EdgeInsets.all(appPadding),
+            padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding),
+            decoration: const BoxDecoration(
+              color: colorBlue,
+              borderRadius: BorderRadius.all(
+                Radius.circular(appRadius),
+              ),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      widget.negotiation.negotiation.toString(),
+                      style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      formatter.format(
+                        DateTime.parse(
+                          widget.negotiation.term!,
+                        ),
+                      ),
+                      style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+                const Divider(),
+                Text(
+                  widget.negotiation.title!,
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: colorWhite),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      widget.negotiation.observation!,
+                      overflow: TextOverflow.clip,
+                      style: const TextStyle(color: colorWhite, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           ValueListenableBuilder(
             valueListenable: widget.tradingsProviderController.stateSearchProductsTrading,
             builder: (context, value, child) {
