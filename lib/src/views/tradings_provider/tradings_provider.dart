@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:intl/intl.dart';
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -6,6 +5,7 @@ import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/controllers/tradings_provider_controller.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
+import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/finish_trading_repository.dart';
 import 'package:profair/src/repositories/tradings_provider_repository.dart';
 import 'package:profair/src/components/header_actions.dart';
@@ -26,6 +26,7 @@ class TradingsProvider extends StatefulWidget {
     required this.codeClient,
     this.listBranchs,
     this.balance,
+    this.client,
   });
 
   final int? codeProvider;
@@ -35,6 +36,7 @@ class TradingsProvider extends StatefulWidget {
   final int? codeConsult;
   final List<ClientsSelectStoreModel>? listBranchs;
   final bool? balance;
+  final LoginModel? client;
 
   @override
   State<TradingsProvider> createState() => _TradingsProviderState();
@@ -68,6 +70,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
       "trading": 0,
       "provider": widget.codeProvider,
       "branch": widget.codeBranch,
+      "clientModel": widget.client,
       "finishTradingController": finishTradingController,
       "value": formatCurrency(tradingsProviderController.totalValue),
       "hour": DateFormat.Hm().format(DateTime.now()).toString()

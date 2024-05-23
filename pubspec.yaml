@@ -40,7 +40,6 @@ dependencies:
   intl: ^0.18.1
   path_provider: ^2.1.2
   badges: ^3.1.2
-  animated_flip_counter: ^0.3.4
 
 
 flutter_native_splash:

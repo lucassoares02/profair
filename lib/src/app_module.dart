@@ -118,6 +118,7 @@ class AppModule extends Module {
           child: (context, args) => TradingSucess(
               client: args.data["client"],
               consult: args.data["consult"],
+              clientModel: args.data["clientModel"],
               trading: args.data["trading"],
               provider: args.data["provider"],
               branch: args.data["branch"],
@@ -152,6 +153,7 @@ class AppModule extends Module {
                   codeProvider: args.data["codeProvider"],
                   listBranchs: args.data["listBranchs"],
                   codeConsult: args.data["consult"],
+                  client: args.data["client"],
                   balance: args.data["balance"])
               : SelectNegotiation(
                   codeBranch: args.data["codeBranch"],

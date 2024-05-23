@@ -104,6 +104,7 @@ class _ComponentListState extends State<ComponentList> {
                     "nameBranch": e.value.nameCompany,
                     "codeBranch": e.value.relationshipCode,
                     "codeClient": widget.client!.userCode,
+                    "client": widget.client,
                     "listBranchs": widget.listItems,
                     "consult": widget.consult,
                   },

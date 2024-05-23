@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
+import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/utils/spacing.dart';
 
 class TradingSucess extends StatefulWidget {
@@ -15,6 +16,7 @@ class TradingSucess extends StatefulWidget {
     required this.trading,
     required this.provider,
     required this.branch,
+    this.clientModel,
   });
 
   final String value;
@@ -24,6 +26,7 @@ class TradingSucess extends StatefulWidget {
   final int consult;
   final int provider;
   final int branch;
+  final LoginModel? clientModel;
   final FinishTradingController finishTradingController;
 
   @override
@@ -146,26 +149,22 @@ class _TradingSucessState extends State<TradingSucess> {
                     Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
                   },
                 ),
-                // const AppSpacing(),
-                // const AppSpacing(),
-                // ValueListenableBuilder(
-                //     valueListenable: widget.finishTradingController.stateClient,
-                //     builder: (context, value, child) {
-                //       return value != null
-                //           ? TextButton(
-                //               onPressed: () {
-                //                 Navigator.of(context).pushNamed(
-                //                   "selectstore",
-                //                   arguments: {
-                //                     "client": widget.finishTradingController.client,
-                //                     "codeProvider": widget.provider,
-                //                     "consult": widget.consult
-                //                   },
-                //                 );
-                //               },
-                //               child: const Text("Novo Pedido"))
-                //           : Container();
-                //     })
+                const AppSpacing(),
+                const AppSpacing(),
+                ValueListenableBuilder(
+                    valueListenable: widget.finishTradingController.stateClient,
+                    builder: (context, value, child) {
+                      return value != null
+                          ? TextButton(
+                              onPressed: () {
+                                Navigator.of(context).pushNamed(
+                                  "selectstore",
+                                  arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult},
+                                );
+                              },
+                              child: const Text("Novo Pedido"))
+                          : Container();
+                    })
               ],
             ),
           ),
