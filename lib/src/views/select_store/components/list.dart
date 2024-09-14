@@ -3,7 +3,6 @@ import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/views/home/state_management.dart';
-import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/generated/l10n.dart';
@@ -35,9 +34,12 @@ class _ComponentListState extends State<ComponentList> {
       component: Column(
         children: [
           HeaderList(
+            onBackButton: () {
+              Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+            },
             icon: Icons.store_mall_directory_outlined,
             activeSearch: false,
-            label: S.of(context).text_store,
+            label: "Lojas",
           ),
           Container(
             width: width,
@@ -118,22 +120,18 @@ class _ComponentListState extends State<ComponentList> {
                 decoration: const BoxDecoration(
                   border: Border(bottom: BorderSide(color: colorGrey)),
                 ),
-                child: Row(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const AppSpacing(),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          e.value.nameCompany!.length < 28 ? '${e.value.nameCompany}' : e.value.nameCompany!.substring(0, 25),
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        Text(
-                          '${e.value.documentCompany}',
-                          style: const TextStyle(color: colorGreyDark),
-                        ),
-                      ],
+                    Text(
+                      '${e.value.documentCompany}',
+                      style: const TextStyle(color: colorGreyDark),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "${e.value.nameCompany}",
+                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                   ],
                 ),

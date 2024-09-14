@@ -62,18 +62,11 @@ class _LoginPageState extends State<LoginPage> {
               textColor: Colors.white,
               fontSize: 16.0);
         }
-        // loginFunc();
       }
     } on PlatformException {
       code = "Failed to get platform version.";
     }
     // }
-  }
-
-  loginFunc() async {
-    // bool response = await loginController!.auth("teste@profair.com", "12345678");
-    // bool response = await loginController!.auth("lucas.soares@profair.com", "12345678");
-    // navigatorRoutes(response);
   }
 
   navigatorRoutes(response) {
@@ -114,19 +107,12 @@ class _LoginPageState extends State<LoginPage> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
-        // padding: const EdgeInsets.all(appPadding),
         decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: NetworkImage(
-                  "https://www.viavini.com.br/blog-de-vinhos/wp-content/uploads/2020/01/comprar-vinhos-para-grandes-eventos-1200x799.jpg"),
-              fit: BoxFit.cover,
-              opacity: 0.1),
           gradient: LinearGradient(
-            // begin: Alignment.topLeft,
-            // end: Alignment.bottomLeft,
+            begin: Alignment.topCenter,
             colors: [
               colorSecondary,
-              colorRedDark,
+              colorBlueAccent,
             ],
           ),
         ),

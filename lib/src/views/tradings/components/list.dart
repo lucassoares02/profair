@@ -12,14 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ComponentList extends StatefulWidget {
-  ComponentList(
-      {super.key,
-      this.description,
-      required this.listItems,
-      required this.state,
-      required this.homeController,
-      this.codeNegotiation,
-      required this.tradingsController});
+  ComponentList({super.key, this.description, required this.listItems, required this.state, required this.homeController, this.codeNegotiation, required this.tradingsController});
 
   Iterable<TradingsModel> listItems;
   final String? description;
@@ -56,13 +49,8 @@ class _ComponentListState extends State<ComponentList> {
                     children: widget.tradingsController.tradingList.map((e) {
                   return InkWell(
                     onTap: () {
-                      Navigator.of(context).pushNamed('listrequestsstores', arguments: {
-                        "codeProvider": e.provider,
-                        "userCode": 0,
-                        "codeNegotiation": e.code,
-                        "homeController": widget.homeController,
-                        "visibleBuyers": false
-                      });
+                      Navigator.of(context).pushNamed('listrequestsstores',
+                          arguments: {"codeProvider": e.provider, "userCode": 0, "codeNegotiation": e.code, "homeController": widget.homeController, "visibleBuyers": false});
                     },
                     child: Container(
                       width: width,
@@ -106,9 +94,7 @@ class _ComponentListState extends State<ComponentList> {
                               ),
                               Text(
                                 '${e.totalVolume} | R\$ ${e.totalValue}',
-                                style: TextStyle(
-                                    color: (e.totalVolume != "0") ? colorGreyDark : colorGrey,
-                                    fontWeight: FontWeight.bold),
+                                style: TextStyle(color: (e.totalVolume != "0") ? colorGreyDark : colorGrey, fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),

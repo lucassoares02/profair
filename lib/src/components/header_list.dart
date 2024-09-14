@@ -14,6 +14,7 @@ class HeaderList extends StatefulWidget {
       this.activePop = true,
       this.color,
       this.iconColor,
+      this.onBackButton,
       this.aditionAction,
       this.onCloseInfo});
 
@@ -22,6 +23,7 @@ class HeaderList extends StatefulWidget {
   Function(String?)? onSearch;
   Function()? onSort;
   Function()? onCloseInfo;
+  Function()? onBackButton;
   Function()? onOpenSearch;
   Color? color;
   Color? iconColor;
@@ -90,9 +92,10 @@ class _HeaderListState extends State<HeaderList> {
                           children: [
                             if (widget.activePop)
                               IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
+                                onPressed: widget.onBackButton ??
+                                    () {
+                                      Navigator.of(context).pop();
+                                    },
                                 icon: Icon(
                                   Icons.arrow_back_ios_new,
                                   size: 20,

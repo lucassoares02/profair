@@ -109,7 +109,6 @@ class _ComponentListState extends State<ComponentList> {
                         }
                       }
                     } else {
-                      print("asdfasdfasdf");
                       FocusManager.instance.primaryFocus?.unfocus();
                       amountItem.text = e.value.amount == "0" ? "" : "${e.value.amount}";
                       if (e.key != widget.tradingsProviderController.itemSelected.value) {
@@ -124,8 +123,10 @@ class _ComponentListState extends State<ComponentList> {
                   child: Container(
                     padding: const EdgeInsets.all(appMargin),
                     margin: const EdgeInsets.only(left: appMargin, right: appMargin, top: appMargin),
-                    decoration: const BoxDecoration(
-                      border: Border(bottom: BorderSide(color: colorGrey)),
+                    decoration: BoxDecoration(
+                      color: e.value.amount == "0" ? transparent : colorSecondary.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(appRadius),
+                      border: const Border(bottom: BorderSide(color: colorGrey)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

@@ -3,17 +3,11 @@ import 'package:profair/src/views/clients_product/clients_product.dart';
 import 'package:profair/src/views/details_attraction/details_attraction.dart';
 import 'package:profair/src/views/details_balance/details_balance.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider.dart';
-import 'package:profair/src/views/details_recipe/details_recipe.dart';
 import 'package:profair/src/views/finish_trading/finish_trading_products.dart';
 import 'package:profair/src/views/list_attractions/list_attractions.dart';
-import 'package:profair/src/views/list_category/list_category.dart';
-import 'package:profair/src/views/create_post/create_post.dart';
-import 'package:profair/src/views/list_recipe/list_recipe.dart';
-import 'package:profair/src/views/favorites/favorites.dart';
 import 'package:profair/src/views/order_details/order_details.dart';
 import 'package:profair/src/views/preorder/preorder.dart';
 import 'package:profair/src/views/products_provider/products_provider.dart';
-import 'package:profair/src/views/profile/profile.dart';
 import 'package:profair/src/views/providers/providers.dart';
 import 'package:profair/src/views/providers_by_group/providers_by_group.dart';
 import 'package:profair/src/views/reports/reports.dart';
@@ -41,11 +35,7 @@ class AppModule extends Module {
         ChildRoute('/app', child: (context, args) => const App()),
         ChildRoute('/login', child: (context, args) => const LoginPage()),
         ChildRoute('/home', child: (context, args) => const HomePage()),
-        ChildRoute('/favorites', child: (context, args) => const Favorites()),
-        ChildRoute('/create', child: (context, args) => const CreatePost()),
         ChildRoute('/search', child: (context, args) => const Search()),
-        ChildRoute('/profile', child: (context, args) => const Profile()),
-        ChildRoute('/detailsrecipe', child: (context, args) => DetailsRecipe(recipe: args.data)),
         ChildRoute('/listattractions', child: (context, args) => const ListAttractions()),
         ChildRoute(
           '/selectstore',
@@ -55,8 +45,6 @@ class AppModule extends Module {
             codeProvider: args.data["codeProvider"],
           ),
         ),
-        ChildRoute('/listrecipe', child: (context, args) => ListRecipe(recipe: args.data)),
-        ChildRoute('/listcategory', child: (context, args) => ListCategory(category: args.data)),
         ChildRoute('/preorder', child: (context, args) => PreOrder(homeController: args.data)),
         ChildRoute('/listrequestsstores',
             child: (context, args) => RequestsStores(

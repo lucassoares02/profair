@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/utils/colors.dart';
+import 'package:profair/src/utils/spacing.dart';
 
 class HeaderActions extends StatefulWidget {
   HeaderActions({
@@ -16,6 +17,8 @@ class HeaderActions extends StatefulWidget {
     this.iconColor,
     this.onCloseInfo,
     this.addIcon,
+    this.menu = false,
+    this.alertClose = false,
   });
 
   String? label;
@@ -28,6 +31,8 @@ class HeaderActions extends StatefulWidget {
   Color? iconColor;
   IconData? icon;
   bool activePop;
+  bool menu;
+  bool alertClose;
   Widget? addIcon;
 
   @override
@@ -41,10 +46,9 @@ class _HeaderActionsState extends State<HeaderActions> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     return Container(
       width: size.width,
-      height: 70,
+      height: double.maxFinite,
       child: ValueListenableBuilder(
         valueListenable: visibleSearch,
         builder: (context, value, child) {
@@ -66,9 +70,14 @@ class _HeaderActionsState extends State<HeaderActions> {
                       contentPadding: const EdgeInsets.symmetric(vertical: 0),
                       suffixIcon: IconButton(
                           onPressed: () {
-                            visibleSearch.value = !visibleSearch.value;
-                            controllerSearch.text = "";
-                            widget.onSearch!("");
+                            if (controllerSearch.text.isNotEmpty) {
+                              controllerSearch.text = "";
+                              widget.onSearch!("");
+                            } else {
+                              visibleSearch.value = !visibleSearch.value;
+                              controllerSearch.text = "";
+                              widget.onSearch!("");
+                            }
                             if (widget.onCloseInfo != null) widget.onCloseInfo!();
                           },
                           icon: const Icon(Icons.close)),
@@ -92,7 +101,40 @@ class _HeaderActionsState extends State<HeaderActions> {
                         if (widget.activePop)
                           IconButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              if (widget.alertClose) {
+                                showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        backgroundColor: Colors.white,
+                                        elevation: 0.1,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(appRadius),
+                                        ),
+                                        title: const Text('Deseja realmente sair?'),
+                                        content: SizedBox(
+                                            width: size.width * 1,
+                                            child: const Text('Caso você volte as informações que foram digitadas serão perdidas, para que isso não aconteça finalize o pedido primeiro!')),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("Cancelar"),
+                                          ),
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text("Confirmar"),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                Navigator.of(context).pop();
+                              }
                             },
                             icon: Icon(
                               Icons.arrow_back_ios_new,
@@ -134,7 +176,28 @@ class _HeaderActionsState extends State<HeaderActions> {
                               color: widget.iconColor,
                             ),
                           ),
-                        if (widget.addIcon != null) widget.addIcon!
+                        if (widget.addIcon != null) widget.addIcon!,
+                        if (widget.menu)
+                          PopupMenuButton<String>(
+                              color: Colors.white,
+                              onSelected: (String result) {
+                                // Lógica de filtro aqui
+                                print('Filtro selecionado: $result');
+                              },
+                              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+                                    const PopupMenuItem<String>(
+                                      value: 'Filtro 1',
+                                      child: Text('Ordem alfabética'),
+                                    ),
+                                    const PopupMenuItem<String>(
+                                      value: 'Filtro 2',
+                                      child: Text('Maior valor'),
+                                    ),
+                                    const PopupMenuItem<String>(
+                                      value: 'Filtro 3',
+                                      child: Text('Maior volume'),
+                                    ),
+                                  ]),
                       ],
                     )
                   ],

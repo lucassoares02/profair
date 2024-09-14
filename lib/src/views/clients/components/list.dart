@@ -52,7 +52,7 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.clientsController.search(value);
             },
-            label: "Lojas",
+            label: "sss",
           ),
           ValueListenableBuilder(
               valueListenable: widget.clientsController.stateSearchClients,

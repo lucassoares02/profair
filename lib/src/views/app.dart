@@ -1,8 +1,5 @@
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/src/views/create_post/create_post.dart';
-import 'package:profair/src/views/favorites/favorites.dart';
 import 'package:profair/src/views/home/home.dart';
-import 'package:profair/src/views/profile/profile.dart';
 import 'package:profair/src/views/search/search.dart';
 import 'package:flutter/material.dart';
 
@@ -17,10 +14,7 @@ class _AppState extends State<App> {
   int _selectedIndex = 0;
   List<Widget> pageList = [
     const HomePage(),
-    const Favorites(),
-    const CreatePost(),
     const Search(),
-    const Profile(),
   ];
 
   void _onItemTapped(int index) {

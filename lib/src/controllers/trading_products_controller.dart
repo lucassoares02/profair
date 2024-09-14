@@ -4,6 +4,13 @@ import 'package:profair/src/repositories/trading_products_repository.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
+class DetailsSell {
+  num? volume;
+  num? quantity;
+
+  DetailsSell({this.volume, this.quantity});
+}
+
 class TradingProductsController extends ValueNotifier<StateApp> {
   List<ProductModel> productsTrading = [];
   List<ProductModel> products = [];
@@ -11,6 +18,7 @@ class TradingProductsController extends ValueNotifier<StateApp> {
 
   ValueNotifier<bool> visibleText = ValueNotifier(false);
   ValueNotifier<int> itemSelected = ValueNotifier(-1);
+  DetailsSell? detailsSell = DetailsSell(volume: 0, quantity: 0);
 
   final stateProductsTrading = ValueNotifier<StateApp>(StateApp.start);
   final stateSearchProductsTrading = ValueNotifier<StateApp>(StateApp.start);
@@ -28,6 +36,10 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       productsTrading = await _negotiationsRepository.getTradingProducts(codeBranch, codeProvider, codeTrading, codeClient);
       products = productsTrading;
       initialListproducts = productsTrading.map<ProductModel>((product) => ProductModel.clone(product)).toList();
+      for (var element in products) {
+        detailsSell!.volume = detailsSell!.volume! + int.parse(element.amount!);
+      }
+      detailsSell!.quantity = products.length;
       stateProductsTrading.value = StateApp.success;
     } catch (e) {
       stateProductsTrading.value = StateApp.error;

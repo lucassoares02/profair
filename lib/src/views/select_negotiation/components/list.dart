@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
@@ -90,10 +91,6 @@ class _ComponentListState extends State<ComponentList> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(
-                            e.value.title!.length < 28 ? '${e.value.title}' : e.value.title!.substring(0, 25),
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -103,11 +100,19 @@ class _ComponentListState extends State<ComponentList> {
                               ),
                               if (e.value.confirm != null)
                                 const Icon(
-                                  Icons.done_all,
-                                  color: colorBlue,
+                                  Icons.check_circle,
+                                  color: colorGreen,
                                   size: appPadding,
                                 )
                             ],
+                          ),
+                          Text(
+                            "${e.value.title}",
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          Text(
+                            DateFormat("dd/MM/yyyy").format(DateTime.parse(e.value.term!)),
+                            style: const TextStyle(color: colorGreyDark),
                           ),
                         ],
                       ),

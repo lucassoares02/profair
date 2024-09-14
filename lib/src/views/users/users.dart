@@ -87,11 +87,7 @@ class _UsersState extends State<Users> with SingleTickerProviderStateMixin {
               child: ValueListenableBuilder(
                 valueListenable: usersController.stateUsers,
                 builder: (context, value, child) {
-                  return ComponentList(
-                      description: "Usuários",
-                      state: usersController.stateUsers,
-                      listItems: usersController.users,
-                      usersController: usersController);
+                  return ComponentList(description: "Usuários", state: usersController.stateUsers, listItems: usersController.users, usersController: usersController);
                 },
               ),
             ),
@@ -101,11 +97,7 @@ class _UsersState extends State<Users> with SingleTickerProviderStateMixin {
               child: ValueListenableBuilder(
                 valueListenable: usersController.stateUsersProvider,
                 builder: (context, value, child) {
-                  return ComponentList(
-                      description: "Usuários",
-                      state: usersController.stateUsersProvider,
-                      listItems: usersController.usersProvider,
-                      usersController: usersController);
+                  return ComponentList(description: "Usuários", state: usersController.stateUsersProvider, listItems: usersController.usersProvider, usersController: usersController);
                 },
               ),
             ),
@@ -115,11 +107,7 @@ class _UsersState extends State<Users> with SingleTickerProviderStateMixin {
               child: ValueListenableBuilder(
                 valueListenable: usersController.stateUsersAssociate,
                 builder: (context, value, child) {
-                  return ComponentList(
-                      description: "Usuários",
-                      state: usersController.stateUsersAssociate,
-                      listItems: usersController.usersAssociate,
-                      usersController: usersController);
+                  return ComponentList(description: "Usuários", state: usersController.stateUsersAssociate, listItems: usersController.usersAssociate, usersController: usersController);
                 },
               ),
             ),

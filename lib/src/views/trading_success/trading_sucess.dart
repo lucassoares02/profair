@@ -3,6 +3,7 @@ import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/login_model.dart';
+import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 
 class TradingSucess extends StatefulWidget {
@@ -55,7 +56,8 @@ class _TradingSucessState extends State<TradingSucess> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.network(
                       "https://cdn-icons-png.freepik.com/512/6815/6815090.png",
@@ -68,8 +70,10 @@ class _TradingSucessState extends State<TradingSucess> {
                       "Pedido Realizado com sucesso!",
                       style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
+                    const AppSpacing(),
                     const Text(
                       "Para acompanhar os detalhes do pedido acesse a lista de pedidos na tela inicial.",
+                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const AppSpacing(),
@@ -140,31 +144,38 @@ class _TradingSucessState extends State<TradingSucess> {
                 ),
                 const AppSpacing(),
                 const AppSpacing(),
-                AppButton(
-                  label: "Concluir",
-                  colorButton: Colors.green,
-                  iconButton: Icons.check,
-                  loading: false,
-                  onPressButton: () {
-                    Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
-                  },
+                Column(
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: widget.finishTradingController.stateClient,
+                      builder: (context, value, child) {
+                        return value != null
+                            ? AppButton(
+                                label: "Novo pedido",
+                                iconButton: Icons.add,
+                                type: "filled",
+                                colorButton: colorSecondary,
+                                onPressButton: () {
+                                  // Navigator.of(context).pushNamed("/selectstore", arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult});
+                                  Navigator.of(context).pushNamedAndRemoveUntil("/selectstore", (route) => false,
+                                      arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult});
+                                },
+                              )
+                            : Container();
+                      },
+                    ),
+                    const AppSpacing(),
+                    AppButton(
+                      label: "Concluir",
+                      colorButton: Colors.green,
+                      iconButton: Icons.check,
+                      loading: false,
+                      onPressButton: () {
+                        Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                      },
+                    ),
+                  ],
                 ),
-                const AppSpacing(),
-                const AppSpacing(),
-                ValueListenableBuilder(
-                    valueListenable: widget.finishTradingController.stateClient,
-                    builder: (context, value, child) {
-                      return value != null
-                          ? TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pushNamed(
-                                  "selectstore",
-                                  arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult},
-                                );
-                              },
-                              child: const Text("Novo Pedido"))
-                          : Container();
-                    })
               ],
             ),
           ),

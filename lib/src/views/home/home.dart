@@ -46,9 +46,7 @@ class _HomePageState extends State<HomePage> {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: currentBrightness == Brightness.light ? Brightness.dark : null),
+        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: Colors.transparent, statusBarIconBrightness: currentBrightness == Brightness.light ? Brightness.dark : null),
         child: SafeArea(
           bottom: false,
           child: SizedBox(
@@ -66,19 +64,22 @@ class _HomePageState extends State<HomePage> {
                         builder: (context, value, child) {
                           return value == StateApp.loading
                               ? Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appMargin * 2),
+                                  padding: const EdgeInsets.only(left: appPadding, right: appPadding, top: appMargin * 2),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(
-                                            height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                                        style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
                                       ),
                                       const SizedBox(height: 10),
                                       SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(
-                                            height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                                        style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
                                       ),
+                                      const SizedBox(height: 10),
+                                      SkeletonAvatar(
+                                        style: SkeletonAvatarStyle(height: 45, width: double.maxFinite, borderRadius: BorderRadius.circular(10)),
+                                      ),
+                                      const SizedBox(height: appPadding)
                                     ],
                                   ),
                                 )
@@ -125,15 +126,12 @@ class _HomePageState extends State<HomePage> {
                       onTap: () {
                         Navigator.of(context).pushNamed("reports", arguments: {
                           "accessTargeting": homeController.data!.accessTargeting,
-                          "codeProvider": homeController.data!.accessTargeting == 2
-                              ? homeController.data!.userCode
-                              : homeController.data!.codCompany
+                          "codeProvider": homeController.data!.accessTargeting == 2 ? homeController.data!.userCode : homeController.data!.codCompany
                         });
                       },
                       child: Container(
                         margin: const EdgeInsets.all(appMargin),
-                        decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(appRadius)),
+                        decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(appRadius)),
                         padding: const EdgeInsets.all(appPadding * 1.1),
                         child: const Row(children: [
                           Icon(
@@ -161,8 +159,7 @@ class _HomePageState extends State<HomePage> {
                                           padding: const EdgeInsets.only(left: appPadding, bottom: appPadding),
                                           child: Text(
                                             homeController.data!.accessTargeting == 3 ? "Carteiras" : "Consultores",
-                                            style: const TextStyle(
-                                                fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
+                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
                                           ),
                                         ),
                                         Categories(homeController: homeController),
