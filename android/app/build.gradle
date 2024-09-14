@@ -76,7 +76,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         // versionCode flutterVersionCode.toInteger()
         // versionName flutterVersionName
-        versionCode 18
+        versionCode 19
         versionName "13.0.6"
         multiDexEnabled true
     }
