@@ -12,6 +12,7 @@ workflows:
     scripts:
       - script: xcode-project use-profiles
       - script: flutter clean
+      - script: flutter --version
       - script: flutter packages pub get
       - name: Flutter build ipa
         script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
