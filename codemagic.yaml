@@ -12,9 +12,9 @@ workflows:
     scripts:
       - script: xcode-project use-profiles
       - script: flutter clean
+      - script: dart pub cache repair
       - script: flutter --version
       - script: flutter packages pub get
-      - script: dart pub cache repair
       - name: Flutter build ipa
         script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
     artifacts:
