@@ -6,7 +6,7 @@ workflows:
         provisioning_profiles:
           - app store connect certificate
         certificates:
-          - api_key_profair_renew, api_key_profair_renew_15_09_2024
+          - api_key_profair_renew
     integrations:
       app_store_connect: api key profair
     scripts:
