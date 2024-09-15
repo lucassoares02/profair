@@ -8,7 +8,7 @@ workflows:
         certificates:
           - api_key_profair_renew
     integrations:
-      app_store_connect: api key profair
+      app_store_connect: api key profair renew
     scripts:
       - script: xcode-project use-profiles
       - script: flutter clean
