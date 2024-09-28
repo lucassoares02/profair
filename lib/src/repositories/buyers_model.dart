@@ -5,6 +5,7 @@ class BuyersModel {
   double? total;
   String? volume;
   String? color;
+  // Somente teste de conexão com github
 
   BuyersModel({
     this.codeBuyer,
