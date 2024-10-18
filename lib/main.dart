@@ -42,7 +42,12 @@ class MyApp extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       supportedLocales: S.delegate.supportedLocales,
-      theme: ThemeData.from(colorScheme: const ColorScheme.dark(primary: Colors.white, surface: Colors.black)),
+      theme: ThemeData.from(
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.white,
+          surface: Colors.black,
+        ),
+      ).copyWith(textTheme: ThemeData.dark().textTheme.apply(fontFamily: "Plus")),
       darkTheme: darkTheme,
       routerDelegate: Modular.routerDelegate,
       routeInformationParser: Modular.routeInformationParser,

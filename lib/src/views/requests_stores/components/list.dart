@@ -71,9 +71,7 @@ class _ComponentListState extends State<ComponentList> {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (widget.homeController != null &&
-                        widget.homeController!.buyers.length > 2 &&
-                        (widget.visibleBuyers != null && widget.visibleBuyers! == true))
+                    if (widget.homeController != null && widget.homeController!.buyers.length > 2 && (widget.visibleBuyers != null && widget.visibleBuyers! == true))
                       ValueListenableBuilder(
                         valueListenable: widget.requestsStoresController.visibleSearch,
                         builder: (context, bool searchActive, child) {
@@ -104,16 +102,13 @@ class _ComponentListState extends State<ComponentList> {
                                             },
                                           );
                                         }),
-                                    if (widget.homeController != null && widget.homeController!.buyers.length > 1)
-                                      const AppSpacing(),
+                                    if (widget.homeController != null && widget.homeController!.buyers.length > 1) const AppSpacing(),
                                     const Divider(),
                                   ],
                                 );
                         },
                       ),
-                    if (widget.homeController != null &&
-                        widget.homeController!.buyers.length > 2 &&
-                        (widget.visibleBuyers != null && widget.visibleBuyers! == true))
+                    if (widget.homeController != null && widget.homeController!.buyers.length > 2 && (widget.visibleBuyers != null && widget.visibleBuyers! == true))
                       const Padding(
                         padding: EdgeInsets.only(left: appPadding),
                         child: Row(

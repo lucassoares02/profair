@@ -3,7 +3,7 @@ description: A project have change the life people.
 
 publish_to: 'none'
 
-version: 3.0.10+1
+version: 3.0.11+1
 
 environment:
   sdk: ">=2.17.6 <3.22.0"
@@ -78,6 +78,11 @@ flutter:
         - asset: fonts/sf/SF-Bold.otf
         - asset: fonts/sf/SF-Light.otf
         - asset: fonts/sf/SF-Medium.otf
+    - family: Plus
+      fonts:
+        - asset: fonts/plus/Plus-Bold.ttf
+        - asset: fonts/plus/Plus-Light.ttf
+        - asset: fonts/plus/Plus-Medium.ttf
 
   uses-material-design: true
   assets:

@@ -44,32 +44,16 @@ class _PreOrderState extends State<PreOrder> {
         LoginModel? response = await widget.homeController.findClient(code);
         int codeUser = response!.userCode ?? 0;
         if (codeUser != 0) {
-          navigatorRoutes("selectstore", {
-            "client": response,
-            "codeProvider": widget.homeController.data!.codCompany,
-            "consult": widget.homeController.data!.userCode
-          });
+          navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany, "consult": widget.homeController.data!.userCode});
         } else {
           Fluttertoast.showToast(
-              msg: "Código inválido!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+              msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
         }
       }
     } on PlatformException {
       debugPrint('Error scanning qrcode');
       Fluttertoast.showToast(
-          msg: "Código inválido!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+          msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
     }
   }
 
@@ -81,23 +65,13 @@ class _PreOrderState extends State<PreOrder> {
       if (codeUser != null) {
         navigatorRoutes(
           "selectstore",
-          {
-            "client": response,
-            "codeProvider": widget.homeController.data!.codCompany,
-            "consult": widget.homeController.data!.userCode
-          },
+          {"client": response, "codeProvider": widget.homeController.data!.codCompany, "consult": widget.homeController.data!.userCode},
         );
       } else {}
     } catch (e) {
       debugPrint('Error scanning qrcodesssss: $e');
       Fluttertoast.showToast(
-          msg: "Código inválido!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+          msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
     }
   }
 
@@ -129,7 +103,6 @@ class _PreOrderState extends State<PreOrder> {
                   },
                   icon: const Icon(
                     Icons.arrow_back_ios_new,
-                    color: colorBlack,
                     size: 20,
                   ),
                 ),

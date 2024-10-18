@@ -1,6 +1,7 @@
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/utils/format_currency.dart';
+import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
@@ -10,11 +11,12 @@ import 'package:skeletons/skeletons.dart';
 import 'package:flutter/material.dart';
 
 class LastRequests extends StatefulWidget {
-  const LastRequests({super.key, required this.listItems, this.description, required this.state});
+  const LastRequests({super.key, required this.listItems, this.description, required this.state, required this.homeController});
 
   final List<RequestsStoresModel> listItems;
   final String? description;
   final ValueListenable state;
+  final HomeController homeController;
 
   @override
   State<LastRequests> createState() => _LastRequestsState();
@@ -48,8 +50,7 @@ class _LastRequestsState extends State<LastRequests> {
                   return Container(
                     margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
                     child: SkeletonAvatar(
-                      style:
-                          SkeletonAvatarStyle(height: 90, width: width, borderRadius: BorderRadius.circular(appRadius)),
+                      style: SkeletonAvatarStyle(height: 90, width: width, borderRadius: BorderRadius.circular(appRadius)),
                     ),
                   );
                 }),
@@ -85,6 +86,14 @@ class _LastRequestsState extends State<LastRequests> {
                   return InkWell(
                     onTap: () {
                       // Navigator.of(context).pushNamed('detailsrecipe', arguments: e);
+                      if (widget.homeController.data!.accessTargeting == 1) {
+                        Navigator.of(context).pushNamed('selectnegotiation', arguments: {
+                          "codeBranch": e.codeClient,
+                          "codeClient": 0,
+                          "codeProvider": widget.homeController.data!.codCompany,
+                          "balance": true,
+                        });
+                      }
                     },
                     child: Container(
                       width: width,

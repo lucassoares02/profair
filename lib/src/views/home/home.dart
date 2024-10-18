@@ -202,6 +202,7 @@ class _HomePageState extends State<HomePage> {
                                       description: S.of(context).text_last_orders,
                                       listItems: homeController.requestStores,
                                       state: homeController.stateRequestsStore,
+                                      homeController: homeController,
                                     )
                                   : Container();
                         },

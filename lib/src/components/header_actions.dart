@@ -106,7 +106,6 @@ class _HeaderActionsState extends State<HeaderActions> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return AlertDialog(
-                                        backgroundColor: Colors.white,
                                         elevation: 0.1,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(appRadius),

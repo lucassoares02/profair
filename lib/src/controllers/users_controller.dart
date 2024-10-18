@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/src/models/users_model.dart';
 import 'package:profair/src/repositories/users_repository.dart';
 import 'package:profair/src/state/state_app.dart';
@@ -98,6 +100,39 @@ class UsersController extends ValueNotifier<StateApp> {
       usersAssociate = usersAssociateBackup.where((item) {
         return item.nameUser!.toLowerCase().contains(value.toLowerCase());
       }).toList();
+
+      stateUsersAssociate.value = StateApp.success;
+    } catch (e) {
+      debugPrint("Search Clients (Users Controller) Error: $e");
+      stateUsersAssociate.value = StateApp.error;
+    }
+  }
+
+  searchClientsAndProvider(String? value) async {
+    stateUsersAssociate.value = StateApp.loading;
+    try {
+      if (value == null || value.isEmpty) {
+        // Caso o valor seja vazio, retorne a lista original
+        usersAssociate = usersAssociateBackup.toList();
+      } else {
+        // Primeira busca por 'nameProvider'
+        usersAssociate = usersAssociateBackup.where((item) {
+          return item.nameProvider!.toLowerCase().contains(value.toLowerCase());
+        }).toList();
+
+        // Se não encontrar resultados, faça a busca por 'nameUser'
+        if (usersAssociate.isEmpty) {
+          usersAssociate = usersAssociateBackup.where((item) {
+            return item.nameUser!.toLowerCase().contains(value.toLowerCase());
+          }).toList();
+        }
+        // Se não encontrar resultados, faça a busca por 'nameUser'
+        if (usersAssociate.isEmpty) {
+          usersAssociate = usersAssociateBackup.where((item) {
+            return item.codeAcess!.toLowerCase().contains(value.toLowerCase());
+          }).toList();
+        }
+      }
 
       stateUsersAssociate.value = StateApp.success;
     } catch (e) {

@@ -1,5 +1,6 @@
 import 'package:profair/src/views/clients/clients.dart';
 import 'package:profair/src/views/clients_product/clients_product.dart';
+import 'package:profair/src/views/customers/customers.dart';
 import 'package:profair/src/views/details_attraction/details_attraction.dart';
 import 'package:profair/src/views/details_balance/details_balance.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider.dart';
@@ -85,6 +86,10 @@ class AppModule extends Module {
           ),
         ),
         ChildRoute('/users', child: (context, args) => const Users()),
+        ChildRoute('/customers',
+            child: (context, args) => Customers(
+                  homeController: args.data,
+                )),
         ChildRoute(
           '/detailsprovider',
           child: (context, args) => DetailsProvider(

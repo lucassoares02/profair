@@ -108,6 +108,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
+          image: DecorationImage(image: AssetImage("assets/images/background.jpg"), fit: BoxFit.cover, opacity: 0.5),
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
@@ -119,10 +120,10 @@ class _LoginPageState extends State<LoginPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            // Image.asset(
-            //   'assets/images/iconwhite.png',
-            //   width: width / 2,
-            // ),
+            Image.asset(
+              'assets/images/logowhite.png',
+              width: width / 1.5,
+            ),
             Padding(
               padding: const EdgeInsets.all(appPadding),
               child: Column(

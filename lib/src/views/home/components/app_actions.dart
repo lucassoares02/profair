@@ -39,33 +39,17 @@ class _AppActionsState extends State<AppActions> {
         LoginModel? response = await widget.homeController.findClient(code);
         int codeUser = response!.userCode ?? 0;
         if (codeUser != 0) {
-          navigatorRoutes("selectstore", {
-            "client": response,
-            "codeProvider": widget.homeController.data!.codCompany,
-            "consult": widget.homeController.data!.userCode
-          });
+          navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany, "consult": widget.homeController.data!.userCode});
         } else {
           Fluttertoast.showToast(
-              msg: "Código inválido!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+              msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
         }
       } else {
         navigatorRoutes("preorder", widget.homeController);
       }
     } on PlatformException {
       Fluttertoast.showToast(
-          msg: "Código inválido!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+          msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
     }
   }
 
@@ -73,11 +57,11 @@ class _AppActionsState extends State<AppActions> {
     if (route == "users") {
       navigatorRoutes(route, {});
     } else if (route == "selectstore") {
-      scannerQrCode();
+      // scannerQrCode();
       // navigatorRoutes("preorder", widget.homeController);
+      navigatorRoutes("customers", widget.homeController);
     } else if (route == "productsprovider") {
-      navigatorRoutes(
-          route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});
+      navigatorRoutes(route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});
     } else if (route == "clients") {
       navigatorRoutes(
         route,
@@ -93,9 +77,7 @@ class _AppActionsState extends State<AppActions> {
     } else if (route == "reports") {
       navigatorRoutes(route, {
         "accessTargeting": widget.homeController.data!.accessTargeting,
-        "codeProvider": widget.homeController.data!.accessTargeting == 2
-            ? widget.homeController.data!.userCode
-            : widget.homeController.data!.codCompany
+        "codeProvider": widget.homeController.data!.accessTargeting == 2 ? widget.homeController.data!.userCode : widget.homeController.data!.codCompany
       });
     } else if (route == "providerbygroup") {
       navigatorRoutes(
@@ -184,9 +166,7 @@ class _AppActionsState extends State<AppActions> {
                       // testeInterno();
                     },
                     child: Container(
-                      margin: EdgeInsets.only(
-                          left: (index == 0) ? 20 : appMargin,
-                          right: (index == widget.homeController.categories.length - 1) ? appMargin : 0),
+                      margin: EdgeInsets.only(left: (index == 0) ? 20 : appMargin, right: (index == widget.homeController.categories.length - 1) ? appMargin : 0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -217,7 +197,7 @@ class _AppActionsState extends State<AppActions> {
                           ),
                           Text(
                             '${widget.homeController.categories[index].title}',
-                            style: TextStyle(fontWeight: FontWeight.w500),
+                            style: const TextStyle(fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),

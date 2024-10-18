@@ -175,8 +175,6 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
         }
       }
 
-      inspect(negotiations[tabSelected].merchandises);
-
       stateSearchProductsTrading.value = StateApp.success;
     } catch (e) {
       print("Error search Requests Stores: $e");
