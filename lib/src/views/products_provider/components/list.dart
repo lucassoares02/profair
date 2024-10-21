@@ -50,7 +50,7 @@ class _ComponentListState extends State<ComponentList> {
             onSort: () {
               widget.productsProviderController.sort();
             },
-            label: S.of(context).text_avaiable_products,
+            label: "Produtos disponíveis",
           ),
           ValueListenableBuilder(
               valueListenable: widget.productsProviderController.stateSearchProducts,

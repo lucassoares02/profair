@@ -8,6 +8,7 @@ import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/ticket/ticket_controller.dart';
 import 'package:profair/src/views/ticket/ticket_repository.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Ticket extends StatefulWidget {
   const Ticket({super.key, required this.homeController});
@@ -21,6 +22,22 @@ class Ticket extends StatefulWidget {
 class _TicketState extends State<Ticket> {
   final TicketController profileController = TicketController(StateApp.start, TicketRepository());
 
+  // URL dos Termos de Privacidade
+  final String privacyPolicyUrl = 'https://profair-site.onrender.com/demo-it-business-privacy-policy.html';
+
+  // Função para abrir o link no navegador
+  Future<void> _launchPrivacyPolicyUrl() async {
+    final Uri url = Uri.parse(privacyPolicyUrl);
+
+    // Usar o navegador externo
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication, // Abre no navegador
+    )) {
+      throw 'Não foi possível abrir o link $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -30,15 +47,13 @@ class _TicketState extends State<Ticket> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              HeaderList(label: "Detalhes", activeSearch: false),
+              HeaderList(label: "Informações Usuário", activeSearch: false),
               Column(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(appPadding),
-                    height: 200,
-                    decoration: const BoxDecoration(
-                      color: colorTertiary,
-                    ),
+                    height: 150,
+                    decoration: const BoxDecoration(),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -51,7 +66,7 @@ class _TicketState extends State<Ticket> {
                             //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                             // ),
                             const AppSpacing(),
-                            Image.asset("assets/images/logo-client.png", width: size.width - 50),
+                            Image.asset("assets/images/logowhite.png", width: size.width - 200),
                           ],
                         ),
                       ],
@@ -62,8 +77,6 @@ class _TicketState extends State<Ticket> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Divider(),
-                        const AppSpacing(),
                         if (widget.homeController.data!.accessTargeting == 2)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,8 +111,7 @@ class _TicketState extends State<Ticket> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     QrImageView(
-                                      data:
-                                          "0x9E89738274392874.${widget.homeController.data!.codAccess!}.9327329847372939",
+                                      data: "0x9E89738274392874.${widget.homeController.data!.codAccess!}.9327329847372939",
                                       size: size.width - 150,
                                       version: QrVersions.auto,
                                     ),
@@ -207,6 +219,17 @@ class _TicketState extends State<Ticket> {
                         ),
                         const AppSpacing(),
                         const Divider(),
+                        TextButton(
+                          onPressed: () {
+                            _launchPrivacyPolicyUrl();
+                          },
+                          child: const Text(
+                            'Termos e Privacidade',
+                            style: TextStyle(
+                              color: Colors.blueAccent, // Cor do texto // Sublinhar o texto
+                            ),
+                          ),
+                        ),
                         const AppSpacing(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,

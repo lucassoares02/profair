@@ -34,7 +34,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     // compileSdkVersion flutter.compileSdkVersion
-    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
@@ -76,8 +76,8 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         // versionCode flutterVersionCode.toInteger()
         // versionName flutterVersionName
-        versionCode 20
-        versionName "13.0.7"
+        versionCode 21
+        versionName "13.0.8"
         multiDexEnabled true
     }
 

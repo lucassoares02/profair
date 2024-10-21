@@ -52,8 +52,7 @@ class _ComponentListState extends State<ComponentList> {
   TextEditingController amountItem = TextEditingController();
 
   saveOrder() async {
-    await widget.finishTradingController.sendOrder(widget.listItems, widget.tradings, widget.codeBranch,
-        widget.codeProvider, widget.codeClient, widget.listBranchs!, widget.codeConsult);
+    await widget.finishTradingController.sendOrder(widget.listItems, widget.tradings, widget.codeBranch, widget.codeProvider, widget.codeClient, widget.listBranchs!, widget.codeConsult);
     totalCurrentTime();
     navigatorHome();
   }
@@ -73,9 +72,8 @@ class _ComponentListState extends State<ComponentList> {
       "provider": widget.codeProvider,
       "branch": widget.codeBranch,
       "finishTradingController": widget.finishTradingController,
-      "value": widget.finishTradingController.formatCurrency(
-          (widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked) *
-              widget.finishTradingController.totalCheckedBranch),
+      "value":
+          widget.finishTradingController.formatCurrency((widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked) * widget.finishTradingController.totalCheckedBranch),
       "hour": DateFormat.Hm().format(DateTime.now()).toString()
     });
     showNotification();
@@ -146,9 +144,8 @@ class _ComponentListState extends State<ComponentList> {
                           valueListenable: widget.finishTradingController.stateTradings,
                           builder: (context, value, child) {
                             return Text(
-                              widget.finishTradingController.formatCurrency((widget.finishTradingController.totalValue *
-                                      widget.finishTradingController.totalChecked) *
-                                  widget.finishTradingController.totalCheckedBranch),
+                              widget.finishTradingController
+                                  .formatCurrency((widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked) * widget.finishTradingController.totalCheckedBranch),
                               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold, color: colorSecondary),
                             );
                           },
@@ -267,9 +264,7 @@ class _ComponentListState extends State<ComponentList> {
                   itemCount: widget.finishTradingController.actualList.length,
                   itemBuilder: (context, index) {
                     return Container(
-                      margin: EdgeInsets.only(
-                          left: appPadding,
-                          right: (index == widget.finishTradingController.actualList.length - 1 ? appPadding : 0)),
+                      margin: EdgeInsets.only(left: appPadding, right: (index == widget.finishTradingController.actualList.length - 1 ? appPadding : 0)),
                       padding: const EdgeInsets.symmetric(horizontal: appPadding),
                       decoration: BoxDecoration(
                         border: Border.all(color: Colors.grey.withOpacity(0.5), width: 1.5),
@@ -290,9 +285,7 @@ class _ComponentListState extends State<ComponentList> {
                                 style: const TextStyle(),
                               ),
                               Text(
-                                formatCurrency(
-                                    double.parse(widget.finishTradingController.actualList[index]["quantMercadoria"]) *
-                                        widget.finishTradingController.actualList[index]["precoMercadoria"]),
+                                formatCurrency(double.parse(widget.finishTradingController.actualList[index]["quantMercadoria"]) * widget.finishTradingController.actualList[index]["precoMercadoria"]),
                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                               ),
                             ],
@@ -440,8 +433,7 @@ class _ComponentListState extends State<ComponentList> {
                                                     ),
                                                   ),
                                                   onChanged: (value) {
-                                                    if (e.value.checked! &&
-                                                        widget.finishTradingController.totalCheckedBranch > 1) {
+                                                    if (e.value.checked! && widget.finishTradingController.totalCheckedBranch > 1) {
                                                       widget.finishTradingController.totalCheckedBranch -= 1;
                                                       widget.listBranchs![e.key].checked = !e.value.checked!;
                                                     } else if (e.value.checked! == false) {
@@ -453,9 +445,7 @@ class _ComponentListState extends State<ComponentList> {
                                                 );
                                               }),
                                           Text(
-                                            e.value.nameCompany!.length < 28
-                                                ? '${e.value.nameCompany}'
-                                                : e.value.nameCompany!.substring(0, 25),
+                                            e.value.nameCompany!.length < 28 ? '${e.value.nameCompany}' : e.value.nameCompany!.substring(0, 25),
                                             style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
                                           ),
                                         ],

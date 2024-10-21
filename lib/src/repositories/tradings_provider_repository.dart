@@ -28,8 +28,6 @@ class TradingsProviderRepository {
     required List<ClientsSelectStoreModel> listBranchs,
     int? codeConsult,
   }) async {
-    clientDio.options.contentType = Headers.formUrlEncodedContentType;
-
     try {
       for (int h = 0; h < listBranchs.length; h++) {
         if (listBranchs[h].checked!) {

@@ -10,6 +10,7 @@ import 'package:profair/src/components/button.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../state/state_app.dart';
 
 class LoginPage extends StatefulWidget {
@@ -102,6 +103,22 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  // URL dos Termos de Privacidade
+  final String privacyPolicyUrl = 'https://profair-site.onrender.com/demo-it-business-privacy-policy.html';
+
+  // Função para abrir o link no navegador
+  Future<void> _launchPrivacyPolicyUrl() async {
+    final Uri url = Uri.parse(privacyPolicyUrl);
+
+    // Usar o navegador externo
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication, // Abre no navegador
+    )) {
+      throw 'Não foi possível abrir o link $url';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -188,6 +205,18 @@ class _LoginPageState extends State<LoginPage> {
                                       ],
                                     );
                                   },
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    _launchPrivacyPolicyUrl();
+                                  },
+                                  child: const Text(
+                                    'Termos e Privacidade',
+                                    style: TextStyle(
+                                      color: Colors.white, // Cor do texto
+                                      decoration: TextDecoration.underline, // Sublinhar o texto
+                                    ),
+                                  ),
                                 ),
                               ],
                             )
