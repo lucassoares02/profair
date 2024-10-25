@@ -52,7 +52,7 @@ class _HeaderActionsState extends State<HeaderActions> {
       child: ValueListenableBuilder(
         valueListenable: visibleSearch,
         builder: (context, value, child) {
-          return visibleSearch.value
+          return visibleSearch.value && widget.onSearch != null
               ? Container(
                   margin: const EdgeInsets.only(top: 5, left: 3, right: 3),
                   child: TextField(

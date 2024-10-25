@@ -49,6 +49,7 @@ class _TradingSucessState extends State<TradingSucess> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(appPadding),

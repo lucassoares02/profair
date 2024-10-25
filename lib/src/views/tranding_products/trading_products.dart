@@ -35,13 +35,11 @@ class TradingProducts extends StatefulWidget {
 }
 
 class _TradingProductsState extends State<TradingProducts> {
-  final TradingProductsController tradingProductsController =
-      TradingProductsController(StateApp.start, TradingProductsRepository());
+  final TradingProductsController tradingProductsController = TradingProductsController(StateApp.start, TradingProductsRepository());
 
   @override
   void initState() {
-    tradingProductsController.findTradingProducts(
-        widget.codeBranch, widget.codeProvider, widget.codeTrading, widget.codeClient);
+    tradingProductsController.findTradingProducts(widget.codeBranch, widget.codeProvider, widget.codeTrading, widget.codeClient);
     super.initState();
   }
 
@@ -49,6 +47,7 @@ class _TradingProductsState extends State<TradingProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: tradingProductsController.stateProductsTrading,

@@ -38,6 +38,7 @@ class _ClientsState extends State<Clients> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: clientsController.stateClients,

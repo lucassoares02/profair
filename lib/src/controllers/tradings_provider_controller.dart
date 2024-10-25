@@ -72,34 +72,48 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     }
   }
 
-  makeSum() async {
+  Future<void> makeSum() async {
     negotiationResume.clear();
     totalValue = 0.0;
     totalVolume = 0;
-    for (var negotiation in negotiations) {
-      if (negotiation.negotiation != null) {
-        double totalNegotiation = 0.0;
-        int volumeNegotiation = 0;
-        if (negotiation.merchandises != null) {
-          for (var merchandise in negotiation.merchandises!) {
-            double? total;
-            if (merchandise.amount != "0") {
-              totalVolume += int.parse(merchandise.amount!);
-              volumeNegotiation += int.parse(merchandise.amount!);
-              total = int.parse(merchandise.amount!) * merchandise.price!;
-              totalNegotiation += total;
-              totalValue += total;
-            }
-          }
-        }
-        if (volumeNegotiation != 0) {
-          negotiationResume.add(
-              NegotiationResume(negotiation: negotiation.negotiation!, description: "${negotiation.observation}", title: "${negotiation.title}", value: totalNegotiation, volume: volumeNegotiation));
+
+    // Verifica se há negociações a processar
+    if (negotiationsProductsTrading.isEmpty) return;
+
+    for (var negotiation in negotiationsProductsTrading) {
+      if (negotiation.negotiation == null || negotiation.merchandises == null) continue;
+
+      double totalNegotiation = 0.0;
+      int volumeNegotiation = 0;
+
+      for (var merchandise in negotiation.merchandises!) {
+        int amount = int.tryParse(merchandise.amount ?? "0") ?? 0;
+        if (amount > 0) {
+          totalVolume += amount;
+          volumeNegotiation += amount;
+
+          double total = amount * (merchandise.price ?? 0);
+          totalNegotiation += total;
+          totalValue += total;
         }
       }
+
+      if (volumeNegotiation > 0) {
+        negotiationResume.add(
+          NegotiationResume(
+            negotiation: negotiation.negotiation!,
+            description: negotiation.observation ?? '',
+            title: negotiation.title ?? '',
+            value: totalNegotiation,
+            volume: volumeNegotiation,
+          ),
+        );
+      }
     }
-    totalValue = totalValue * totalCheckedBranch;
-    totalVolume = totalVolume * totalCheckedBranch;
+
+    totalValue *= totalCheckedBranch;
+    totalVolume *= totalCheckedBranch;
+
     itemTotal.value = StateApp.loading;
     itemTotal.value = StateApp.success;
   }
@@ -125,10 +139,15 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
         }
       }
       if (teste.isNotEmpty) {
-        await sendOrder(teste, negotiations[i].negotiation!, codeBranch, codeProvider, codeClient, listBranchs, codeConsult);
+        try {
+          await sendOrder(teste, negotiations[i].negotiation!, codeBranch, codeProvider, codeClient, listBranchs, codeConsult);
+          stateFinishTrading.value = StateApp.success;
+        } catch (e) {
+          stateFinishTrading.value = StateApp.error;
+          rethrow;
+        }
       }
     }
-    stateFinishTrading.value = StateApp.success;
   }
 
   Future sendOrder(List<dynamic> products, int trading, int? codeBranch, int? codeProvider, int? codeClient, List<ClientsSelectStoreModel> listBranchs, int? codeConsult) async {
@@ -143,13 +162,14 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
         codeConsult: codeConsult,
       );
     } catch (e) {
-      print("Error save order: $e");
+      debugPrint("Tradings Provider Controller Error: $e");
       stateFinishTrading.value = StateApp.error;
-      return;
+      rethrow;
     }
   }
 
   search(String? value) async {
+    itemSelected.value = -1;
     stateSearchProductsTrading.value = StateApp.loading;
     try {
       if (value == null || value.isEmpty) {

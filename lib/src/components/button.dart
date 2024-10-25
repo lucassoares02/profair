@@ -1,10 +1,12 @@
+import 'package:permission_handler/permission_handler.dart';
 import 'package:profair/src/components/progress_indicator.dart';
+import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
-  const AppButton({super.key, this.label, this.type, this.colorButton, this.iconButton, required this.onPressButton, this.loading = false, this.colorLoading});
+  AppButton({super.key, this.label, this.state, this.type, this.colorButton, this.iconButton, required this.onPressButton, this.loading = false, this.colorLoading});
 
   final String? label;
   final String? type;
@@ -13,6 +15,7 @@ class AppButton extends StatelessWidget {
   final Function()? onPressButton;
   final bool loading;
   final Color? colorLoading;
+  StateApp? state;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +41,7 @@ class AppButton extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      iconButton,
+                      state == StateApp.error ? Icons.error_outline : iconButton,
                       color: type == 'filled'
                           ? colorButton ?? colorSecondary
                           : colorButton != colorWhite
@@ -47,7 +50,7 @@ class AppButton extends StatelessWidget {
                     ),
                     if (iconButton != null) marginWidget,
                     Text(
-                      '$label',
+                      state == StateApp.error ? 'Tentar novamente' : '$label',
                       style: TextStyle(
                         color: type == 'filled'
                             ? colorButton ?? colorSecondary

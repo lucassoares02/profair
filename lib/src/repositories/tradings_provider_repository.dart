@@ -45,7 +45,8 @@ class TradingsProviderRepository {
       }
       return;
     } catch (e) {
-      debugPrint("Error return Negotiation Model Mapper: $e");
+      debugPrint("Error return Negotiation Model Mapper ====: $e");
+      rethrow;
     }
   }
 }

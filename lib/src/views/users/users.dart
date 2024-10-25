@@ -83,6 +83,7 @@ class _UsersState extends State<Users> with SingleTickerProviderStateMixin {
         controller: _tabController,
         children: [
           SafeArea(
+            bottom: false,
             child: SingleChildScrollView(
               child: ValueListenableBuilder(
                 valueListenable: usersController.stateUsers,
@@ -93,6 +94,7 @@ class _UsersState extends State<Users> with SingleTickerProviderStateMixin {
             ),
           ),
           SafeArea(
+            bottom: false,
             child: SingleChildScrollView(
               child: ValueListenableBuilder(
                 valueListenable: usersController.stateUsersProvider,
@@ -103,6 +105,7 @@ class _UsersState extends State<Users> with SingleTickerProviderStateMixin {
             ),
           ),
           SafeArea(
+            bottom: false,
             child: SingleChildScrollView(
               child: ValueListenableBuilder(
                 valueListenable: usersController.stateUsersAssociate,

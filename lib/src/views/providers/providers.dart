@@ -21,8 +21,7 @@ class _ProvidersState extends State<Providers> {
 
   @override
   void initState() {
-    clientsController.findProviders(
-        codeClient: widget.codeClient, codeBuyer: widget.codeBuyer, codeBranch: widget.codeBranch);
+    clientsController.findProviders(codeClient: widget.codeClient, codeBuyer: widget.codeBuyer, codeBranch: widget.codeBranch);
 
     super.initState();
   }
@@ -31,6 +30,7 @@ class _ProvidersState extends State<Providers> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: clientsController.stateProviders,

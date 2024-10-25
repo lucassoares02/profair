@@ -16,13 +16,11 @@ class OrderDetails extends StatefulWidget {
 }
 
 class _OrderDetailsState extends State<OrderDetails> {
-  final OrderDetailsController orderDetailsController =
-      OrderDetailsController(StateApp.start, OrderDetailsRepository());
+  final OrderDetailsController orderDetailsController = OrderDetailsController(StateApp.start, OrderDetailsRepository());
 
   @override
   void initState() {
-    orderDetailsController.findOrderDetails(
-        widget.order.codeBranch, widget.order.codeForn, widget.order.codeNegotiation);
+    orderDetailsController.findOrderDetails(widget.order.codeBranch, widget.order.codeForn, widget.order.codeNegotiation);
     super.initState();
   }
 
@@ -30,6 +28,7 @@ class _OrderDetailsState extends State<OrderDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: orderDetailsController.stateProducts,

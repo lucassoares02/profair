@@ -13,8 +13,7 @@ class ListAttractions extends StatefulWidget {
 }
 
 class _ListAttractionsState extends State<ListAttractions> {
-  final ListAttractionsController listAttractionsController =
-      ListAttractionsController(StateApp.start, ListAttractionsRepository());
+  final ListAttractionsController listAttractionsController = ListAttractionsController(StateApp.start, ListAttractionsRepository());
 
   @override
   void initState() {
@@ -26,6 +25,7 @@ class _ListAttractionsState extends State<ListAttractions> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: listAttractionsController.stateAttractions,

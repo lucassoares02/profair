@@ -17,8 +17,7 @@ class ClientsProducts extends StatefulWidget {
 }
 
 class _ClientsProductsState extends State<ClientsProducts> {
-  final ClientsProductController clientsProductController =
-      ClientsProductController(StateApp.start, ClientsProductRepository());
+  final ClientsProductController clientsProductController = ClientsProductController(StateApp.start, ClientsProductRepository());
 
   @override
   void initState() {
@@ -30,6 +29,7 @@ class _ClientsProductsState extends State<ClientsProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: clientsProductController.stateClientProduct,

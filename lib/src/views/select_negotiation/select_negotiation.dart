@@ -44,6 +44,7 @@ class _SelectNegotiationState extends State<SelectNegotiation> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: negotiationController.stateNegotiations,

@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -53,14 +54,20 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
   }
 
   saveOrder() async {
-    await tradingsProviderController.insertInList(
-      widget.codeBranch!,
-      widget.codeProvider!,
-      widget.codeClient!,
-      widget.listBranchs!,
-      widget.codeConsult!,
-    );
-    navigatorHome();
+    try {
+      await tradingsProviderController.insertInList(
+        widget.codeBranch!,
+        widget.codeProvider!,
+        widget.codeClient!,
+        widget.listBranchs!,
+        widget.codeConsult!,
+      );
+      navigatorHome();
+    } catch (e) {
+      debugPrint("Error saveOrder: $e");
+      Fluttertoast.showToast(
+          msg: "Pedido não foi salvo!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+    }
   }
 
   navigatorHome() {
@@ -100,14 +107,14 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text("Cancelar"),
+                child: const Text("Cancelar"),
               ),
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
-                child: Text("Confirmar"),
+                child: const Text("Confirmar"),
               ),
             ],
           );
@@ -165,6 +172,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                             isScrollable: true,
                             tabAlignment: TabAlignment.start,
                             onTap: (value) {
+                              tradingsProviderController.search("");
                               FocusScope.of(context).unfocus();
                               tradingsProviderController.tabSelected = value;
                               tradingsProviderController.itemTotal.value = StateApp.loading;
@@ -453,6 +461,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                                         return AppButton(
                                                           label: "Finalizar Pedido",
                                                           colorButton: colorSecondary,
+                                                          state: tradingsProviderController.stateFinishTrading.value,
                                                           iconButton: Icons.done_all,
                                                           loading: value == StateApp.loading,
                                                           onPressButton: () {

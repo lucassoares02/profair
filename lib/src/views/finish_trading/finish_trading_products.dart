@@ -40,8 +40,7 @@ class FinishTrading extends StatefulWidget {
 }
 
 class _FinishTradingState extends State<FinishTrading> {
-  final FinishTradingController finishTradingController =
-      FinishTradingController(StateApp.start, FinishTradingRepository());
+  final FinishTradingController finishTradingController = FinishTradingController(StateApp.start, FinishTradingRepository());
 
   @override
   void initState() {
@@ -54,6 +53,7 @@ class _FinishTradingState extends State<FinishTrading> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: finishTradingController.stateFinishTrading,

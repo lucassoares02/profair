@@ -37,6 +37,7 @@ class _SelectStoreState extends State<SelectStore> {
           //   child:
 
           SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: storesController.stateStores,

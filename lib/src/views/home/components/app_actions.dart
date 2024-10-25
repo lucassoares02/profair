@@ -154,7 +154,7 @@ class _AppActionsState extends State<AppActions> {
                 }),
           ),
           component: SizedBox(
-            height: 90,
+            height: 100,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
@@ -166,7 +166,7 @@ class _AppActionsState extends State<AppActions> {
                       // testeInterno();
                     },
                     child: Container(
-                      margin: EdgeInsets.only(left: (index == 0) ? 20 : appMargin, right: (index == widget.homeController.categories.length - 1) ? appMargin : 0),
+                      margin: EdgeInsets.only(left: (index == 0) ? 20 : appPadding * 1.3, right: (index == widget.homeController.categories.length - 1) ? appPadding * 1.3 : 0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -176,7 +176,7 @@ class _AppActionsState extends State<AppActions> {
                               border: Border.all(color: colorSecondary, width: 2),
                               color: colorWhite,
                             ),
-                            padding: const EdgeInsets.all(2),
+                            padding: const EdgeInsets.all(3),
                             child: Container(
                               padding: const EdgeInsets.all(appPadding),
                               decoration: const BoxDecoration(
@@ -187,7 +187,7 @@ class _AppActionsState extends State<AppActions> {
                               ),
                               child: Icon(
                                 widget.homeController.categories[index].icon,
-                                size: 20,
+                                size: 22,
                                 color: colorWhite,
                               ),
                             ),

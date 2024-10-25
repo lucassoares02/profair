@@ -142,8 +142,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                         padding: EdgeInsets.symmetric(horizontal: appPadding),
                                         child: Text(
                                           "Negociações / Prazos",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
+                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
                                         ),
                                       ),
                                       const AppSpacing(),
@@ -173,8 +172,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                     padding: const EdgeInsets.only(top: appPadding, left: appPadding),
                                     child: Text(
                                       noEmptyList ? "Mercadorias" : "Nenhum resultado!",
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
                                     ),
                                   ),
                                   Column(

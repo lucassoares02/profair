@@ -16,8 +16,7 @@ class DetailsBalance extends StatefulWidget {
 }
 
 class _DetailsBalanceState extends State<DetailsBalance> {
-  final DetailsBalanceController balanceController =
-      DetailsBalanceController(StateApp.start, DetailsBalanceRepository());
+  final DetailsBalanceController balanceController = DetailsBalanceController(StateApp.start, DetailsBalanceRepository());
 
   @override
   void initState() {
@@ -29,6 +28,7 @@ class _DetailsBalanceState extends State<DetailsBalance> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: balanceController.stateStores,

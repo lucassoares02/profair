@@ -41,6 +41,7 @@ class _CustomersState extends State<Customers> with SingleTickerProviderStateMix
       ),
       body: SingleChildScrollView(
         child: SafeArea(
+          bottom: false,
           child: Column(
             children: [
               ValueListenableBuilder(

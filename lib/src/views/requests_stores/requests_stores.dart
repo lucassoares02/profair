@@ -27,8 +27,7 @@ class RequestsStores extends StatefulWidget {
 }
 
 class _RequestsStoresState extends State<RequestsStores> {
-  final RequestsStoresController storesController =
-      RequestsStoresController(StateApp.start, RequestsStoresRepository());
+  final RequestsStoresController storesController = RequestsStoresController(StateApp.start, RequestsStoresRepository());
   @override
   void initState() {
     storesController.findRequestsStores(widget.codeProvider, widget.userCode, widget.codeNegotiation);
@@ -39,6 +38,7 @@ class _RequestsStoresState extends State<RequestsStores> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: storesController.stateStores,
