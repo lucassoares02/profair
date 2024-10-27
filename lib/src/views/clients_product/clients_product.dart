@@ -29,7 +29,6 @@ class _ClientsProductsState extends State<ClientsProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: clientsProductController.stateClientProduct,

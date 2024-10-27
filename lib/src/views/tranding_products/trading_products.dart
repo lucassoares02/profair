@@ -47,7 +47,6 @@ class _TradingProductsState extends State<TradingProducts> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: tradingProductsController.stateProductsTrading,

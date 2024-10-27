@@ -53,7 +53,6 @@ class _FinishTradingState extends State<FinishTrading> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: finishTradingController.stateFinishTrading,

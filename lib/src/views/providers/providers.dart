@@ -30,7 +30,6 @@ class _ProvidersState extends State<Providers> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: clientsController.stateProviders,

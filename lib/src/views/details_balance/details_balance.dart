@@ -28,7 +28,6 @@ class _DetailsBalanceState extends State<DetailsBalance> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: balanceController.stateStores,

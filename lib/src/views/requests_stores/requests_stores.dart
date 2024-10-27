@@ -38,7 +38,6 @@ class _RequestsStoresState extends State<RequestsStores> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: storesController.stateStores,

@@ -25,7 +25,6 @@ class _ListAttractionsState extends State<ListAttractions> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: listAttractionsController.stateAttractions,

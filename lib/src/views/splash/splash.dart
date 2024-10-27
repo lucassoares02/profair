@@ -39,7 +39,6 @@ class _SplashPageState extends State<SplashPage> {
     return Scaffold(
       backgroundColor: colorWhite,
       body: SafeArea(
-        bottom: false,
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

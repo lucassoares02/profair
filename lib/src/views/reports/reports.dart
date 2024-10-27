@@ -40,7 +40,6 @@ class _ReportsState extends State<Reports> {
       //   ),
       // ),
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ValueListenableBuilder(
             valueListenable: reportsController.statePercentageClients,

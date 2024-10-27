@@ -43,7 +43,6 @@ class _TicketState extends State<Ticket> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

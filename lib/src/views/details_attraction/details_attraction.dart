@@ -18,7 +18,6 @@ class _DetailsAttractionsState extends State<DetailsAttractions> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        bottom: false,
         child: SingleChildScrollView(
           child: ComponentDetails(
             title: widget.title,
