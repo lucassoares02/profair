@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                         });
                       },
                       child: Container(
-                        margin: const EdgeInsets.all(appMargin),
+                        margin: const EdgeInsets.symmetric(horizontal: appMargin),
                         decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(appRadius)),
                         padding: const EdgeInsets.all(appPadding * 1.1),
                         child: const Row(children: [
@@ -183,7 +183,7 @@ class _HomePageState extends State<HomePage> {
                                           homeController: homeController,
                                           description: "Fornecedores",
                                         ),
-                                        const Divider(),
+                                        // const Divider(),
                                       ],
                                     )
                                   : Container();

@@ -120,13 +120,11 @@ class BarChartTesteState extends State<BarChartTeste> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() =>
-      List.generate(widget.reportsClients.length < 10 ? widget.reportsClients.length : 10, (e) {
+  List<BarChartGroupData> showingGroups() => List.generate(widget.reportsClients.length < 10 ? widget.reportsClients.length : 10, (e) {
         return makeGroupData(e, widget.reportsClients[e].total!, isTouched: e == touchedIndex);
       });
 
-  BarChartGroupData makeGroupData(int x, double y,
-      {bool isTouched = false, Color? barColor, double width = 20, List<int> showTooltips = const []}) {
+  BarChartGroupData makeGroupData(int x, double y, {bool isTouched = false, Color? barColor, double width = 20, List<int> showTooltips = const []}) {
     barColor ??= widget.barColor;
     return BarChartGroupData(
       x: x,
@@ -136,8 +134,7 @@ class BarChartTesteState extends State<BarChartTeste> {
           color: isTouched ? widget.touchedBarColor : barColor,
           width: width,
           borderRadius: BorderRadius.circular(3),
-          borderSide:
-              isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
+          borderSide: isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 20,

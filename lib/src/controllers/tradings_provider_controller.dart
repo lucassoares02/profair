@@ -141,7 +141,7 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
       if (teste.isNotEmpty) {
         try {
           await sendOrder(teste, negotiations[i].negotiation!, codeBranch, codeProvider, codeClient, listBranchs, codeConsult);
-          stateFinishTrading.value = StateApp.success;
+          // stateFinishTrading.value = StateApp.success;
         } catch (e) {
           stateFinishTrading.value = StateApp.error;
           rethrow;

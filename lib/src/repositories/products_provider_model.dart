@@ -13,6 +13,7 @@ class ProductsProviderModel {
   double? unitPrice;
   double? totalValue;
   String? totalVolume;
+  String? barcode;
 
   ProductsProviderModel({
     this.codeProvider,
@@ -25,6 +26,7 @@ class ProductsProviderModel {
     this.unitPrice,
     this.brand,
     this.complement,
+    this.barcode,
     this.totalValue,
     this.totalVolume,
   });
@@ -38,10 +40,10 @@ class ProductsProviderModel {
       nameProduct = json['nomeMercadoria'];
       packing = json['embMercadoria'];
       complement = json['complemento'];
+      barcode = json['barcode'];
       brand = json['marca'];
       coefficient = json['fatorMerc'];
-      productPrice =
-          json['precoMercadoria'] != null ? double.parse(json["precoMercadoria"].toString()) : json["precoMercadoria"];
+      productPrice = json['precoMercadoria'] != null ? double.parse(json["precoMercadoria"].toString()) : json["precoMercadoria"];
       unitPrice = json['precoUnit'] != null ? double.parse(json['precoUnit'].toString()) : json['precoUnit'];
       totalValue = json['precoMercadoria'] * double.parse(json["volumeTotal"].toString());
       totalVolume = json['volumeTotal'].toString();
@@ -57,6 +59,7 @@ class ProductsProviderModel {
     data['nomeMercadoria'] = nameProduct;
     data['embMercadoria'] = packing;
     data['fatorMerc'] = coefficient;
+    data['barcode'] = barcode;
     data['precoMercadoria'] = productPrice;
     data['volumeTotal'] = totalVolume;
     data['complemento'] = complement;

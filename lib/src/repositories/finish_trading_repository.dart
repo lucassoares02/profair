@@ -1,28 +1,29 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:share_plus/share_plus.dart';
-
+import 'package:profair/src/shared/http_service.dart';
 import '../models/clients_select_stores_model.dart';
 
 class FinishTradingRepository {
-  final Dio clientDio = Dio();
+  final clientDio = HttpService();
+
+  final Dio clientDioExport = Dio();
   final String url = "https://profair.click/";
 
-  postTrading(
-      {required List<ProductModel> products,
-      required List<NegotiationModel> tradings,
-      int? codeBranch,
-      int? codeProvider,
-      int? codeClient,
-      required List<ClientsSelectStoreModel> listBranchs}) async {
-    clientDio.options.contentType = Headers.formUrlEncodedContentType;
-
+  postTrading({
+    required List<ProductModel> products,
+    required List<NegotiationModel> tradings,
+    int? codeBranch,
+    int? codeProvider,
+    int? codeClient,
+    required List<ClientsSelectStoreModel> listBranchs,
+  }) async {
     try {
       for (int h = 0; h < listBranchs.length; h++) {
         if (listBranchs[h].checked!) {
@@ -39,7 +40,7 @@ class FinishTradingRepository {
                     "codNegociacao": tradings[i].negotiation.toString(),
                     "codOrganizacao": "158"
                   };
-                  await clientDio.post("${url}insertrequestnew", data: data);
+                  await clientDio.post("insertrequestnew", data);
                 }
               }
             }
@@ -60,8 +61,6 @@ class FinishTradingRepository {
     required List<ClientsSelectStoreModel> listBranchs,
     int? codeConsult,
   }) async {
-    clientDio.options.contentType = Headers.formUrlEncodedContentType;
-
     try {
       for (int h = 0; h < listBranchs.length; h++) {
         if (listBranchs[h].checked!) {
@@ -76,7 +75,7 @@ class FinishTradingRepository {
                 "codOrganizacao": "158",
                 "items": products
               };
-              final response = await clientDio.post("${url}insertrequestnew", data: data);
+              final response = await clientDio.post("insertrequestnew", data);
             }
           }
         }
@@ -92,8 +91,8 @@ class FinishTradingRepository {
 
     try {
       // Fazendo a solicitação com a opção de resposta para obter os bytes
-      response = await clientDio.get(
-        '${url}exportpdf/$codeProvider/$codeNegotiation/$codeBranch',
+      response = await clientDioExport.get(
+        'exportpdfdeep/$codeProvider/$codeNegotiation/$codeBranch',
         options: Options(responseType: ResponseType.bytes),
       );
 
@@ -127,8 +126,8 @@ class FinishTradingRepository {
   }
 
   Future<LoginModel> getClient(String id) async {
-    clientDio.options.contentType = Headers.formUrlEncodedContentType;
-    final response = await clientDio.get("${url}client/$id");
+    // clientDio.options.contentType = Headers.formUrlEncodedContentType;
+    final response = await clientDio.get("client/$id");
     final item = response.data[0];
     return LoginModel.fromJson(item);
   }

@@ -33,8 +33,7 @@ class _ComponentListState extends State<ComponentList> {
   getMaxValue() {
     for (int i = 0; i < widget.reportsController.reportValueMinutes.length; i++) {
       if (widget.reportsController.reportValueMinutes[i].totalValue! > maxValue) {
-        maxValue = widget.reportsController.reportValueMinutes[i].totalValue! +
-            widget.reportsController.reportValueMinutes[i].totalValue!;
+        maxValue = widget.reportsController.reportValueMinutes[i].totalValue! + widget.reportsController.reportValueMinutes[i].totalValue!;
       }
     }
     print("MaxValue $maxValue");
@@ -44,8 +43,7 @@ class _ComponentListState extends State<ComponentList> {
   getMaxValuePeriod() {
     for (int i = 0; i < widget.reportsController.reportValueMinutes.length; i++) {
       if (widget.reportsController.reportValueMinutes[i].value! > maxValuePeriod) {
-        maxValuePeriod = widget.reportsController.reportValueMinutes[i].value! +
-            widget.reportsController.reportValueMinutes[i].value! * 0.2;
+        maxValuePeriod = widget.reportsController.reportValueMinutes[i].value! + widget.reportsController.reportValueMinutes[i].value! * 0.2;
       }
     }
     horizontalIntervalPeriod = maxValuePeriod / 5;
@@ -69,7 +67,7 @@ class _ComponentListState extends State<ComponentList> {
             children: [
               if (widget.accessTargeting == 3)
                 ValueListenableBuilder(
-                    valueListenable: widget.reportsController.stateReportsProducts,
+                    valueListenable: widget.reportsController.statePercentageClients,
                     builder: (context, value, child) {
                       return value == StateApp.loading
                           ? SkeletonAvatar(
@@ -84,8 +82,7 @@ class _ComponentListState extends State<ComponentList> {
                               reportsController: widget.reportsController,
                               title: "Fornecedores com venda",
                               value: widget.reportsController.percentageProviders!.percentage,
-                              footer:
-                                  "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
+                              footer: "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
                             );
                     }),
               const AppSpacing(),
@@ -113,10 +110,7 @@ class _ComponentListState extends State<ComponentList> {
                                 )
                               : Column(
                                   children: [
-                                    SizedBox(
-                                        height: 300,
-                                        child: BarChartTeste(
-                                            reportsClients: widget.reportsController.reportsTotalProvider)),
+                                    SizedBox(height: 300, child: BarChartTeste(reportsClients: widget.reportsController.reportsTotalProvider)),
                                     const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -153,8 +147,7 @@ class _ComponentListState extends State<ComponentList> {
                                     SizedBox(
                                         // padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
                                         height: 300,
-                                        child: BarChartSample1(
-                                            reportsProducts: widget.reportsController.reportsTotalProducts)),
+                                        child: BarChartSample1(reportsProducts: widget.reportsController.reportsTotalProducts)),
                                     const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -187,14 +180,11 @@ class _ComponentListState extends State<ComponentList> {
                             ),
                           )
                         : CardPercentage(
-                            title: widget.accessTargeting == 1 || widget.accessTargeting == 3
-                                ? "Clientes Atendidos"
-                                : "Fornecedores visitados",
+                            title: widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "Clientes Atendidos" : "Fornecedores visitados",
                             content:
                                 "Nessa sessão é possível visualizar quantos ${widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes no evento.",
                             value: widget.reportsController.percentageClients!.percentage,
-                            footer:
-                                "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
+                            footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
                             reportsController: widget.reportsController,
                           );
                   }),

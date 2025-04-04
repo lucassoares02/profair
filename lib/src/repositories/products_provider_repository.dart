@@ -1,18 +1,18 @@
+import 'package:profair/src/models/response_model.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
-import 'package:dio/dio.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class ProductsProviderRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final clientDio = HttpService();
 
   getProductsProvider(int? codeProvider, int? codeClient) async {
-    Response response;
+    ResponseModel response;
     try {
       if (codeClient != 0) {
         // response = await clientDio.get("${url}merchandisepercustomer/$codeClient/$codeProvider");
-        response = await clientDio.get("${url}merchandiseperclient/$codeClient/$codeProvider");
+        response = await clientDio.get("merchandiseperclient/$codeClient/$codeProvider");
       } else {
-        response = await clientDio.get("${url}merchandiseprovider/$codeProvider");
+        response = await clientDio.get("merchandiseprovider/$codeProvider");
       }
       List list = response.data as List;
       print(list);

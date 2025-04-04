@@ -1,17 +1,14 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:dio/dio.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class TradingsProviderRepository {
-  final Dio clientDio = Dio();
-  // final String url = "http://192.168.100.86:3001/";
-  final String url = "https://profair.click/";
+  final clientDio = HttpService();
 
   getTradingProvider(int codeBranch, int codeProvider) async {
     try {
-      final response = await clientDio.get("${url}negotiationproviderclient/$codeBranch/$codeProvider");
+      final response = await clientDio.get("negotiationproviderclient/$codeBranch/$codeProvider");
       List list = response.data as List;
       return list.map((json) => NegotiationModel.fromJson(json)).toList();
     } catch (e) {
@@ -31,7 +28,7 @@ class TradingsProviderRepository {
     try {
       for (int h = 0; h < listBranchs.length; h++) {
         if (listBranchs[h].checked!) {
-          Map<String?, dynamic> data = {
+          Object data = {
             "codAssociado": listBranchs[h].relationshipCode.toString(),
             "codFornecedor": codeProvider.toString(),
             "codComprador": codeClient.toString(),
@@ -40,7 +37,7 @@ class TradingsProviderRepository {
             "codOrganizacao": "158",
             "items": products
           };
-          await clientDio.post("${url}insertrequestnew", data: data);
+          await clientDio.post("insertrequestnew", data);
         }
       }
       return;

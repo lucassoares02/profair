@@ -1,17 +1,14 @@
-import 'package:dio/dio.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class StoresRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final httpService = HttpService();
 
   getStores(String? userCode) async {
-    print(userCode);
-    final response = await clientDio.get("${url}stores/$userCode");
+    final response = await httpService.get("stores/$userCode");
 
     try {
       List list = response.data as List;
-      print(list);
       return list.map((json) => ClientsSelectStoreModel.fromJson(json)).toList();
     } catch (e) {
       print("Error return Stores Model Mapper: $e");

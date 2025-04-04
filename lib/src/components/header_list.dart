@@ -13,6 +13,7 @@ class HeaderList extends StatefulWidget {
       this.onOpenSearch,
       this.activePop = true,
       this.color,
+      this.linearGradient,
       this.iconColor,
       this.onBackButton,
       this.aditionAction,
@@ -25,6 +26,7 @@ class HeaderList extends StatefulWidget {
   Function()? onCloseInfo;
   Function()? onBackButton;
   Function()? onOpenSearch;
+  LinearGradient? linearGradient;
   Color? color;
   Color? iconColor;
   IconData? icon;

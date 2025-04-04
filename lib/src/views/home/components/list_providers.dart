@@ -1,3 +1,4 @@
+import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/utils/spacing.dart';
@@ -51,8 +52,7 @@ class _ListProvidersState extends State<ListProviders> {
                         return Container(
                           margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
                           child: SkeletonAvatar(
-                            style: SkeletonAvatarStyle(
-                                height: 90, width: width, borderRadius: BorderRadius.circular(appRadius)),
+                            style: SkeletonAvatarStyle(height: 90, width: width, borderRadius: BorderRadius.circular(appRadius)),
                           ),
                         );
                       }),
@@ -120,7 +120,9 @@ class _ListProvidersState extends State<ListProviders> {
                                 child: Container(
                                   width: 250,
                                   margin: EdgeInsets.only(left: appMargin, right: lastItem ? appMargin : 0),
+                                  padding: const EdgeInsets.all(5),
                                   decoration: BoxDecoration(
+                                    color: Colors.grey.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(appRadius),
                                   ),
                                   child: Row(
@@ -134,11 +136,8 @@ class _ListProvidersState extends State<ListProviders> {
                                               height: 120,
                                               padding: const EdgeInsets.symmetric(vertical: appPadding),
                                               decoration: BoxDecoration(
-                                                  color: widget.homeController.topProviders[index].color != null
-                                                      ? Color(
-                                                          int.parse(widget.homeController.topProviders[index].color!))
-                                                      : colorPrimary,
-                                                  borderRadius: BorderRadius.circular(appRadius)),
+                                                  color: widget.homeController.topProviders[index].color != null ? Color(int.parse(widget.homeController.topProviders[index].color!)) : colorPrimary,
+                                                  borderRadius: BorderRadius.circular(5)),
                                               child: Row(
                                                 mainAxisAlignment: MainAxisAlignment.center,
                                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -146,7 +145,7 @@ class _ListProvidersState extends State<ListProviders> {
                                                   widget.homeController.topProviders[index].image != null
                                                       ? Image.network(
                                                           widget.homeController.topProviders[index].image!,
-                                                          height: 80,
+                                                          width: 80,
                                                         )
                                                       : Container(
                                                           width: 100,
@@ -167,6 +166,11 @@ class _ListProvidersState extends State<ListProviders> {
                                                   Text(
                                                     "${widget.homeController.topProviders[index].nameProvider}",
                                                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                                    overflow: TextOverflow.fade,
+                                                  ),
+                                                  Text(
+                                                    formatCurrency(widget.homeController.topProviders[index].totalValue!),
+                                                    style: const TextStyle(fontSize: 12),
                                                     overflow: TextOverflow.fade,
                                                   ),
                                                 ],

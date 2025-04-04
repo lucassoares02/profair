@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 class LoginModel {
   String? codAccess;
   int? accessTargeting;
@@ -9,6 +11,7 @@ class LoginModel {
   String? documentUser;
   String? valueOrder;
   String? email;
+  int? active;
 
   LoginModel({
     this.codAccess,
@@ -21,12 +24,13 @@ class LoginModel {
     this.documentUser,
     this.valueOrder,
     this.email,
+    this.active,
   });
 
   LoginModel.fromJson(Map<String, dynamic> json) {
-    print("map login del");
-    print(json);
-    print("======");
+    print("================================================================");
+    inspect(json);
+    print("================================================================");
     try {
       codAccess = json["codAcesso"];
       accessTargeting = json["direcAcesso"];
@@ -34,6 +38,7 @@ class LoginModel {
       document = json["cnpjForn"];
       userCode = json["codUsuario"];
       codCompany = json["codForn"];
+      active = json["ativo"];
       nameUser = json["nomeConsult"];
       documentUser = json["cpfConsult"];
       valueOrder = json["valorPedido"];
@@ -52,6 +57,7 @@ class LoginModel {
     data["cnpjForn"] = document;
     data["codUsuario"] = userCode;
     data["codForn"] = codCompany;
+    data["ativo"] = active;
     data["nomeConsult"] = nameUser;
     data["cpfConsult"] = documentUser;
     data["valorPedido"] = valueOrder;

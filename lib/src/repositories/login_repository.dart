@@ -1,15 +1,12 @@
 import 'package:profair/src/models/login_model.dart';
-import 'package:dio/dio.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class LoginRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final httpService = HttpService();
 
   Future getLogin(Object data) async {
-    clientDio.options.contentType = Headers.formUrlEncodedContentType;
-
     try {
-      final response = await clientDio.post("https://profair.click/getuser", data: data);
+      final response = await httpService.post("getuser", data);
       print(response);
       final list = response.data[0];
       return LoginModel.fromJson(list);

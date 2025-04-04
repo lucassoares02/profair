@@ -1,23 +1,21 @@
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
+import 'package:profair/src/models/response_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
 import 'package:profair/src/repositories/categories_model.dart';
 import 'package:profair/src/repositories/recipe_model.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class HomeRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final httpService = HttpService();
 
   Future<List<LoginModel>?> getData(Object data) async {
-    clientDio.options.contentType = Headers.formUrlEncodedContentType;
-
     try {
-      final response = await clientDio.post("https://profair.click/getusermore", data: data);
+      final response = await httpService.post("getusermore", data);
       List list = response.data as List;
       return list.map((json) => LoginModel.fromJson(json)).toList();
     } catch (e) {
@@ -27,23 +25,20 @@ class HomeRepository {
   }
 
   Future<LoginModel> getClient(String id) async {
-    clientDio.options.contentType = Headers.formUrlEncodedContentType;
-
-    final response = await clientDio.get("${url}client/$id");
-
+    final response = await httpService.get("client/$id");
     final item = response.data[0];
     return LoginModel.fromJson(item);
   }
 
   getCategoriesHome() async {
-    final response = await clientDio.post('https://profair-backend.onrender.com/categories');
+    final response = await httpService.post('categories', {});
     List list = response.data as List;
     return list.map((json) => CategoriesModel.fromJson(json)).toList();
   }
 
   getNotices() async {
     try {
-      final response = await clientDio.get('${url}notices');
+      final response = await httpService.get('notices');
       List list = response.data as List;
       return list.map((json) => CampaignModel.fromJson(json)).toList();
     } catch (e) {
@@ -53,7 +48,7 @@ class HomeRepository {
 
   getTopFourProviders(int codBranch) async {
     try {
-      final response = await clientDio.get('${url}requesttopproviderclient/$codBranch');
+      final response = await httpService.get('requesttopproviderclient/$codBranch');
       List list = response.data as List;
       return list.map((json) => ProvidersModel.fromJson(json)).toList();
     } catch (e) {
@@ -63,30 +58,30 @@ class HomeRepository {
   }
 
   getSharedHome() async {
-    final response = await clientDio.get('https://profair-backend.onrender.com/cookbook');
+    final response = await httpService.get('https://profair-backend.onrender.com/cookbook');
     List list = response.data as List;
     return list.map((json) => RecipeModel.fromJson(json)).toList();
   }
 
   getLastTradings(int? codeProvider, int accessTargeting) async {
-    Response? response;
+    ResponseModel? response;
     if (accessTargeting == 1) {
-      response = await clientDio.get('${url}requestsprovider/$codeProvider');
+      response = await httpService.get('requestsprovider/$codeProvider');
     } else if (accessTargeting == 2) {
-      response = await clientDio.get('${url}requestsnegotiationbyclient/$codeProvider');
+      response = await httpService.get('requestsnegotiationbyclient/$codeProvider');
     } else {
-      response = await clientDio.get('${url}requestsclients/$codeProvider');
+      response = await httpService.get('requestsclients/$codeProvider');
     }
     List list = response.data as List;
     return list.map((json) => RequestsStoresModel.fromJson(json)).toList();
   }
 
   getBuyers({int? codeProvider}) async {
-    Response? response;
+    ResponseModel? response;
     if (codeProvider != null) {
-      response = await clientDio.get('${url}buyersprovider/$codeProvider');
+      response = await httpService.get('buyersprovider/$codeProvider');
     } else {
-      response = await clientDio.get('${url}buyers');
+      response = await httpService.get('buyers');
     }
     List list = response.data as List;
     return list.map((json) => BuyersModel.fromJson(json)).toList();

@@ -1,5 +1,7 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
+import 'package:profair/src/models/product_model.dart';
+import 'package:profair/src/models/users_model.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/state/state_app.dart';
@@ -11,11 +13,15 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
 
   List<NegotiationModel> negotiations = [];
   List<ProductsProviderModel> merchandises = [];
+  List<ProductModel> topMerchandises = [];
   List<ProductsProviderModel> merchandisesBackup = [];
   List<RequestsStoresModel> requestsStores = [];
+  List<UsersModel> consults = [];
   RequestsStoresModel? request;
   final stateNegotiations = ValueNotifier<StateApp>(StateApp.start);
+  final stateConsults = ValueNotifier<StateApp>(StateApp.start);
   final stateMerchandises = ValueNotifier<StateApp>(StateApp.start);
+  final stateTopMerchandises = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestStores = ValueNotifier<StateApp>(StateApp.start);
   ValueNotifier<int> indexNegotiationSelected = ValueNotifier(0);
   final DetailsProviderRepository _detailsProviderRepository;
@@ -48,17 +54,57 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
     }
   }
 
+  Future findTopMerchandises(int codeProvider) async {
+    stateTopMerchandises.value = StateApp.loading;
+    try {
+      topMerchandises = await _detailsProviderRepository.getTopMerchandises(codeProvider);
+
+      // Ordena os produtos pelo valor de venda (total), do maior para o menor
+      topMerchandises.sort((a, b) => b.total!.compareTo(a.total!));
+
+      stateTopMerchandises.value = StateApp.success;
+    } catch (e) {
+      debugPrint("Find Merchandises (Details Provider Controller) Error: $e");
+      stateTopMerchandises.value = StateApp.error;
+    }
+  }
+
   Future findRequestStores(int codeBranch, int codeProvider) async {
     stateRequestStores.value = StateApp.loading;
     try {
       requestsStores = await _detailsProviderRepository.getRequestsStores(codeBranch, codeProvider);
-      stateRequestStores.value = StateApp.success;
       if (negotiations.isNotEmpty) {
         searchNegotiation(negotiations[0].negotiation!);
       }
+      stateRequestStores.value = StateApp.success;
     } catch (e) {
       debugPrint("Find Request Stores (Details Provider Controller) Error: $e");
       stateRequestStores.value = StateApp.error;
+    }
+  }
+
+  Future findRequestStoresOrOrg(int? codeBranch, int codeProvider) async {
+    stateRequestStores.value = StateApp.loading;
+    try {
+      requestsStores = await _detailsProviderRepository.getNegotiationPerClient(codeProvider, codeBranch);
+      if (negotiations.isNotEmpty) {
+        searchNegotiation(negotiations[0].negotiation!);
+      }
+      stateRequestStores.value = StateApp.success;
+    } catch (e) {
+      debugPrint("Find Request Stores (Details Provider Controller) Error: $e");
+      stateRequestStores.value = StateApp.error;
+    }
+  }
+
+  Future findConsults(int provider) async {
+    stateConsults.value = StateApp.loading;
+    try {
+      consults = await _detailsProviderRepository.getConsults(provider);
+      stateConsults.value = StateApp.success;
+    } catch (e) {
+      debugPrint("Find Request Stores (Details Provider Controller) Error: $e");
+      stateConsults.value = StateApp.error;
     }
   }
 
@@ -113,14 +159,7 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(
-          msg: message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
 
       stateMerchandises.value = StateApp.success;
     } catch (e) {

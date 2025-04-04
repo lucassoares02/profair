@@ -4,25 +4,24 @@ import 'package:path_provider/path_provider.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:profair/src/models/response_model.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class TradingProductsRepository {
-  final Dio clientDio = Dio();
+  final Dio clientDioRequest = Dio();
   final String url = "https://profair.click/";
+  final clientDio = HttpService();
 
   getTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading, int? codeClient) async {
-    Response? response;
+    ResponseModel? response;
     try {
       if (codeClient == 0 && codeBranch == 0) {
-        print("step 1");
-        response = await clientDio.get("${url}merchandisenegotiationprovider/$codeProvider/$codeTrading");
+        response = await clientDio.get("merchandisenegotiationprovider/$codeProvider/$codeTrading");
       } else if (codeClient == 0) {
-        print("step 2");
-        response =
-            await clientDio.get("${url}merchandiseclientprovidernegotiation/$codeBranch/$codeProvider/$codeTrading");
+        response = await clientDio.get("merchandiseclientprovidernegotiation/$codeBranch/$codeProvider/$codeTrading");
       } else {
-        print("step 3");
-        response = await clientDio.get("${url}merchandiseproviderifclient/$codeBranch/$codeProvider/$codeTrading");
+        response = await clientDio.get("merchandiseproviderifclient/$codeBranch/$codeProvider/$codeTrading");
       }
       List list = response.data as List;
       return list.map((json) => ProductModel.fromJson(json)).toList();
@@ -36,7 +35,7 @@ class TradingProductsRepository {
 
     try {
       // Fazendo a solicitação com a opção de resposta para obter os bytes
-      response = await clientDio.get(
+      response = await clientDioRequest.get(
         '${url}exportpdf/$codeProvider/$codeNegotiation/$codeBranch',
         options: Options(responseType: ResponseType.bytes),
       );

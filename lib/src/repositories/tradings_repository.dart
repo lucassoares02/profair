@@ -1,12 +1,11 @@
 import 'package:profair/src/models/tradings_model.dart';
-import 'package:dio/dio.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class TradingsRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final httpService = HttpService();
 
   getTradings(String? codeProvider) async {
-    final response = await clientDio.get("${url}negotiationprovider/$codeProvider");
+    final response = await httpService.get("negotiationprovider/$codeProvider");
     try {
       List list = response.data as List;
 

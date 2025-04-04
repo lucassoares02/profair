@@ -121,7 +121,7 @@ class _ComponentListState extends State<ComponentList> {
                       ),
                     ],
                   ),
-                  PieChartSample2(products: widget.tradingProductsController.productsTrading),
+                  // PieChartSample2(products: widget.tradingProductsController.productsTrading),
                   const AppSpacing(),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:profair/src/models/response_model.dart';
 import 'package:profair/src/repositories/order_details_model.dart';
-import 'package:dio/dio.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class OrderDetailsRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final clientDio = HttpService();
 
   getOrderDetails(int? codeClient, int? codeProvider, int? codeNegotiation) async {
-    Response response;
+    ResponseModel response;
     try {
-      response =
-          await clientDio.get("${url}merchandiseclientprovidernegotiation/$codeClient/$codeProvider/$codeNegotiation");
+      response = await clientDio.get("merchandiseclientprovidernegotiation/$codeClient/$codeProvider/$codeNegotiation");
       List list = response.data as List;
 
       return list.map((json) => OrderDetailsModel.fromJson(json)).toList();

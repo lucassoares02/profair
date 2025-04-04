@@ -1,25 +1,21 @@
-import 'package:dio/dio.dart';
 import 'package:profair/src/models/providers_model.dart';
+import 'package:profair/src/models/response_model.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class ProvidersRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final clientDio = HttpService();
 
   getProviders(int? codeClient, int? codeBuyer, int? codeBranch) async {
-    Response? response;
+    ResponseModel? response;
     try {
       if (codeBuyer != 0) {
-        print("step 1");
-        response = await clientDio.get("${url}providerscategories/$codeBuyer");
+        response = await clientDio.get("providerscategories/$codeBuyer");
       } else if (codeClient == 0 && codeBranch == 0) {
-        print("step 2");
-        response = await clientDio.get("${url}suppliersinvoicing");
+        response = await clientDio.get("suppliersinvoicing");
       } else if (codeClient != 0) {
-        print("step 3");
-        response = await clientDio.get("${url}providersconsult/$codeClient");
+        response = await clientDio.get("providersconsult/$codeClient");
       } else {
-        print("step 4");
-        response = await clientDio.get("${url}requestproviderclient/$codeBranch");
+        response = await clientDio.get("requestproviderclient/$codeBranch");
       }
       List list = response.data as List;
       return list.map((json) => ProvidersModel.fromJson(json)).toList();
@@ -29,9 +25,9 @@ class ProvidersRepository {
   }
 
   getProvidersByGroup(int? codeClient) async {
-    Response? response;
+    ResponseModel? response;
     try {
-      response = await clientDio.get("${url}providersconsult/$codeClient");
+      response = await clientDio.get("providersconsult/$codeClient");
       List list = response.data as List;
       return list.map((json) => ProvidersModel.fromJson(json)).toList();
     } catch (e) {

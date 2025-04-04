@@ -62,13 +62,7 @@ class _ComponentListState extends State<ComponentList> {
                     onTap: () {
                       Navigator.of(context).pushNamed(
                         "detailsprovider",
-                        arguments: {
-                          "codeProvider": e.codeProvider,
-                          "imageProvider": e.image,
-                          "nameProvider": e.nameProvider,
-                          "codeBranch": widget.codeBranch,
-                          "color": e.color
-                        },
+                        arguments: {"codeProvider": e.codeProvider, "imageProvider": e.image, "nameProvider": e.nameProvider, "codeBranch": widget.codeBranch, "color": e.color},
                       );
                     },
                     child: Container(
@@ -83,15 +77,13 @@ class _ComponentListState extends State<ComponentList> {
                           if (e.image != null)
                             Container(
                               padding: const EdgeInsets.all(3),
-                              decoration: BoxDecoration(
-                                  color: e.color != null ? Color(int.parse(e.color!)) : colorTertiary,
-                                  borderRadius: BorderRadius.circular(50)),
+                              decoration: BoxDecoration(color: e.color != null ? Color(int.parse(e.color!)) : colorTertiary, borderRadius: BorderRadius.circular(50)),
                               child: Container(
-                                padding: const EdgeInsets.all(appMargin),
+                                height: 55,
+                                width: 55,
+                                padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                    border: Border.all(color: colorWhite, width: 2),
-                                    color: e.color != null ? Color(int.parse(e.color!)) : colorTertiary,
-                                    borderRadius: BorderRadius.circular(50)),
+                                    border: Border.all(color: colorWhite, width: 2), color: e.color != null ? Color(int.parse(e.color!)) : colorTertiary, borderRadius: BorderRadius.circular(50)),
                                 child: Image.network(
                                   e.image!,
                                   width: 30,

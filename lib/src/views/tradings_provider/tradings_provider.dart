@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:profair/src/components/button.dart';
@@ -63,6 +65,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
         widget.codeConsult!,
       );
       navigatorHome();
+      tradingsProviderController.stateFinishTrading.value = StateApp.success;
     } catch (e) {
       debugPrint("Error saveOrder: $e");
       Fluttertoast.showToast(
@@ -95,7 +98,6 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            backgroundColor: Colors.white,
             elevation: 0.1,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(appRadius),
@@ -417,6 +419,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                                                             ValueListenableBuilder(
                                                                                 valueListenable: tradingsProviderController.stateTradings,
                                                                                 builder: (context, bool value, child) {
+                                                                                  inspect(e.value);
                                                                                   return Checkbox(
                                                                                     activeColor: colorSecondary,
                                                                                     value: e.value.checked,
@@ -438,10 +441,21 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                                                                     },
                                                                                   );
                                                                                 }),
-                                                                            Text(
-                                                                              e.value.nameCompany!.length < 28 ? '${e.value.nameCompany}' : e.value.nameCompany!.substring(0, 25),
-                                                                              style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-                                                                            ),
+                                                                            Column(
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                Text(
+                                                                                  e.value.nameCompany!.length < 40
+                                                                                      ? '${e.value.relationshipCode} - ${e.value.nameCompany}'
+                                                                                      : '${e.value.relationshipCode} - ${e.value.nameCompany!.substring(0, 40)}',
+                                                                                  style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                                                                                ),
+                                                                                // Text(
+                                                                                //   '${e.value.documentCompany}',
+                                                                                //   style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                                                                                // ),
+                                                                              ],
+                                                                            )
                                                                           ],
                                                                         ),
                                                                       ),

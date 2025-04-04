@@ -1,12 +1,11 @@
 import 'package:profair/src/repositories/list_attractions_model.dart';
-import 'package:dio/dio.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class ListAttractionsRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final clientDio = HttpService();
 
   getRequestsStores() async {
-    final response = await clientDio.get("${url}schedule");
+    final response = await clientDio.get("schedule");
 
     try {
       List list = response.data as List;

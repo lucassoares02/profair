@@ -38,11 +38,26 @@ class _AppActionsState extends State<AppActions> {
         code = code.replaceAll(".9327329847372939", "");
         LoginModel? response = await widget.homeController.findClient(code);
         int codeUser = response!.userCode ?? 0;
-        if (codeUser != 0) {
-          navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany, "consult": widget.homeController.data!.userCode});
-        } else {
+
+        int active = response.active ?? 0;
+
+        if (active == 0) {
           Fluttertoast.showToast(
-              msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+              msg: "Período de negociações não iniciado ou encerrado!!",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
+          return;
+        } else {
+          if (codeUser != 0) {
+            navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany, "consult": widget.homeController.data!.userCode});
+          } else {
+            Fluttertoast.showToast(
+                msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+          }
         }
       } else {
         navigatorRoutes("preorder", widget.homeController);
@@ -57,9 +72,9 @@ class _AppActionsState extends State<AppActions> {
     if (route == "users") {
       navigatorRoutes(route, {});
     } else if (route == "selectstore") {
-      // scannerQrCode();
+      scannerQrCode();
       // navigatorRoutes("preorder", widget.homeController);
-      navigatorRoutes("customers", widget.homeController);
+      // navigatorRoutes("customers", widget.homeController);
     } else if (route == "productsprovider") {
       navigatorRoutes(route, {"codeProvider": widget.homeController.data!.codCompany, "codeClient": 0, "nextScreen": true});
     } else if (route == "clients") {

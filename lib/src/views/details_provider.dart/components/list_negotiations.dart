@@ -11,8 +11,7 @@ import 'package:profair/src/views/details_provider.dart/details_provider_control
 import 'package:skeletons/skeletons.dart';
 
 class ListNegotiations extends StatefulWidget {
-  const ListNegotiations(
-      {super.key, required this.detailsProviderController, required this.codeProvider, required this.codeBranch});
+  const ListNegotiations({super.key, required this.detailsProviderController, required this.codeProvider, required this.codeBranch});
 
   final DetailsProviderController detailsProviderController;
   final int codeProvider;
@@ -33,7 +32,7 @@ class _ListNegotiationsState extends State<ListNegotiations> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(
-                height: 100,
+                height: 130,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   shrinkWrap: true,
@@ -42,9 +41,7 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                     return Container(
                       width: 300,
                       padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding),
-                      margin: EdgeInsets.only(
-                          right: index == widget.detailsProviderController.negotiations.length - 1 ? appMargin : 0,
-                          left: appMargin),
+                      margin: EdgeInsets.only(right: index == widget.detailsProviderController.negotiations.length - 1 ? appMargin : 0, left: appMargin),
                       decoration: BoxDecoration(
                         color: negotiationIndex == index ? colorBlue : Colors.grey.withOpacity(0.2),
                         borderRadius: const BorderRadius.all(
@@ -55,10 +52,8 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                         onTap: () async {
                           if (!(widget.detailsProviderController.stateMerchandises.value == StateApp.loading)) {
                             widget.detailsProviderController.indexNegotiationSelected.value = index;
-                            widget.detailsProviderController
-                                .searchNegotiation(widget.detailsProviderController.negotiations[index].negotiation!);
-                            await widget.detailsProviderController.findMerchandises(widget.codeBranch,
-                                widget.codeProvider, widget.detailsProviderController.negotiations[index].negotiation!);
+                            widget.detailsProviderController.searchNegotiation(widget.detailsProviderController.negotiations[index].negotiation!);
+                            await widget.detailsProviderController.findMerchandises(widget.codeBranch, widget.codeProvider, widget.detailsProviderController.negotiations[index].negotiation!);
                           }
                         },
                         child: Column(
@@ -70,9 +65,7 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                               children: [
                                 Text(
                                   widget.detailsProviderController.negotiations[index].negotiation.toString(),
-                                  style: TextStyle(
-                                      color: negotiationIndex == index ? colorWhite : null,
-                                      fontWeight: FontWeight.w600),
+                                  style: TextStyle(color: negotiationIndex == index ? colorWhite : null, fontWeight: FontWeight.w600),
                                 ),
                                 Text(
                                   formatter.format(
@@ -80,19 +73,14 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                                       widget.detailsProviderController.negotiations[index].term!,
                                     ),
                                   ),
-                                  style: TextStyle(
-                                      color: negotiationIndex == index ? colorWhite : null,
-                                      fontWeight: FontWeight.w600),
+                                  style: TextStyle(color: negotiationIndex == index ? colorWhite : null, fontWeight: FontWeight.w600),
                                 ),
                               ],
                             ),
                             const Divider(),
                             Text(
                               widget.detailsProviderController.negotiations[index].title!,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: negotiationIndex == index ? colorWhite : null),
+                              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: negotiationIndex == index ? colorWhite : null),
                             ),
                             Column(
                               children: [
@@ -111,9 +99,7 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                 ),
               ),
               const AppSpacing(),
-              if (widget.detailsProviderController
-                      .negotiations[widget.detailsProviderController.indexNegotiationSelected.value].confirm !=
-                  null)
+              if (widget.detailsProviderController.negotiations[widget.detailsProviderController.indexNegotiationSelected.value].confirm != null)
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: appMargin),
                   decoration: BoxDecoration(
@@ -144,10 +130,7 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                                   builder: (context, stateRequest, value) {
                                     return stateRequest == StateApp.loading
                                         ? const SkeletonLine(
-                                            style: SkeletonLineStyle(
-                                                width: 50,
-                                                height: 15,
-                                                borderRadius: BorderRadius.all(Radius.circular(10))),
+                                            style: SkeletonLineStyle(width: 50, height: 15, borderRadius: BorderRadius.all(Radius.circular(10))),
                                           )
                                         : stateRequest == StateApp.success
                                             ? widget.detailsProviderController.request != null

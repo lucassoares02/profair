@@ -53,13 +53,11 @@ class _CardWelcomeState extends State<CardWelcome> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         SkeletonAvatar(
-                          style: SkeletonAvatarStyle(
-                              height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                          style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
                         ),
                         const SizedBox(height: 10),
                         SkeletonAvatar(
-                          style: SkeletonAvatarStyle(
-                              height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                          style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
                         ),
                       ],
                     )
@@ -115,10 +113,9 @@ class _CardWelcomeState extends State<CardWelcome> {
                                             icon: const Icon(Icons.keyboard_arrow_down_sharp, size: 25),
                                             hint: Text(
                                               "${widget.homeController.data!.codCompany} - ${widget.homeController.data!.nameCompany!.length > 35 ? "${widget.homeController.data!.nameCompany!.substring(0, 35)}..." : widget.homeController.data!.nameCompany!}",
-                                              style: TextStyle(
-                                                  color: Theme.of(context).colorScheme.onBackground,
-                                                  fontWeight: FontWeight.w500),
+                                              style: TextStyle(color: Theme.of(context).colorScheme.onBackground, fontWeight: FontWeight.w500),
                                             ),
+                                            value: widget.homeController.moreData![widget.homeController.indexSelected],
                                             items: widget.homeController.moreData!.map((e) {
                                               return DropdownMenuItem<LoginModel>(
                                                 value: e,
@@ -132,9 +129,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                                     ),
                                                     const SizedBox(width: 10),
                                                     Text(
-                                                      e.nameCompany!.length > 35
-                                                          ? "${e.nameCompany!.substring(0, 35)}..."
-                                                          : e.nameCompany!,
+                                                      e.nameCompany!.length > 35 ? "${e.nameCompany!.substring(0, 35)}..." : e.nameCompany!,
                                                       style: const TextStyle(fontWeight: FontWeight.w600),
                                                     ),
                                                   ],
@@ -153,8 +148,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                         )
                                       : Container(
                                           width: double.maxFinite,
-                                          padding:
-                                              const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
+                                          padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
                                           decoration: BoxDecoration(
                                             color: Colors.grey.withOpacity(0.1),
                                             borderRadius: BorderRadius.circular(appRadius),

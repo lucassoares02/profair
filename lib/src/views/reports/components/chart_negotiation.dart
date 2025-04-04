@@ -4,13 +4,13 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class BarChartSample1 extends StatefulWidget {
-  BarChartSample1({super.key, required this.reportsProducts});
+  BarChartSample1({super.key, required this.reportsProducts, this.barColor, this.legendValue = true});
 
   List<ProductModel> reportsProducts;
-
   final Color barBackgroundColor = transparent;
-  final Color barColor = colorBlue;
-  final Color touchedBarColor = colorBlueDark;
+  Color? barColor = colorPrimary;
+  final Color touchedBarColor = colorSecondary;
+  bool legendValue;
 
   @override
   State<StatefulWidget> createState() => BarChartSample1State();
@@ -18,6 +18,11 @@ class BarChartSample1 extends StatefulWidget {
 
 class BarChartSample1State extends State<BarChartSample1> {
   final Duration animDuration = const Duration(milliseconds: 250);
+  List<Color> topProductColors = [
+    Colors.amber, // 🥇 1º - Ouro (Destaque máximo)
+    Colors.grey, // 🥈 2º - Prata (Destaque forte)
+    Colors.brown, // 🥉 3º - Bronze (Reconhecimento)
+  ];
 
   int touchedIndex = -1;
 
@@ -50,25 +55,28 @@ class BarChartSample1State extends State<BarChartSample1> {
     return BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: colorGreyDark,
+          tooltipBgColor: touchedIndex <= 2 ? topProductColors[touchedIndex % topProductColors.length] : widget.barColor,
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: 5,
+          direction: TooltipDirection.top,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
             return BarTooltipItem(
-              "${widget.reportsProducts[group.x].title!}\n\n",
+              "${widget.reportsProducts[group.x].title!}",
               const TextStyle(
                 color: Colors.white,
                 fontSize: 12,
               ),
               children: <TextSpan>[
-                TextSpan(
-                  text: formatCurrency(rod.toY - 1),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                widget.legendValue
+                    ? TextSpan(
+                        text: formatCurrency(rod.toY - 1),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    : const TextSpan(text: ""),
               ],
             );
           },
@@ -112,24 +120,22 @@ class BarChartSample1State extends State<BarChartSample1> {
     );
   }
 
-  List<BarChartGroupData> showingGroups() =>
-      List.generate(widget.reportsProducts.length > 10 ? 10 : widget.reportsProducts.length, (e) {
+  List<BarChartGroupData> showingGroups() => List.generate(widget.reportsProducts.length > 10 ? 10 : widget.reportsProducts.length, (e) {
         return makeGroupData(e, widget.reportsProducts[e].total!, isTouched: e == touchedIndex);
       });
 
-  BarChartGroupData makeGroupData(int x, double y,
-      {bool isTouched = false, Color? barColor, double width = 20, List<int> showTooltips = const []}) {
-    barColor ??= widget.barColor;
+  BarChartGroupData makeGroupData(int x, double y, {bool isTouched = false, Color? barColor, double width = 20, List<int> showTooltips = const []}) {
+    // barColor ??= widget.barColor;
+    barColor = x <= 2 ? topProductColors[x % topProductColors.length] : widget.barColor;
     return BarChartGroupData(
       x: x,
       barRods: [
         BarChartRodData(
           toY: isTouched ? y + 0 : y,
-          color: isTouched ? widget.touchedBarColor : barColor,
+          color: isTouched ? barColor!.withOpacity(0.5) : barColor,
           borderRadius: BorderRadius.circular(3),
           width: width,
-          borderSide:
-              isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
+          borderSide: isTouched ? BorderSide(color: barColor!.withOpacity(0.5)) : const BorderSide(color: Colors.white, width: 0),
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 20,
@@ -142,16 +148,16 @@ class BarChartSample1State extends State<BarChartSample1> {
   }
 
   Widget getTitles(double value, TitleMeta meta) {
-    const style = TextStyle(
-      color: colorBlue,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
     Widget text;
     return SideTitleWidget(
       axisSide: meta.axisSide,
       space: 10,
-      child: Text(widget.reportsProducts[value.toInt()].title!.substring(0, 1), style: style),
+      child: Text(widget.reportsProducts[value.toInt()].title!.substring(0, 1),
+          style: TextStyle(
+            color: value <= 2 ? topProductColors[value.toInt() % topProductColors.length] : widget.barColor,
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          )),
     );
   }
 }

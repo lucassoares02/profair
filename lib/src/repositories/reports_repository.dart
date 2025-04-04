@@ -1,23 +1,23 @@
 import 'package:profair/src/models/product_model.dart';
+import 'package:profair/src/models/response_model.dart';
 import 'package:profair/src/models/total_value_clients.dart';
 import 'package:profair/src/models/value_minute_graph.dart';
 import 'package:profair/src/repositories/percentage_clients_model.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:profair/src/shared/http_service.dart';
 
 class ReportsRepository {
-  final Dio clientDio = Dio();
-  final String url = "https://profair.click/";
+  final clientDio = HttpService();
 
   getPercentageClients(int? codeProvider, int? accessTargenting) async {
-    Response? response;
+    ResponseModel? response;
     if (accessTargenting == 3) {
-      response = await clientDio.get("${url}percentageclientsorganization");
+      response = await clientDio.get("percentageclientsorganization");
     } else if (accessTargenting == 1) {
-      response = await clientDio.get("${url}percentageclients/$codeProvider");
+      response = await clientDio.get("percentageclients/$codeProvider");
     } else {
-      response = await clientDio.get("${url}percentageproviderbyclients/$codeProvider");
+      response = await clientDio.get("percentageproviderbyclients/$codeProvider");
     }
     try {
       List list = response.data as List;
@@ -28,9 +28,9 @@ class ReportsRepository {
   }
 
   getPercentageProviders() async {
-    Response? response;
+    ResponseModel? response;
     try {
-      response = await clientDio.get("${url}percentageprovidersorganization");
+      response = await clientDio.get("percentageprovidersorganization");
       List list = response.data as List;
       return list.map((json) => PercentageClientsModel.fromJson(json)).toList();
     } catch (e) {
@@ -39,13 +39,13 @@ class ReportsRepository {
   }
 
   getTotalValueClients(int? codeProvider, int? accessTargeting) async {
-    Response? response;
+    ResponseModel? response;
     if (accessTargeting == 3) {
-      response = await clientDio.get("${url}stores");
+      response = await clientDio.get("stores");
     } else if (accessTargeting == 1) {
-      response = await clientDio.get("${url}storesbyprovider/$codeProvider");
+      response = await clientDio.get("storesbyprovider/$codeProvider");
     } else {
-      response = await clientDio.get("${url}providersconsult/$codeProvider");
+      response = await clientDio.get("providersconsult/$codeProvider");
     }
     try {
       List list = response.data as List;
@@ -57,14 +57,14 @@ class ReportsRepository {
   }
 
   getTotalValueProducts(int? codeProvider, int? accessTargeting) async {
-    Response? response;
+    ResponseModel? response;
     try {
       if (accessTargeting == 3) {
-        response = await clientDio.get("${url}suppliersinvoicing");
+        response = await clientDio.get("suppliersinvoicing");
         List list = response.data as List;
         return list.map((json) => TotalValueClients.fromJson(json)).toList();
       } else {
-        response = await clientDio.get("${url}merchandiseprovider/$codeProvider");
+        response = await clientDio.get("merchandiseprovider/$codeProvider");
         List list = response.data as List;
         return list.map((json) => ProductModel.fromJson(json)).toList();
       }
@@ -74,9 +74,9 @@ class ReportsRepository {
   }
 
   getTotalSellProvider(int? codeProvider) async {
-    Response? response;
+    ResponseModel? response;
     try {
-      response = await clientDio.get("${url}valueminutegraphprovider/$codeProvider");
+      response = await clientDio.get("valueminutegraphprovider/$codeProvider");
       List list = response.data as List;
       return list.map((json) => ValueMinutesGraph.fromJson(json)).toList();
     } catch (e) {

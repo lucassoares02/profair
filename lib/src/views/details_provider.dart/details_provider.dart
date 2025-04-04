@@ -25,12 +25,12 @@ class DetailsProvider extends StatefulWidget {
 }
 
 class _DetailsProviderState extends State<DetailsProvider> {
-  final DetailsProviderController detailsProviderController =
-      DetailsProviderController(StateApp.start, DetailsProviderRepository());
+  final DetailsProviderController detailsProviderController = DetailsProviderController(StateApp.start, DetailsProviderRepository());
 
   @override
   void initState() {
     detailsProviderController.findNegotiations(widget.codeBranch!, widget.codeProvider!);
+    detailsProviderController.findTopMerchandises(widget.codeProvider!);
 
     super.initState();
   }
