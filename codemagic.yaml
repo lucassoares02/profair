@@ -2,7 +2,7 @@ workflows:
   app-store:
     name: Publishing to App Store workflow
     environment:
-      flutter: 3.16.9
+      flutter: 3.29.0
       ios_signing:
         provisioning_profiles:
           - app store connect certificate
