@@ -1,0 +1,1 @@
+/home/lucas/projetos/flutter/seller/seller/build/app/intermediates/cxx/RelWithDebInfo/3g6g5l18/obj/x86_64

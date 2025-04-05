@@ -1,7 +1,7 @@
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/utils/spacing.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter/material.dart';
 
 class LoadingList extends StatefulWidget {
@@ -40,14 +40,35 @@ class _LoadingListState extends State<LoadingList> {
                   padding: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
                   margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    SkeletonAvatar(
-                      style:
-                          SkeletonAvatarStyle(height: 12, width: width / 1.5, borderRadius: BorderRadius.circular(10)),
+                    Skeletonizer(
+                      effect: const ShimmerEffect(),
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          height: 12,
+                          width: width / 1.5,
+                        ),
+                      ),
                     ),
                     const AppSpacing(),
-                    SkeletonAvatar(
-                      style: SkeletonAvatarStyle(height: 12, width: width / 3, borderRadius: BorderRadius.circular(10)),
-                    )
+                    Skeletonizer(
+                      effect: const ShimmerEffect(),
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        child: SizedBox(
+                          height: 12,
+                          width: width / 1.5,
+                        ),
+                      ),
+                    ),
+                    // Skeleton.replace(
+                    //   style:
+                    //       SkeletonAvatarStyle(height: 12, width: width / 1.5, borderRadius: BorderRadius.circular(10)),
+                    // ),
+                    // const AppSpacing(),
+                    // SkeletonAvatar(
+                    //   style: SkeletonAvatarStyle(height: 12, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                    // )
                   ]),
                 );
               }),

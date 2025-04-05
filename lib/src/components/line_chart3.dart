@@ -114,8 +114,8 @@ class _LineChartSample3State extends State<LineChartSample3> {
     text = Text(textValue[1], style: style);
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
       child: text,
+      meta: meta,
     );
   }
 

@@ -34,7 +34,7 @@ class _ProductsProviderState extends State<ProductsProvider> {
             valueListenable: productsProviderController.stateProducts,
             builder: (context, value, child) {
               return ComponentList(
-                  description: S.of(context).text_select_branch,
+                  description: "Selecione a Filial",
                   state: productsProviderController.stateProducts,
                   codeProvider: widget.codeProvider,
                   listItems: productsProviderController.productsProvider,

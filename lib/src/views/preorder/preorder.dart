@@ -1,11 +1,6 @@
-// import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'dart:developer';
-
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:profair/generated/l10n.dart';
+import 'package:profair/src/components/barcode_scanner_simple_sell.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/models/login_model.dart';
@@ -32,56 +27,11 @@ class _PreOrderState extends State<PreOrder> {
 
   String codes = "";
 
-  scannerQrCode() async {
-    try {
-      String codeD = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666",
-        "Cancelar",
-        false,
-        ScanMode.DEFAULT,
-      );
-      if (codeD != "-1") {
-        String code = codeD.replaceAll("0x9E89738274392874.", "");
-        code = code.replaceAll(".9327329847372939", "");
-        LoginModel? response = await widget.homeController.findClient(code);
-
-        int active = response!.active ?? 0;
-
-        if (active == 0) {
-          Fluttertoast.showToast(
-              msg: "Período de negociações não iniciado ou encerrado!!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          return;
-        } else {
-          int codeUser = response!.userCode ?? 0;
-          if (codeUser != 0) {
-            navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany, "consult": widget.homeController.data!.userCode});
-          } else {
-            Fluttertoast.showToast(
-                msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
-          }
-        }
-      }
-    } on PlatformException {
-      debugPrint('Error scanning qrcode');
-      Fluttertoast.showToast(
-          msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
-    }
-  }
-
   loginCode() async {
     try {
       LoginModel? response = await widget.homeController.findClient(codigo.text);
       int codeUser = response!.userCode ?? 0;
       int active = response.active ?? 0;
-      print("active");
-      print(active);
-
       if (active == 0) {
         Fluttertoast.showToast(
             msg: "Período de negociações não iniciado ou encerrado!!",
@@ -181,10 +131,16 @@ class _PreOrderState extends State<PreOrder> {
                                           children: [
                                             AppButton(
                                               onPressButton: () {
-                                                scannerQrCode();
+                                                // scannerQrCode();
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => BarcodeScannerSimpleSell(
+                                                              homeController: widget.homeController,
+                                                            )));
                                               },
                                               colorLoading: colorWhite,
-                                              label: S.of(context).text_scanner,
+                                              label: "Scanear QrCode",
                                               colorButton: colorSecondary,
                                               iconButton: Icons.qr_code_rounded,
                                               loading: value == StateApp.loading,
@@ -331,7 +287,7 @@ class _PreOrderState extends State<PreOrder> {
                 //                           scannerQrCode();
                 //                           // testteInter();
                 //                         },
-                //                         label: S.of(context).text_scanner,
+                //                         label: "Scanear QrCode",
                 //                         colorButton: colorSecondary,
                 //                         iconButton: Icons.qr_code_rounded,
                 //                         loading: value == StateApp.loading,

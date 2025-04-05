@@ -1,5 +1,4 @@
 import 'package:flutter/services.dart';
-import 'package:profair/src/components/button.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
@@ -14,9 +13,8 @@ import 'package:profair/src/views/home/home_repository.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/state/state_app.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -64,20 +62,41 @@ class _HomePageState extends State<HomePage> {
                         builder: (context, value, child) {
                           return value == StateApp.loading
                               ? Container(
-                                  padding: const EdgeInsets.only(left: appPadding, right: appPadding, top: appMargin * 2),
+                                  padding: const EdgeInsets.only(top: appMargin * 2),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                                      Skeletonizer(
+                                        effect: const ShimmerEffect(),
+                                        child: Card(
+                                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                                          child: SizedBox(
+                                            width: width / 3,
+                                            height: 10,
+                                          ),
+                                        ),
                                       ),
                                       const SizedBox(height: 10),
-                                      SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                                      Skeletonizer(
+                                        effect: const ShimmerEffect(),
+                                        child: Card(
+                                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                                          child: SizedBox(
+                                            height: 15,
+                                            width: width / 2,
+                                          ),
+                                        ),
                                       ),
                                       const SizedBox(height: 10),
-                                      SkeletonAvatar(
-                                        style: SkeletonAvatarStyle(height: 45, width: double.maxFinite, borderRadius: BorderRadius.circular(10)),
+                                      const Skeletonizer(
+                                        effect: ShimmerEffect(),
+                                        child: Card(
+                                          margin: EdgeInsets.symmetric(horizontal: 16),
+                                          child: SizedBox(
+                                            height: 45,
+                                            width: double.maxFinite,
+                                          ),
+                                        ),
                                       ),
                                       const SizedBox(height: appPadding)
                                     ],
@@ -94,13 +113,13 @@ class _HomePageState extends State<HomePage> {
                         valueListenable: homeController.stateCampaign,
                         builder: (context, value, child) {
                           return value == StateApp.loading
-                              ? Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: appPadding),
-                                  child: SkeletonAvatar(
-                                    style: SkeletonAvatarStyle(
-                                      height: 240,
-                                      width: double.maxFinite,
-                                      borderRadius: BorderRadius.circular(appRadius),
+                              ? const Skeletonizer(
+                                  effect: ShimmerEffect(),
+                                  child: Card(
+                                    margin: EdgeInsets.symmetric(horizontal: 16),
+                                    child: SizedBox(
+                                      height: 240, // altura desejada pro esqueleto
+                                      width: double.infinity,
                                     ),
                                   ),
                                 )
@@ -199,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                               ? LoadingList(loadingHeader: false)
                               : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
                                   ? LastRequests(
-                                      description: S.of(context).text_last_orders,
+                                      description: "Últimos pedidos",
                                       listItems: homeController.requestStores,
                                       state: homeController.stateRequestsStore,
                                       homeController: homeController,

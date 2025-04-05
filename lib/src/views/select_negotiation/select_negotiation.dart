@@ -51,7 +51,7 @@ class _SelectNegotiationState extends State<SelectNegotiation> {
               return ComponentList(
                 listItems: negotiationController.negotiations,
                 state: negotiationController.stateNegotiations,
-                description: S.of(context).text_select_branch,
+                description: "Selecione a Filial",
                 codeBranch: widget.codeBranch,
                 codeProvider: widget.codeProvider,
                 codeClient: widget.codeClient,

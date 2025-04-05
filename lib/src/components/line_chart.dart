@@ -31,19 +31,17 @@ class _LineChartSample2State extends State<LineChartSample2> {
   LineChartData mainData() {
     return LineChartData(
       lineTouchData: LineTouchData(
-        touchTooltipData: LineTouchTooltipData(
-            tooltipBgColor: Colors.white,
-            getTooltipItems: (List<LineBarSpot> barSpots) {
-              return barSpots.map((e) {
-                return LineTooltipItem(
-                  "${DateFormat.Hm().format(DateTime.parse(widget.values[(e.x).toInt()].hour!))} - ${formatCurrency(widget.values[(e.x).toInt()].value!)}",
-                  const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                );
-              }).toList();
-            }),
+        touchTooltipData: LineTouchTooltipData(getTooltipItems: (List<LineBarSpot> barSpots) {
+          return barSpots.map((e) {
+            return LineTooltipItem(
+              "${DateFormat.Hm().format(DateTime.parse(widget.values[(e.x).toInt()].hour!))} - ${formatCurrency(widget.values[(e.x).toInt()].value!)}",
+              const TextStyle(
+                color: Colors.grey,
+                fontSize: 14,
+              ),
+            );
+          }).toList();
+        }),
       ),
       gridData: FlGridData(
         show: true,
@@ -116,8 +114,8 @@ class _LineChartSample2State extends State<LineChartSample2> {
     text = Text(textValue[1], style: style);
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
       child: text,
+      meta: meta,
     );
   }
 

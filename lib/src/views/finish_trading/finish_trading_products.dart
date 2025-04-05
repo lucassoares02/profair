@@ -59,7 +59,7 @@ class _FinishTradingState extends State<FinishTrading> {
             builder: (context, value, child) {
               return ComponentList(
                   listItems: widget.productsTrading,
-                  description: S.of(context).text_select_branch,
+                  description: "Selecione a Filial",
                   finishTradingController: finishTradingController,
                   codeBranch: widget.codeBranch,
                   codeProvider: widget.codeProvider,

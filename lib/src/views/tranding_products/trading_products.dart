@@ -53,7 +53,7 @@ class _TradingProductsState extends State<TradingProducts> {
             builder: (context, value, child) {
               return ComponentList(
                 state: tradingProductsController.stateProductsTrading,
-                description: S.of(context).text_select_branch,
+                description: "Selecione a Filial",
                 tradingProductsController: tradingProductsController,
                 codeProvider: widget.codeProvider,
                 codeBranch: widget.codeBranch,

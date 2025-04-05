@@ -6,7 +6,7 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CardCount extends StatefulWidget {
   CardCount({super.key, required this.homeController});
@@ -38,28 +38,37 @@ class _CardCountState extends State<CardCount> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SkeletonAvatar(
-                            style: SkeletonAvatarStyle(
-                              height: appPadding,
-                              width: width / 2,
-                              borderRadius: BorderRadius.circular(appRadius),
+                          Skeletonizer(
+                            effect: const ShimmerEffect(),
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                              child: SizedBox(
+                                height: appPadding,
+                                width: width / 2,
+                              ),
                             ),
                           ),
                           const AppSpacing(),
-                          SkeletonAvatar(
-                            style: SkeletonAvatarStyle(
-                              height: appMargin,
-                              width: width / 3,
-                              borderRadius: BorderRadius.circular(appRadius),
+                          Skeletonizer(
+                            effect: const ShimmerEffect(),
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                              child: SizedBox(
+                                height: appMargin,
+                                width: width / 3,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      SkeletonAvatar(
-                        style: SkeletonAvatarStyle(
-                          height: appPadding,
-                          width: appPadding,
-                          borderRadius: BorderRadius.circular(appRadius),
+                      const Skeletonizer(
+                        effect: ShimmerEffect(),
+                        child: Card(
+                          margin: EdgeInsets.symmetric(horizontal: 16),
+                          child: SizedBox(
+                            height: appPadding,
+                            width: appPadding,
+                          ),
                         ),
                       ),
                     ],
@@ -81,12 +90,8 @@ class _CardCountState extends State<CardCount> {
                           "userCode": widget.homeController.data!.userCode,
                         });
                       } else {
-                        Navigator.of(context).pushNamed('listrequestsstores', arguments: {
-                          "codeProvider": widget.homeController.data!.codCompany,
-                          "userCode": 0,
-                          "visibleBuyers": true,
-                          "homeController": widget.homeController
-                        });
+                        Navigator.of(context).pushNamed('listrequestsstores',
+                            arguments: {"codeProvider": widget.homeController.data!.codCompany, "userCode": 0, "visibleBuyers": true, "homeController": widget.homeController});
                       }
                     },
                     child: Container(

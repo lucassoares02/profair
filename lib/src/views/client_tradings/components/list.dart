@@ -29,7 +29,7 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(icon: Icons.groups_2_sharp, label: S.of(context).text_customers),
+      widgetLoading: LoadingList(icon: Icons.groups_2_sharp, label: "Clientes"),
       component: Column(
         children: [
           HeaderList(
@@ -37,7 +37,7 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.tradingsController.search(value);
             },
-            label: S.of(context).text_customers,
+            label: "Clientes",
           ),
           ValueListenableBuilder(
               valueListenable: widget.tradingsController.stateSearchTrandings,

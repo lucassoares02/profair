@@ -33,7 +33,7 @@ class _DetailsBalanceState extends State<DetailsBalance> {
             valueListenable: balanceController.stateStores,
             builder: (context, value, child) {
               return ComponentList(
-                  description: S.of(context).text_select_branch,
+                  description: "Selecione a Filial",
                   state: balanceController.stateStores,
                   codeProvider: widget.codeProvider,
                   listItems: balanceController.requestsStores,

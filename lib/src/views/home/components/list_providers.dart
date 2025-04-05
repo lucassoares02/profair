@@ -3,7 +3,7 @@ import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter/material.dart';
 
 class ListProviders extends StatefulWidget {
@@ -38,21 +38,29 @@ class _ListProvidersState extends State<ListProviders> {
             listenable: widget.homeController.stateTopProvider,
             widgetLoading: Column(
               children: [
-                Container(
-                    margin: const EdgeInsets.all(appPadding),
-                    child: SkeletonLine(
-                      style: SkeletonLineStyle(width: width / 2),
-                    )),
+                Skeletonizer(
+                  effect: const ShimmerEffect(),
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SizedBox(
+                      width: width / 2,
+                    ),
+                  ),
+                ),
                 Container(
                   margin: const EdgeInsets.only(left: 10),
                   child: ListView.builder(
                       shrinkWrap: true,
                       itemCount: 7,
                       itemBuilder: (context, index) {
-                        return Container(
-                          margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
-                          child: SkeletonAvatar(
-                            style: SkeletonAvatarStyle(height: 90, width: width, borderRadius: BorderRadius.circular(appRadius)),
+                        return Skeletonizer(
+                          effect: const ShimmerEffect(),
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            child: SizedBox(
+                              height: 90,
+                              width: width,
+                            ),
                           ),
                         );
                       }),

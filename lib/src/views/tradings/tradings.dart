@@ -33,7 +33,7 @@ class _TradingsState extends State<Tradings> {
             valueListenable: tradingsController.stateTradings,
             builder: (context, value, child) {
               return ComponentList(
-                description: S.of(context).text_select_branch,
+                description: "Selecione a Filial",
                 state: tradingsController.stateTradings,
                 homeController: widget.homeController,
                 listItems: tradingsController.tradingList,

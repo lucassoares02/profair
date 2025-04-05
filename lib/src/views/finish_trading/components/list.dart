@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:intl/intl.dart';
 import 'package:profair/src/components/button.dart';
 import 'package:profair/src/components/header_list.dart';
@@ -7,15 +5,12 @@ import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/components/spacing.dart';
-import 'package:profair/src/notification/notification_model.dart';
-import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../models/clients_select_stores_model.dart';
 
 class ComponentList extends StatefulWidget {
@@ -76,23 +71,23 @@ class _ComponentListState extends State<ComponentList> {
           widget.finishTradingController.formatCurrency((widget.finishTradingController.totalValue * widget.finishTradingController.totalChecked) * widget.finishTradingController.totalCheckedBranch),
       "hour": DateFormat.Hm().format(DateTime.now()).toString()
     });
-    showNotification();
+    // showNotification();
   }
 
-  showNotification() async {
-    try {
-      Provider.of<NotificationService>(context, listen: false).showNotification(
-        CustomNotification(
-          id: 1,
-          title: "✅ Bom Trabalho!",
-          body: "Pedido realizado com sucesso!",
-          payload: "/home",
-        ),
-      );
-    } catch (e) {
-      print("Error Show Notification: $e");
-    }
-  }
+  // showNotification() async {
+  //   try {
+  //     Provider.of<NotificationService>(context, listen: false).showNotification(
+  //       CustomNotification(
+  //         id: 1,
+  //         title: "✅ Bom Trabalho!",
+  //         body: "Pedido realizado com sucesso!",
+  //         payload: "/home",
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     print("Error Show Notification: $e");
+  //   }
+  // }
 
   totalCurrentTime() {
     // PARA NOTIFICAR A ATUALIZAÇÃO DO ESTADO DO SALDO
@@ -154,10 +149,13 @@ class _ComponentListState extends State<ComponentList> {
                             valueListenable: widget.finishTradingController.stateCheckList,
                             builder: (context, value, child) {
                               return value == StateApp.loading
-                                  ? SkeletonAvatar(
-                                      style: SkeletonAvatarStyle(
-                                        height: 80,
-                                        borderRadius: BorderRadius.circular(50),
+                                  ? const Skeletonizer(
+                                      effect: ShimmerEffect(),
+                                      child: Card(
+                                        margin: EdgeInsets.symmetric(horizontal: 16),
+                                        child: SizedBox(
+                                          height: 80,
+                                        ),
                                       ),
                                     )
                                   : ValueListenableBuilder(

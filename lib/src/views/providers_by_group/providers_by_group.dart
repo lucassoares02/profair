@@ -33,7 +33,7 @@ class _ProvidersByGroupState extends State<ProvidersByGroup> {
             valueListenable: clientsController.stateProviders,
             builder: (context, value, child) {
               return ComponentList(
-                  description: S.of(context).text_select_provider,
+                  description: "Fornecedores",
                   state: clientsController.stateProviders,
                   codeProvider: widget.codeClient,
                   listItems: clientsController.providersList,

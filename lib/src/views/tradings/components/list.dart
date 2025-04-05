@@ -32,7 +32,7 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(icon: Icons.swap_horiz_rounded, label: S.of(context).text_trading),
+      widgetLoading: LoadingList(icon: Icons.swap_horiz_rounded, label: "Negociações"),
       component: Column(
         children: [
           HeaderList(

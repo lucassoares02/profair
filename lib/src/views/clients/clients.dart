@@ -43,7 +43,7 @@ class _ClientsState extends State<Clients> {
             valueListenable: clientsController.stateClients,
             builder: (context, value, child) {
               return ComponentList(
-                  description: S.of(context).text_select_branch,
+                  description: "Selecione a Filial",
                   state: clientsController.stateClients,
                   codeProvider: widget.codeProvider,
                   listItems: clientsController.clientsList,

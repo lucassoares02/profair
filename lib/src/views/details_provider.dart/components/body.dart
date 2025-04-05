@@ -11,7 +11,7 @@ import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/details_provider.dart/components/list_negotiations.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider_controller.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../reports/components/chart_negotiation.dart';
 
@@ -192,11 +192,14 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                 valueListenable: widget.detailsProviderController.stateTopMerchandises,
                                 builder: (context, valueTop, childTop) {
                                   return valueTop == StateApp.loading
-                                      ? SkeletonAvatar(
-                                          style: SkeletonAvatarStyle(
-                                            height: 400,
-                                            width: double.maxFinite,
-                                            borderRadius: BorderRadius.circular(10),
+                                      ? const Skeletonizer(
+                                          effect: ShimmerEffect(),
+                                          child: Card(
+                                            margin: EdgeInsets.symmetric(horizontal: 16),
+                                            child: SizedBox(
+                                              height: 400,
+                                              width: double.maxFinite,
+                                            ),
                                           ),
                                         )
                                       : Column(
@@ -300,8 +303,15 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                                                       Text(e.codeNegotiation.toString()),
                                                                       Text(widget.codeBranch == 0 ? e.razaoClient! : e.descriptionNegotiation!),
                                                                       stateRequest == StateApp.loading
-                                                                          ? const SkeletonLine(
-                                                                              style: SkeletonLineStyle(width: 50, height: 15, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                                                          ? const Skeletonizer(
+                                                                              effect: ShimmerEffect(),
+                                                                              child: Card(
+                                                                                margin: EdgeInsets.symmetric(horizontal: 16),
+                                                                                child: SizedBox(
+                                                                                  height: appPadding,
+                                                                                  width: 50,
+                                                                                ),
+                                                                              ),
                                                                             )
                                                                           : stateRequest == StateApp.success
                                                                               ? widget.detailsProviderController.request != null

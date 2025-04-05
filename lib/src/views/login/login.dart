@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
 import 'package:profair/generated/l10n.dart';
+import 'package:profair/src/components/barcode_scanner_simple.dart';
 import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:profair/src/components/spacing.dart';
@@ -36,39 +36,39 @@ class _LoginPageState extends State<LoginPage> {
   String codes = "";
   String? code = "";
 
-  scannerQrCode() async {
-    // dynamic permission = await accessCamPermission();
-    // if (permission == PermissionStatus.granted) {
+  // scannerQrCode() async {
+  //   // dynamic permission = await accessCamPermission();
+  //   // if (permission == PermissionStatus.granted) {
 
-    try {
-      code = await FlutterBarcodeScanner.scanBarcode(
-        "#66ff66",
-        "Cancelar",
-        true,
-        ScanMode.DEFAULT,
-      );
+  //   try {
+  //     code = await FlutterBarcodeScanner.scanBarcode(
+  //       "#66ff66",
+  //       "Cancelar",
+  //       true,
+  //       ScanMode.DEFAULT,
+  //     );
 
-      if (code != "-1") {
-        final data = {"codacesso": code};
-        bool response = await loginController!.stateLoginQr(data);
-        if (loginController!.stateLogin.value == StateApp.success) {
-          navigatorRoutes(true);
-        } else {
-          Fluttertoast.showToast(
-              msg: "Não foi possível realizar login!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-        }
-      }
-    } on PlatformException {
-      code = "Failed to get platform version.";
-    }
-    // }
-  }
+  //     if (code != "-1") {
+  //       final data = {"codacesso": code};
+  //       bool response = await loginController!.stateLoginQr(data);
+  //       if (loginController!.stateLogin.value == StateApp.success) {
+  //         navigatorRoutes(true);
+  //       } else {
+  //         Fluttertoast.showToast(
+  //             msg: "Não foi possível realizar login!",
+  //             toastLength: Toast.LENGTH_SHORT,
+  //             gravity: ToastGravity.CENTER,
+  //             timeInSecForIosWeb: 1,
+  //             backgroundColor: Colors.red,
+  //             textColor: Colors.white,
+  //             fontSize: 16.0);
+  //       }
+  //     }
+  //   } on PlatformException {
+  //     code = "Failed to get platform version.";
+  //   }
+  //   // }
+  // }
 
   navigatorRoutes(response) {
     if (response) {
@@ -182,11 +182,12 @@ class _LoginPageState extends State<LoginPage> {
                                         AppButton(
                                           onPressButton: () {
                                             // loginFunc();
-                                            scannerQrCode();
+                                            // scannerQrCode();
                                             // testteInter();
+                                            Navigator.push(context, MaterialPageRoute(builder: (context) => BarcodeScannerSimple(loginController: loginController!)));
                                           },
                                           colorLoading: colorWhite,
-                                          label: S.of(context).text_scanner,
+                                          label: "Scanear QrCode",
                                           colorButton: colorWhite,
                                           iconButton: Icons.qr_code_rounded,
                                           loading: value == StateApp.loading,

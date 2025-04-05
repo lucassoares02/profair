@@ -12,16 +12,20 @@ import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MultiProvider(
-      providers: [
-        Provider<NotificationService>(
-          create: (context) => NotificationService(),
-        ),
-      ],
-      child: ModularApp(
-        module: AppModule(),
-        child: const MyApp(),
-      )));
+  runApp(
+      // MultiProvider(
+      //   providers: [
+      //     Provider<NotificationService>(
+      //       create: (context) => NotificationService(),
+      //     ),
+      //   ],
+      //   child:
+      ModularApp(
+    module: AppModule(),
+    child: const MyApp(),
+  )
+      // )
+      );
 }
 
 class MyApp extends StatelessWidget {

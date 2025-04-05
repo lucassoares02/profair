@@ -1,11 +1,10 @@
-import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CardWelcome extends StatefulWidget {
   CardWelcome({super.key, required this.homeController, required this.action});
@@ -52,12 +51,26 @@ class _CardWelcomeState extends State<CardWelcome> {
                   ? Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SkeletonAvatar(
-                          style: SkeletonAvatarStyle(height: 15, width: width / 2, borderRadius: BorderRadius.circular(10)),
+                        Skeletonizer(
+                          effect: const ShimmerEffect(),
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            child: SizedBox(
+                              height: 15,
+                              width: width / 2,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10),
-                        SkeletonAvatar(
-                          style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                        Skeletonizer(
+                          effect: const ShimmerEffect(),
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            child: SizedBox(
+                              height: 10,
+                              width: width / 3,
+                            ),
+                          ),
                         ),
                       ],
                     )

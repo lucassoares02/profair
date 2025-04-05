@@ -8,7 +8,7 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider_controller.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ListNegotiations extends StatefulWidget {
   const ListNegotiations({super.key, required this.detailsProviderController, required this.codeProvider, required this.codeBranch});
@@ -129,8 +129,15 @@ class _ListNegotiationsState extends State<ListNegotiations> {
                                   valueListenable: widget.detailsProviderController.stateRequestStores,
                                   builder: (context, stateRequest, value) {
                                     return stateRequest == StateApp.loading
-                                        ? const SkeletonLine(
-                                            style: SkeletonLineStyle(width: 50, height: 15, borderRadius: BorderRadius.all(Radius.circular(10))),
+                                        ? const Skeletonizer(
+                                            effect: ShimmerEffect(),
+                                            child: Card(
+                                              margin: EdgeInsets.symmetric(horizontal: 16),
+                                              child: SizedBox(
+                                                height: appPadding,
+                                                width: 50,
+                                              ),
+                                            ),
                                           )
                                         : stateRequest == StateApp.success
                                             ? widget.detailsProviderController.request != null

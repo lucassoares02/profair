@@ -12,8 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ComponentList extends StatefulWidget {
-  ComponentList(
-      {super.key, this.product, required this.listItems, required this.state, required this.clientsProductController});
+  ComponentList({super.key, this.product, required this.listItems, required this.state, required this.clientsProductController});
 
   Iterable<ClientsProductModel> listItems;
   final ProductsProviderModel? product;
@@ -31,8 +30,7 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading:
-          LoadingList(icon: Icons.shopping_cart_checkout_rounded, label: S.of(context).text_requesting_customers),
+      widgetLoading: LoadingList(icon: Icons.shopping_cart_checkout_rounded, label: "Clientes Solicitantes"),
       component: Column(
         children: [
           HeaderList(
@@ -40,7 +38,7 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.clientsProductController.search(value);
             },
-            label: S.of(context).text_requesting_customers,
+            label: "Clientes Solicitantes",
           ),
           ValueListenableBuilder(
               valueListenable: widget.clientsProductController.stateSearchClientProduct,

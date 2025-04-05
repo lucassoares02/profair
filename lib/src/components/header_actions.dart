@@ -82,7 +82,7 @@ class _HeaderActionsState extends State<HeaderActions> {
                           },
                           icon: const Icon(Icons.close)),
                       prefixIcon: const Icon(Icons.search),
-                      hintText: S.of(context).text_search,
+                      hintText: "Pesquisar",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: const BorderSide(width: 0, style: BorderStyle.none),

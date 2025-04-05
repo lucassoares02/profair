@@ -58,7 +58,6 @@ class BarChartTesteState extends State<BarChartTeste> {
     return BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: widget.touchedBarColor,
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: 5,
           getTooltipItem: (group, groupIndex, rod, rodIndex) {
@@ -154,7 +153,7 @@ class BarChartTesteState extends State<BarChartTeste> {
     );
     Widget text;
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       space: 10,
       child: Text(widget.reportsClients[value.toInt()].client!.substring(0, 1), style: style),
     );

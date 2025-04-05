@@ -1,6 +1,4 @@
-import 'package:flutter/services.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:profair/src/components/barcode_scanner_simple_sell.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -8,7 +6,7 @@ import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/utils/spacing.dart';
 // import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter/material.dart';
 
 class AppActions extends StatefulWidget {
@@ -24,55 +22,17 @@ class AppActions extends StatefulWidget {
 }
 
 class _AppActionsState extends State<AppActions> {
-  scannerQrCode() async {
-    try {
-      String codeD = await FlutterBarcodeScanner.scanBarcode(
-        "#ff6666",
-        "Cancelar",
-        true,
-        ScanMode.DEFAULT,
-      );
-
-      if (codeD != "-1") {
-        String code = codeD.replaceAll("0x9E89738274392874.", "");
-        code = code.replaceAll(".9327329847372939", "");
-        LoginModel? response = await widget.homeController.findClient(code);
-        int codeUser = response!.userCode ?? 0;
-
-        int active = response.active ?? 0;
-
-        if (active == 0) {
-          Fluttertoast.showToast(
-              msg: "Período de negociações não iniciado ou encerrado!!",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
-          return;
-        } else {
-          if (codeUser != 0) {
-            navigatorRoutes("selectstore", {"client": response, "codeProvider": widget.homeController.data!.codCompany, "consult": widget.homeController.data!.userCode});
-          } else {
-            Fluttertoast.showToast(
-                msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
-          }
-        }
-      } else {
-        navigatorRoutes("preorder", widget.homeController);
-      }
-    } on PlatformException {
-      Fluttertoast.showToast(
-          msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
-    }
-  }
-
   actionButton(String? route) {
     if (route == "users") {
       navigatorRoutes(route, {});
     } else if (route == "selectstore") {
-      scannerQrCode();
+      // scannerQrCode();
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => BarcodeScannerSimpleSell(
+                    homeController: widget.homeController,
+                  )));
       // navigatorRoutes("preorder", widget.homeController);
       // navigatorRoutes("customers", widget.homeController);
     } else if (route == "productsprovider") {
@@ -160,10 +120,14 @@ class _AppActionsState extends State<AppActions> {
                 shrinkWrap: true,
                 itemCount: 6,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: const EdgeInsets.only(left: 10),
-                    child: SkeletonAvatar(
-                      style: SkeletonAvatarStyle(height: 60, width: 60, borderRadius: BorderRadius.circular(50)),
+                  return const Skeletonizer(
+                    effect: ShimmerEffect(),
+                    child: Card(
+                      margin: EdgeInsets.symmetric(horizontal: 16),
+                      child: SizedBox(
+                        height: 60,
+                        width: 60,
+                      ),
                     ),
                   );
                 }),

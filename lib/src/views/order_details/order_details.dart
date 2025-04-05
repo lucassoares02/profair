@@ -33,7 +33,7 @@ class _OrderDetailsState extends State<OrderDetails> {
             valueListenable: orderDetailsController.stateProducts,
             builder: (context, value, child) {
               return ComponentList(
-                description: S.of(context).text_select_branch,
+                description: "Selecione a Filial",
                 state: orderDetailsController.stateProducts,
                 codeProvider: widget.order.codeForn,
                 listItems: orderDetailsController.orderDetails,

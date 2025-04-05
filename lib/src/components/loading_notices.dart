@@ -1,5 +1,5 @@
 import 'package:profair/src/utils/spacing.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter/material.dart';
 
 class LoadingNotice extends StatefulWidget {
@@ -18,11 +18,16 @@ class _LoadingNoticeState extends State<LoadingNotice> {
     final width = MediaQuery.of(context).size.width;
     return Column(
       children: [
-        Container(
-            margin: const EdgeInsets.only(left: appPadding, bottom: appMargin),
-            child: SkeletonLine(
-              style: SkeletonLineStyle(width: width / 2, height: 15, borderRadius: const BorderRadius.all(Radius.circular(10))),
-            )),
+        Skeletonizer(
+          effect: const ShimmerEffect(),
+          child: Card(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            child: SizedBox(
+              height: appPadding,
+              width: width / 2,
+            ),
+          ),
+        ),
         Container(
           margin: const EdgeInsets.only(left: 5),
           height: widget.cardHeigth ?? 300,
@@ -31,13 +36,13 @@ class _LoadingNoticeState extends State<LoadingNotice> {
               shrinkWrap: true,
               itemCount: 3,
               itemBuilder: (context, index) {
-                return Container(
-                  margin: const EdgeInsets.only(left: appMargin, right: appPadding, top: appMargin),
-                  child: SkeletonAvatar(
-                    style: SkeletonAvatarStyle(
+                return Skeletonizer(
+                  effect: const ShimmerEffect(),
+                  child: Card(
+                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                    child: SizedBox(
                       height: widget.cardHeigth ?? 300,
                       width: widget.cardWidth ?? 200,
-                      borderRadius: BorderRadius.circular(appRadius),
                     ),
                   ),
                 );

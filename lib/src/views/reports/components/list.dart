@@ -10,7 +10,7 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ComponentList extends StatefulWidget {
   ComponentList({super.key, required this.reportsController, this.codeProvider, this.accessTargeting});
@@ -70,11 +70,14 @@ class _ComponentListState extends State<ComponentList> {
                     valueListenable: widget.reportsController.statePercentageClients,
                     builder: (context, value, child) {
                       return value == StateApp.loading
-                          ? SkeletonAvatar(
-                              style: SkeletonAvatarStyle(
-                                height: 100,
-                                width: width,
-                                borderRadius: BorderRadius.circular(10),
+                          ? Skeletonizer(
+                              effect: const ShimmerEffect(),
+                              child: Card(
+                                margin: const EdgeInsets.symmetric(horizontal: 16),
+                                child: SizedBox(
+                                  height: 100,
+                                  width: width,
+                                ),
                               ),
                             )
                           : CardPercentage(
@@ -101,11 +104,14 @@ class _ComponentListState extends State<ComponentList> {
                         valueListenable: widget.reportsController.stateReportsProducts,
                         builder: (context, value, child) {
                           return value == StateApp.loading
-                              ? SkeletonAvatar(
-                                  style: SkeletonAvatarStyle(
-                                    height: 300,
-                                    width: width,
-                                    borderRadius: BorderRadius.circular(10),
+                              ? Skeletonizer(
+                                  effect: const ShimmerEffect(),
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                                    child: SizedBox(
+                                      height: 300,
+                                      width: width,
+                                    ),
                                   ),
                                 )
                               : Column(
@@ -134,11 +140,14 @@ class _ComponentListState extends State<ComponentList> {
                         valueListenable: widget.reportsController.stateReportsProducts,
                         builder: (context, value, child) {
                           return value == StateApp.loading
-                              ? SkeletonAvatar(
-                                  style: SkeletonAvatarStyle(
-                                    height: 300,
-                                    width: width,
-                                    borderRadius: BorderRadius.circular(10),
+                              ? Skeletonizer(
+                                  effect: const ShimmerEffect(),
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(horizontal: 16),
+                                    child: SizedBox(
+                                      height: 300,
+                                      width: width,
+                                    ),
                                   ),
                                 )
                               // : BarChartTeste(listItems: widget.reportsController.reportsTotalProducts);
@@ -172,11 +181,14 @@ class _ComponentListState extends State<ComponentList> {
                   valueListenable: widget.reportsController.statePercentageClients,
                   builder: (context, value, child) {
                     return value == StateApp.loading
-                        ? SkeletonAvatar(
-                            style: SkeletonAvatarStyle(
-                              height: 100,
-                              width: width,
-                              borderRadius: BorderRadius.circular(10),
+                        ? Skeletonizer(
+                            effect: const ShimmerEffect(),
+                            child: Card(
+                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                              child: SizedBox(
+                                height: 100,
+                                width: width,
+                              ),
                             ),
                           )
                         : CardPercentage(
@@ -211,11 +223,14 @@ class _ComponentListState extends State<ComponentList> {
                 valueListenable: widget.reportsController.stateReports,
                 builder: (context, value, child) {
                   return value == StateApp.loading
-                      ? SkeletonAvatar(
-                          style: SkeletonAvatarStyle(
-                            height: 250,
-                            width: width,
-                            borderRadius: BorderRadius.circular(10),
+                      ? Skeletonizer(
+                          effect: const ShimmerEffect(),
+                          child: Card(
+                            margin: const EdgeInsets.symmetric(horizontal: 16),
+                            child: SizedBox(
+                              height: 250,
+                              width: width,
+                            ),
                           ),
                         )
                       : Column(
@@ -263,11 +278,14 @@ class _ComponentListState extends State<ComponentList> {
                       builder: (context, value, child) {
                         getMaxValue();
                         return value == StateApp.loading
-                            ? SkeletonAvatar(
-                                style: SkeletonAvatarStyle(
-                                  height: 250,
-                                  width: width,
-                                  borderRadius: BorderRadius.circular(10),
+                            ? Skeletonizer(
+                                effect: const ShimmerEffect(),
+                                child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: SizedBox(
+                                    height: 250,
+                                    width: width,
+                                  ),
                                 ),
                               )
                             : widget.reportsController.reportValueMinutes.isNotEmpty
@@ -297,11 +315,14 @@ class _ComponentListState extends State<ComponentList> {
                       builder: (context, value, child) {
                         getMaxValuePeriod();
                         return value == StateApp.loading
-                            ? SkeletonAvatar(
-                                style: SkeletonAvatarStyle(
-                                  height: 250,
-                                  width: width,
-                                  borderRadius: BorderRadius.circular(10),
+                            ? Skeletonizer(
+                                effect: const ShimmerEffect(),
+                                child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                                  child: SizedBox(
+                                    height: 250,
+                                    width: width,
+                                  ),
                                 ),
                               )
                             : widget.reportsController.reportValueMinutes.isNotEmpty

@@ -5,7 +5,7 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class CardPercentage extends StatefulWidget {
   CardPercentage({
@@ -78,19 +78,25 @@ class _CardPercentageState extends State<CardPercentage> {
                       ? Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            SkeletonAvatar(
-                              style: SkeletonAvatarStyle(
-                                height: 20,
-                                width: width,
-                                borderRadius: BorderRadius.circular(10),
+                            Skeletonizer(
+                              effect: const ShimmerEffect(),
+                              child: Card(
+                                margin: const EdgeInsets.symmetric(horizontal: 16),
+                                child: SizedBox(
+                                  height: 20,
+                                  width: width,
+                                ),
                               ),
                             ),
                             const AppSpacing(),
-                            SkeletonAvatar(
-                              style: SkeletonAvatarStyle(
-                                height: 15,
-                                width: 30,
-                                borderRadius: BorderRadius.circular(10),
+                            const Skeletonizer(
+                              effect: ShimmerEffect(),
+                              child: Card(
+                                margin: EdgeInsets.symmetric(horizontal: 16),
+                                child: SizedBox(
+                                  height: 15,
+                                  width: 30,
+                                ),
                               ),
                             ),
                           ],

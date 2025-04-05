@@ -30,7 +30,7 @@ class _ListAttractionsState extends State<ListAttractions> {
             valueListenable: listAttractionsController.stateAttractions,
             builder: (context, value, child) {
               return ComponentList(
-                description: S.of(context).text_select_branch,
+                description: "Selecione a Filial",
                 state: listAttractionsController.stateAttractions,
                 listItems: listAttractionsController.listAttractions,
               );

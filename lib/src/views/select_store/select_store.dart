@@ -42,7 +42,7 @@ class _SelectStoreState extends State<SelectStore> {
             valueListenable: storesController.stateStores,
             builder: (context, value, child) {
               return ComponentList(
-                  description: S.of(context).text_select_branch,
+                  description: "Selecione a Filial",
                   state: storesController.stateStores,
                   codeProvider: widget.codeProvider,
                   listItems: storesController.stores,

@@ -55,7 +55,6 @@ class BarChartSample1State extends State<BarChartSample1> {
     return BarChartData(
       barTouchData: BarTouchData(
         touchTooltipData: BarTouchTooltipData(
-          tooltipBgColor: touchedIndex <= 2 ? topProductColors[touchedIndex % topProductColors.length] : widget.barColor,
           tooltipHorizontalAlignment: FLHorizontalAlignment.right,
           tooltipMargin: 5,
           direction: TooltipDirection.top,
@@ -150,7 +149,7 @@ class BarChartSample1State extends State<BarChartSample1> {
   Widget getTitles(double value, TitleMeta meta) {
     Widget text;
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       space: 10,
       child: Text(widget.reportsProducts[value.toInt()].title!.substring(0, 1),
           style: TextStyle(

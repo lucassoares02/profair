@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:profair/src/utils/spacing.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class LoadingNegotiations extends StatelessWidget {
   const LoadingNegotiations({super.key});
@@ -15,10 +14,14 @@ class LoadingNegotiations extends StatelessWidget {
           shrinkWrap: true,
           itemCount: 6,
           itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.only(left: 10),
-              child: SkeletonAvatar(
-                style: SkeletonAvatarStyle(height: 80, width: 80, borderRadius: BorderRadius.circular(appRadius)),
+            return const Skeletonizer(
+              effect: ShimmerEffect(),
+              child: Card(
+                margin: EdgeInsets.symmetric(horizontal: 16),
+                child: SizedBox(
+                  height: 80,
+                  width: 80,
+                ),
               ),
             );
           }),

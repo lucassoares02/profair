@@ -62,7 +62,7 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(icon: Icons.shopping_basket_rounded, label: S.of(context).text_products),
+      widgetLoading: LoadingList(icon: Icons.shopping_basket_rounded, label: "Produtos"),
       component: Column(
         children: [
           HeaderList(
