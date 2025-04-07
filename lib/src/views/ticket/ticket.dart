@@ -86,108 +86,128 @@ class _TicketState extends State<Ticket> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          if (widget.homeController.data!.accessTargeting == 2)
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // const Text(
-                                //   "Agilize seus pedidos",
-                                //   style: TextStyle(
-                                //     fontSize: 18,
-                                //     fontWeight: FontWeight.bold,
-                                //   ),
-                                // ),
-                                // const AppSpacing(),
-                                // const Text(
-                                //   "Utilize o código abaixo, para que o fornecedor possa identificar o seu acesso!",
-                                //   style: TextStyle(
-                                //     fontSize: 16,
-                                //     fontWeight: FontWeight.w500,
-                                //     color: colorGreyDark,
-                                //   ),
-                                // ),
+                          widget.homeController.data!.accessTargeting == 2
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    // const Text(
+                                    //   "Agilize seus pedidos",
+                                    //   style: TextStyle(
+                                    //     fontSize: 18,
+                                    //     fontWeight: FontWeight.bold,
+                                    //   ),
+                                    // ),
+                                    // const AppSpacing(),
+                                    // const Text(
+                                    //   "Utilize o código abaixo, para que o fornecedor possa identificar o seu acesso!",
+                                    //   style: TextStyle(
+                                    //     fontSize: 16,
+                                    //     fontWeight: FontWeight.w500,
+                                    //     color: colorGreyDark,
+                                    //   ),
+                                    // ),
 
-                                Container(
-                                  decoration: const BoxDecoration(
-                                    gradient: LinearGradient(
-                                      end: Alignment.topCenter,
-                                      begin: Alignment.bottomCenter,
-                                      // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
-                                      colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
-                                    ),
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        margin: EdgeInsets.only(top: appPadding, left: 5),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            BackButton(
-                                              color: colorWhite,
-                                              onPressed: () {
-                                                Navigator.pop(context);
-                                              },
-                                            ),
-                                          ],
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                        gradient: LinearGradient(
+                                          end: Alignment.topCenter,
+                                          begin: Alignment.bottomCenter,
+                                          // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
+                                          colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
                                         ),
                                       ),
-                                      const AppSpacing(),
-                                      const AppSpacing(),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Image.asset("assets/images/logowhite.png", width: 140),
-                                        ],
-                                      ),
-                                      const AppSpacing(),
-                                      const AppSpacing(),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                      child: Column(
                                         children: [
                                           Container(
-                                            padding: const EdgeInsets.all(appPadding),
-                                            decoration: const BoxDecoration(
-                                              color: colorWhite,
-                                              borderRadius: BorderRadius.all(
-                                                Radius.circular(appRadius),
-                                              ),
-                                            ),
-                                            child: Animate(
-                                              effects: const [ShimmerEffect(delay: Duration(milliseconds: 500), duration: Duration(milliseconds: 1000))],
-                                              child: QrImageView(
-                                                data: "0x9E89738274392874.${widget.homeController.data!.codAccess!}.9327329847372939",
-                                                size: size.width - 150,
-                                                version: QrVersions.auto,
-                                              ),
+                                            margin: EdgeInsets.only(top: appPadding, left: 5),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              children: [
+                                                BackButton(
+                                                  color: colorWhite,
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                ),
+                                              ],
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      const AppSpacing(),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        children: [
-                                          Text(
-                                            widget.homeController.data!.codAccess!,
-                                            // widget.homeController.data!.userCode.toString(),
-                                            style: const TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                          const AppSpacing(),
+                                          const AppSpacing(),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset("assets/images/logowhite.png", width: 140),
+                                            ],
                                           ),
+                                          const AppSpacing(),
+                                          const AppSpacing(),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                padding: const EdgeInsets.all(appPadding),
+                                                decoration: const BoxDecoration(
+                                                  color: colorWhite,
+                                                  borderRadius: BorderRadius.all(
+                                                    Radius.circular(appRadius),
+                                                  ),
+                                                ),
+                                                child: Animate(
+                                                  effects: const [ShimmerEffect(delay: Duration(milliseconds: 500), duration: Duration(milliseconds: 1000))],
+                                                  child: QrImageView(
+                                                    data: "0x9E89738274392874.${widget.homeController.data!.codAccess!}.9327329847372939",
+                                                    size: size.width - 150,
+                                                    version: QrVersions.auto,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const AppSpacing(),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: [
+                                              Text(
+                                                widget.homeController.data!.codAccess!,
+                                                // widget.homeController.data!.userCode.toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 18,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const AppSpacing(),
+                                          const AppSpacing(),
+                                          const AppSpacing(),
+                                          const AppSpacing(),
+                                          const AppSpacing(),
                                         ],
                                       ),
-                                      const AppSpacing(),
-                                      const AppSpacing(),
-                                      const AppSpacing(),
-                                      const AppSpacing(),
-                                      const AppSpacing(),
+                                    ),
+                                  ],
+                                )
+                              : Container(
+                                  margin: EdgeInsets.only(top: appPadding, left: 5),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      BackButton(
+                                        color: colorWhite,
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ),
+                                      const Text("Perfil do usuário",
+                                          style: TextStyle(
+                                            color: colorWhite,
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                          )),
                                     ],
                                   ),
                                 ),
-                              ],
-                            ),
                           const AppSpacing(),
                           const AppSpacing(),
                           Container(
