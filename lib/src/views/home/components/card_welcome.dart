@@ -54,7 +54,6 @@ class _CardWelcomeState extends State<CardWelcome> {
                         Skeletonizer(
                           effect: const ShimmerEffect(),
                           child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
                             child: SizedBox(
                               height: 15,
                               width: width / 2,
@@ -65,7 +64,6 @@ class _CardWelcomeState extends State<CardWelcome> {
                         Skeletonizer(
                           effect: const ShimmerEffect(),
                           child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
                             child: SizedBox(
                               height: 10,
                               width: width / 3,

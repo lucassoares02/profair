@@ -1,3 +1,4 @@
+import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter/material.dart';
@@ -17,17 +18,18 @@ class _LoadingNoticeState extends State<LoadingNotice> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Skeletonizer(
           effect: const ShimmerEffect(),
           child: Card(
-            margin: const EdgeInsets.symmetric(horizontal: 16),
             child: SizedBox(
-              height: appPadding,
+              height: 20,
               width: width / 2,
             ),
           ),
         ),
+        const AppSpacing(),
         Container(
           margin: const EdgeInsets.only(left: 5),
           height: widget.cardHeigth ?? 300,
@@ -39,7 +41,6 @@ class _LoadingNoticeState extends State<LoadingNotice> {
                 return Skeletonizer(
                   effect: const ShimmerEffect(),
                   child: Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: SizedBox(
                       height: widget.cardHeigth ?? 300,
                       width: widget.cardWidth ?? 200,

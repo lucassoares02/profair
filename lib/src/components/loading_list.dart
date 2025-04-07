@@ -34,19 +34,18 @@ class _LoadingListState extends State<LoadingList> {
             ),
           ListView.builder(
               shrinkWrap: true,
-              itemCount: 7,
+              itemCount: 4,
               itemBuilder: (context, index) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
-                  margin: const EdgeInsets.symmetric(vertical: appMargin, horizontal: appMargin),
+                  padding: const EdgeInsets.symmetric(vertical: appMargin),
+                  margin: const EdgeInsets.symmetric(vertical: appMargin),
                   child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                     Skeletonizer(
                       effect: const ShimmerEffect(),
                       child: Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
                         child: SizedBox(
-                          height: 12,
-                          width: width / 1.5,
+                          height: 10,
+                          width: width / 4,
                         ),
                       ),
                     ),
@@ -54,20 +53,43 @@ class _LoadingListState extends State<LoadingList> {
                     Skeletonizer(
                       effect: const ShimmerEffect(),
                       child: Card(
-                        margin: const EdgeInsets.symmetric(horizontal: 16),
                         child: SizedBox(
-                          height: 12,
-                          width: width / 1.5,
+                          height: 10,
+                          width: width / 1.3,
                         ),
                       ),
                     ),
+                    const AppSpacing(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Skeletonizer(
+                          effect: const ShimmerEffect(),
+                          child: Card(
+                            child: SizedBox(
+                              height: 10,
+                              width: width / 1.6,
+                            ),
+                          ),
+                        ),
+                        const Skeletonizer(
+                          effect: const ShimmerEffect(),
+                          child: Card(
+                            child: SizedBox(
+                              height: 14,
+                              width: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     // Skeleton.replace(
                     //   style:
-                    //       SkeletonAvatarStyle(height: 12, width: width / 1.5, borderRadius: BorderRadius.circular(10)),
+                    //       SkeletonAvatarStyle(height: 10, width: width / 1.5, borderRadius: BorderRadius.circular(10)),
                     // ),
                     // const AppSpacing(),
                     // SkeletonAvatar(
-                    //   style: SkeletonAvatarStyle(height: 12, width: width / 3, borderRadius: BorderRadius.circular(10)),
+                    //   style: SkeletonAvatarStyle(height: 10, width: width / 3, borderRadius: BorderRadius.circular(10)),
                     // )
                   ]),
                 );

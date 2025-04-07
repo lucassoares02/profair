@@ -73,7 +73,6 @@ class _ComponentListState extends State<ComponentList> {
                           ? Skeletonizer(
                               effect: const ShimmerEffect(),
                               child: Card(
-                                margin: const EdgeInsets.symmetric(horizontal: 16),
                                 child: SizedBox(
                                   height: 100,
                                   width: width,
@@ -107,7 +106,6 @@ class _ComponentListState extends State<ComponentList> {
                               ? Skeletonizer(
                                   effect: const ShimmerEffect(),
                                   child: Card(
-                                    margin: const EdgeInsets.symmetric(horizontal: 16),
                                     child: SizedBox(
                                       height: 300,
                                       width: width,
@@ -143,7 +141,6 @@ class _ComponentListState extends State<ComponentList> {
                               ? Skeletonizer(
                                   effect: const ShimmerEffect(),
                                   child: Card(
-                                    margin: const EdgeInsets.symmetric(horizontal: 16),
                                     child: SizedBox(
                                       height: 300,
                                       width: width,
@@ -184,7 +181,6 @@ class _ComponentListState extends State<ComponentList> {
                         ? Skeletonizer(
                             effect: const ShimmerEffect(),
                             child: Card(
-                              margin: const EdgeInsets.symmetric(horizontal: 16),
                               child: SizedBox(
                                 height: 100,
                                 width: width,
@@ -226,7 +222,6 @@ class _ComponentListState extends State<ComponentList> {
                       ? Skeletonizer(
                           effect: const ShimmerEffect(),
                           child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
                             child: SizedBox(
                               height: 250,
                               width: width,
@@ -281,7 +276,6 @@ class _ComponentListState extends State<ComponentList> {
                             ? Skeletonizer(
                                 effect: const ShimmerEffect(),
                                 child: Card(
-                                  margin: const EdgeInsets.symmetric(horizontal: 16),
                                   child: SizedBox(
                                     height: 250,
                                     width: width,
@@ -318,7 +312,6 @@ class _ComponentListState extends State<ComponentList> {
                             ? Skeletonizer(
                                 effect: const ShimmerEffect(),
                                 child: Card(
-                                  margin: const EdgeInsets.symmetric(horizontal: 16),
                                   child: SizedBox(
                                     height: 250,
                                     width: width,

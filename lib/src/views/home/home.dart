@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   reloadScreen() async {
-    await homeController.findData();
+    homeController.findData();
     homeController.findCampaign();
   }
 
@@ -66,10 +66,11 @@ class _HomePageState extends State<HomePage> {
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      const AppSpacing(),
                                       Skeletonizer(
                                         effect: const ShimmerEffect(),
                                         child: Card(
-                                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                                          margin: const EdgeInsets.symmetric(horizontal: appPadding),
                                           child: SizedBox(
                                             width: width / 3,
                                             height: 10,
@@ -80,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                                       Skeletonizer(
                                         effect: const ShimmerEffect(),
                                         child: Card(
-                                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                                          margin: const EdgeInsets.symmetric(horizontal: appPadding),
                                           child: SizedBox(
                                             height: 15,
                                             width: width / 2,
@@ -91,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                                       const Skeletonizer(
                                         effect: ShimmerEffect(),
                                         child: Card(
-                                          margin: EdgeInsets.symmetric(horizontal: 16),
+                                          margin: EdgeInsets.symmetric(horizontal: appPadding),
                                           child: SizedBox(
                                             height: 45,
                                             width: double.maxFinite,
@@ -116,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                               ? const Skeletonizer(
                                   effect: ShimmerEffect(),
                                   child: Card(
-                                    margin: EdgeInsets.symmetric(horizontal: 16),
+                                    margin: EdgeInsets.symmetric(horizontal: appPadding),
                                     child: SizedBox(
                                       height: 240, // altura desejada pro esqueleto
                                       width: double.infinity,
@@ -126,21 +127,62 @@ class _HomePageState extends State<HomePage> {
                               : CardNotice(homeController: homeController);
                         }),
                     CardCount(homeController: homeController),
-                    const AppSpacing(),
                     ValueListenableBuilder(
-                        valueListenable: homeController.stateData,
-                        builder: (context, value, child) {
-                          return value == StateApp.loading
-                              ? LoadingList(loadingHeader: false)
-                              : homeController.data!.accessTargeting == 3 || homeController.data!.accessTargeting == 1
-                                  ? Column(
-                                      children: [
-                                        AppActions(homeController: homeController),
-                                        const AppSpacing(),
-                                      ],
-                                    )
-                                  : Container();
-                        }),
+                      valueListenable: homeController.stateData,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? Container(
+                                margin: const EdgeInsets.only(bottom: appPadding),
+                                padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                                child: Row(
+                                  children: [
+                                    Skeletonizer(
+                                      effect: const ShimmerEffect(),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                        margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
+                                        child: const SizedBox(
+                                          height: 70,
+                                          width: 70,
+                                        ),
+                                      ),
+                                    ),
+                                    Skeletonizer(
+                                      effect: const ShimmerEffect(),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                        margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
+                                        child: const SizedBox(
+                                          height: 70,
+                                          width: 70,
+                                        ),
+                                      ),
+                                    ),
+                                    Skeletonizer(
+                                      effect: const ShimmerEffect(),
+                                      child: Card(
+                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                        margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
+                                        child: const SizedBox(
+                                          height: 70,
+                                          width: 70,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : homeController.data!.accessTargeting == 3 || homeController.data!.accessTargeting == 1
+                                ? Column(
+                                    children: [
+                                      AppActions(homeController: homeController),
+                                      const AppSpacing(),
+                                    ],
+                                  )
+                                : Container();
+                      },
+                    ),
+                    const AppSpacing(),
                     InkWell(
                       onTap: () {
                         Navigator.of(context).pushNamed("reports", arguments: {
@@ -164,12 +206,14 @@ class _HomePageState extends State<HomePage> {
                         ]),
                       ),
                     ),
-                    const AppSpacing(),
                     ValueListenableBuilder(
                         valueListenable: homeController.stateData,
                         builder: (context, value, child) {
                           return value == StateApp.loading
-                              ? LoadingList(loadingHeader: false)
+                              ? Padding(
+                                  padding: const EdgeInsets.all(appPadding),
+                                  child: LoadingList(loadingHeader: false),
+                                )
                               : homeController.data!.accessTargeting == 3
                                   ? Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -215,7 +259,10 @@ class _HomePageState extends State<HomePage> {
                         valueListenable: homeController.stateData,
                         builder: (context, value, child) {
                           return value == StateApp.loading
-                              ? LoadingList(loadingHeader: false)
+                              ? Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                                  child: LoadingList(loadingHeader: false),
+                                )
                               : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
                                   ? LastRequests(
                                       description: "Últimos pedidos",

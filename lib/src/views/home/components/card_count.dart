@@ -29,7 +29,7 @@ class _CardCountState extends State<CardCount> {
               ? Container(
                   height: 120,
                   width: width,
-                  margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                  margin: const EdgeInsets.symmetric(horizontal: appMargin),
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -41,18 +41,24 @@ class _CardCountState extends State<CardCount> {
                           Skeletonizer(
                             effect: const ShimmerEffect(),
                             child: Card(
-                              margin: const EdgeInsets.symmetric(horizontal: 16),
+                              child: SizedBox(
+                                height: appMargin,
+                                width: width / 5,
+                              ),
+                            ),
+                          ),
+                          Skeletonizer(
+                            effect: const ShimmerEffect(),
+                            child: Card(
                               child: SizedBox(
                                 height: appPadding,
                                 width: width / 2,
                               ),
                             ),
                           ),
-                          const AppSpacing(),
                           Skeletonizer(
                             effect: const ShimmerEffect(),
                             child: Card(
-                              margin: const EdgeInsets.symmetric(horizontal: 16),
                               child: SizedBox(
                                 height: appMargin,
                                 width: width / 3,

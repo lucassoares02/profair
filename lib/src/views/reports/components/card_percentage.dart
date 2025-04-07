@@ -81,7 +81,6 @@ class _CardPercentageState extends State<CardPercentage> {
                             Skeletonizer(
                               effect: const ShimmerEffect(),
                               child: Card(
-                                margin: const EdgeInsets.symmetric(horizontal: 16),
                                 child: SizedBox(
                                   height: 20,
                                   width: width,

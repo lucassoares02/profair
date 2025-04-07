@@ -41,7 +41,6 @@ class _ListProvidersState extends State<ListProviders> {
                 Skeletonizer(
                   effect: const ShimmerEffect(),
                   child: Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16),
                     child: SizedBox(
                       width: width / 2,
                     ),
@@ -56,7 +55,6 @@ class _ListProvidersState extends State<ListProviders> {
                         return Skeletonizer(
                           effect: const ShimmerEffect(),
                           child: Card(
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
                             child: SizedBox(
                               height: 90,
                               width: width,

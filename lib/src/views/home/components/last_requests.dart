@@ -38,7 +38,6 @@ class _LastRequestsState extends State<LastRequests> {
           Skeletonizer(
             effect: const ShimmerEffect(),
             child: Card(
-              margin: const EdgeInsets.symmetric(horizontal: 16),
               child: SizedBox(
                 width: width / 2,
               ),
@@ -53,7 +52,6 @@ class _LastRequestsState extends State<LastRequests> {
                   return Skeletonizer(
                     effect: const ShimmerEffect(),
                     child: Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16),
                       child: SizedBox(
                         height: 90,
                         width: width,

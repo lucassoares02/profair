@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:profair/src/components/best_selling_productcard.dart';
 import 'package:profair/src/components/card_product.dart';
 import 'package:profair/src/components/card_product_top.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -129,7 +130,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                     ValueListenableBuilder(
                         valueListenable: indexTab,
                         builder: (context, valueIndex, child) {
-                          return SizedBox(
+                          return Container(
                             height: 45,
                             child: ListView.separated(
                               separatorBuilder: (context, index) => Container(
@@ -213,12 +214,8 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                               child: Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
-                                                  const Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Text("Top 10 produtos mais negociados", style: styleTitle),
-                                                      // Icon(Icons.more_horiz),
-                                                    ],
+                                                  BestSellingProductCard(
+                                                    onTap: () {},
                                                   ),
                                                   const AppSpacing(),
                                                   const AppSpacing(),

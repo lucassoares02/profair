@@ -23,7 +23,7 @@ class PreOrder extends StatefulWidget {
 class _PreOrderState extends State<PreOrder> {
   ValueNotifier<String> teste = ValueNotifier("");
   TextEditingController codigo = TextEditingController();
-  ValueNotifier<bool> enterCode = ValueNotifier(false);
+  ValueNotifier<bool> enterCode = ValueNotifier(true);
 
   String codes = "";
 
@@ -164,6 +164,24 @@ class _PreOrderState extends State<PreOrder> {
                                 )
                               : Column(
                                   children: [
+                                    const Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Abaixo do QrCode do Cliente!",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        AppSpacing(),
+                                        Text(
+                                          "Solicite o código que fica abaixo do QrCode do cliente, após encontrar o código de acesso, digite aqui!",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                     const AppSpacing(),
                                     const AppSpacing(),
                                     const AppSpacing(),
@@ -202,16 +220,16 @@ class _PreOrderState extends State<PreOrder> {
                                           );
                                         }),
                                     const AppSpacing(),
-                                    if (width < 700)
-                                      TextButton(
-                                        onPressed: () {
-                                          enterCode.value = !enterCode.value;
-                                        },
-                                        child: const Text(
-                                          "Acessar com QrCode",
-                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                      ),
+                                    // if (width < 700)
+                                    //   TextButton(
+                                    //     onPressed: () {
+                                    //       enterCode.value = !enterCode.value;
+                                    //     },
+                                    //     child: const Text(
+                                    //       "Acessar com QrCode",
+                                    //       style: TextStyle(fontWeight: FontWeight.bold),
+                                    //     ),
+                                    //   ),
                                   ],
                                 );
                         },

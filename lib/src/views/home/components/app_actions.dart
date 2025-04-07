@@ -22,17 +22,37 @@ class AppActions extends StatefulWidget {
 }
 
 class _AppActionsState extends State<AppActions> {
-  actionButton(String? route) {
+  actionButton(String? route, double height) async {
     if (route == "users") {
       navigatorRoutes(route, {});
     } else if (route == "selectstore") {
       // scannerQrCode();
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => BarcodeScannerSimpleSell(
-                    homeController: widget.homeController,
-                  )));
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => BarcodeScannerSimpleSell(
+      //       homeController: widget.homeController,
+      //     ),
+      //   ),
+      // );
+      showDialog(
+        context: context,
+        barrierDismissible: true, // fecha se clicar fora
+        builder: (context) => Dialog(
+          backgroundColor: Colors.transparent, // remove o fundo branco padrão
+          insetPadding: const EdgeInsets.all(16), // margem nas bordas
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(16),
+            child: SizedBox(
+              height: height * 0.8, // defina o tamanho do seu scanner
+              child: BarcodeScannerSimpleSell(
+                homeController: widget.homeController,
+              ),
+            ),
+          ),
+        ),
+      );
+
       // navigatorRoutes("preorder", widget.homeController);
       // navigatorRoutes("customers", widget.homeController);
     } else if (route == "productsprovider") {
@@ -105,6 +125,7 @@ class _AppActionsState extends State<AppActions> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
 
     return ValueListenableBuilder(
       valueListenable: widget.homeController.stateData,
@@ -141,7 +162,7 @@ class _AppActionsState extends State<AppActions> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () {
-                      actionButton(widget.homeController.categories[index].route);
+                      actionButton(widget.homeController.categories[index].route, height);
                       // testeInterno();
                     },
                     child: Container(
