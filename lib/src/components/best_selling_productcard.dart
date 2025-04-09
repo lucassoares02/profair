@@ -64,7 +64,7 @@ class BestSellingProductCard extends StatelessWidget {
                         ),
                         SizedBox(height: 8),
                         Text(
-                          'Separamos pra você os itens que mais foram negociados no evento pelo fornecedor! Confira abaixo!',
+                          'Separamos pra você os itens que mais foram negociados no evento pelo fornecedor, Confira abaixo!',
                           style: TextStyle(
                             color: Colors.white70,
                             fontSize: 14,

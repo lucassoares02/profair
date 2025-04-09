@@ -103,7 +103,7 @@ class HomeRepository {
           "icon": Icons.shopping_basket_rounded,
           "route": "productsprovider",
         },
-      if (code == 3)
+      if (code == 3 || code == 1)
         {
           "id": 54,
           "title": code == 1 ? 'Clientes' : 'Lojas',
@@ -112,7 +112,7 @@ class HomeRepository {
         },
       // if (code == 3)
       //   {
-      //     "id": 64,
+      //     "id": 64,6
       //     "title": 'Fornecedores',
       //     "icon": Icons.business_rounded,
       //     "route": "selectprovider",

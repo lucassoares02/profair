@@ -24,6 +24,7 @@ class _ClientsState extends State<Clients> {
 
   @override
   void initState() {
+    clientsController.findPercentageClients(widget.codeProvider!);
     clientsController.findClients(
       codeProvider: widget.codeProvider.toString(),
       accessTargenting: widget.accessTargenting,

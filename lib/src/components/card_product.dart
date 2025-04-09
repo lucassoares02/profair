@@ -15,6 +15,7 @@ class CardProduct extends StatefulWidget {
       required this.total,
       required this.packing,
       required this.factor,
+      this.barcode,
       this.visibleActions = true,
       this.action});
 
@@ -28,6 +29,7 @@ class CardProduct extends StatefulWidget {
   String packing;
   int factor;
   String total;
+  String? barcode;
   bool visibleActions;
   Function()? action;
 
@@ -50,6 +52,17 @@ class _CardProductState extends State<CardProduct> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            // Container(
+            //   width: 80,
+            //   height: 80,
+            //   decoration: const BoxDecoration(
+            //     borderRadius: BorderRadius.all(Radius.circular(appRadius)),
+            //   ),
+            //   child: Image.network(
+            //     "http://www.eanpictures.com.br:9000/api/gtin/${widget.barcode}",
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -74,8 +87,7 @@ class _CardProductState extends State<CardProduct> {
               children: [
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: BoxDecoration(
-                      color: colorGreen.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  decoration: BoxDecoration(color: colorGreen.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.brand,
                     style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -84,8 +96,7 @@ class _CardProductState extends State<CardProduct> {
                 const SizedBox(width: 5),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: BoxDecoration(
-                      color: colorBlue.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  decoration: BoxDecoration(color: colorBlue.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.unitPrice,
                     style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
@@ -94,8 +105,7 @@ class _CardProductState extends State<CardProduct> {
                 const SizedBox(width: 5),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration:
-                      const BoxDecoration(color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                  decoration: const BoxDecoration(color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.price,
                     style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),

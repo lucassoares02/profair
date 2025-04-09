@@ -137,7 +137,7 @@ class PieChart2State extends State<PieChartSample2> {
   List<PieChartSectionData>? showingSections() {
     final totalValue = getTotalValue();
 
-    return widget.products.asMap().entries.map((item) {
+    return widget.products.asMap().entries.take(10).map((item) {
       final isTouched = item.key == touchedIndex;
       const fontSize = 15.0;
       final radius = isTouched ? 43.0 : 40.0;

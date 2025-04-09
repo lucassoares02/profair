@@ -1,5 +1,6 @@
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
+import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/views/home/state_management.dart';
@@ -33,56 +34,68 @@ class _ComponentListState extends State<ComponentList> {
       widgetLoading: LoadingList(icon: Icons.store_mall_directory_outlined, label: "Lojas"),
       component: Column(
         children: [
-          HeaderList(
-            onBackButton: () {
-              Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
-            },
-            icon: Icons.store_mall_directory_outlined,
-            activeSearch: false,
-            label: "Lojas",
-          ),
+          // HeaderList(
+          //   onBackButton: () {
+          //     Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+          //   },
+          //   icon: Icons.store_mall_directory_outlined,
+          //   activeSearch: false,
+          //   label: "Associado",
+          // ),
           Container(
             width: width,
-            padding: const EdgeInsets.all(appPadding),
+            decoration: const BoxDecoration(
+              color: Color(0xffB1121F),
+            ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: width,
-                  padding: const EdgeInsets.all(appPadding),
-                  decoration: BoxDecoration(
-                    color: colorGrey.withOpacity(0.5),
-                    borderRadius: const BorderRadius.all(
-                      Radius.circular(appRadius),
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new, color: colorWhite), // Altere o ícone aqui
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                const AppSpacing(),
+                const AppSpacing(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/images/adegablack.png",
+                      height: 120,
+                      fit: BoxFit.cover,
                     ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ],
+                ),
+                const AppSpacing(),
+                const AppSpacing(),
+                Container(
+                  padding: const EdgeInsets.all(appPadding),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text("Dê as boas vindas a"),
-                          const SizedBox(height: appMargin / 2),
-                          Row(
-                            children: [
-                              Text(
-                                "${widget.client!.nameUser}",
-                                style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                              ),
-                              const SizedBox(width: appMargin / 2),
-                              const Icon(
-                                Icons.verified,
-                                color: colorSecondary,
-                                size: 18,
-                              ),
-                            ],
-                          ),
-                        ],
+                      const Text("Dê as boas vindas a"),
+                      const SizedBox(height: appMargin / 2),
+                      Text(
+                        "${widget.client!.nameUser}",
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(appPadding),
+            child: const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Lojas",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                 ),
               ],
             ),
@@ -117,8 +130,8 @@ class _ComponentListState extends State<ComponentList> {
                 height: 90,
                 padding: const EdgeInsets.all(appMargin),
                 margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                decoration: const BoxDecoration(
-                  border: Border(bottom: BorderSide(color: colorGrey)),
+                decoration: BoxDecoration(
+                  border: Border(bottom: BorderSide(color: colorGrey.withValues(alpha: 0.3))),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,6 +1,7 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/repositories/clients_repository.dart';
 import 'package:profair/src/models/clients_model.dart';
+import 'package:profair/src/repositories/percentage_clients_model.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
@@ -11,8 +12,10 @@ class ClientsController extends ValueNotifier<StateApp> {
   final stateSearchClients = ValueNotifier<StateApp>(StateApp.start);
 
   final stateClients = ValueNotifier<StateApp>(StateApp.start);
+  final statePercentageClients = ValueNotifier<StateApp>(StateApp.start);
 
   final ClientsRepository _clientsRepository;
+  PercentageClientsModel? percentageClients;
   int sortInt = 0;
   ClientsController(super.value, this._clientsRepository);
 
@@ -25,6 +28,17 @@ class ClientsController extends ValueNotifier<StateApp> {
       stateClients.value = StateApp.success;
     } catch (e) {
       stateClients.value = StateApp.error;
+    }
+  }
+
+  Future findPercentageClients(int provider) async {
+    statePercentageClients.value = StateApp.loading;
+    try {
+      List<PercentageClientsModel> clientsPercentage = await _clientsRepository.getPercentageProviders(provider);
+      percentageClients = clientsPercentage.first;
+      statePercentageClients.value = StateApp.success;
+    } catch (e) {
+      statePercentageClients.value = StateApp.error;
     }
   }
 
@@ -64,14 +78,7 @@ class ClientsController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(
-          msg: message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
 
       stateClients.value = StateApp.success;
     } catch (e) {

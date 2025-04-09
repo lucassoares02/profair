@@ -121,7 +121,7 @@ class _ComponentListState extends State<ComponentList> {
                       ),
                     ],
                   ),
-                  // PieChartSample2(products: widget.tradingProductsController.productsTrading),
+                  PieChartSample2(products: widget.tradingProductsController.productsTrading),
                   const AppSpacing(),
                   const Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -135,10 +135,13 @@ class _ComponentListState extends State<ComponentList> {
                           SizedBox(
                             width: 5,
                           ),
-                          Icon(
-                            Icons.info_outline,
-                            size: 20,
-                            color: colorGrey,
+                          Tooltip(
+                            message: "O gráfico mostra os 10 primeiros itens do pedido.",
+                            child: Icon(
+                              Icons.info_outline,
+                              size: 20,
+                              color: colorGrey,
+                            ),
                           )
                         ],
                       ),

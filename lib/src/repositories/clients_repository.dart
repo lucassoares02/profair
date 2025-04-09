@@ -1,5 +1,6 @@
 import 'package:profair/src/models/clients_model.dart';
 import 'package:profair/src/models/response_model.dart';
+import 'package:profair/src/repositories/percentage_clients_model.dart';
 import 'package:profair/src/shared/http_service.dart';
 
 class ClientsRepository {
@@ -7,17 +8,37 @@ class ClientsRepository {
 
   getClients(String? codeProvider, int accessTargenting, int merchandise, int? trading) async {
     ResponseModel? response;
+    print(accessTargenting);
+    print(codeProvider);
     try {
       if (merchandise != 0 && trading != 0) {
+        print("STEPPPPPPPPPPPPPPPPP 1");
         response = await clientDio.get("clientmerchandisetrading/$merchandise/$trading");
       } else if (accessTargenting == 3) {
+        print("STEPPPPPPPPPPPPPPPPP 2");
         response = await clientDio.get("stores");
+      } else if (accessTargenting == 1 && codeProvider != null) {
+        print("STEPPPPPPPPPPPPPPPPP 3");
+        response = await clientDio.get("storespresentbyprovider/$codeProvider");
       } else {
+        print("STEPPPPPPPPPPPPPPPPP 4");
         response = await clientDio.get("storesbyprovider/$codeProvider");
       }
       List list = response.data as List;
 
       return list.map((json) => ClientsModel.fromJson(json)).toList();
+    } catch (e) {
+      print("Error return Stores Model Mapper: $e");
+    }
+  }
+
+  getPercentageProviders(int provider) async {
+    ResponseModel? response;
+    try {
+      response = await clientDio.get("percentageclients/$provider");
+      List list = response.data as List;
+
+      return list.map((json) => PercentageClientsModel.fromJson(json)).toList();
     } catch (e) {
       print("Error return Stores Model Mapper: $e");
     }

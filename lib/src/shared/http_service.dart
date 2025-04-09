@@ -15,7 +15,6 @@ class HttpService {
     _dio.options.contentType = Headers.formUrlEncodedContentType;
     try {
       sharedPreferences = await SharedPreferences.getInstance();
-      print(sharedPreferences!.getString('codacesso'));
       _dio.options.headers.addAll({'user-id': sharedPreferences!.getString('codacesso')});
       Response response = await _dio.get(endpoint, queryParameters: params);
       if (response.statusCode! >= 200 && response.statusCode! < 300) {

@@ -1,7 +1,10 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/components/card_product.dart';
+import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/products_provider.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
+import 'package:profair/src/utils/colors.dart';
+import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/components/header_list.dart';
@@ -59,6 +62,7 @@ class _ComponentListState extends State<ComponentList> {
                     children: widget.productsProviderController.productsProvider.map((e) {
                   return CardProduct(
                       description: e.nameProduct!,
+                      barcode: e.barcode,
                       code: e.codeProduct.toString(),
                       brand: e.brand!,
                       packing: e.packing!,
@@ -88,115 +92,119 @@ class _ComponentListState extends State<ComponentList> {
                         }
                       });
 
-                  //     InkWell(
-                  //       onTap: () {
-                  //         if (widget.nextScreen) {
-                  //           if (e.totalVolume != "0") {
-                  //             Navigator.of(context).pushNamed(
-                  //               "/clientsproduct",
-                  //               arguments: e.codeProduct,
-                  //             );
-                  //           } else {
-                  //             Fluttertoast.showToast(
-                  //                 msg: "Produto não possui pedidos!",
-                  //                 toastLength: Toast.LENGTH_SHORT,
-                  //                 gravity: ToastGravity.CENTER,
-                  //                 timeInSecForIosWeb: 1,
-                  //                 backgroundColor: Colors.red,
-                  //                 textColor: Colors.white,
-                  //                 fontSize: 16.0);
-                  //           }
-                  //         }
-                  //       },
-                  //       child: Container(
-                  //         width: width,
-                  //         padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
-                  //         margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                  //         decoration: const BoxDecoration(
-                  //           border: Border(bottom: BorderSide(color: colorGrey)),
-                  //         ),
-                  //         child: Column(
-                  //           crossAxisAlignment: CrossAxisAlignment.start,
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // InkWell(
+                  //   onTap: () {
+                  //     if (widget.nextScreen) {
+                  //       if (e.totalVolume != "0") {
+                  //         Navigator.of(context).pushNamed(
+                  //           "/clientsproduct",
+                  //           arguments: e.codeProduct,
+                  //         );
+                  //       } else {
+                  //         Fluttertoast.showToast(
+                  //             msg: "Produto não possui pedidos!",
+                  //             toastLength: Toast.LENGTH_SHORT,
+                  //             gravity: ToastGravity.CENTER,
+                  //             timeInSecForIosWeb: 1,
+                  //             backgroundColor: Colors.red,
+                  //             textColor: Colors.white,
+                  //             fontSize: 16.0);
+                  //       }
+                  //     }
+                  //   },
+                  //   child: Container(
+                  //     width: width,
+                  //     padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
+                  //     margin: const EdgeInsets.symmetric(horizontal: appMargin),
+                  //     decoration: const BoxDecoration(
+                  //       border: Border(bottom: BorderSide(color: colorGrey)),
+                  //     ),
+                  //     child: Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //       children: [
+                  //         Row(
                   //           children: [
-                  //             Row(
+                  //             Container(
+                  //               width: 80,
+                  //               height: 80,
+                  //               decoration: BoxDecoration(
+                  //                 color: e.totalVolume != "0" ? colorSecondary : colorGreyLigth,
+                  //                 borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
+                  //               ),
+                  //               child: Image.network(
+                  //                 "http://www.eanpictures.com.br:9000/api/gtin/${e.barcode}",
+                  //                 fit: BoxFit.cover,
+                  //               ),
+                  //             ),
+                  //             // Container(
+                  //             //   decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.all(Radius.circular(50))),
+                  //             //   width: 50,
+                  //             //   child: Image.network("https://gifs.eco.br/wp-content/uploads/2023/05/imagens-de-agua-mineral-png-0.png"),
+                  //             // ),
+                  //             const SizedBox(width: 10),
+                  //             Column(
+                  //               crossAxisAlignment: CrossAxisAlignment.start,
                   //               children: [
-                  //                 Container(
-                  //                   width: 4,
-                  //                   height: 40,
-                  //                   decoration: BoxDecoration(
-                  //                     color: e.totalVolume != "0" ? colorSecondary : colorGreyLigth,
-                  //                     borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
-                  //                   ),
+                  //                 Text(
+                  //                   // e.nameProduct!.length < 35 ? '${e.nameProduct}' : "${e.nameProduct!.substring(0, 35)}...",
+                  //                   "${e.nameProduct}",
+                  //                   style: const TextStyle(fontWeight: FontWeight.bold),
                   //                 ),
-                  //                 // Container(
-                  //                 //   decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.all(Radius.circular(50))),
-                  //                 //   width: 50,
-                  //                 //   child: Image.network("https://gifs.eco.br/wp-content/uploads/2023/05/imagens-de-agua-mineral-png-0.png"),
+                  //                 const SizedBox(height: 8),
+                  //                 Text(
+                  //                   // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
+                  //                   "${e.packing!} | ${e.coefficient} | ${formatCurrency(e.unitPrice!)}",
+                  //                   style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                  //                 ),
+                  //                 // const SizedBox(height: 5),
+                  //                 // Text(
+                  //                 //   // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
+                  //                 //   formatCurrency(e.productPrice!),
+                  //                 //   style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
                   //                 // ),
-                  //                 const SizedBox(width: 10),
-                  //                 Column(
-                  //                   crossAxisAlignment: CrossAxisAlignment.start,
-                  //                   children: [
-                  //                     Text(
-                  //                       // e.nameProduct!.length < 35 ? '${e.nameProduct}' : "${e.nameProduct!.substring(0, 35)}...",
-                  //                       "${e.nameProduct}",
-                  //                       style: const TextStyle(fontWeight: FontWeight.bold),
-                  //                     ),
-                  //                     const SizedBox(height: 8),
-                  //                     Text(
-                  //                       // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
-                  //                       "${e.packing!} | ${e.coefficient} | ${formatCurrency(e.unitPrice!)}",
-                  //                       style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
-                  //                     ),
-                  //                     // const SizedBox(height: 5),
-                  //                     // Text(
-                  //                     //   // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
-                  //                     //   formatCurrency(e.productPrice!),
-                  //                     //   style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
-                  //                     // ),
-                  //                   ],
-                  //                 ),
                   //               ],
                   //             ),
-                  //             const AppSpacing(),
-                  //             Row(
-                  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //               children: [
-                  //                 Text(
-                  //                   // '${e.totalVolume} | R\$ ${e.totalValue}',
-                  //                   // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
-                  //                   "${formatCurrency(e.productPrice!)} | ${e.totalVolume}",
-                  //                   style: const TextStyle(fontWeight: FontWeight.w500),
-                  //                 ),
-                  //                 Text(
-                  //                   // '${e.totalVolume} | R\$ ${e.totalValue}',
-                  //                   // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
-                  //                   formatCurrency(e.totalValue!),
-                  //                   style: const TextStyle(
-                  //                     fontWeight: FontWeight.w500,
-                  //                   ),
-                  //                 ),
-                  //               ],
-                  //             )
-                  //             // Flexible(
-                  //             //   flex: 1,
-                  //             //   child: Row(
-                  //             //     mainAxisAlignment: MainAxisAlignment.end,
-                  //             //     children: [
-                  //             //       Text(
-                  //             //         // '${e.totalVolume} | R\$ ${e.totalValue}',
-                  //             //         // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
-                  //             //         formatCurrency(e.totalValue!),
-                  //             //         style: const TextStyle(fontWeight: FontWeight.bold),
-                  //             //       ),
-                  //             //     ],
-                  //             //   ),
-                  //             // ),
                   //           ],
                   //         ),
-                  //       ),
-                  //     );
+                  //         const AppSpacing(),
+                  //         Row(
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: [
+                  //             Text(
+                  //               // '${e.totalVolume} | R\$ ${e.totalValue}',
+                  //               // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
+                  //               "${formatCurrency(e.productPrice!)} | ${e.totalVolume}",
+                  //               style: const TextStyle(fontWeight: FontWeight.w500),
+                  //             ),
+                  //             Text(
+                  //               // '${e.totalVolume} | R\$ ${e.totalValue}',
+                  //               // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
+                  //               formatCurrency(e.totalValue!),
+                  //               style: const TextStyle(
+                  //                 fontWeight: FontWeight.w500,
+                  //               ),
+                  //             ),
+                  //           ],
+                  //         )
+                  //         // Flexible(
+                  //         //   flex: 1,
+                  //         //   child: Row(
+                  //         //     mainAxisAlignment: MainAxisAlignment.end,
+                  //         //     children: [
+                  //         //       Text(
+                  //         //         // '${e.totalVolume} | R\$ ${e.totalValue}',
+                  //         //         // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
+                  //         //         formatCurrency(e.totalValue!),
+                  //         //         style: const TextStyle(fontWeight: FontWeight.bold),
+                  //         //       ),
+                  //         //     ],
+                  //         //   ),
+                  //         // ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // );
                 }).toList());
               })
         ],

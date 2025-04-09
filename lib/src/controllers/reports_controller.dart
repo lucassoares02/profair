@@ -28,8 +28,7 @@ class ReportsController extends ValueNotifier<StateApp> {
   Future findPercentageClients(int? codeProvider, int? accessTargeting) async {
     statePercentageClients.value = StateApp.loading;
     try {
-      List<PercentageClientsModel> percentage =
-          await _reportsRepository.getPercentageClients(codeProvider, accessTargeting);
+      List<PercentageClientsModel> percentage = await _reportsRepository.getPercentageClients(codeProvider, accessTargeting);
       if (accessTargeting == 1 || accessTargeting == 3) {
         List<PercentageClientsModel> percentageP = await _reportsRepository.getPercentageProviders();
         percentageProviders = percentageP[0];

@@ -1,4 +1,4 @@
-import 'package:profair/generated/l10n.dart';
+import 'package:flutter/services.dart';
 import 'package:profair/src/controllers/stores_controller.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/stores_repository.dart';
@@ -22,7 +22,7 @@ class _SelectStoreState extends State<SelectStore> {
 
   @override
   void initState() {
-    storesController.findStores(widget.client!.userCode.toString());
+    storesController.findStores(widget.client!.userCode.toString(), widget.codeConsult!, widget.codeProvider!);
     storesController.codeProvider = widget.codeProvider;
     super.initState();
   }
@@ -30,25 +30,22 @@ class _SelectStoreState extends State<SelectStore> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-          // ALTERAR COR NOTIFICATIONBAR
-          // AnnotatedRegion<SystemUiOverlayStyle>(
-          //   value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-          //   child:
-
-          SafeArea(
-        child: SingleChildScrollView(
-          child: ValueListenableBuilder(
-            valueListenable: storesController.stateStores,
-            builder: (context, value, child) {
-              return ComponentList(
-                  description: "Selecione a Filial",
-                  state: storesController.stateStores,
-                  codeProvider: widget.codeProvider,
-                  listItems: storesController.stores,
-                  client: widget.client,
-                  consult: widget.codeConsult);
-            },
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: Color(0xffB1121F)),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: ValueListenableBuilder(
+              valueListenable: storesController.stateStores,
+              builder: (context, value, child) {
+                return ComponentList(
+                    description: "Selecione a Filial",
+                    state: storesController.stateStores,
+                    codeProvider: widget.codeProvider,
+                    listItems: storesController.stores,
+                    client: widget.client,
+                    consult: widget.codeConsult);
+              },
+            ),
           ),
         ),
       ),

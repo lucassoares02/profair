@@ -13,10 +13,10 @@ class StoresController extends ValueNotifier<StateApp> {
 
   StoresController(super.value, this._storesRepository);
 
-  Future findStores(String? codeAcess) async {
+  Future findStores(String? codeAcess, int consultant, int supplier) async {
     stateStores.value = StateApp.loading;
     try {
-      stores = await _storesRepository.getStores(codeAcess);
+      stores = await _storesRepository.getStores(codeAcess, consultant, supplier);
       stateStores.value = StateApp.success;
     } catch (e) {
       stateStores.value = StateApp.error;

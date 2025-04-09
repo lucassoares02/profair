@@ -4,8 +4,9 @@ import 'package:profair/src/shared/http_service.dart';
 class StoresRepository {
   final httpService = HttpService();
 
-  getStores(String? userCode) async {
-    final response = await httpService.get("stores/$userCode");
+  getStores(String? userCode, int consultant, int supplier) async {
+    // final response = await httpService.get("stores/$userCode");
+    final response = await httpService.get("stores/$userCode/$consultant/$supplier");
 
     try {
       List list = response.data as List;

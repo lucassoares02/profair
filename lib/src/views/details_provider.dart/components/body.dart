@@ -78,8 +78,8 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              BackButton(
-                                color: colorWhite,
+                              IconButton(
+                                icon: const Icon(Icons.arrow_back_ios_new, color: colorWhite), // Altere o ícone aqui
                                 onPressed: () {
                                   Navigator.pop(context);
                                 },
@@ -205,52 +205,58 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                         )
                                       : Column(
                                           children: [
-                                            Container(
-                                              // padding: const EdgeInsets.all(appPadding),
-                                              // decoration: BoxDecoration(
-                                              //   border: Border.all(color: colorGrey.withOpacity(0.3)),
-                                              //   borderRadius: BorderRadius.circular(appRadius),
-                                              // ),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  BestSellingProductCard(
-                                                    onTap: () {},
-                                                  ),
-                                                  const AppSpacing(),
-                                                  const AppSpacing(),
-                                                  SizedBox(
-                                                    height: 300,
-                                                    child: BarChartSample1(
-                                                      legendValue: false,
-                                                      barColor: widget.color != null ? Color(int.parse(widget.color!)) : colorPrimary,
-                                                      reportsProducts: widget.detailsProviderController.topMerchandises,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
+                                            BestSellingProductCard(
+                                              onTap: () {},
                                             ),
-                                            Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
-                                              children: widget.detailsProviderController.topMerchandises.asMap().entries.map((e) {
-                                                return CardProductTop(
-                                                  barcode: e.value.barcode.toString(),
-                                                  description: e.value.title!,
-                                                  code: e.value.codeProduct.toString(),
-                                                  brand: e.value.brand!,
-                                                  complement: e.value.complement!,
-                                                  price: (e.value.price != null) ? formatCurrency(e.value.price!) : "",
-                                                  unitPrice: e.value.unitPrice != null ? formatCurrency(e.value.unitPrice!) : "",
-                                                  amount: "",
-                                                  total: "",
-                                                  negotiation: e.value.negotiation,
-                                                  packing: e.value.packing!,
-                                                  factor: e.value.coefficient!,
-                                                  color: widget.color != null ? Color(int.parse(widget.color!)) : colorPrimary,
-                                                  position: e.key,
-                                                );
-                                              }).toList(),
-                                            ),
+                                            const AppSpacing(),
+                                            widget.detailsProviderController.topMerchandises[9].total == 0
+                                                ? const Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        "As métricas ainda estão sendo calculadas",
+                                                        style: TextStyle(
+                                                          fontSize: 16,
+                                                          fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                          "Em breve você terá informações detalhadas das mercadorias mais negociadas por esse fornecedor. Essas métricas podem variar ao decorrer do evento. E os dados não são recomendações de compra."),
+                                                    ],
+                                                  )
+                                                : Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: 300,
+                                                        child: BarChartSample1(
+                                                          legendValue: false,
+                                                          barColor: widget.color != null ? Color(int.parse(widget.color!)) : colorPrimary,
+                                                          reportsProducts: widget.detailsProviderController.topMerchandises,
+                                                        ),
+                                                      ),
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: widget.detailsProviderController.topMerchandises.asMap().entries.map((e) {
+                                                          return CardProductTop(
+                                                            barcode: e.value.barcode.toString(),
+                                                            description: e.value.title!,
+                                                            code: e.value.codeProduct.toString(),
+                                                            brand: e.value.brand!,
+                                                            complement: e.value.complement!,
+                                                            price: (e.value.price != null) ? formatCurrency(e.value.price!) : "",
+                                                            unitPrice: e.value.unitPrice != null ? formatCurrency(e.value.unitPrice!) : "",
+                                                            amount: "",
+                                                            total: "",
+                                                            negotiation: e.value.negotiation,
+                                                            packing: e.value.packing!,
+                                                            factor: e.value.coefficient!,
+                                                            color: widget.color != null ? Color(int.parse(widget.color!)) : colorPrimary,
+                                                            position: e.key,
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    ],
+                                                  ),
                                           ],
                                         );
                                 },

@@ -82,12 +82,12 @@ class _BarcodeScannerSimpleState extends State<BarcodeScannerSimple> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    BackButton(
-                      color: colorWhite,
+                    IconButton(
+                      icon: const Icon(Icons.arrow_back_ios_new, color: colorWhite), // Altere o ícone aqui
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                    ),
+                    )
                   ],
                 ),
               ),
