@@ -33,7 +33,6 @@ class TicketController extends ValueNotifier<StateApp> {
       windowNegotiation = await _profileRepository.getWindowNegotiations(client);
       stateWindowNegotiation.value = StateApp.success;
     } catch (e) {
-      print("passando");
       windowNegotiation = null;
       stateWindowNegotiation.value = StateApp.error;
     }

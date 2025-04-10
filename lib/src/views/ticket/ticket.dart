@@ -50,12 +50,7 @@ class _TicketState extends State<Ticket> {
     super.initState();
 
     // Chamada inicial
-    profileController.getWindowNegotiation(widget.homeController.data!.userCode!);
-
-    // Executa a cada 3 segundos
-    negotiationTimer = Timer.periodic(Duration(seconds: 3), (timer) {
-      profileController.getWindowNegotiation(widget.homeController.data!.userCode!);
-    });
+    // profileController.getWindowNegotiation(widget.homeController.data!.userCode!);
   }
 
   @override
@@ -128,23 +123,14 @@ class _TicketState extends State<Ticket> {
                                         valueListenable: profileController.stateWindowNegotiation,
                                         builder: (context, stateWindowNegotiation, child) {
                                           return Container(
-                                            decoration: profileController.windowNegotiation != null
-                                                ? const BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      end: Alignment.topCenter,
-                                                      begin: Alignment.bottomCenter,
-                                                      // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
-                                                      colors: [colorGreen, colorSecondary], // Defina suas cores de gradiente
-                                                    ),
-                                                  )
-                                                : const BoxDecoration(
-                                                    gradient: LinearGradient(
-                                                      end: Alignment.topCenter,
-                                                      begin: Alignment.bottomCenter,
-                                                      // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
-                                                      colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
-                                                    ),
-                                                  ),
+                                            decoration: const BoxDecoration(
+                                              gradient: LinearGradient(
+                                                end: Alignment.topCenter,
+                                                begin: Alignment.bottomCenter,
+                                                // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
+                                                colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
+                                              ),
+                                            ),
                                             child: Column(
                                               children: [
                                                 Container(
@@ -203,6 +189,7 @@ class _TicketState extends State<Ticket> {
                                                       style: const TextStyle(
                                                         fontSize: 18,
                                                         fontWeight: FontWeight.bold,
+                                                        color: colorWhite,
                                                       ),
                                                     ),
                                                   ],

@@ -62,8 +62,8 @@ class _ComponentListState extends State<ComponentList> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset(
-                      "assets/images/adegablack.png",
+                    Image.network(
+                      "https://multishowsupermercados.com.br/wp-content/uploads/2024/03/1f5068ac-0d48-4ec7-a00c-68090ff500eb.png",
                       height: 120,
                       fit: BoxFit.cover,
                     ),
@@ -76,11 +76,14 @@ class _ComponentListState extends State<ComponentList> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text("Dê as boas vindas a"),
+                      const Text(
+                        "Dê as boas vindas a",
+                        style: TextStyle(color: colorWhite),
+                      ),
                       const SizedBox(height: appMargin / 2),
                       Text(
                         "${widget.client!.nameUser}",
-                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: colorWhite),
                       ),
                     ],
                   ),
