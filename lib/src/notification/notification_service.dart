@@ -1,73 +1,97 @@
-// import 'package:profair/src/app_module.dart';
-// import 'package:profair/src/notification/notification_model.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-// import 'package:flutter_native_timezone/flutter_native_timezone.dart';
-// import 'package:timezone/timezone.dart' as tz;
-// import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:io';
+import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
-// class NotificationService {
-//   late FlutterLocalNotificationsPlugin localNotificationsPlugin;
-//   late AndroidNotificationDetails androidDetails;
+Future<String> _downloadAndSaveFile(String url, String fileName) async {
+  final directory = await getApplicationDocumentsDirectory();
+  final filePath = '${directory.path}/$fileName';
+  final response = await http.get(Uri.parse(url));
+  final file = File(filePath);
+  await file.writeAsBytes(response.bodyBytes);
+  return filePath;
+}
 
-//   NotificationService() {
-//     localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-//     _setupNotifications();
-//   }
+class NotificationService {
+  static final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-//   _setupNotifications() async {
-//     await _setupTimezone();
-//     await _initializeNotifications();
-//   }
+  static Future<void> initialize() async {
+    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher_notification');
 
-//   Future<void> _setupTimezone() async {
-//     tz.initializeTimeZones();
-//     final String? timeZoneName = (await FlutterNativeTimezone.getAvailableTimezones()) as String?;
-//     tz.setLocalLocation(tz.getLocation(timeZoneName!));
-//   }
+    const InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+    );
 
-//   _initializeNotifications() async {
-//     const android = AndroidInitializationSettings("@mipmap/ic_launcher");
+    await _localNotificationsPlugin.initialize(initializationSettings);
 
-//     await localNotificationsPlugin.initialize(
-//       const InitializationSettings(
-//         android: android,
-//       ),
-//       onDidReceiveNotificationResponse: _onSelectNotification,
-//     );
-//   }
+    const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      'high_importance_channel',
+      'Notificações Importantes',
+      description: 'Este canal é usado para notificações importantes.',
+      importance: Importance.high,
+    );
 
-//   _onSelectNotification(NotificationResponse? payload) {
-//     if (payload != null) {
-//       Navigator.of(AppModule.navigatorKey!.currentContext!).pushReplacementNamed("${payload.payload}");
-//     }
-//   }
+    await _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
-//   showNotification(CustomNotification notification) {
-//     androidDetails = const AndroidNotificationDetails(
-//       "lembretes_notification_x",
-//       "Lembretes",
-//       channelDescription: "Este canal é para lembrete",
-//       importance: Importance.max,
-//       icon: "@mipmap/ic_launcher",
-//       priority: Priority.max,
-//       enableVibration: true,
-//     );
+    // Escuta mensagens enquanto app está em foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      final notification = message.notification;
+      final android = message.notification?.android;
 
-//     localNotificationsPlugin.show(
-//         notification.id,
-//         notification.title,
-//         notification.body,
-//         NotificationDetails(
-//           android: androidDetails,
-//         ),
-//         payload: notification.payload);
-//   }
+      final String? imageUrl = message.notification?.android?.imageUrl ?? message.notification?.android?.imageUrl;
 
-//   checkForNotification() async {
-//     final details = await localNotificationsPlugin.getNotificationAppLaunchDetails();
-//     if (details != null && details.didNotificationLaunchApp) {
-//       _onSelectNotification(details.notificationResponse);
-//     }
-//   }
-// }
+      if (notification != null && android != null) {
+        final bigPicture = imageUrl != null
+            ? BigPictureStyleInformation(
+                FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'notif_image')),
+                largeIcon: FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'logo_thumb')),
+                contentTitle: notification.title,
+                summaryText: notification.body,
+              )
+            : null;
+
+        await _localNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              largeIcon: FilePathAndroidBitmap(
+                await _downloadAndSaveFile(imageUrl ?? "https://play-lh.googleusercontent.com/6FINLIOgGm5UN2MuqBIYnqhydb71JlO55aOG1ox_S7WtSGvo-72p5pWkL2OufnIjBbY=w240-h480-rw", 'logo_thumb'),
+              ),
+              importance: Importance.high,
+              priority: Priority.high,
+              icon: 'ic_launcher_notification',
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  static Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+  }) async {
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'profair_channel',
+      'Notificações Profair',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails generalNotificationDetails = NotificationDetails(android: androidDetails);
+
+    await _localNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      generalNotificationDetails,
+    );
+  }
+}

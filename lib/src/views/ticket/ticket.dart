@@ -10,6 +10,7 @@ import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/home/home_controller.dart';
+import 'package:profair/src/views/map/map_event_dynamic.dart';
 import 'package:profair/src/views/ticket/ticket_controller.dart';
 import 'package:profair/src/views/ticket/ticket_repository.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -53,6 +54,10 @@ class _TicketState extends State<Ticket> {
     // profileController.getWindowNegotiation(widget.homeController.data!.userCode!);
   }
 
+  // @override
+  // Widget build(BuildContext context) {
+  //   return const MapEventDynamic();
+  // }
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -310,6 +315,8 @@ class _TicketState extends State<Ticket> {
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
+                                const AppSpacing(),
+                                const Divider(),
                                 const AppSpacing(),
                                 const Divider(),
                                 TextButton(

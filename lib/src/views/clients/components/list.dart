@@ -7,11 +7,9 @@ import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/models/clients_model.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:profair/src/views/reports/components/card_percentage.dart';
 import 'package:profair/src/views/reports/components/card_percentage_client_provider.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 

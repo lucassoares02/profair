@@ -45,7 +45,7 @@ class _ComponentListState extends State<ComponentList> {
           Container(
             width: width,
             decoration: const BoxDecoration(
-              color: Color(0xffB1121F),
+              color: colorPrimary,
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -59,16 +59,6 @@ class _ComponentListState extends State<ComponentList> {
                 ),
                 const AppSpacing(),
                 const AppSpacing(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.network(
-                      "https://multishowsupermercados.com.br/wp-content/uploads/2024/03/1f5068ac-0d48-4ec7-a00c-68090ff500eb.png",
-                      height: 120,
-                      fit: BoxFit.cover,
-                    ),
-                  ],
-                ),
                 const AppSpacing(),
                 const AppSpacing(),
                 Container(

@@ -1,5 +1,4 @@
 import 'package:profair/src/components/spacing.dart';
-import 'package:profair/src/utils/spacing.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter/material.dart';
 

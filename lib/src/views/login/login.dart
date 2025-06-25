@@ -1,12 +1,12 @@
-import 'package:flutter/services.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/components/barcode_scanner_simple.dart';
 import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/components/button.dart';
+import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   ValueNotifier<bool> enterCode = ValueNotifier(false);
   TextEditingController codigo = TextEditingController();
   bool logoVisible = true;
+  int count = 0;
 
   @override
   void initState() {
@@ -35,40 +36,6 @@ class _LoginPageState extends State<LoginPage> {
 
   String codes = "";
   String? code = "";
-
-  // scannerQrCode() async {
-  //   // dynamic permission = await accessCamPermission();
-  //   // if (permission == PermissionStatus.granted) {
-
-  //   try {
-  //     code = await FlutterBarcodeScanner.scanBarcode(
-  //       "#66ff66",
-  //       "Cancelar",
-  //       true,
-  //       ScanMode.DEFAULT,
-  //     );
-
-  //     if (code != "-1") {
-  //       final data = {"codacesso": code};
-  //       bool response = await loginController!.stateLoginQr(data);
-  //       if (loginController!.stateLogin.value == StateApp.success) {
-  //         navigatorRoutes(true);
-  //       } else {
-  //         Fluttertoast.showToast(
-  //             msg: "Não foi possível realizar login!",
-  //             toastLength: Toast.LENGTH_SHORT,
-  //             gravity: ToastGravity.CENTER,
-  //             timeInSecForIosWeb: 1,
-  //             backgroundColor: Colors.red,
-  //             textColor: Colors.white,
-  //             fontSize: 16.0);
-  //       }
-  //     }
-  //   } on PlatformException {
-  //     code = "Failed to get platform version.";
-  //   }
-  //   // }
-  // }
 
   navigatorRoutes(response) {
     if (response) {
@@ -83,7 +50,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   loginCode() async {
-    final data = {"codacesso": codigo.text};
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("((((((((((((((((((((((((((((((((((((((((token))))))))))))))))))))))))))))))))))))))))");
+    print(token);
+    final data = {"codacesso": codigo.text, "token": token};
     try {
       await loginController!.requestLogin(data);
       if (loginController!.stateLoginCode.value == StateApp.success) {
