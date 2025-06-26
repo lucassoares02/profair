@@ -31,7 +31,7 @@ workflows:
   android:
     name: Android workflow
     environment:
-      flutter: 3.32.4
+      flutter: 3.29.0
       android_signing:
         - profair_keystore_android
       groups:
