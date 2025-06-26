@@ -37,10 +37,6 @@ workflows:
       groups:
         - android
     scripts:
-      - name: Clean Gradle
-        script: |
-          rm -rf ~/.gradle/caches
-          ./gradlew clean
       - name: Get Flutter packages
         script: flutter packages pub get
       - name: Set up key.properties
