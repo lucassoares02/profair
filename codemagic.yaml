@@ -1,48 +1,60 @@
 workflows:
-  app-store:
-    name: Publishing to App Store workflow
-    environment:
-      flutter: 3.32.4
-      ios_signing:
-        provisioning_profiles:
-          - app store connect certificate
-        certificates:
-          - api_key_profair_renew
-    integrations:
-      app_store_connect: api key profair renew
-    scripts:
-      - script: xcode-project use-profiles
-      - script: flutter clean
-      - script: flutter --version
-      - script: flutter packages pub get
-      - script: dart pub cache repair
-      - name: Flutter build ipa
-        script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-    artifacts:
-      - build/ios/ipa/*.ipa
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_app_store: true
-        release_type: SCHEDULED
-        copyright: 2023 Profair
+  # app-store:
+  #   name: Publishing to App Store workflow
+  #   environment:
+  #     flutter: 3.32.4
+  #     ios_signing:
+  #       provisioning_profiles:
+  #         - app store connect certificate
+  #       certificates:
+  #         - api_key_profair_renew
+  #   integrations:
+  #     app_store_connect: api key profair renew
+  #   scripts:
+  #     - script: xcode-project use-profiles
+  #     - script: flutter clean
+  #     - script: flutter --version
+  #     - script: flutter packages pub get
+  #     - script: dart pub cache repair
+  #     - name: Flutter build ipa
+  #       script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+  #   artifacts:
+  #     - build/ios/ipa/*.ipa
+  #   publishing:
+  #     app_store_connect:
+  #       auth: integration
+  #       submit_to_app_store: true
+  #       release_type: SCHEDULED
+  #       copyright: 2023 Profair
 
 
   android:
     name: Android workflow
     environment:
+      flutter: 3.32.4
       android_signing:
         - profair_keystore_android
+      groups:
+        - android
     scripts:
       - name: Get Flutter packages
         script: flutter packages pub get
-      - name: Build apk
+      - name: Set up key.properties
+        script: |
+          echo "storePassword=$CM_KEYSTORE_PASSWORD" > android/key.properties
+          echo "keyPassword=$CM_KEY_PASSWORD" >> android/key.properties
+          echo "keyAlias=$CM_KEY_ALIAS" >> android/key.properties
+          echo "storeFile=$CM_KEYSTORE_PATH" >> android/key.properties
+      - name: Build AAB
         script: flutter build appbundle --release
-      - name: Set up key properties
-        script: cat >> "CM_BUILD_DIR/android/key.properties" <<EOF storePassword=$CM_KEYSTORE_PASSWORD keyPassword=$CM_KEY_PASSWORD $keyAlias=$CM_KEY_ALIAS storeFile=$CM_KEYSTORE_PATH EOF
     artifacts:
       - build/**/outputs/apk/**/*.apk
       - build/**/outputs/**/*.aab
-       - flutter_drive.log
+      - flutter_drive.log
+    publishing:
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
+        track: production
+
 
        
