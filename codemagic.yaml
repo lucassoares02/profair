@@ -37,12 +37,10 @@ workflows:
       groups:
         - android
     scripts:
-      - name: DEBUG VARIÁVEIS
+      - name: Clean Gradle
         script: |
-          echo "Alias: $CM_KEY_ALIAS"
-          echo "Keystore: $CM_KEYSTORE_PATH"
-          echo "CM_KEYSTORE_PASSWORD: $CM_KEYSTORE_PASSWORD"
-          echo "CM_KEY_PASSWORD: $CM_KEY_PASSWORD"
+          rm -rf ~/.gradle/caches
+          ./gradlew clean
       - name: Get Flutter packages
         script: flutter packages pub get
       - name: Set up key.properties
