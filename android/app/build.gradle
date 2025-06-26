@@ -45,12 +45,18 @@ android {
 
     signingConfigs {
         release{
-            if(System.getenv()["CI"]){
-                storeFile file(System.getenv()["CM_KEYSTORE_PATH"])
-                storePassword file(System.getenv()["CM_KEYSTORE_PASSWORD"])
-                keyAlias file(System.getenv()["CM_KEY_ALIAS"])
-                keyPassword file(System.getenv()["CM_KEY_PASSWORD"])
-            } else {
+            // if(System.getenv()["CI"]){
+            //     storeFile file(System.getenv()["CM_KEYSTORE_PATH"])
+            //     storePassword file(System.getenv()["CM_KEYSTORE_PASSWORD"])
+            //     keyAlias file(System.getenv()["CM_KEY_ALIAS"])
+            //     keyPassword file(System.getenv()["CM_KEY_PASSWORD"])
+            // } else {
+                if(System.getenv("CI") != null){
+                    storeFile file(System.getenv("CM_KEYSTORE_PATH"))
+                    storePassword System.getenv("CM_KEYSTORE_PASSWORD")
+                    keyAlias System.getenv("CM_KEY_ALIAS")
+                    keyPassword System.getenv("CM_KEY_PASSWORD")
+                } else {
                 keyAlias keystoreProperties['keyAlias']
                 keyPassword keystoreProperties['keyPassword']
                 storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
