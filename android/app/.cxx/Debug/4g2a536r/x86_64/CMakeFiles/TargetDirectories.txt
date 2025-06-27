@@ -1,0 +1,2 @@
+/home/lucas/projetos/flutter/seller/seller/android/app/.cxx/Debug/4g2a536r/x86_64/CMakeFiles/edit_cache.dir
+/home/lucas/projetos/flutter/seller/seller/android/app/.cxx/Debug/4g2a536r/x86_64/CMakeFiles/rebuild_cache.dir

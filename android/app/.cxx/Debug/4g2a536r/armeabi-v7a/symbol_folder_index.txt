@@ -1,0 +1,1 @@
+/home/lucas/projetos/flutter/seller/seller/build/app/intermediates/cxx/Debug/4g2a536r/obj/armeabi-v7a
