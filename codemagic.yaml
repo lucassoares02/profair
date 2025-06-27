@@ -1,8 +1,8 @@
 workflows:
   app-store:
-    name: Publishing to App Store workflow
+    name: Apple Workflow
     environment:
-      flutter: 3.32.4
+      flutter: 3.29.0
       ios_signing:
         provisioning_profiles:
           - app store connect certificate
@@ -28,7 +28,7 @@ workflows:
         copyright: 2023 Profair
 
   android:
-    name: Android workflow
+    name: Android Workflow
     environment:
       flutter: 3.29.0
       android_signing:
