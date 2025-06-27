@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -337,7 +338,11 @@ class _TicketState extends State<Ticket> {
                                   children: [
                                     TextButton.icon(
                                       icon: const Icon(Icons.logout),
-                                      onPressed: () {
+                                      onPressed: () async {
+                                        FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+                                        // 🔥 Força a geração de um novo token
+                                        await messaging.deleteToken();
                                         widget.homeController.logout();
                                         Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
                                       },

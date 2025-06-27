@@ -6,7 +6,6 @@ import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/components/button.dart';
-import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
@@ -51,11 +50,9 @@ class _LoginPageState extends State<LoginPage> {
 
   loginCode() async {
     String? token = await FirebaseMessaging.instance.getToken();
-    print("((((((((((((((((((((((((((((((((((((((((token))))))))))))))))))))))))))))))))))))))))");
-    print(token);
     final data = {"codacesso": codigo.text, "token": token};
     try {
-      await loginController!.requestLogin(data);
+      await loginController!.requestLogin(data, token!);
       if (loginController!.stateLoginCode.value == StateApp.success) {
         navigatorRoutes(true);
       } else {

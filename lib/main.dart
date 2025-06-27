@@ -1,7 +1,4 @@
-import 'dart:developer';
-
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:profair/src/notification/notification_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -13,7 +10,6 @@ import 'package:flutter_modular/flutter_modular.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await _initFCM();
   await NotificationService.initialize();
   runApp(ModularApp(
     module: AppModule(),
@@ -21,30 +17,6 @@ void main() async {
   )
       // )
       );
-}
-
-Future<void> _initFCM() async {
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-  // Solicita permissão no Android 13+ e iOS
-  await messaging.requestPermission();
-
-  // Token de registro do dispositivo
-  String? token = await messaging.getToken();
-  print('==========================================================');
-  print('FCM Token: $token');
-  print('==========================================================');
-
-  // Mensagem quando app está em foreground
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('📩 Mensagem recebida: ${message.notification?.title}');
-    inspect(message);
-    // NotificationService.showNotification(
-    //   id: message.hashCode,
-    //   title: message.notification?.title ?? 'Nova Notificação',
-    //   body: message.notification?.body ?? 'Você tem uma nova notificação.',
-    // );
-  });
 }
 
 class MyApp extends StatelessWidget {

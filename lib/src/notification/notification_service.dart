@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:profair/src/shared/http_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final httpService = HttpService();
 
@@ -22,8 +23,15 @@ class NotificationService {
   static Future<void> initialize() async {
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher_notification');
 
-    final InitializationSettings initializationSettings = InitializationSettings(
+    const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+
+    const InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
     );
 
     await _localNotificationsPlugin.initialize(
@@ -65,6 +73,7 @@ class NotificationService {
           notification.title,
           notification.body,
           NotificationDetails(
+            iOS: const DarwinNotificationDetails(),
             android: AndroidNotificationDetails(
               channel.id,
               channel.name,
@@ -109,8 +118,12 @@ class NotificationService {
   }
 
   static Future<void> _handleNotificationClick(Object payload) async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+
+    final token = sharedPreferences.getString("tokenFcm");
+
     try {
-      final response = await httpService.post("notification/opened", {"notification_id": payload});
+      final response = await httpService.post("notification/opened", {"notificationId": payload, "tokenFcm": token});
       // final response = await http.post(
       //   Uri.parse('http://192.168.100.86:3001/notification/opened'),
       //   headers: {

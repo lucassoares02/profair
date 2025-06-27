@@ -36,6 +36,7 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateAlert = ValueNotifier<StateApp>(StateApp.start);
   final stateShared = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestsStore = ValueNotifier<StateApp>(StateApp.start);
+  final stateSaveToken = ValueNotifier<StateApp>(StateApp.start);
 
   final HomeRepository _homeRepository;
 
@@ -159,6 +160,16 @@ class HomeController extends ValueNotifier<StateApp> {
       stateRequestsStore.value = StateApp.error;
     }
     stateRequestsStore.value = StateApp.success;
+  }
+
+  Future postTokenFcm(String user, String token) async {
+    stateSaveToken.value = StateApp.loading;
+    try {
+      requestStores = await _homeRepository.postToken(user, token);
+    } catch (e) {
+      stateSaveToken.value = StateApp.error;
+    }
+    stateSaveToken.value = StateApp.success;
   }
 
   Future findAlert(int accessTargeting) async {}

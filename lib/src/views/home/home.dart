@@ -1,3 +1,5 @@
+import 'dart:developer';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
@@ -14,6 +16,7 @@ import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class HomePage extends StatefulWidget {
@@ -28,14 +31,52 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    super.initState();
+
     homeController.findData();
     homeController.findCampaign();
-    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initFCM();
+    });
   }
 
   reloadScreen() async {
     homeController.findData();
     homeController.findCampaign();
+  }
+
+  Future<void> _initFCM() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    final settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print('Permissão concedida');
+    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      print('Permissão negada');
+    } else if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+      print('Permissão não determinada');
+    }
+
+    String? token = await messaging.getToken();
+    print('==========================================================');
+    print('FCM Token: $token');
+    print('==========================================================');
+
+    homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
+
+    await prefs.setString("tokenFcm", token.toString());
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      inspect(message);
+    });
   }
 
   @override
@@ -58,58 +99,59 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     const AppSpacing(),
                     ValueListenableBuilder(
-                        valueListenable: homeController.stateData,
-                        builder: (context, value, child) {
-                          return value == StateApp.loading
-                              ? Container(
-                                  padding: const EdgeInsets.only(top: appMargin * 2),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const AppSpacing(),
-                                      Skeletonizer(
-                                        effect: const ShimmerEffect(),
-                                        child: Card(
-                                          margin: const EdgeInsets.symmetric(horizontal: appPadding),
-                                          child: SizedBox(
-                                            width: width / 3,
-                                            height: 10,
-                                          ),
+                      valueListenable: homeController.stateData,
+                      builder: (context, value, child) {
+                        return value == StateApp.loading
+                            ? Container(
+                                padding: const EdgeInsets.only(top: appMargin * 2),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const AppSpacing(),
+                                    Skeletonizer(
+                                      effect: const ShimmerEffect(),
+                                      child: Card(
+                                        margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                                        child: SizedBox(
+                                          width: width / 3,
+                                          height: 10,
                                         ),
                                       ),
-                                      const SizedBox(height: 10),
-                                      Skeletonizer(
-                                        effect: const ShimmerEffect(),
-                                        child: Card(
-                                          margin: const EdgeInsets.symmetric(horizontal: appPadding),
-                                          child: SizedBox(
-                                            height: 15,
-                                            width: width / 2,
-                                          ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Skeletonizer(
+                                      effect: const ShimmerEffect(),
+                                      child: Card(
+                                        margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                                        child: SizedBox(
+                                          height: 15,
+                                          width: width / 2,
                                         ),
                                       ),
-                                      const SizedBox(height: 10),
-                                      const Skeletonizer(
-                                        effect: ShimmerEffect(),
-                                        child: Card(
-                                          margin: EdgeInsets.symmetric(horizontal: appPadding),
-                                          child: SizedBox(
-                                            height: 45,
-                                            width: double.maxFinite,
-                                          ),
+                                    ),
+                                    const SizedBox(height: 10),
+                                    const Skeletonizer(
+                                      effect: ShimmerEffect(),
+                                      child: Card(
+                                        margin: EdgeInsets.symmetric(horizontal: appPadding),
+                                        child: SizedBox(
+                                          height: 45,
+                                          width: double.maxFinite,
                                         ),
                                       ),
-                                      const SizedBox(height: appPadding)
-                                    ],
-                                  ),
-                                )
-                              : CardWelcome(
-                                  homeController: homeController,
-                                  action: () {
-                                    reloadScreen();
-                                  },
-                                );
-                        }),
+                                    ),
+                                    const SizedBox(height: appPadding)
+                                  ],
+                                ),
+                              )
+                            : CardWelcome(
+                                homeController: homeController,
+                                action: () {
+                                  reloadScreen();
+                                },
+                              );
+                      },
+                    ),
                     ValueListenableBuilder(
                         valueListenable: homeController.stateCampaign,
                         builder: (context, value, child) {
@@ -206,6 +248,7 @@ class _HomePageState extends State<HomePage> {
                         ]),
                       ),
                     ),
+                    const AppSpacing(),
                     ValueListenableBuilder(
                         valueListenable: homeController.stateData,
                         builder: (context, value, child) {

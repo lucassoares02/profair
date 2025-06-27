@@ -87,6 +87,18 @@ class HomeRepository {
     return list.map((json) => BuyersModel.fromJson(json)).toList();
   }
 
+  postToken(String user, String token) async {
+    try {
+      ResponseModel response = await httpService.post('notification/save/token', {
+        "userId": user,
+        "tokenFcm": token,
+      });
+      print(response.data);
+    } catch (e) {
+      debugPrint("Post Token (Home Repository) Error: $e");
+    }
+  }
+
   getCategoriesss(int code) async {
     List list = [
       if (code == 1)

@@ -6,6 +6,7 @@ import 'package:profair/src/views/details_balance/details_balance.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider.dart';
 import 'package:profair/src/views/finish_trading/finish_trading_products.dart';
 import 'package:profair/src/views/list_attractions/list_attractions.dart';
+import 'package:profair/src/views/notifications/notifications.dart';
 import 'package:profair/src/views/order_details/order_details.dart';
 import 'package:profair/src/views/preorder/preorder.dart';
 import 'package:profair/src/views/products_provider/products_provider.dart';
@@ -199,6 +200,10 @@ class AppModule extends Module {
           child: (context, args) => Ticket(
             homeController: args.data,
           ),
+        ),
+        ChildRoute(
+          '/notifications',
+          child: (context, args) => const Notifications(),
         ),
       ];
 
