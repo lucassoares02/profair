@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:lottie/lottie.dart';
@@ -29,6 +31,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    printScreenDensity();
     loginController = LoginController(StateApp.start);
     super.initState();
   }
@@ -41,6 +44,14 @@ class _LoginPageState extends State<LoginPage> {
       codigo.text = "";
       Navigator.of(context).pushNamed('home');
     }
+  }
+
+  void printScreenDensity() {
+    final pixelRatio = window.devicePixelRatio;
+    final size = window.physicalSize;
+
+    print('Device Pixel Ratio: $pixelRatio');
+    print('Screen Resolution: ${size.width} x ${size.height}');
   }
 
   accessCamPermission() async {
@@ -106,7 +117,7 @@ class _LoginPageState extends State<LoginPage> {
           children: [
             Image.asset(
               'assets/images/logowhite.png',
-              width: width / 1.5,
+              width: width / 2,
             ),
             Padding(
               padding: const EdgeInsets.all(appPadding),
@@ -119,10 +130,13 @@ class _LoginPageState extends State<LoginPage> {
                       return value == false && width < 700
                           ? Column(
                               children: [
-                                Lottie.asset("assets/images/qrcode2.json"),
+                                // Lottie.asset("assets/images/qrcode2.json", width: 100),
                                 const Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
+                                    AppSpacing(),
+                                    AppSpacing(),
+                                    AppSpacing(),
                                     Text(
                                       "Faça login com QrCode",
                                       style: TextStyle(

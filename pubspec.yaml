@@ -3,7 +3,7 @@ description: A project have change the life people.
 
 publish_to: 'none'
 
-version: 3.0.22+1
+version: 3.0.23+1
 
 environment:
   sdk: ">=2.17.6 <3.22.0"
@@ -29,7 +29,7 @@ dependencies:
   firebase_messaging: ^15.2.6
   flutter_animate: ^4.5.2
   url_launcher: ^6.0.20
-  flutter_launcher_icons: ^0.14.3
+  flutter_launcher_icons: ^0.14.4
   # flutter_barcode_scanner: 2.0.0
   mobile_scanner: ^6.0.7
   qr_flutter: ^4.1.0
@@ -40,14 +40,17 @@ dependencies:
   cached_network_image: ^3.3.1
   flutter_local_notifications: ^18.0.1
   firebase_core: ^3.14.0
+  flutter_native_splash: ^2.4.4
   #
 
 
 flutter_native_splash:
   color: "#8007ff"
+  branding_mode: center
   image: "assets/app/splash.png"
   android: true
   ios: true
+  ios_content_mode: scaleAspectFit
 
 flutter_launcher_icons:
   image_path: "assets/app/icon.png"

@@ -1,6 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:profair/src/notification/notification_service.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:profair/src/app_module.dart';
 import 'package:profair/generated/l10n.dart';
@@ -9,8 +7,10 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  await NotificationService.initialize();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+  Modular.setInitialRoute('/splash');
+
   runApp(ModularApp(
     module: AppModule(),
     child: const MyApp(),
@@ -21,12 +21,9 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-    Modular.setInitialRoute('/splash');
-
     return MaterialApp.router(
       builder: (context, child) {
         return MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)), child: child!);
