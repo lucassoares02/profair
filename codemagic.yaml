@@ -1,4 +1,24 @@
 workflows:
+  flutter-ios-simulator:
+        name: Flutter iOS Simulator
+        environment:
+          flutter: 3.29.0
+          xcode: 16.2
+        scripts:
+          - name: Get Flutter packages
+            script: |
+              flutter pub get
+
+          - name: Build for iOS Simulator
+            script: |
+              flutter build ios --simulator
+
+        artifacts:
+          - build/ios/iphonesimulator/Runner.app
+        cache:
+          cache_paths:
+            - $FLUTTER_ROOT/.pub-cache
+            - ios/Pods
   app-store:
     name: Publishing to App Store workflow
     environment:
