@@ -1,13 +1,18 @@
 workflows:
-  flutter-ios-simulator:
-    name: Flutter iOS Simulator
+  simulator-workflow:
+    name: Build for simulator
     environment:
-      flutter: 3.29.0
-      xcode: 16.2
+      xcode: latest
     scripts:
-      - flutter build ios --simulator --flavor staging  # --flavor is optional
+      - name: Build with Generic Destination
+        script: |
+          xcodebuild build \
+            -project "yourproject.xcodeproj" \
+            -scheme "yourscheme" \
+            -sdk iphonesimulator \
+            -configuration Debug          
     artifacts:
-      - build/ios/iphonesimulator/Runner.app
+      - /Users/builder/Library/Developer/Xcode/DerivedData/**/*.app
   app-store:
     name: Apple Workflow
     environment:
