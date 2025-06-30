@@ -25,6 +25,7 @@ workflows:
 
       - name: Install CocoaPods dependencies
         script: |
+          flutter pub get
           cd ios
           pod install
 
