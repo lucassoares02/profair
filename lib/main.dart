@@ -7,15 +7,7 @@ import 'package:flutter_modular/flutter_modular.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(
-      // MultiProvider(
-      //   providers: [
-      //     Provider<NotificationService>(
-      //       create: (context) => NotificationService(),
-      //     ),
-      //   ],
-      //   child:
-      ModularApp(
+  runApp(ModularApp(
     module: AppModule(),
     child: const MyApp(),
   )

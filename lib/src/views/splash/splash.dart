@@ -1,6 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:profair/firebase_options.dart';
 import 'package:profair/src/components/progress_indicator.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/splash_controller.dart';
+import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/repositories/login_repository.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
@@ -24,6 +27,11 @@ class _SplashPageState extends State<SplashPage> {
 
   void start() async {
     try {
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
+      await NotificationService.initialize();
+
       bool response = await splashController.initApplication();
       navigatorRoute(response);
     } catch (e) {
