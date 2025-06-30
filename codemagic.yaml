@@ -1,24 +1,39 @@
 workflows:
   flutter-ios-simulator:
-    name: Flutter iOS Simulator
-    environment:
-      flutter: 3.29.0
-      xcode: 16.2
-    scripts:
-      - name: Get Flutter packages
-        script: |
-          flutter pub get
+        name: Flutter iOS Simulator
+        environment:
+          groups:
+            - android
+          flutter: 3.29.0
+          xcode: 16.2
+        scripts:
+          - name: Restore GoogleService-Info.plist
+            script: |
+              echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
-      - name: Build for iOS Simulator
-        script: |
-          flutter build ios --simulator
+          - name: Get Flutter packages
+            script: |
+              flutter pub get
 
-    artifacts:
-      - build/ios/iphonesimulator/Runner.app
-    cache:
-      cache_paths:
-        - $FLUTTER_ROOT/.pub-cache
-        - ios/Pods
+          - name: Check GoogleService-Info.plist exists
+            script: |
+              if [ -f ios/Runner/GoogleService-Info.plist ]; then
+                echo "✅ GoogleService-Info.plist restored!"
+                ls -l ios/Runner/GoogleService-Info.plist
+              else
+                echo "❌ GoogleService-Info.plist NOT found!"
+                exit 1
+              fi
+          - name: Build for iOS Simulator
+            script: |
+              flutter build ios --simulator
+
+        artifacts:
+          - build/ios/iphonesimulator/Runner.app
+        cache:
+          cache_paths:
+            - $FLUTTER_ROOT/.pub-cache
+            - ios/Pods
   app-store:
     name: Apple Workflow
     environment:
