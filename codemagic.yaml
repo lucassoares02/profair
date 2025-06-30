@@ -8,8 +8,6 @@ workflows:
           - app store connect certificate
         certificates:
           - api_key_profair_renew
-      vars:
-        GOOGLE_SERVICE_PLIST_B64: Envie_esse_valor_pelo_Codemagic_env_vars
     integrations:
       app_store_connect: api key profair renew
     scripts:
