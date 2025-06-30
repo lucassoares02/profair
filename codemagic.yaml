@@ -8,6 +8,8 @@ workflows:
           - app store connect certificate
         certificates:
           - api_key_profair_renew
+      vars:
+        GOOGLE_SERVICE_PLIST_B64: Envie_esse_valor_pelo_Codemagic_env_vars
     integrations:
       app_store_connect: api key profair renew
     scripts:
@@ -16,25 +18,32 @@ workflows:
       - script: flutter --version
       - script: flutter packages pub get
       - script: dart pub cache repair
+
+      - name: Restore GoogleService-Info.plist
+        script: |
+          echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
+
       - name: Install CocoaPods dependencies
         script: |
-          flutter pub get
           cd ios
           pod install
-      - name: Verifique existência do .plist
-        script: ls -l ios/Runner/GoogleService-Info.plist
+
       - name: Check GoogleService-Info.plist exists
         script: |
           if [ -f ios/Runner/GoogleService-Info.plist ]; then
             echo "✅ GoogleService-Info.plist restored!"
+            ls -l ios/Runner/GoogleService-Info.plist
           else
             echo "❌ GoogleService-Info.plist NOT found!"
             exit 1
           fi
+
       - name: Flutter build ipa
         script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+
     artifacts:
       - build/ios/ipa/*.ipa
+
     publishing:
       app_store_connect:
         auth: integration
@@ -69,6 +78,3 @@ workflows:
       google_play:
         credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT_CREDENTIALS
         track: production
-
-
-       
