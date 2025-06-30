@@ -11,7 +11,7 @@ workflows:
 
       - name: Build for iOS Simulator
         script: |
-          flutter build ios --simulator --flavor staging
+          flutter build ios --simulator
 
     artifacts:
       - build/ios/iphonesimulator/Runner.app
