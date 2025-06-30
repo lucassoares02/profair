@@ -1,20 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:profair/src/app_module.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:profair/src/notification/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // try {
-  //   await Firebase.initializeApp();
-  //   await NotificationService.initialize();
-  // } catch (e) {
-  //   debugPrint("Erro ao inicializar Firebase/Notificações: $e");
-  // }
+  try {
+    await Firebase.initializeApp();
+    await NotificationService.initialize();
+  } catch (e) {
+    debugPrint("Erro ao inicializar Firebase/Notificações: $e");
+  }
 
   Modular.setInitialRoute('/splash');
 

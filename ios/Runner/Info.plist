@@ -63,6 +63,8 @@
 		<false/>
 		<key>CADisableMinimumFrameDurationOnPhone</key>
 		<true/>
+		<key>NSUserTrackingUsageDescription</key>
+		<string>Utilizamos suas informações para melhorar a experiência com notificações personalizadas.</string>
 		<key>NSCameraUsageDescription</key>
 		<string>Camera permission is required for barcode scanning.</string>
 		<key>UIStatusBarHidden</key>

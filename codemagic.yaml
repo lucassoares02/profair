@@ -2,6 +2,8 @@ workflows:
   app-store:
     name: Apple Workflow
     environment:
+      groups:
+          - android
       flutter: 3.29.0
       ios_signing:
         provisioning_profiles:
