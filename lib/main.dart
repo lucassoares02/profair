@@ -1,31 +1,29 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:profair/src/app_module.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:profair/src/notification/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    await Firebase.initializeApp();
-    await NotificationService.initialize();
-  } catch (e, s) {
-    runApp(MaterialApp(
-      home: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: SingleChildScrollView(
-            child: Text('Erro ao iniciar o app:\n\n$e\n\n$s'),
-          ),
-        ),
-      ),
-    ));
-    return;
-  }
+  // try {
+  //   await Firebase.initializeApp();
+  //   await NotificationService.initialize();
+  // } catch (e, s) {
+  //   runApp(MaterialApp(
+  //     home: Scaffold(
+  //       body: Padding(
+  //         padding: const EdgeInsets.all(24.0),
+  //         child: SingleChildScrollView(
+  //           child: Text('Erro ao iniciar o app:\n\n$e\n\n$s'),
+  //         ),
+  //       ),
+  //     ),
+  //   ));
+  //   return;
+  // }
 
   runApp(ModularApp(module: AppModule(), child: MyApp()));
 }
