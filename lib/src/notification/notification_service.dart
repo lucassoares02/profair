@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:http/http.dart' as http;
@@ -21,76 +22,88 @@ class NotificationService {
   static final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static Future<void> initialize() async {
-    const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher_notification');
+    try {
+      final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = _localNotificationsPlugin;
 
-    const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
+      const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('ic_launcher_notification');
 
-    const InitializationSettings initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-    );
+      const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
+        requestAlertPermission: true,
+        requestBadgePermission: true,
+        requestSoundPermission: true,
+      );
 
-    await _localNotificationsPlugin.initialize(
-      initializationSettings,
-      onDidReceiveNotificationResponse: (NotificationResponse response) async {
-        final payload = response.payload;
-        if (payload != null) {
-          await _handleNotificationClick(payload);
-        }
-      },
-    );
+      const InitializationSettings initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid,
+        iOS: initializationSettingsIOS,
+      );
 
-    const AndroidNotificationChannel channel = AndroidNotificationChannel(
-      'high_importance_channel',
-      'Notificações Importantes',
-      description: 'Este canal é usado para notificações importantes.',
-      importance: Importance.high,
-    );
+      await flutterLocalNotificationsPlugin.initialize(
+        initializationSettings,
+        onDidReceiveNotificationResponse: (NotificationResponse response) async {
+          final payload = response.payload;
+          if (payload != null) {
+            await _handleNotificationClick(payload);
+          }
+        },
+      );
 
-    await _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
+      const AndroidNotificationChannel channel = AndroidNotificationChannel(
+        'high_importance_channel',
+        'Notificações Importantes',
+        description: 'Este canal é usado para notificações importantes.',
+        importance: Importance.high,
+      );
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      final notification = message.notification;
-      final android = message.notification?.android;
-      final String? imageUrl = android?.imageUrl;
+      await flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
-      if (notification != null && android != null) {
-        final bigPicture = imageUrl != null
-            ? BigPictureStyleInformation(
-                FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'notif_image')),
-                largeIcon: FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'logo_thumb')),
-                contentTitle: notification.title,
-                summaryText: notification.body,
-              )
-            : null;
+      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+        try {
+          final notification = message.notification;
+          final android = message.notification?.android;
+          final String? imageUrl = android?.imageUrl;
 
-        await _localNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            iOS: const DarwinNotificationDetails(),
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              styleInformation: bigPicture,
-              largeIcon: FilePathAndroidBitmap(
-                await _downloadAndSaveFile(imageUrl ?? "https://play-lh.googleusercontent.com/6FINLIOgGm5UN2MuqBIYnqhydb71JlO55aOG1ox_S7WtSGvo-72p5pWkL2OufnIjBbY=w240-h480-rw", 'logo_thumb'),
+          if (notification != null && android != null) {
+            final imagePath = await _downloadAndSaveFile(imageUrl ?? "", 'notif_image');
+            final logoPath = await _downloadAndSaveFile(imageUrl ?? "", 'logo_thumb');
+
+            final bigPicture = (imagePath != null && logoPath != null)
+                ? BigPictureStyleInformation(
+                    FilePathAndroidBitmap(imagePath),
+                    largeIcon: FilePathAndroidBitmap(logoPath),
+                    contentTitle: notification.title,
+                    summaryText: notification.body,
+                  )
+                : null;
+
+            await flutterLocalNotificationsPlugin.show(
+              notification.hashCode,
+              notification.title,
+              notification.body,
+              NotificationDetails(
+                iOS: const DarwinNotificationDetails(),
+                android: AndroidNotificationDetails(
+                  channel.id,
+                  channel.name,
+                  channelDescription: channel.description,
+                  styleInformation: bigPicture,
+                  largeIcon: logoPath != null ? FilePathAndroidBitmap(logoPath) : null,
+                  importance: Importance.high,
+                  priority: Priority.high,
+                  icon: 'ic_launcher_notification',
+                ),
               ),
-              importance: Importance.high,
-              priority: Priority.high,
-              icon: 'ic_launcher_notification',
-            ),
-          ),
-          payload: "${message.data["notificationId"]} - ${message.data["userId"]}",
-        );
-      }
-    });
+              payload: "${message.data["notificationId"]} - ${message.data["userId"]}",
+            );
+          }
+        } catch (e) {
+          debugPrint("Erro ao processar notificação recebida: $e");
+        }
+      });
+    } catch (e) {
+      debugPrint("Erro ao inicializar NotificationService: $e");
+      // Você pode enviar esse erro para um sistema de monitoramento se quiser
+    }
   }
 
   static Future<void> showNotification({
