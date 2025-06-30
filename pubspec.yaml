@@ -26,7 +26,7 @@ dependencies:
   fl_chart: ^0.70.2
   percent_indicator: ^4.2.3
   fluttertoast: ^8.2.2
-  # firebase_core: ^2.27.0
+  firebase_core: ^3.14.0
   # firebase_messaging: ^14.6.6
   flutter_animate: ^4.5.2
   url_launcher: ^6.0.20
@@ -40,7 +40,10 @@ dependencies:
   badges: ^3.1.2
   webview_flutter: ^4.0.0
   cached_network_image: ^3.3.1
+  flutter_local_notifications: ^18.0.1
+  firebase_messaging: ^15.2.6
   #
+
 
 
 flutter_native_splash:
