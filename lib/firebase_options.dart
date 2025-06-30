@@ -41,12 +41,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAGQa9NuCeukLTLmmTcgePowiU5yWdCbqA',
-    appId: '1:764244996471:web:56fa5e00f89383a4103172',
-    messagingSenderId: '764244996471',
-    projectId: 'profair-398018',
-    authDomain: 'profair-398018.firebaseapp.com',
-    storageBucket: 'profair-398018.firebasestorage.app',
+    apiKey: 'AIzaSyCZzV9ZH_nGRhNOVjVx6W8eM-Yh-eEpHGY',
+    appId: '1:252078218557:web:044ccc9ff8e682c743f954',
+    messagingSenderId: '252078218557',
+    projectId: 'appprofair',
+    authDomain: 'appprofair.firebaseapp.com',
+    storageBucket: 'appprofair.firebasestorage.app',
+    measurementId: 'G-HQMBL3L3EP',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -67,20 +68,21 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCCDW17CDjng4DNlWLL9OfTSr889cQ4WjM',
-    appId: '1:764244996471:ios:9d29f737bf9b2963103172',
-    messagingSenderId: '764244996471',
-    projectId: 'profair-398018',
-    storageBucket: 'profair-398018.firebasestorage.app',
+    apiKey: 'AIzaSyBlSh2DZRFqZ7_I1tAIPKDE19IgwZU8a0s',
+    appId: '1:252078218557:ios:fbf3dc3c9b5aad6c43f954',
+    messagingSenderId: '252078218557',
+    projectId: 'appprofair',
+    storageBucket: 'appprofair.firebasestorage.app',
     iosBundleId: 'br.com.profair.profair',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAGQa9NuCeukLTLmmTcgePowiU5yWdCbqA',
-    appId: '1:764244996471:web:667f6043e9f1cbde103172',
-    messagingSenderId: '764244996471',
-    projectId: 'profair-398018',
-    authDomain: 'profair-398018.firebaseapp.com',
-    storageBucket: 'profair-398018.firebasestorage.app',
+    apiKey: 'AIzaSyCZzV9ZH_nGRhNOVjVx6W8eM-Yh-eEpHGY',
+    appId: '1:252078218557:web:27edb04765e1828443f954',
+    messagingSenderId: '252078218557',
+    projectId: 'appprofair',
+    authDomain: 'appprofair.firebaseapp.com',
+    storageBucket: 'appprofair.firebasestorage.app',
+    measurementId: 'G-L0QFZT968C',
   );
 }
