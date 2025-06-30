@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBNwbeVLm8P_1RRI5u7eEJifzLjXPoMJPU',
-    appId: '1:764244996471:android:254a84e81f5cdfaf103172',
-    messagingSenderId: '764244996471',
-    projectId: 'profair-398018',
-    storageBucket: 'profair-398018.firebasestorage.app',
+    apiKey: 'AIzaSyAA8ECpdohAXZfWMgf9DdSkJto-cbe4JMU',
+    appId: '1:252078218557:android:69553b56689ed42e43f954',
+    messagingSenderId: '252078218557',
+    projectId: 'appprofair',
+    storageBucket: 'appprofair.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCCDW17CDjng4DNlWLL9OfTSr889cQ4WjM',
-    appId: '1:764244996471:ios:9d29f737bf9b2963103172',
-    messagingSenderId: '764244996471',
-    projectId: 'profair-398018',
-    storageBucket: 'profair-398018.firebasestorage.app',
+    apiKey: 'AIzaSyBlSh2DZRFqZ7_I1tAIPKDE19IgwZU8a0s',
+    appId: '1:252078218557:ios:fbf3dc3c9b5aad6c43f954',
+    messagingSenderId: '252078218557',
+    projectId: 'appprofair',
+    storageBucket: 'appprofair.firebasestorage.app',
     iosBundleId: 'br.com.profair.profair',
   );
 

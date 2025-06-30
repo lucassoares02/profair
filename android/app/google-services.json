@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "764244996471",
-    "project_id": "profair-398018",
-    "storage_bucket": "profair-398018.firebasestorage.app"
+    "project_number": "252078218557",
+    "project_id": "appprofair",
+    "storage_bucket": "appprofair.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:764244996471:android:254a84e81f5cdfaf103172",
+        "mobilesdk_app_id": "1:252078218557:android:69553b56689ed42e43f954",
         "android_client_info": {
           "package_name": "br.com.profair.profair"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBNwbeVLm8P_1RRI5u7eEJifzLjXPoMJPU"
+          "current_key": "AIzaSyAA8ECpdohAXZfWMgf9DdSkJto-cbe4JMU"
         }
       ],
       "services": {

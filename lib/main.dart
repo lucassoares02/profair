@@ -10,9 +10,7 @@ void main() {
   runApp(ModularApp(
     module: AppModule(),
     child: const MyApp(),
-  )
-      // )
-      );
+  ));
 }
 
 class MyApp extends StatelessWidget {
