@@ -5,38 +5,33 @@ import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // try {
-  //   await Firebase.initializeApp();
-  //   await NotificationService.initialize();
-  // } catch (e, s) {
-  //   runApp(MaterialApp(
-  //     home: Scaffold(
-  //       body: Padding(
-  //         padding: const EdgeInsets.all(24.0),
-  //         child: SingleChildScrollView(
-  //           child: Text('Erro ao iniciar o app:\n\n$e\n\n$s'),
-  //         ),
-  //       ),
-  //     ),
-  //   ));
-  //   return;
-  // }
-
-  runApp(ModularApp(module: AppModule(), child: MyApp()));
+  runApp(
+      // MultiProvider(
+      //   providers: [
+      //     Provider<NotificationService>(
+      //       create: (context) => NotificationService(),
+      //     ),
+      //   ],
+      //   child:
+      ModularApp(
+    module: AppModule(),
+    child: const MyApp(),
+  )
+      // )
+      );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    Modular.setInitialRoute('/splash');
+
     return MaterialApp.router(
-      builder: (context, child) {
-        return MediaQuery(data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)), child: child!);
-      },
       title: "profair",
       localizationsDelegates: const [
         GlobalWidgetsLocalizations.delegate,
