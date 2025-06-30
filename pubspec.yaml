@@ -1,0 +1,96 @@
+name: profair
+description: A project have change the life people.
+
+publish_to: 'none'
+
+version: 3.0.23+4
+
+environment:
+  sdk: ">=2.17.6 <3.22.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  font_awesome_flutter: ^10.4.0
+  google_sign_in: ^5.4.4
+  dio: ^5.0.0
+  flutter_modular: ^5.0.3
+  skeletonizer: ^1.4.3
+  share_plus: ^10.1.4
+  permission_handler: ^11.3.0 
+  http: ^0.13.6
+  shared_preferences: ^2.2.0
+  flutter_spinkit: ^5.2.0
+  provider: ^6.0.5
+  fl_chart: ^0.70.2
+  percent_indicator: ^4.2.3
+  fluttertoast: ^8.2.2
+  firebase_messaging: ^15.2.6
+  flutter_animate: ^4.5.2
+  url_launcher: ^6.0.20
+  flutter_launcher_icons: ^0.14.4
+  # flutter_barcode_scanner: 2.0.0
+  mobile_scanner: ^6.0.7
+  qr_flutter: ^4.1.0
+  lottie: ^2.6.0
+  path_provider: ^2.1.2
+  badges: ^3.1.2
+  webview_flutter: ^4.0.0
+  cached_network_image: ^3.3.1
+  flutter_local_notifications: ^18.0.1
+  firebase_core: ^3.14.0
+  flutter_native_splash: ^2.4.4
+  #
+
+
+flutter_native_splash:
+  color: "#8007ff"
+  branding_mode: center
+  image: "assets/app/splash.png"
+  android: true
+  ios: true
+  ios_content_mode: scaleAspectFit
+
+flutter_launcher_icons:
+  image_path: "assets/app/icon.png"
+  ios: true
+  remove_alpha_ios: true
+  android: "launcher_icon"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/app/icon-android.png"
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  flutter_localizations:
+    sdk: flutter
+
+flutter:
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: fonts/inter/Inter-Medium.ttf
+        - asset: fonts/inter/Inter-Regular.ttf
+        - asset: fonts/inter/Inter-Light.ttf
+        - asset: fonts/inter/Inter-Bold.ttf
+    - family: Sf
+      fonts:
+        - asset: fonts/sf/SF-Bold.otf
+        - asset: fonts/sf/SF-Light.otf
+        - asset: fonts/sf/SF-Medium.otf
+    - family: Plus
+      fonts:
+        - asset: fonts/plus/Plus-Bold.ttf
+        - asset: fonts/plus/Plus-Light.ttf
+        - asset: fonts/plus/Plus-Medium.ttf
+
+  uses-material-design: true
+  assets:
+    - assets/images/
+flutter_intl:
+  enabled: true
+
+dependency_overrides:
+  flutter_plugin_android_lifecycle: ^2.0.17
