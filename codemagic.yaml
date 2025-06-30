@@ -5,6 +5,10 @@ workflows:
           flutter: 3.29.0
           xcode: 16.2
         scripts:
+          - name: Restore GoogleService-Info.plist
+            script: |
+              echo $GOOGLE_SERVICE_INFO_PLIST | base64 --decode > ios/Runner/GoogleService-Info.plist
+
           - name: Get Flutter packages
             script: |
               flutter pub get
