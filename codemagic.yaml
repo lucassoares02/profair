@@ -16,6 +16,17 @@ workflows:
       - script: flutter --version
       - script: flutter packages pub get
       - script: dart pub cache repair
+      - name: Restore GoogleService-Info.plist
+        script: |
+          echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
+      - name: Check GoogleService-Info.plist exists
+        script: |
+          if [ -f ios/Runner/GoogleService-Info.plist ]; then
+            echo "✅ GoogleService-Info.plist restored!"
+          else
+            echo "❌ GoogleService-Info.plist NOT found!"
+            exit 1
+          fi
       - name: Flutter build ipa
         script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
     artifacts:
