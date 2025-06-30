@@ -1,0 +1,25 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "profair-398018",
+          "appId": "1:764244996471:android:254a84e81f5cdfaf103172",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "profair-398018",
+          "configurations": {
+            "android": "1:764244996471:android:254a84e81f5cdfaf103172",
+            "ios": "1:764244996471:ios:9d29f737bf9b2963103172",
+            "macos": "1:764244996471:ios:9d29f737bf9b2963103172",
+            "web": "1:764244996471:web:56fa5e00f89383a4103172",
+            "windows": "1:764244996471:web:667f6043e9f1cbde103172"
+          }
+        }
+      }
+    }
+  }
+}

@@ -6,6 +6,7 @@ import 'package:profair/src/repositories/login_repository.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:profair/firebase_options.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -30,7 +31,9 @@ class _SplashPageState extends State<SplashPage> {
 
   initApp() async {
     try {
-      await Firebase.initializeApp();
+      await Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform,
+      );
       await NotificationService.initialize();
 
       bool response = await splashController.initApplication();
