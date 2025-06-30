@@ -18,18 +18,19 @@ workflows:
       - script: dart pub cache repair
       - name: Install CocoaPods dependencies
         script: |
+          flutter pub get
           cd ios
           pod install
       - name: Verifique existência do .plist
         script: ls -l ios/Runner/GoogleService-Info.plist
-      # - name: Check GoogleService-Info.plist exists
-      #   script: |
-      #     if [ -f ios/Runner/GoogleService-Info.plist ]; then
-      #       echo "✅ GoogleService-Info.plist restored!"
-      #     else
-      #       echo "❌ GoogleService-Info.plist NOT found!"
-      #       exit 1
-      #     fi
+      - name: Check GoogleService-Info.plist exists
+        script: |
+          if [ -f ios/Runner/GoogleService-Info.plist ]; then
+            echo "✅ GoogleService-Info.plist restored!"
+          else
+            echo "❌ GoogleService-Info.plist NOT found!"
+            exit 1
+          fi
       - name: Flutter build ipa
         script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
     artifacts:
