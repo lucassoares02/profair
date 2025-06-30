@@ -9,23 +9,25 @@ import 'package:profair/src/notification/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   try {
     await Firebase.initializeApp();
     await NotificationService.initialize();
-  } catch (e) {
-    debugPrint("Erro ao inicializar Firebase/Notificações: $e");
+  } catch (e, s) {
+    runApp(MaterialApp(
+      home: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: SingleChildScrollView(
+            child: Text('Erro ao iniciar o app:\n\n$e\n\n$s'),
+          ),
+        ),
+      ),
+    ));
+    return;
   }
 
-  Modular.setInitialRoute('/splash');
-
-  runApp(ModularApp(
-    module: AppModule(),
-    child: const MyApp(),
-  )
-      // )
-      );
+  runApp(ModularApp(module: AppModule(), child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
