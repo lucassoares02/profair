@@ -12,11 +12,10 @@ class LoginController extends ValueNotifier<StateApp> {
   LoginModel? dataUser;
   LoginRepository loginRepository = LoginRepository();
 
-  Future requestLogin(Object data, String tokenFcm) async {
+  Future requestLogin(Object data) async {
     stateLoginCode.value = StateApp.loading;
     try {
       LoginModel? response = await loginRepository.getLogin(data);
-      await moduleSharedPreferences("tokenFcm", tokenFcm);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
       if (responseShared) {
         debugPrint("Request Login (Login Controller) $responseShared");

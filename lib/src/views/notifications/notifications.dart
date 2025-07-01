@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart' as AppSettings;
 import 'package:profair/src/components/header_list.dart';
+import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/home_repository.dart';
@@ -21,6 +22,7 @@ class _NotificationsState extends State<Notifications> {
   void initState() {
     super.initState();
 
+    homeController.findNotifications();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initFCM();
     });
@@ -45,7 +47,7 @@ class _NotificationsState extends State<Notifications> {
       print('Permissão não determinada');
     }
 
-    String? token = await messaging.getToken();
+    String? token = await FirebaseMessaging.instance.getToken();
     print('==========================================================');
     print('FCM Token: $token');
     print('==========================================================');
@@ -60,46 +62,82 @@ class _NotificationsState extends State<Notifications> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: SafeArea(
-          child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          HeaderList(label: "Notificações", activeSearch: false),
-          FutureBuilder<NotificationSettings>(
-            future: FirebaseMessaging.instance.getNotificationSettings(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return const SizedBox.shrink();
+        body: SafeArea(
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            HeaderList(label: "Notificações", activeSearch: false),
+            FutureBuilder<NotificationSettings>(
+              future: FirebaseMessaging.instance.getNotificationSettings(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return const SizedBox.shrink();
 
-              final settings = snapshot.data!;
-              if (settings.authorizationStatus == AuthorizationStatus.denied || settings.authorizationStatus == AuthorizationStatus.notDetermined) {
-                return Padding(
-                  padding: const EdgeInsets.only(left: 16, right: 16),
-                  child: Card(
-                    color: Colors.red.withValues(alpha: 0.1),
-                    child: ListTile(
-                      leading: const Icon(Icons.warning, color: Colors.red),
-                      title: const Text("Permissão de notificações"),
-                      subtitle: const Text("Para receber notificações, ative as permissões"),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.settings),
-                        onPressed: () {
-                          // Alternativas:
-                          // 1. Fechar o app (como você usou com SystemNavigator.pop)
-                          // 2. Abrir configurações do sistema (opcional)
-                          AppSettings.openAppSettings();
-                          // _initFCM();
-                        },
+                final settings = snapshot.data!;
+                if (settings.authorizationStatus == AuthorizationStatus.denied || settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 16, right: 16),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.red.withValues(alpha: 0.1),
+                        border: Border.all(
+                          color: Colors.red.withValues(alpha: 0.9),
+                        ),
+                      ),
+                      child: ListTile(
+                        leading: const Icon(Icons.warning, color: Colors.red),
+                        title: const Text("Permissão de notificações"),
+                        subtitle: const Text("Não perca as novidades do evento, ative as notificações!"),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.settings_outlined),
+                          onPressed: () {
+                            // Alternativas:
+                            // 1. Fechar o app (como você usou com SystemNavigator.pop)
+                            // 2. Abrir configurações do sistema (opcional)
+                            AppSettings.openAppSettings();
+                            // _initFCM();
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }
-              return const SizedBox.shrink(); // Não exibe nada se estiver autorizado
-            },
-          ),
-        ],
-      )),
+                  );
+                }
+                return const SizedBox.shrink(); // Não exibe nada se estiver autorizado
+              },
+            ),
+            ValueListenableBuilder(
+              valueListenable: homeController.stateNotifications,
+              builder: (context, stateNotifications, child) {
+                return stateNotifications == StateApp.loading
+                    ? LoadingList(loadingHeader: false)
+                    : Column(
+                        children: homeController.notifications.map((notification) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          child: Container(
+                            child: ListTile(
+                              shape: Border(
+                                bottom: BorderSide(
+                                  color: Colors.grey.withValues(alpha: 0.1),
+                                ),
+                              ),
+                              title: Text(notification.title ?? "Sem título"),
+                              subtitle: Text(notification.body ?? "Sem conteúdo"),
+                              onTap: () {
+                                // Ação ao clicar na notificação
+                                print("Notificação clicada: ${notification.title}");
+                              },
+                            ),
+                          ),
+                        );
+                      }).toList());
+              },
+            ),
+          ],
+        ),
+      ),
     ));
   }
 }

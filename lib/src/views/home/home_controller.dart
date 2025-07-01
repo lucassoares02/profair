@@ -1,5 +1,7 @@
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
+import 'package:profair/src/models/response_model.dart';
+import 'package:profair/src/notification/notification_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -20,6 +22,7 @@ class HomeController extends ValueNotifier<StateApp> {
   List<RecipeModel> shared = [];
   List<RecipeModel> stores = [];
   List<ProvidersModel> topProviders = [];
+  List<CustomNotification> notifications = [];
   List<BuyersModel> buyers = [];
   CampaignModel? campaign;
   LoginModel? data;
@@ -30,6 +33,7 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateCategories = ValueNotifier<StateApp>(StateApp.start);
   final stateBuyers = ValueNotifier<StateApp>(StateApp.start);
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
+  final stateNotifications = ValueNotifier<StateApp>(StateApp.start);
   final stateData = ValueNotifier<StateApp>(StateApp.start);
   final stateCampaign = ValueNotifier<StateApp>(StateApp.start);
   final stateTopProvider = ValueNotifier<StateApp>(StateApp.start);
@@ -91,6 +95,17 @@ class HomeController extends ValueNotifier<StateApp> {
       stateStore.value = StateApp.error;
     }
     return null;
+  }
+
+  Future<void> findNotifications() async {
+    stateNotifications.value = StateApp.loading;
+    try {
+      final response = await _homeRepository.getNotifications();
+      notifications = response;
+      stateNotifications.value = StateApp.success;
+    } catch (e) {
+      stateNotifications.value = StateApp.error;
+    }
   }
 
   Future findCampaign() async {

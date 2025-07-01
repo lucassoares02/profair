@@ -30,11 +30,8 @@ class _BarcodeScannerSimpleState extends State<BarcodeScannerSimple> {
       setState(() {
         _scanned = true;
       });
-      String? token = "notificationToken";
-      print("((((((((((((((((((((((((((((((((((((((((token))))))))))))))))))))))))))))))))))))))))");
-      print(token);
 
-      final data = {"codacesso": code, "token": token};
+      final data = {"codacesso": code};
       bool response = await widget.loginController!.stateLoginQr(data);
 
       if (widget.loginController!.stateLogin.value == StateApp.success) {

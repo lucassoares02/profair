@@ -1,6 +1,7 @@
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/models/response_model.dart';
+import 'package:profair/src/notification/notification_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -85,6 +86,18 @@ class HomeRepository {
     }
     List list = response.data as List;
     return list.map((json) => BuyersModel.fromJson(json)).toList();
+  }
+
+  getNotifications() async {
+    ResponseModel? response;
+    try {
+      response = await httpService.get('notifications');
+      List list = response.data as List;
+      return list.map((json) => CustomNotification.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Get Notifications (Home Repository) Error: $e");
+      rethrow;
+    }
   }
 
   postToken(String user, String token) async {

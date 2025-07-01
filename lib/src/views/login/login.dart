@@ -1,8 +1,5 @@
 import 'dart:ui';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:lottie/lottie.dart';
 import 'package:profair/src/components/barcode_scanner_simple.dart';
 import 'package:profair/src/controllers/login_controller.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -61,10 +58,10 @@ class _LoginPageState extends State<LoginPage> {
 
   loginCode() async {
     // String? token = await FirebaseMessaging.instance.getToken();
-    String? token = "tokenAcess";
-    final data = {"codacesso": codigo.text, "token": token};
+
+    final data = {"codacesso": codigo.text};
     try {
-      await loginController!.requestLogin(data, token!);
+      await loginController!.requestLogin(data);
       if (loginController!.stateLoginCode.value == StateApp.success) {
         navigatorRoutes(true);
       } else {

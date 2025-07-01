@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
@@ -36,6 +37,8 @@ class _HomePageState extends State<HomePage> {
     homeController.findData();
     homeController.findCampaign();
 
+    // await NotificationService.initialize();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initFCM();
     });
@@ -47,6 +50,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initFCM() async {
+    await NotificationService.initialize();
+
     final prefs = await SharedPreferences.getInstance();
 
     FirebaseMessaging messaging = FirebaseMessaging.instance;
@@ -65,7 +70,7 @@ class _HomePageState extends State<HomePage> {
       print('Permissão não determinada');
     }
 
-    String? token = await messaging.getToken();
+    String? token = await FirebaseMessaging.instance.getToken();
     print('==========================================================');
     print('FCM Token: $token');
     print('==========================================================');
