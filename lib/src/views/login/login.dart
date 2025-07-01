@@ -60,7 +60,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   loginCode() async {
-    String? token = await FirebaseMessaging.instance.getToken();
+    // String? token = await FirebaseMessaging.instance.getToken();
+    String? token = "tokenAcess";
     final data = {"codacesso": codigo.text, "token": token};
     try {
       await loginController!.requestLogin(data, token!);
