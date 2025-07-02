@@ -42,6 +42,17 @@ class _HomePageState extends State<HomePage> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initFCM();
     });
+
+    FirebaseMessaging.instance.onTokenRefresh.listen((String token) async {
+      print('==========================================================');
+      print('FCM Token Refresh: $token');
+      print('==========================================================');
+
+      homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("tokenFcm", token.toString());
+    });
   }
 
   reloadScreen() async {

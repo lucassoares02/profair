@@ -9,7 +9,7 @@ class CustomNotification {
   CustomNotification.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     title = json['title'];
-    body = json['body'];
+    body = json['content'];
     payload = json['payload'];
   }
 }
