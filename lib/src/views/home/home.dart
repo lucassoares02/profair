@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeController homeController = HomeController(StateApp.start, HomeRepository());
-  String varTeste = "";
+  String? varTeste = "";
   Timer? _timer;
 
   @override
@@ -71,7 +71,7 @@ class _HomePageState extends State<HomePage> {
           builder: (context) {
             return AlertDialog(
               title: const Text("Token FCM"),
-              content: Text(varTeste),
+              content: Text(varTeste!),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -89,8 +89,8 @@ class _HomePageState extends State<HomePage> {
 
   getTokenApns() async {
     // 3) Puxa token APNs (iOS)
-    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    print('APNs token: $apnsToken');
+    varTeste = await FirebaseMessaging.instance.getAPNSToken();
+    print('APNs token: $varTeste');
   }
 
   reloadScreen() async {
