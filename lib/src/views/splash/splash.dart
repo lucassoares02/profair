@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:profair/firebase_options.dart';
 import 'package:profair/src/components/progress_indicator.dart';
 import 'package:profair/src/components/spacing.dart';
@@ -33,7 +34,11 @@ class _SplashPageState extends State<SplashPage> {
       //   options: Platform.isAndroid ? null : DefaultFirebaseOptions.currentPlatform,
       // );
 
-      // await NotificationService.initialize();
+      await NotificationService.initialize();
+
+      // 3) Puxa token APNs (iOS)
+      final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      print('APNs token: $apnsToken');
 
       bool response = await splashController.initApplication();
       navigatorRoute(response);
