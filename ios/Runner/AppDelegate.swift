@@ -77,7 +77,6 @@
 
 import UIKit
 import Flutter
-import FirebaseCore
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -87,8 +86,6 @@ import FirebaseCore
   ) -> Bool {
 
     application.registerForRemoteNotifications()
-
-    FirebaseApp.configure()
 
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
