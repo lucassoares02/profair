@@ -11,8 +11,6 @@
 //     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
 //   }
 // }
-
-
 import UIKit
 import Flutter
 import Firebase
@@ -60,7 +58,7 @@ import UserNotifications
   }
 
   // 🔔 Exibe notificações em foreground (iOS 10+)
-  func userNotificationCenter(
+  override func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     willPresent notification: UNNotification,
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void

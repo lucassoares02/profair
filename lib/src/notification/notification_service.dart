@@ -210,8 +210,7 @@ class NotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       final notification = message.notification;
       final android = message.notification?.android;
-      final String? imageUrl = android?.imageUrl;
-
+      final String? imageUrl = message.data["imageUrl"];
       if (notification != null && android != null) {
         final bigPicture = imageUrl != null
             ? BigPictureStyleInformation(
