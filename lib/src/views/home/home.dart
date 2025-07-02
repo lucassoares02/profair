@@ -95,6 +95,34 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  teste() async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    print('==========================================================');
+    print('FCM Token: $token');
+    print('==========================================================');
+
+    homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
+
+    // open showdialog with token
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Token FCM"),
+          content: Text(token ?? "Token não encontrado"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
@@ -168,6 +196,17 @@ class _HomePageState extends State<HomePage> {
                               );
                       },
                     ),
+                    const AppSpacing(),
+                    Row(
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              teste();
+                            },
+                            child: Text("Ver token"))
+                      ],
+                    ),
+                    const AppSpacing(),
                     ValueListenableBuilder(
                         valueListenable: homeController.stateCampaign,
                         builder: (context, value, child) {
