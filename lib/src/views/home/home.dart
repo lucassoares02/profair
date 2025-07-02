@@ -105,34 +105,45 @@ class _HomePageState extends State<HomePage> {
 
   teste() async {
     try {
-      final settings = await FirebaseMessaging.instance.requestPermission(
+      await NotificationService.initialize();
+
+      final prefs = await SharedPreferences.getInstance();
+
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+      final settings = await messaging.requestPermission(
         alert: true,
         badge: true,
         sound: true,
       );
-      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        print('Permissão de notificação não concedida');
-        return;
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        print('Permissão concedida');
+      } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+        print('Permissão negada');
+      } else if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
+        print('Permissão não determinada');
       }
 
-      // 4) Agora puxa token FCM
-      final fcmToken = await FirebaseMessaging.instance.getToken();
-      print('FCM token: $fcmToken');
+      if (Platform.isIOS) {
+        String? apnsToken = await messaging.getAPNSToken();
+        print('APNS Token: $apnsToken');
+        await Future.delayed(Duration(seconds: 2));
+      }
 
-      // 5) Escuta renovações de token
-      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-        print('FCM token atualizado: $newToken');
-      });
+      String? token = await FirebaseMessaging.instance.getToken();
+      print('==========================================================');
+      print('FCM Token: $token');
+      print('==========================================================');
 
-      homeController.postTokenFcm(homeController.data!.userCode!.toString(), fcmToken.toString());
-
+      homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
       // open showdialog with token
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
             title: const Text("Token FCM"),
-            content: Text(fcmToken ?? "Token não encontrado"),
+            content: Text(token ?? "Token não encontrado"),
             actions: [
               TextButton(
                 onPressed: () {
