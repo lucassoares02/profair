@@ -96,31 +96,35 @@ class _HomePageState extends State<HomePage> {
   }
 
   teste() async {
-    String? token = await FirebaseMessaging.instance.getToken();
-    print('==========================================================');
-    print('FCM Token: $token');
-    print('==========================================================');
+    try {
+      String? token = await FirebaseMessaging.instance.getToken();
+      print('==========================================================');
+      print('FCM Token: $token');
+      print('==========================================================');
 
-    homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
+      homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
 
-    // open showdialog with token
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Token FCM"),
-          content: Text(token ?? "Token não encontrado"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("OK"),
-            ),
-          ],
-        );
-      },
-    );
+      // open showdialog with token
+      showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Token FCM"),
+            content: Text(token ?? "Token não encontrado"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      homeController.postTokenFcm(homeController.data!.userCode!.toString(), "Erro ao obter token FCM: $e");
+    }
   }
 
   @override
