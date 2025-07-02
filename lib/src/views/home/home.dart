@@ -97,10 +97,28 @@ class _HomePageState extends State<HomePage> {
 
   teste() async {
     try {
-      String? token = await FirebaseMessaging.instance.getToken();
-      print('==========================================================');
-      print('FCM Token: $token');
-      print('==========================================================');
+      final settings = await FirebaseMessaging.instance.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+        print('Permissão de notificação não concedida');
+        return;
+      }
+
+      // 3) Puxa token APNs (iOS)
+      final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+      print('APNs token: $apnsToken');
+
+      // 4) Agora puxa token FCM
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      print('FCM token: $fcmToken');
+
+      // 5) Escuta renovações de token
+      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+        print('FCM token atualizado: $newToken');
+      });
 
       homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
 
