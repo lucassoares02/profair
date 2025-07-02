@@ -27,23 +27,9 @@ workflows:
               fi
           - name: Build for iOS Simulator
             script: |
-              flutter build ios --simulator
-
-          - name: Iniciar simulador e capturar logs
-            script: |
-              # pega o UDID do simulador bootado
-              SIM_UDID=$(xcrun simctl list devices booted | head -n1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
-              # inicia o app no simulador
-              xcrun simctl install booted build/ios/iphonesimulator/Runner.app
-              xcrun simctl launch booted com.example.yourapp &
-
-              # captura 30s de log do sistema filtrando pelo bundle identifier
-              timeout 30s xcrun simctl spawn booted log stream \
-                --predicate 'processImagePath CONTAINS "Runner"' \
-                --style compact > ios_simulator_logs.txt
+              flutter build ios --simulator --verbose
         artifacts:
           - build/ios/iphonesimulator/Runner.app
-          - ios_simulator_logs.txt
         cache:
           cache_paths:
             - $FLUTTER_ROOT/.pub-cache
