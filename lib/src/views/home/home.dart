@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:profair/src/notification/notification_service.dart';
@@ -30,14 +31,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeController homeController = HomeController(StateApp.start, HomeRepository());
-  String? varTeste = "";
-  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
-
-    _startChecking();
 
     homeController.findData();
     homeController.findCampaign();
@@ -58,39 +55,6 @@ class _HomePageState extends State<HomePage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("tokenFcm", token.toString());
     });
-  }
-
-  void _startChecking() {
-    // roda a cada 5 segundos
-    _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-      if (varTeste == "") {
-        getTokenApns();
-      } else {
-        showDialog(
-          context: context,
-          builder: (context) {
-            return AlertDialog(
-              title: const Text("Token FCM"),
-              content: Text(varTeste!),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("OK"),
-                ),
-              ],
-            );
-          },
-        );
-      }
-    });
-  }
-
-  getTokenApns() async {
-    // 3) Puxa token APNs (iOS)
-    varTeste = await FirebaseMessaging.instance.getAPNSToken();
-    print('APNs token: $varTeste');
   }
 
   reloadScreen() async {
@@ -117,6 +81,14 @@ class _HomePageState extends State<HomePage> {
       print('Permissão negada');
     } else if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
       print('Permissão não determinada');
+    }
+
+    final _firebaseMessaging = FirebaseMessaging.instance;
+
+    if (Platform.isIOS) {
+      String? apnsToken = await _firebaseMessaging.getAPNSToken();
+      print('APNS Token: $apnsToken');
+      await Future.delayed(Duration(seconds: 2));
     }
 
     String? token = await FirebaseMessaging.instance.getToken();
