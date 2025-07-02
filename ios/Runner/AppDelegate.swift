@@ -11,7 +11,6 @@
 //     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
 //   }
 // }
-
 import UIKit
 import Flutter
 import FirebaseCore
@@ -19,21 +18,21 @@ import FirebaseMessaging
 import UserNotifications
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate {
+@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
 
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    // 1️⃣ Registra plugins Flutter primeiro
+    // 1️⃣ Registra plugins do Flutter
     GeneratedPluginRegistrant.register(with: self)
 
-    // 2️⃣ Inicializa o Firebase (se ainda não inicializado)
+    // 2️⃣ Inicializa o Firebase se necessário
     if FirebaseApp.app() == nil {
       FirebaseApp.configure()
     }
 
-    // 3️⃣ Define os delegates de notificação e messaging
+    // 3️⃣ Configure delegates
     UNUserNotificationCenter.current().delegate = self
     Messaging.messaging().delegate = self
 
@@ -43,15 +42,16 @@ import UserNotifications
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
+  // 📲 APNs trouxe o deviceToken —> encaminha para o Firebase Messaging
   override func application(
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
-    // encaminha o token APNs pro Firebase
     Messaging.messaging().apnsToken = deviceToken
     super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
   }
 
+  // 🚨 Falha ao registrar no APNs
   override func application(
     _ application: UIApplication,
     didFailToRegisterForRemoteNotificationsWithError error: Error
@@ -59,13 +59,9 @@ import UserNotifications
     print("❌ Falha ao registrar APNs: \(error)")
     super.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
   }
-}
 
-// MARK: - UNUserNotificationCenterDelegate e MessagingDelegate
-extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
-
-  // iOS: exibe notificações mesmo com app em foreground
-  func userNotificationCenter(
+  // 🔔 Exibe notificações em foreground (iOS 10+)
+  override func userNotificationCenter(
     _ center: UNUserNotificationCenter,
     willPresent notification: UNNotification,
     withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
@@ -73,11 +69,11 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     completionHandler([.alert, .badge, .sound])
   }
 
-  // Firebase Messaging: recebe novo token FCM (registro e refresh)
+  // 🔄 Recebe novo token FCM (registro e refresh)
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
     guard let token = fcmToken else { return }
     print("🔄 Novo token FCM: \(token)")
-    // aqui você pode enviar para o seu servidor
+    // Aqui você pode enviar o token para o seu servidor
   }
 }
 

@@ -29,9 +29,9 @@ class _SplashPageState extends State<SplashPage> {
 
   void start() async {
     try {
-      await Firebase.initializeApp(
-        options: Platform.isAndroid ? null : DefaultFirebaseOptions.currentPlatform,
-      );
+      // await Firebase.initializeApp(
+      //   options: Platform.isAndroid ? null : DefaultFirebaseOptions.currentPlatform,
+      // );
 
       // await NotificationService.initialize();
 
