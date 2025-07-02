@@ -207,42 +207,103 @@ class NotificationService {
 
     await _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+    //   final notification = message.notification;
+    //   final android = message.notification?.android;
+    //   final String? imageUrl = message.data["imageUrl"];
+    //   if (notification != null && android != null) {
+    //     final bigPicture = imageUrl != null
+    //         ? BigPictureStyleInformation(
+    //             FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'notif_image')),
+    //             largeIcon: FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'logo_thumb')),
+    //             contentTitle: notification.title,
+    //             summaryText: notification.body,
+    //           )
+    //         : null;
+
+    //     await _localNotificationsPlugin.show(
+    //       notification.hashCode,
+    //       notification.title,
+    //       notification.body,
+    //       NotificationDetails(
+    //         iOS: const DarwinNotificationDetails(),
+    //         android: AndroidNotificationDetails(
+    //           channel.id,
+    //           channel.name,
+    //           channelDescription: channel.description,
+    //           styleInformation: bigPicture,
+    //           largeIcon: FilePathAndroidBitmap(
+    //             await _downloadAndSaveFile(imageUrl ?? "https://play-lh.googleusercontent.com/6FINLIOgGm5UN2MuqBIYnqhydb71JlO55aOG1ox_S7WtSGvo-72p5pWkL2OufnIjBbY=w240-h480-rw", 'logo_thumb'),
+    //           ),
+    //           importance: Importance.high,
+    //           priority: Priority.high,
+    //           icon: 'ic_launcher_notification',
+    //         ),
+    //       ),
+    //       payload: "${message.data["notificationId"]}",
+    //     );
+    //   }
+    // });
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       final notification = message.notification;
       final android = message.notification?.android;
-      final String? imageUrl = message.data["imageUrl"];
-      if (notification != null && android != null) {
-        final bigPicture = imageUrl != null
-            ? BigPictureStyleInformation(
-                FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'notif_image')),
-                largeIcon: FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'logo_thumb')),
-                contentTitle: notification.title,
-                summaryText: notification.body,
-              )
-            : null;
+      final apple = message.notification?.apple;
+      final imageUrl = message.data["imageUrl"];
 
-        await _localNotificationsPlugin.show(
-          notification.hashCode,
-          notification.title,
-          notification.body,
-          NotificationDetails(
-            iOS: const DarwinNotificationDetails(),
-            android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
-              styleInformation: bigPicture,
-              largeIcon: FilePathAndroidBitmap(
-                await _downloadAndSaveFile(imageUrl ?? "https://play-lh.googleusercontent.com/6FINLIOgGm5UN2MuqBIYnqhydb71JlO55aOG1ox_S7WtSGvo-72p5pWkL2OufnIjBbY=w240-h480-rw", 'logo_thumb'),
-              ),
-              importance: Importance.high,
-              priority: Priority.high,
-              icon: 'ic_launcher_notification',
-            ),
+      if (notification == null) return;
+
+      NotificationDetails details;
+
+      if (android != null) {
+        // === ANDROID ===
+        BigPictureStyleInformation? bigPicture;
+        if (imageUrl != null) {
+          final largeIconPath = await _downloadAndSaveFile(imageUrl, 'logo_thumb');
+          final bigPicPath = await _downloadAndSaveFile(imageUrl, 'notif_image');
+          bigPicture = BigPictureStyleInformation(
+            FilePathAndroidBitmap(bigPicPath),
+            largeIcon: FilePathAndroidBitmap(largeIconPath),
+            contentTitle: notification.title,
+            summaryText: notification.body,
+          );
+        }
+        details = NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            styleInformation: bigPicture,
+            largeIcon: imageUrl != null ? FilePathAndroidBitmap(await _downloadAndSaveFile(imageUrl, 'logo_thumb')) : null,
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: 'ic_launcher_notification',
           ),
-          payload: "${message.data["notificationId"]}",
+          iOS: const DarwinNotificationDetails(), // pode deixar vazio aqui
+        );
+      } else {
+        // === iOS ===
+        // no iOS, use attachments para exibir imagem
+        List<DarwinNotificationAttachment> attachments = [];
+        if (imageUrl != null) {
+          final filePath = await _downloadAndSaveFile(imageUrl, 'notif_image');
+          attachments.add(DarwinNotificationAttachment(filePath));
+        }
+        details = NotificationDetails(
+          iOS: DarwinNotificationDetails(
+            attachments: attachments,
+          ),
         );
       }
+
+      // por fim, dispara a notificação
+      await _localNotificationsPlugin.show(
+        notification.hashCode,
+        notification.title,
+        notification.body,
+        details,
+        payload: message.data["notificationId"],
+      );
     });
   }
 
