@@ -83,10 +83,8 @@ class _HomePageState extends State<HomePage> {
       print('Permissão não determinada');
     }
 
-    final _firebaseMessaging = FirebaseMessaging.instance;
-
     if (Platform.isIOS) {
-      String? apnsToken = await _firebaseMessaging.getAPNSToken();
+      String? apnsToken = await messaging.getAPNSToken();
       print('APNS Token: $apnsToken');
       await Future.delayed(Duration(seconds: 2));
     }
