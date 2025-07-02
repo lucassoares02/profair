@@ -27,7 +27,7 @@ workflows:
               fi
           - name: Build for iOS Simulator
             script: |
-              flutter build ios --simulator --verbose
+              flutter build ios --simulator
         artifacts:
           - build/ios/iphonesimulator/Runner.app
         cache:
