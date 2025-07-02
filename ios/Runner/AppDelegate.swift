@@ -74,37 +74,46 @@
 //   }
 // }
 
-
 import UIKit
 import Flutter
+import flutter_local_notifications
 import FirebaseCore
 import FirebaseMessaging
+import UserNotifications
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate {
+@objc class AppDelegate: FlutterAppDelegate, MessagingDelegate, UNUserNotificationCenterDelegate {
 
   override func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    // 1️⃣ Registra plugins do Flutter
+    // 1️⃣ Plugin de notificações locais no background isolate
+    FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { registry in
+      GeneratedPluginRegistrant.register(with: registry)
+    }
+
+    // 2️⃣ Registrar plugins do Flutter
     GeneratedPluginRegistrant.register(with: self)
-    
-    // 2️⃣ Inicializa o Firebase
+
+    // 3️⃣ Inicializar Firebase
     if FirebaseApp.app() == nil {
       FirebaseApp.configure()
     }
-    
-    // 3️⃣ Define o delegate do Messaging para receber o token
+
+    // 4️⃣ Delegate para notificações (foreground e taps)
+    UNUserNotificationCenter.current().delegate = self
+
+    // 5️⃣ Delegate de Messaging para receber token e refresh
     Messaging.messaging().delegate = self
-    
-    // 4️⃣ Registra para receber notificações APNs (necessário para gerar o token)
+
+    // 6️⃣ Registrar APNs → gera o APNs token que vira FCM token
     application.registerForRemoteNotifications()
-    
+
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
-  // 📲 Recebe o deviceToken do APNs e repassa ao Firebase Messaging
+  // 📲 APNs token recebido → repassa ao Firebase Messaging
   override func application(
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
@@ -113,10 +122,28 @@ import FirebaseMessaging
     super.application(application, didRegisterForRemoteNotificationsWithDeviceToken: deviceToken)
   }
 
-  // 🔄 Callback FCM: aqui chega o token (registro inicial e refresh)
+  // 🚨 Falha ao registrar no APNs
+  override func application(
+    _ application: UIApplication,
+    didFailToRegisterForRemoteNotificationsWithError error: Error
+  ) {
+    print("❌ Falha no APNs: \(error)")
+    super.application(application, didFailToRegisterForRemoteNotificationsWithError: error)
+  }
+
+  // 🔔 Exibir notificação em foreground
+  func userNotificationCenter(
+    _ center: UNUserNotificationCenter,
+    willPresent notification: UNNotification,
+    withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void
+  ) {
+    completionHandler([.alert, .badge, .sound])
+  }
+
+  // 🔄 Callback de novo token FCM
   func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
     guard let token = fcmToken else { return }
     print("✅ FCM token: \(token)")
-    // envie para o seu servidor, armazene em prefs, etc.
+    // Aqui você envia ao seu servidor ou armazena localmente
   }
 }
