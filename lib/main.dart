@@ -1,6 +1,8 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:profair/firebase_options.dart';
@@ -14,6 +16,11 @@ void main() async {
   await Firebase.initializeApp(
     options: Platform.isAndroid ? null : DefaultFirebaseOptions.currentPlatform,
   );
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  runZonedGuarded<Future<void>>(() async {
+    runApp(const MyApp());
+  }, FirebaseCrashlytics.instance.recordError);
+
   runApp(ModularApp(
     module: AppModule(),
     child: const MyApp(),
