@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage> {
         print('FCM token atualizado: $newToken');
       });
 
-      homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
+      homeController.postTokenFcm(homeController.data!.userCode!.toString(), fcmToken.toString());
 
       // open showdialog with token
       showDialog(
@@ -128,7 +128,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context) {
           return AlertDialog(
             title: const Text("Token FCM"),
-            content: Text(token ?? "Token não encontrado"),
+            content: Text(fcmToken ?? "Token não encontrado"),
             actions: [
               TextButton(
                 onPressed: () {
