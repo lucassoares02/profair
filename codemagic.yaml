@@ -11,6 +11,7 @@ workflows:
             script: |
               echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
+          - script: flutter clean
           - name: Get Flutter packages
             script: |
               flutter pub get
