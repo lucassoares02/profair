@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/components/barcode_scanner_simple.dart';
 import 'package:profair/src/controllers/login_controller.dart';
@@ -43,7 +44,11 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  void printScreenDensity() {
+  void printScreenDensity() async {
+    // 3) Puxa token APNs (iOS)
+    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+    print('APNs token: $apnsToken');
+
     final pixelRatio = window.devicePixelRatio;
     final size = window.physicalSize;
 

@@ -36,10 +36,6 @@ class _SplashPageState extends State<SplashPage> {
 
       await NotificationService.initialize();
 
-      // 3) Puxa token APNs (iOS)
-      final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-      print('APNs token: $apnsToken');
-
       bool response = await splashController.initApplication();
       navigatorRoute(response);
     } catch (e) {
