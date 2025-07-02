@@ -107,20 +107,23 @@ class _HomePageState extends State<HomePage> {
         return;
       }
 
-      // 3) Puxa token APNs (iOS)
-      final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-      print('APNs token: $apnsToken');
-
-      // 4) Agora puxa token FCM
+      // O FirebaseMessaging.instance.getToken() irá internamente tentar obter o APNs token primeiro.
       final fcmToken = await FirebaseMessaging.instance.getToken();
       print('FCM token: $fcmToken');
+
+      if (fcmToken == null) {
+        print('FCM token é nulo, pode ser que o APNs token ainda não esteja pronto.');
+        // Você pode querer adicionar um retry aqui ou aguardar mais um pouco.
+        return;
+      }
 
       // 5) Escuta renovações de token
       FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
         print('FCM token atualizado: $newToken');
+        homeController.postTokenFcm(homeController.data!.userCode!.toString(), newToken);
       });
 
-      homeController.postTokenFcm(homeController.data!.userCode!.toString(), fcmToken.toString());
+      homeController.postTokenFcm(homeController.data!.userCode!.toString(), fcmToken);
 
       // open showdialog with token
       showDialog(
@@ -128,7 +131,7 @@ class _HomePageState extends State<HomePage> {
         builder: (context) {
           return AlertDialog(
             title: const Text("Token FCM"),
-            content: Text(fcmToken ?? "Token não encontrado"),
+            content: Text(fcmToken),
             actions: [
               TextButton(
                 onPressed: () {
@@ -141,6 +144,7 @@ class _HomePageState extends State<HomePage> {
         },
       );
     } catch (e) {
+      print("Erro ao obter token FCM: $e");
       homeController.postTokenFcm(homeController.data!.userCode!.toString(), "Erro ao obter token FCM: $e");
     }
   }
