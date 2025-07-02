@@ -10,15 +10,6 @@ workflows:
           - name: Restore GoogleService-Info.plist
             script: |
               echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
-
-          - name: Limpar e Reinstalar CocoaPods
-            script: |
-              cd ios # Navega para a pasta iOS do seu projeto
-              rm -rf Pods/ # Remove a pasta Pods
-              rm Podfile.lock # Remove o arquivo de lock dos Pods
-              pod cache clean --all # Limpa o cache do CocoaPods
-              pod install --repo-update # Instala os Pods, atualizando o repositório antes
-              cd .. # Volta para a raiz do projeto
           - script: flutter clean
           - name: Get Flutter packages
             script: |

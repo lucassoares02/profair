@@ -16,10 +16,6 @@ void main() async {
   await Firebase.initializeApp(
     options: Platform.isAndroid ? null : DefaultFirebaseOptions.currentPlatform,
   );
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
-  runZonedGuarded<Future<void>>(() async {
-    runApp(const MyApp());
-  }, FirebaseCrashlytics.instance.recordError);
 
   runApp(ModularApp(
     module: AppModule(),
