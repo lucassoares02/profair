@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
+// import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/login_controller.dart';
 import 'package:profair/src/state/state_app.dart';
@@ -21,33 +21,33 @@ class _BarcodeScannerSimpleState extends State<BarcodeScannerSimple> {
   // Barcode? _barcode;
   bool _scanned = false;
 
-  void _handleBarcode(BarcodeCapture barcodes) async {
-    if (_scanned) return;
+  // void _handleBarcode(BarcodeCapture barcodes) async {
+  //   if (_scanned) return;
 
-    final String code = barcodes.barcodes.first.rawValue ?? "-1";
+  //   final String code = barcodes.barcodes.first.rawValue ?? "-1";
 
-    if (code != "-1") {
-      setState(() {
-        _scanned = true;
-      });
+  //   if (code != "-1") {
+  //     setState(() {
+  //       _scanned = true;
+  //     });
 
-      final data = {"codacesso": code};
-      bool response = await widget.loginController!.stateLoginQr(data);
+  //     final data = {"codacesso": code};
+  //     bool response = await widget.loginController!.stateLoginQr(data);
 
-      if (widget.loginController!.stateLogin.value == StateApp.success) {
-        navigatorRoutes(true);
-      } else {
-        Fluttertoast.showToast(
-          msg: "Não foi possível realizar login!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-        );
-        Navigator.of(context).pushNamedAndRemoveUntil('login', (route) => false);
-      }
-    }
-  }
+  //     if (widget.loginController!.stateLogin.value == StateApp.success) {
+  //       navigatorRoutes(true);
+  //     } else {
+  //       Fluttertoast.showToast(
+  //         msg: "Não foi possível realizar login!",
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.CENTER,
+  //         backgroundColor: Colors.red,
+  //         textColor: Colors.white,
+  //       );
+  //       Navigator.of(context).pushNamedAndRemoveUntil('login', (route) => false);
+  //     }
+  //   }
+  // }
 
   navigatorRoutes(response) {
     if (response) {
@@ -61,15 +61,15 @@ class _BarcodeScannerSimpleState extends State<BarcodeScannerSimple> {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          MobileScanner(
-            onDetect: _handleBarcode,
-            fit: BoxFit.cover,
-            controller: MobileScannerController(
-              facing: CameraFacing.back,
-              torchEnabled: false,
-              detectionSpeed: DetectionSpeed.noDuplicates,
-            ),
-          ),
+          // MobileScanner(
+          //   onDetect: _handleBarcode,
+          //   fit: BoxFit.cover,
+          //   controller: MobileScannerController(
+          //     facing: CameraFacing.back,
+          //     torchEnabled: false,
+          //     detectionSpeed: DetectionSpeed.noDuplicates,
+          //   ),
+          // ),
           Container(
             color: Colors.black.withOpacity(0.3), // leve escurecimento
           ),
