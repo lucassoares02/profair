@@ -42,7 +42,7 @@ workflows:
     name: Apple Workflow
     environment:
       groups:
-          - android
+        - android
       flutter: 3.29.0
       ios_signing:
         provisioning_profiles:
@@ -51,18 +51,34 @@ workflows:
           - api_key_profair_renew
     integrations:
       app_store_connect: api key profair renew
+
     scripts:
-      - name: Check envs
+      - name: Check Info.plist
         script: |
-            echo "📄 Info.plist do projeto:"
-            cat ios/Runner/Info.plist
+          echo "📄 Info.plist do projeto:"
+          cat ios/Runner/Info.plist
+
       - name: Restore Provisioning Profile
         script: |
-          echo "Restoring provisioning profile from \$APPSTORE_MOBILEPROVISION"
+          echo "🧹 Limpando outros provisioning profiles"
+          rm -f ~/Library/MobileDevice/Provisioning\ Profiles/*
+          echo "⬇️ Restaurando provisioning profile do \$APPSTORE_MOBILEPROVISION"
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision
-          echo "✅ Provisioning profile restored!"
+          echo "✅ Provisioning profile restaurado!"
           ls -l ~/Library/MobileDevice/Provisioning\ Profiles
+
+      - name: Inspect Provisioning Profile
+        script: |
+          echo "🔍 Verificando provisioning profile"
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
+          /usr/libexec/PlistBuddy -c "Print :UUID" profile.plist
+          /usr/libexec/PlistBuddy -c "Print :AppIDName" profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist
+          /usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist
+          export PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
+          echo "📌 Usando PROFILE_UUID=$PROFILE_UUID"
+
       - script: xcode-project use-profiles
       - script: flutter clean
       - script: flutter --version
@@ -73,29 +89,26 @@ workflows:
         script: |
           echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
+      - name: Check GoogleService-Info.plist exists
+        script: |
+          if [ -f ios/Runner/GoogleService-Info.plist ]; then
+            echo "✅ GoogleService-Info.plist restaurado!"
+            ls -l ios/Runner/GoogleService-Info.plist
+          else
+            echo "❌ GoogleService-Info.plist NÃO encontrado!"
+            exit 1
+          fi
+
       - name: Install CocoaPods dependencies
         script: |
           flutter pub get
           cd ios
           pod install
 
-      - name: Check GoogleService-Info.plist exists
-        script: |
-          if [ -f ios/Runner/GoogleService-Info.plist ]; then
-            echo "✅ GoogleService-Info.plist restored!"
-            ls -l ios/Runner/GoogleService-Info.plist
-          else
-            echo "❌ GoogleService-Info.plist NOT found!"
-            exit 1
-          fi
-
-      - name: Force provisioning profile
-        script: |
-          export PROFILE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision | plutil -extract UUID xml1 -o - -)
-          xcodebuild archive … PROVISIONING_PROFILE_SPECIFIER=$PROFILE_UUID
-      
       - name: Flutter build ipa
-        script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+        script: |
+          echo "🏗️ Construindo IPA com flutter"
+          flutter build ipa --export-options-plist=/Users/builder/export_options.plist
 
     artifacts:
       - build/ios/ipa/*.ipa
@@ -106,6 +119,7 @@ workflows:
         submit_to_app_store: true
         release_type: SCHEDULED
         copyright: 2025 Profair
+
 
 
   android:
