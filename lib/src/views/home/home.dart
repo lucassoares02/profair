@@ -83,10 +83,30 @@ class _HomePageState extends State<HomePage> {
 
 // home.dart
 
+  teste2() async {
+    final messaging = FirebaseMessaging.instance;
+    String? token = "";
+    try {
+      await messaging.getAPNSToken();
+      // esperar alguns segundos para garantir que o token seja atualizado
+      await Future.delayed(const Duration(seconds: 3));
+      token = await messaging.getToken();
+    } catch (e) {
+      token = "Error ao tentar pegar o GetApnsToken $e";
+    }
+    await homeController.postTokenFcm(homeController.data!.userCode!.toString(), token!);
+  }
+
   teste() async {
     try {
       // Apenas recupera o token que já deve ter sido gerado na inicialização.
       String? token = await FirebaseMessaging.instance.getToken();
+
+      if (token == null) {
+        final prefs = await SharedPreferences.getInstance();
+        token = prefs.getString("tokenFcm");
+      }
+
       print('FCM Token recuperado na Home: $token');
 
       if (token == null) {
@@ -200,7 +220,17 @@ class _HomePageState extends State<HomePage> {
                             onPressed: () {
                               teste();
                             },
-                            child: Text("Ver token"))
+                            child: Text("Teste 1"))
+                      ],
+                    ),
+                    const AppSpacing(),
+                    Row(
+                      children: [
+                        TextButton(
+                            onPressed: () {
+                              teste2();
+                            },
+                            child: Text("Teste 2"))
                       ],
                     ),
                     const AppSpacing(),

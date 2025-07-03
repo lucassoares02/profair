@@ -11,6 +11,7 @@ import 'package:profair/src/repositories/login_repository.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -30,11 +31,25 @@ class _SplashPageState extends State<SplashPage> {
 
   void start() async {
     try {
-      // await Firebase.initializeApp(
-      //   options: Platform.isAndroid ? null : DefaultFirebaseOptions.currentPlatform,
-      // );
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
 
       await NotificationService.initialize();
+
+      NotificationSettings settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        String? fcmToken = await messaging.getToken();
+        if (fcmToken != null) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('tokenFcm', fcmToken);
+        }
+      } else {
+        print('Permissão de notificação negada pelo usuário.');
+      }
 
       bool response = await splashController.initApplication();
       navigatorRoute(response);
