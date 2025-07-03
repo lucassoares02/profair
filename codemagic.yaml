@@ -7,6 +7,12 @@ workflows:
           flutter: 3.29.0
           xcode: 16.2
         scripts:
+          - name: Check envs
+            script: |
+              echo "📦 Bundle Identifier atual: $PRODUCT_BUNDLE_IDENTIFIER"
+              echo "📄 Provisioning Profile: $APPSTORE_MOBILEPROVISION"
+              echo "🏷️ Build Number: $FLUTTER_BUILD_NUMBER"
+              echo "🚀 Build Name: $FLUTTER_BUILD_NAME"
           - name: Restore GoogleService-Info.plist
             script: |
               echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
@@ -14,7 +20,6 @@ workflows:
           - name: Get Flutter packages
             script: |
               flutter pub get
-
           - name: Check GoogleService-Info.plist exists
             script: |
               if [ -f ios/Runner/GoogleService-Info.plist ]; then

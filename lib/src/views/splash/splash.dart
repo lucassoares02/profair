@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:profair/src/components/progress_indicator.dart';
 import 'package:profair/src/components/spacing.dart';
@@ -33,11 +35,21 @@ class _SplashPageState extends State<SplashPage> {
 
       NotificationSettings settings = await messaging.requestPermission(
         alert: true,
+        announcement: false,
         badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
         sound: true,
       );
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        final a = await messaging.getAPNSToken();
+
+        print('APNS Token: $a');
+
+        Timer(const Duration(seconds: 4), () {});
+
         String? fcmToken = await messaging.getToken();
         if (fcmToken != null) {
           final prefs = await SharedPreferences.getInstance();
