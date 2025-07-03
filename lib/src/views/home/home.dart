@@ -63,38 +63,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _initFCM() async {
-    await NotificationService.initialize();
-
     final prefs = await SharedPreferences.getInstance();
-
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-    final settings = await messaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('Permissão concedida');
-    } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
-      print('Permissão negada');
-    } else if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
-      print('Permissão não determinada');
-    }
-
-    if (Platform.isIOS) {
-      String? apnsToken = await messaging.getAPNSToken();
-      print('APNS Token: $apnsToken');
-      await Future.delayed(Duration(seconds: 2));
-    }
-
     String? token = await FirebaseMessaging.instance.getToken();
-    print('==========================================================');
-    print('FCM Token: $token');
-    print('==========================================================');
+    print('FCM Token recuperado na Home: $token');
 
-    homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
+    if (token == null) {
+      // Se ainda for nulo, algo na configuração (passos 1-3) está errado.
+      throw Exception("Token FCM é nulo. Verifique a configuração do Xcode/Firebase.");
+    }
+
+    homeController.postTokenFcm(homeController.data!.userCode!.toString(), token);
 
     await prefs.setString("tokenFcm", token.toString());
 
@@ -103,41 +81,21 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+// home.dart
+
   teste() async {
     try {
-      await NotificationService.initialize();
-
-      final prefs = await SharedPreferences.getInstance();
-
-      FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-      final settings = await messaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        print('Permissão concedida');
-      } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
-        print('Permissão negada');
-      } else if (settings.authorizationStatus == AuthorizationStatus.notDetermined) {
-        print('Permissão não determinada');
-      }
-
-      if (Platform.isIOS) {
-        String? apnsToken = await messaging.getAPNSToken();
-        print('APNS Token: $apnsToken');
-        await Future.delayed(Duration(seconds: 2));
-      }
-
+      // Apenas recupera o token que já deve ter sido gerado na inicialização.
       String? token = await FirebaseMessaging.instance.getToken();
-      print('==========================================================');
-      print('FCM Token: $token');
-      print('==========================================================');
+      print('FCM Token recuperado na Home: $token');
 
-      homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
-      // open showdialog with token
+      if (token == null) {
+        // Se ainda for nulo, algo na configuração (passos 1-3) está errado.
+        throw Exception("Token FCM é nulo. Verifique a configuração do Xcode/Firebase.");
+      }
+
+      homeController.postTokenFcm(homeController.data!.userCode!.toString(), token);
+      // ... seu código showDialog ...
       showDialog(
         context: context,
         builder: (context) {
@@ -156,7 +114,9 @@ class _HomePageState extends State<HomePage> {
         },
       );
     } catch (e) {
-      homeController.postTokenFcm(homeController.data!.userCode!.toString(), "Erro ao obter token FCM: $e");
+      print("Erro ao obter token na Home: $e");
+      // Mostre um erro mais informativo para o usuário ou para o log
+      // ...
     }
   }
 
