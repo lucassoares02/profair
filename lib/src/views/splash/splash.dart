@@ -48,7 +48,7 @@ class _SplashPageState extends State<SplashPage> {
 
         print('APNS Token: $a');
 
-        Timer(const Duration(seconds: 4), () {});
+        await Future.delayed(const Duration(seconds: 4));
 
         String? fcmToken = await messaging.getToken();
         if (fcmToken != null) {
