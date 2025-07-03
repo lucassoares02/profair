@@ -89,6 +89,11 @@ workflows:
             exit 1
           fi
 
+      - name: Force provisioning profile
+        script: |
+          export PROFILE_UUID=$(security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision | plutil -extract UUID xml1 -o - -)
+          xcodebuild archive … PROVISIONING_PROFILE_SPECIFIER=$PROFILE_UUID
+      
       - name: Flutter build ipa
         script: flutter build ipa --export-options-plist=/Users/builder/export_options.plist
 
