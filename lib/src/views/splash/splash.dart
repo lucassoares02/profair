@@ -1,8 +1,4 @@
-import 'dart:io';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:profair/firebase_options.dart';
 import 'package:profair/src/components/progress_indicator.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/splash_controller.dart';

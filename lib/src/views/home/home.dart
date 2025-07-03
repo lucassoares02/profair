@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
-import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
@@ -81,20 +79,40 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-// home.dart
-
-  teste2() async {
+  Future<void> teste2() async {
     final messaging = FirebaseMessaging.instance;
-    String? token = "";
+
     try {
-      await messaging.getAPNSToken();
-      // esperar alguns segundos para garantir que o token seja atualizado
-      await Future.delayed(const Duration(seconds: 3));
-      token = await messaging.getToken();
+      final settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+        print('Permissão negada');
+        await homeController.postTokenFcm(homeController.data!.userCode!.toString(), 'Permissão negada');
+        return;
+      }
+
+      // opcional: ouça mudanças no token
+      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+        print('Novo FCM Token: $newToken');
+        homeController.postTokenFcm(homeController.data!.userCode!.toString(), newToken);
+      });
+
+      // tenta obter o token
+      String? token = await messaging.getToken();
+      if (token == null) {
+        print('Token ainda não disponível');
+        token = 'Token ainda não disponível';
+      }
+
+      await homeController.postTokenFcm(homeController.data!.userCode!.toString(), token);
     } catch (e) {
-      token = "Error ao tentar pegar o GetApnsToken $e";
+      print('Erro ao obter token: $e');
+      await homeController.postTokenFcm(homeController.data!.userCode!.toString(), 'Erro: $e');
     }
-    await homeController.postTokenFcm(homeController.data!.userCode!.toString(), token!);
   }
 
   teste() async {
