@@ -51,7 +51,7 @@ workflows:
         script: |
           echo "Restoring provisioning profile from \$APPSTORE_MOBILEPROVISION"
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/Profile_profair_notifications.mobileprovision
+          echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision
           echo "✅ Provisioning profile restored!"
           ls -l ~/Library/MobileDevice/Provisioning\ Profiles
 
