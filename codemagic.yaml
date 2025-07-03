@@ -47,6 +47,14 @@ workflows:
     integrations:
       app_store_connect: api key profair renew
     scripts:
+      - name: Restore Provisioning Profile
+        script: |
+          echo "Restoring provisioning profile from \$APPSTORE_MOBILEPROVISION"
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/Profile_profair_notifications.mobileprovision
+          echo "✅ Provisioning profile restored!"
+          ls -l ~/Library/MobileDevice/Provisioning\ Profiles
+
       - script: xcode-project use-profiles
       - script: flutter clean
       - script: flutter --version
@@ -85,6 +93,7 @@ workflows:
         submit_to_app_store: true
         release_type: SCHEDULED
         copyright: 2025 Profair
+
 
   android:
     name: Android Workflow
