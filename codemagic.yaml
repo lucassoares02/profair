@@ -24,7 +24,7 @@ workflows:
             script: |
               if [ -f ios/Runner/GoogleService-Info.plist ]; then
                 echo "✅ GoogleService-Info.plist restored!"
-                ls -l ios/Runner/GoogleService-Info.plist
+                ls -l ios/Runner/GoogleService-Info.plistN
               else
                 echo "❌ GoogleService-Info.plist NOT found!"
                 exit 1
@@ -54,10 +54,8 @@ workflows:
     scripts:
       - name: Check envs
         script: |
-          echo "📦 Bundle Identifier atual: $PRODUCT_BUNDLE_IDENTIFIER"
-          echo "📄 Provisioning Profile: $APPSTORE_MOBILEPROVISION"
-          echo "🏷️ Build Number: $FLUTTER_BUILD_NUMBER"
-          echo "🚀 Build Name: $FLUTTER_BUILD_NAME"
+            echo "📄 Info.plist do projeto:"
+            cat ios/Runner/Info.plist
       - name: Restore Provisioning Profile
         script: |
           echo "Restoring provisioning profile from \$APPSTORE_MOBILEPROVISION"
