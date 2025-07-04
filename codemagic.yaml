@@ -38,6 +38,7 @@ workflows:
           cache_paths:
             - $FLUTTER_ROOT/.pub-cache
             - ios/Pods
+
   app-store:
     name: Apple Workflow
     environment:
@@ -45,8 +46,6 @@ workflows:
         - android
       flutter: 3.29.0
       ios_signing:
-        provisioning_profiles:
-          - app store connect certificate
         certificates:
           - api_key_profair_renew
     integrations:
@@ -119,6 +118,7 @@ workflows:
         submit_to_app_store: true
         release_type: SCHEDULED
         copyright: 2025 Profair
+
 
 
 

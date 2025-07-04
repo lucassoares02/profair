@@ -43,12 +43,14 @@ class _SplashPageState extends State<SplashPage> {
         sound: true,
       );
 
+      await Future.delayed(const Duration(seconds: 2));
+
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
         final a = await messaging.getAPNSToken();
 
         print('APNS Token: $a');
 
-        await Future.delayed(const Duration(seconds: 4));
+        await Future.delayed(const Duration(seconds: 2));
 
         String? fcmToken = await messaging.getToken();
         if (fcmToken != null) {
