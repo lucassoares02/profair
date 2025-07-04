@@ -45,6 +45,8 @@ workflows:
         - android
       flutter: 3.29.0
       ios_signing:
+        distribution_type: app_store
+        bundle_identifier: br.com.profair.profair
         certificates:
           - api_key_profair_renew
     integrations:
@@ -73,6 +75,7 @@ workflows:
           /usr/libexec/PlistBuddy -c "Print :UUID" profile.plist
           /usr/libexec/PlistBuddy -c "Print :AppIDName" profile.plist
           /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist
           /usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist
           export PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
           echo "📌 Usando PROFILE_UUID=$PROFILE_UUID"
@@ -117,6 +120,7 @@ workflows:
         submit_to_app_store: true
         release_type: SCHEDULED
         copyright: 2025 Profair
+
 
 
 
