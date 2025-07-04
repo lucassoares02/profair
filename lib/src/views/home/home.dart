@@ -79,85 +79,6 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  Future<void> teste2() async {
-    final messaging = FirebaseMessaging.instance;
-
-    try {
-      final settings = await messaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-
-      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        print('Permissão negada');
-        await homeController.postTokenFcm(homeController.data!.userCode!.toString(), 'Permissão negada');
-        return;
-      }
-
-      // opcional: ouça mudanças no token
-      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-        print('Novo FCM Token: $newToken');
-        homeController.postTokenFcm(homeController.data!.userCode!.toString(), newToken);
-      });
-
-      // tenta obter o token
-      String? token = await messaging.getToken();
-      if (token == null) {
-        print('Token ainda não disponível');
-        token = 'Token ainda não disponível';
-      }
-
-      await homeController.postTokenFcm(homeController.data!.userCode!.toString(), token);
-    } catch (e) {
-      print('Erro ao obter token: $e');
-      await homeController.postTokenFcm(homeController.data!.userCode!.toString(), 'Erro: $e');
-    }
-  }
-
-  teste() async {
-    try {
-      // Apenas recupera o token que já deve ter sido gerado na inicialização.
-      String? token = await FirebaseMessaging.instance.getToken();
-
-      if (token == null) {
-        final prefs = await SharedPreferences.getInstance();
-        token = prefs.getString("tokenFcm");
-      }
-
-      print('FCM Token recuperado na Home: $token');
-
-      if (token == null) {
-        // Se ainda for nulo, algo na configuração (passos 1-3) está errado.
-        throw Exception("Token FCM é nulo. Verifique a configuração do Xcode/Firebase.");
-      }
-
-      homeController.postTokenFcm(homeController.data!.userCode!.toString(), token);
-      // ... seu código showDialog ...
-      showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: const Text("Token FCM"),
-            content: Text(token ?? "Token não encontrado"),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("OK"),
-              ),
-            ],
-          );
-        },
-      );
-    } catch (e) {
-      print("Erro ao obter token na Home: $e");
-      // Mostre um erro mais informativo para o usuário ou para o log
-      // ...
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
@@ -230,26 +151,6 @@ class _HomePageState extends State<HomePage> {
                                 },
                               );
                       },
-                    ),
-                    const AppSpacing(),
-                    Row(
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              teste();
-                            },
-                            child: Text("Teste 1"))
-                      ],
-                    ),
-                    const AppSpacing(),
-                    Row(
-                      children: [
-                        TextButton(
-                            onPressed: () {
-                              teste2();
-                            },
-                            child: Text("Teste 2"))
-                      ],
                     ),
                     const AppSpacing(),
                     ValueListenableBuilder(
