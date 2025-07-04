@@ -45,8 +45,6 @@ workflows:
         - android
       flutter: 3.29.0
       ios_signing:
-        provisioning_profiles:
-          - app store connect certificate
         certificates:
           - api_key_profair_renew
     integrations:
