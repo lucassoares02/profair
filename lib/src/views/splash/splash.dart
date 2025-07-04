@@ -66,30 +66,33 @@ class _SplashPageState extends State<SplashPage> {
     } catch (e) {
       if (!mounted) return;
 
-      await showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          title: const Text("Erro ao iniciar o app"),
-          content: Text("Erro ao configurar o aplicativo:\n\n$e"),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                start(); // tentar novamente
-              },
-              child: const Text("Tentar novamente"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                Navigator.of(context).pushNamedAndRemoveUntil("/login", (_) => false);
-              },
-              child: const Text("Ir para login"),
-            ),
-          ],
-        ),
-      );
+      bool response = await splashController.initApplication();
+      navigatorRoute(response);
+
+      // await showDialog(
+      //   context: context,
+      //   barrierDismissible: false,
+      //   builder: (context) => AlertDialog(
+      //     title: const Text("Erro ao iniciar o app"),
+      //     content: Text("Erro ao configurar o aplicativo:\n\n$e"),
+      //     actions: [
+      //       TextButton(
+      //         onPressed: () {
+      //           Navigator.of(context).pop();
+      //           start(); // tentar novamente
+      //         },
+      //         child: const Text("Tentar novamente"),
+      //       ),
+      //       TextButton(
+      //         onPressed: () {
+      //           Navigator.of(context).pop();
+      //           Navigator.of(context).pushNamedAndRemoveUntil("/login", (_) => false);
+      //         },
+      //         child: const Text("Ir para login"),
+      //       ),
+      //     ],
+      //   ),
+      // );
     }
   }
 

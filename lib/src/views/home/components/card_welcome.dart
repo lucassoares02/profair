@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/views/home/home_controller.dart';
@@ -23,6 +24,42 @@ class _CardWelcomeState extends State<CardWelcome> {
   void initState() {
     selectedItem = widget.homeController.data!.nameCompany;
     super.initState();
+  }
+
+  Future<void> sendNotificationPost() async {
+    final messaging = FirebaseMessaging.instance;
+
+    try {
+      final settings = await messaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+
+      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
+        print('Permissão negada');
+        await widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), 'Permissão negada');
+        return;
+      }
+
+      // opcional: ouça mudanças no token
+      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+        print('Novo FCM Token: $newToken');
+        widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), newToken);
+      });
+
+      // tenta obter o token
+      String? token = await messaging.getToken();
+      if (token == null) {
+        print('Token ainda não disponível');
+        token = 'Token ainda não disponível';
+      }
+
+      await widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), token);
+    } catch (e) {
+      print('Erro ao obter token: $e');
+      await widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), 'Erro: $e');
+    }
   }
 
   @override
@@ -95,6 +132,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                           ),
                           InkWell(
                             onTap: () {
+                              sendNotificationPost();
                               Navigator.of(context).pushNamed("/notifications");
                             },
                             child: Stack(
