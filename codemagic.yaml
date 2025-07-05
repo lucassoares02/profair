@@ -67,6 +67,9 @@ workflows:
           echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision
           echo "✅ Provisioning profile restaurado!"
           ls -l ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "🔎 Verificando provisioning profile restaurado"
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
+          grep -A1 aps-environment profile.plist
 
       - name: Verify provisioning profile entitlements
         script: |
