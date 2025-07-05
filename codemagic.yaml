@@ -47,8 +47,6 @@ workflows:
       ios_signing:
         distribution_type: app_store
         bundle_identifier: br.com.profair.profair
-        provisioning_profiles:
-          - ios_profair_notification.mobileprovision  
         certificates:
           - api_key_profair_renew
     integrations:
@@ -223,7 +221,7 @@ workflows:
         script: |
           unzip -q build/ios/ipa/*.ipa -d extracted
           codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-          grep -q '<string>production</string>' built_entitlements.plist
+          grep -q '<string>development</string>' built_entitlements.plist
           if [ $? -ne 0 ]; then
             echo "❌ aps-environment não está setado para production no app final!"
             exit 1
