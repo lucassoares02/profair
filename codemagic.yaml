@@ -38,6 +38,10 @@ workflows:
           cache_paths:
             - $FLUTTER_ROOT/.pub-cache
             - ios/Pods
+
+
+
+
   app-store:
     name: Apple Workflow
     environment:
@@ -180,33 +184,62 @@ workflows:
         script: |
           echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
+      - name: Create entitlements.plist
+        script: |
+          echo "🔧 Criando entitlements.plist com aps-environment: production"
+          cat <<EOF > ios/Runner/entitlements.plist
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>aps-environment</key>
+            <string>production</string>
+          </dict>
+          </plist>
+          EOF
+          cat ios/Runner/entitlements.plist
+
       - name: Install CocoaPods dependencies
         script: |
+          echo "📦 Instalando CocoaPods"
           flutter pub get
           cd ios
-          pod install
+          pod install --repo-update
+          cd ..
+
+      - name: Build IPA with entitlements.plist
+        script: |
+          echo "🏗️ Build IPA com entitlements.plist explícito"
+          ls -l ios/Runner/entitlements.plist || { echo "❌ entitlements.plist NÃO encontrado!"; exit 1; }
+
+          xcodebuild archive \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -archivePath build/Runner.xcarchive \
+            CODE_SIGN_ENTITLEMENTS=ios/Runner/entitlements.plist \
+            CODE_SIGN_STYLE=Manual \
+            DEVELOPMENT_TEAM=B4DCW8V3J4 \
+            PROVISIONING_PROFILE_SPECIFIER="ios_profair_notification" \
+            | tee xcodebuild.log
+
+          if [ ! -d build/Runner.xcarchive ]; then
+            echo "❌ Arquivo .xcarchive NÃO foi gerado!"
+            exit 1
+          fi
+
+          xcodebuild -exportArchive \
+            -archivePath build/Runner.xcarchive \
+            -exportOptionsPlist /Users/builder/export_options.plist \
+            -exportPath build/ios/ipa \
+            | tee xcodebuild-export.log
 
       # - name: Flutter build ipa
       #   script: |
       #     echo "🏗️ Construindo IPA com flutter"
       #     flutter build ipa --export-options-plist=/Users/builder/export_options.plist
       
-      - name: Build IPA with entitlements.plist
-        script: |
-          echo "🏗️ Build IPA com entitlements.plist explícito"
-
-          xcodebuild archive \
-            -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -archivePath build/Runner.xcarchive \
-            CODE_SIGN_ENTITLEMENTS=ios/Runner/entitlements.plist
-
-          xcodebuild -exportArchive \
-            -archivePath build/Runner.xcarchive \
-            -exportOptionsPlist /Users/builder/export_options.plist \
-            -exportPath build/ios/ipa
-
-
+      
       - name: Verify GoogleService-Info.plist in .ipa
         script: |
           echo "🔍 Verificando se GoogleService-Info.plist está embutido no .ipa"
