@@ -68,6 +68,26 @@ workflows:
           echo "✅ Provisioning profile restaurado!"
           ls -l ~/Library/MobileDevice/Provisioning\ Profiles
 
+      - name: Verify provisioning profile entitlements
+        script: |
+          echo "🔍 Validando provisioning profile restaurado"
+
+          # extrai para plist
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
+
+          echo "✅ application-identifier:"
+          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist || { echo "❌ Não encontrou application-identifier no profile"; exit 1; }
+
+          echo "✅ aps-environment:"
+          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist || echo "none")
+
+          if [[ "$APS_ENV" != "production" ]]; then
+            echo "❌ aps-environment não está setado para production (atual: $APS_ENV)"
+            exit 1
+          fi
+
+          echo "✅ provisioning profile contém aps-environment: production"
+
       - name: Verify Provisioning Profile
         script: |
           echo "🔍 Verificando provisioning profile"
