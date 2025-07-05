@@ -29,22 +29,6 @@ workflows:
                 echo "❌ GoogleService-Info.plist NOT found!"
                 exit 1
               fi
-          - name: Validate GoogleService-Info.plist contents
-            script: |
-              echo "🔍 Validando conteúdo do GoogleService-Info.plist"
-              if [ -f ios/Runner/GoogleService-Info.plist ]; then
-                GOOGLE_APP_ID=$(/usr/libexec/PlistBuddy -c "Print :GOOGLE_APP_ID" ios/Runner/GoogleService-Info.plist)
-                BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" ios/Runner/GoogleService-Info.plist)
-                echo "✅ GOOGLE_APP_ID: $GOOGLE_APP_ID"
-                echo "✅ BUNDLE_ID: $BUNDLE_ID"
-                if [[ -z "$GOOGLE_APP_ID" || -z "$BUNDLE_ID" ]]; then
-                  echo "❌ GOOGLE_APP_ID ou BUNDLE_ID não encontrados ou inválidos no GoogleService-Info.plist"
-                  exit 1
-                fi
-              else
-                echo "❌ GoogleService-Info.plist NÃO encontrado!"
-                exit 1
-              fi
           - name: Build for iOS Simulator
             script: |
               flutter build ios
@@ -115,7 +99,22 @@ workflows:
             echo "❌ GoogleService-Info.plist NÃO encontrado!"
             exit 1
           fi
-
+      - name: Validate GoogleService-Info.plist contents
+        script: |
+          echo "🔍 Validando conteúdo do GoogleService-Info.plist"
+          if [ -f ios/Runner/GoogleService-Info.plist ]; then
+            GOOGLE_APP_ID=$(/usr/libexec/PlistBuddy -c "Print :GOOGLE_APP_ID" ios/Runner/GoogleService-Info.plist)
+            BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" ios/Runner/GoogleService-Info.plist)
+            echo "✅ GOOGLE_APP_ID: $GOOGLE_APP_ID"
+            echo "✅ BUNDLE_ID: $BUNDLE_ID"
+            if [[ -z "$GOOGLE_APP_ID" || -z "$BUNDLE_ID" ]]; then
+              echo "❌ GOOGLE_APP_ID ou BUNDLE_ID não encontrados ou inválidos no GoogleService-Info.plist"
+              exit 1
+            fi
+          else
+            echo "❌ GoogleService-Info.plist NÃO encontrado!"
+            exit 1
+          fi
       - name: Install CocoaPods dependencies
         script: |
           flutter pub get
