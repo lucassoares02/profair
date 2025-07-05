@@ -170,6 +170,35 @@ workflows:
         script: |
           echo "🏗️ Construindo IPA com flutter"
           flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+      
+      - name: Verify GoogleService-Info.plist in .ipa
+        script: |
+          echo "🔍 Verificando se GoogleService-Info.plist está embutido no .ipa"
+          
+          # Descompacta o IPA para inspecionar
+          unzip -q build/ios/ipa/*.ipa -d extracted_ipa
+          
+          if [ -f extracted_ipa/Payload/*.app/GoogleService-Info.plist ]; then
+            echo "✅ GoogleService-Info.plist encontrado dentro do .ipa"
+            ls -l extracted_ipa/Payload/*.app/GoogleService-Info.plist
+          else
+            echo "❌ GoogleService-Info.plist NÃO encontrado no .ipa"
+            exit 1
+          fi
+
+      
+      - name: Verify .entitlements in built app
+        script: |
+          unzip -q build/ios/ipa/*.ipa -d extracted
+          codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
+          grep -q '<string>production</string>' built_entitlements.plist
+          if [ $? -ne 0 ]; then
+            echo "❌ aps-environment não está setado para production no app final!"
+            exit 1
+          fi
+          echo "✅ aps-environment presente no app final e configurado para production."
+
+
 
     artifacts:
       - build/ios/ipa/*.ipa
