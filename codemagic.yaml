@@ -188,7 +188,10 @@ workflows:
 
       - name: Ajustar entitlements para production
         script: |
-          sed -i 's/development/production/' ios/Runner/Runner.entitlements
+          echo "🛠️ Corrigindo aps-environment para production"
+          sed -i '' 's/development/production/' ios/Runner/Runner.entitlements
+          grep -q '<string>production</string>' ios/Runner/Runner.entitlements && echo "✅ Entitlements corrigido!" || echo "❌ Não foi possível corrigir entitlements"
+
 
       - name: Flutter build ipa
         script: |
