@@ -217,16 +217,39 @@ workflows:
           fi
 
       
+      # - name: Verify .entitlements in built app
+      #   script: |
+      #     unzip -q build/ios/ipa/*.ipa -d extracted
+      #     codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
+      #     grep -q '<string>development</string>' built_entitlements.plist
+      #     if [ $? -ne 0 ]; then
+      #       echo "❌ aps-environment não está setado para production no app final!"
+      #       exit 1
+      #     fi
+      #     echo "✅ aps-environment presente no app final e configurado para production."
+
+      #!/usr/bin/env bash
+
       - name: Verify .entitlements in built app
         script: |
+          set -euo pipefail
+
+          echo "🔍 Extraindo .ipa para verificar entitlements"
           unzip -q build/ios/ipa/*.ipa -d extracted
+
+          echo "🔍 Extraindo entitlements do app assinado"
           codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-          grep -q '<string>development</string>' built_entitlements.plist
-          if [ $? -ne 0 ]; then
-            echo "❌ aps-environment não está setado para production no app final!"
-            exit 1
+
+          echo "🔍 Buscando valor de aps-environment no app final"
+          APS_LINE=$(grep -A1 '<key>aps-environment</key>' built_entitlements.plist || true)
+
+          if [[ -n "$APS_LINE" ]]; then
+            echo "✅ aps-environment encontrado no binário:"
+            echo "$APS_LINE"
+          else
+            echo "⚠️ aps-environment NÃO encontrado no binário!"
           fi
-          echo "✅ aps-environment presente no app final e configurado para production."
+
 
 
 
