@@ -68,17 +68,87 @@ workflows:
           echo "✅ Provisioning profile restaurado!"
           ls -l ~/Library/MobileDevice/Provisioning\ Profiles
 
-      - name: Inspect Provisioning Profile
+      - name: Verify Provisioning Profile
         script: |
           echo "🔍 Verificando provisioning profile"
           security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-          /usr/libexec/PlistBuddy -c "Print :UUID" profile.plist
-          /usr/libexec/PlistBuddy -c "Print :AppIDName" profile.plist
-          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist
-          /usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist
-          /usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist
-          export PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
+
+          UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
+          APP_ID_NAME=$(/usr/libexec/PlistBuddy -c "Print :AppIDName" profile.plist)
+          APP_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist)
+          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist)
+          TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist)
+
+          echo "✅ UUID: $UUID"
+          echo "✅ App ID Name: $APP_ID_NAME"
+          echo "✅ Application Identifier: $APP_IDENTIFIER"
+          echo "✅ APS Environment: $APS_ENV"
+          echo "✅ Team ID: $TEAM_ID"
+
+          if [ "$APS_ENV" != "production" ]; then
+            echo "❌ APS Environment NÃO está em production!"
+            exit 1
+          fi
+
+          if [[ "$APP_IDENTIFIER" != "B4DCW8V3J4.br.com.profair.profair" ]]; then
+            echo "❌ Application Identifier incorreto!"
+            exit 1
+          fi
+
+          export PROFILE_UUID=$UUID
           echo "📌 Usando PROFILE_UUID=$PROFILE_UUID"
+
+      - name: Verify Certificates
+        script: |
+          echo "🔍 Verificando certificado no keychain"
+          security find-identity -v -p codesigning | grep "Apple Distribution"
+          if [ $? -ne 0 ]; then
+            echo "❌ Certificado Apple Distribution não encontrado no keychain"
+            exit 1
+          fi
+
+      - name: Verify GoogleService-Info.plist
+        script: |
+          echo "🔍 Verificando GoogleService-Info.plist"
+          if [ ! -f ios/Runner/GoogleService-Info.plist ]; then
+            echo "❌ GoogleService-Info.plist NÃO encontrado!"
+            exit 1
+          fi
+
+          GOOGLE_APP_ID=$(/usr/libexec/PlistBuddy -c "Print :GOOGLE_APP_ID" ios/Runner/GoogleService-Info.plist)
+          BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" ios/Runner/GoogleService-Info.plist)
+
+          echo "✅ GOOGLE_APP_ID: $GOOGLE_APP_ID"
+          echo "✅ BUNDLE_ID: $BUNDLE_ID"
+
+          if [[ "$BUNDLE_ID" != "br.com.profair.profair" ]]; then
+            echo "❌ BUNDLE_ID no GoogleService-Info.plist não corresponde ao bundle esperado"
+            exit 1
+          fi
+
+      - name: Verify Info.plist
+        script: |
+          echo "🔍 Verificando Info.plist"
+          if [ ! -f ios/Runner/Info.plist ]; then
+            echo "❌ Info.plist NÃO encontrado!"
+            exit 1
+          fi
+
+          DEPLOYMENT_TARGET=$(/usr/libexec/PlistBuddy -c "Print :MinimumOSVersion" ios/Runner/Info.plist || echo "12.0")
+          BG_MODES=$(/usr/libexec/PlistBuddy -c "Print :UIBackgroundModes:0" ios/Runner/Info.plist || echo "none")
+
+          echo "✅ Deployment Target: $DEPLOYMENT_TARGET"
+          echo "✅ Background Modes: $BG_MODES"
+
+          if (( $(echo "$DEPLOYMENT_TARGET < 12.0" | bc -l) )); then
+            echo "❌ Deployment Target menor que 12.0"
+            exit 1
+          fi
+
+          if [[ "$BG_MODES" != "remote-notification" ]]; then
+            echo "❌ UIBackgroundModes não inclui remote-notification"
+            exit 1
+          fi
 
       - script: xcode-project use-profiles
       - script: flutter clean
@@ -90,31 +160,6 @@ workflows:
         script: |
           echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
-      - name: Check GoogleService-Info.plist exists
-        script: |
-          if [ -f ios/Runner/GoogleService-Info.plist ]; then
-            echo "✅ GoogleService-Info.plist restaurado!"
-            ls -l ios/Runner/GoogleService-Info.plist
-          else
-            echo "❌ GoogleService-Info.plist NÃO encontrado!"
-            exit 1
-          fi
-      - name: Validate GoogleService-Info.plist contents
-        script: |
-          echo "🔍 Validando conteúdo do GoogleService-Info.plist"
-          if [ -f ios/Runner/GoogleService-Info.plist ]; then
-            GOOGLE_APP_ID=$(/usr/libexec/PlistBuddy -c "Print :GOOGLE_APP_ID" ios/Runner/GoogleService-Info.plist)
-            BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" ios/Runner/GoogleService-Info.plist)
-            echo "✅ GOOGLE_APP_ID: $GOOGLE_APP_ID"
-            echo "✅ BUNDLE_ID: $BUNDLE_ID"
-            if [[ -z "$GOOGLE_APP_ID" || -z "$BUNDLE_ID" ]]; then
-              echo "❌ GOOGLE_APP_ID ou BUNDLE_ID não encontrados ou inválidos no GoogleService-Info.plist"
-              exit 1
-            fi
-          else
-            echo "❌ GoogleService-Info.plist NÃO encontrado!"
-            exit 1
-          fi
       - name: Install CocoaPods dependencies
         script: |
           flutter pub get
@@ -135,6 +180,7 @@ workflows:
         submit_to_app_store: true
         release_type: SCHEDULED
         copyright: 2025 Profair
+
 
 
 
