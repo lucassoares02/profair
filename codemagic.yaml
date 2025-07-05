@@ -186,6 +186,10 @@ workflows:
           cd ios
           pod install
 
+      - name: Ajustar entitlements para production
+        script: |
+          sed -i 's/development/production/' ios/Runner/Runner.entitlements
+
       - name: Flutter build ipa
         script: |
           echo "🏗️ Construindo IPA com flutter"
