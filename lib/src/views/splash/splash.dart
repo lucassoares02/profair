@@ -43,15 +43,7 @@ class _SplashPageState extends State<SplashPage> {
         sound: true,
       );
 
-      await Future.delayed(const Duration(seconds: 2));
-
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        final a = await messaging.getAPNSToken();
-
-        print('APNS Token: $a');
-
-        await Future.delayed(const Duration(seconds: 2));
-
         String? fcmToken = await messaging.getToken();
         if (fcmToken != null) {
           final prefs = await SharedPreferences.getInstance();
@@ -68,31 +60,6 @@ class _SplashPageState extends State<SplashPage> {
 
       bool response = await splashController.initApplication();
       navigatorRoute(response);
-
-      // await showDialog(
-      //   context: context,
-      //   barrierDismissible: false,
-      //   builder: (context) => AlertDialog(
-      //     title: const Text("Erro ao iniciar o app"),
-      //     content: Text("Erro ao configurar o aplicativo:\n\n$e"),
-      //     actions: [
-      //       TextButton(
-      //         onPressed: () {
-      //           Navigator.of(context).pop();
-      //           start(); // tentar novamente
-      //         },
-      //         child: const Text("Tentar novamente"),
-      //       ),
-      //       TextButton(
-      //         onPressed: () {
-      //           Navigator.of(context).pop();
-      //           Navigator.of(context).pushNamedAndRemoveUntil("/login", (_) => false);
-      //         },
-      //         child: const Text("Ir para login"),
-      //       ),
-      //     ],
-      //   ),
-      // );
     }
   }
 
