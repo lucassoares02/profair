@@ -213,7 +213,7 @@ workflows:
             <key>provisioningProfiles</key>
             <dict>
               <key>br.com.profair.profair</key>
-              <string>$PROFILE_UUID</string>
+              <string>db7be4d2-f1d7-478c-90d8-407bbe2db148</string>
             </dict>
             <key>stripSwiftSymbols</key>
             <true/>
