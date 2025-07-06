@@ -241,6 +241,61 @@ workflows:
           plutil -replace CODE_SIGN_ENTITLEMENTS -string "Runner/Runner.entitlements" ios/Runner.xcodeproj/project.pbxproj
           grep -A2 CODE_SIGN_ENTITLEMENTS ios/Runner.xcodeproj/project.pbxproj
 
+      - name: Gerar export_options.plist
+        script: |
+          echo "📋 Extraindo informações do .mobileprovision"
+          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
+
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" profile.plist)
+          TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist)
+
+          echo "✅ Provisioning profile name: $PROFILE_NAME"
+          echo "✅ Team ID: $TEAM_ID"
+
+          cat > ios/export_options.plist <<EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store</string>
+
+            <key>signingStyle</key>
+            <string>manual</string>
+
+            <key>teamID</key>
+            <string>${TEAM_ID}</string>
+
+            <key>provisioningProfiles</key>
+            <dict>
+              <key>br.com.profair.profair</key>
+              <string>${PROFILE_NAME}</string>
+            </dict>
+
+            <key>stripSwiftSymbols</key>
+            <true/>
+
+            <key>compileBitcode</key>
+            <true/>
+          </dict>
+          </plist>
+          EOF
+
+          echo "📄 export_options.plist gerado:"
+          cat ios/export_options.plist
+
+
+      - name: Ajustar Runner.entitlements
+        script: |
+          if ! grep -q "<string>production</string>" ios/Runner/Runner.entitlements; then
+            echo "🛠️ Adicionando aps-environment=production em Runner.entitlements"
+            plutil -replace aps-environment -string production ios/Runner/Runner.entitlements || {
+              echo "❌ Falha ao ajustar Runner.entitlements"; exit 1;
+            }
+          fi
+          echo "✅ Runner.entitlements:"
+          cat ios/Runner/Runner.entitlements
+
 
       - name: Flutter build ipa
         script: |
