@@ -38,6 +38,9 @@ workflows:
           cache_paths:
             - $FLUTTER_ROOT/.pub-cache
             - ios/Pods
+  
+  
+  
   app-store:
     name: Apple Workflow
     environment:
@@ -185,11 +188,11 @@ workflows:
         script: |
           echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
-      - name: Install CocoaPods dependencies
-        script: |
-          flutter pub get
-          cd ios
-          pod install
+      # - name: Install CocoaPods dependencies
+      #   script: |
+      #     flutter pub get
+      #     cd ios
+      #     pod install
 
       - name: Ajustar entitlements para production
         script: |
@@ -246,7 +249,21 @@ workflows:
 
       - name: Build IPA com xcodebuild
         script: |
-          echo "📦 Arquivando projeto com xcodebuild"
+          set -euo pipefail
+
+          echo "📦 Instalando dependências CocoaPods"
+          cd ios
+          pod install
+          cd ..
+
+          echo "📋 Lendo UUID do provisioning profile"
+          PROFILE_UUID=$(cat profile_uuid.txt)
+          echo "✅ PROFILE_UUID: $PROFILE_UUID"
+
+          echo "🧹 Limpando build antigo"
+          rm -rf build/Runner.xcarchive build/ipa
+
+          echo "🏗️ Arquivando projeto com xcodebuild"
           xcodebuild -workspace ios/Runner.xcworkspace \
             -scheme Runner \
             -configuration Release \
@@ -256,13 +273,37 @@ workflows:
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="Apple Distribution" \
             PRODUCT_BUNDLE_IDENTIFIER=br.com.profair.profair \
-            CODE_SIGN_ENTITLEMENTS=Runner/Runner.entitlements
+            CODE_SIGN_ENTITLEMENTS=Runner/Runner.entitlements \
+            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" \
+            | tee xcodebuild-archive.log
 
-          echo "📦 Exportando IPA com xcodebuild"
+          echo "📄 Últimas linhas do xcodebuild-archive.log"
+          tail -n 30 xcodebuild-archive.log
+
+          if [ ! -d build/Runner.xcarchive ]; then
+            echo "❌ Arquivo .xcarchive não foi gerado. Veja o log acima para detalhes."
+            exit 1
+          fi
+
+          echo "✅ .xcarchive gerado com sucesso"
+
+          echo "🗃️ Exportando IPA"
           xcodebuild -exportArchive \
             -archivePath build/Runner.xcarchive \
             -exportPath build/ipa \
-            -exportOptionsPlist /Users/builder/export_options.plist
+            -exportOptionsPlist /Users/builder/export_options.plist \
+            | tee xcodebuild-export.log
+
+          echo "📄 Últimas linhas do xcodebuild-export.log"
+          tail -n 30 xcodebuild-export.log
+
+          if [ ! -f build/ipa/*.ipa ]; then
+            echo "❌ IPA não foi gerado. Veja o log acima para detalhes."
+            exit 1
+          fi
+
+          echo "🎉 IPA gerado com sucesso em build/ipa/"
+
 
       
       - name: Verify GoogleService-Info.plist in .ipa
