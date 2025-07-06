@@ -10,6 +10,7 @@ class ProvidersController extends ValueNotifier<StateApp> {
 
   final stateSearchProviders = ValueNotifier<StateApp>(StateApp.start);
   int sortInt = 0;
+  List<int> sellCounts = [0, 0, 0];
 
   final stateProviders = ValueNotifier<StateApp>(StateApp.start);
 
@@ -22,7 +23,11 @@ class ProvidersController extends ValueNotifier<StateApp> {
     try {
       providersList = await _providersRepository.getProviders(codeClient!, codeBuyer, codeBranch);
       providers = providersList;
-
+      sellCounts = [
+        providersList.length,
+        providersList.where((item) => item.totalValue! > 0.0).length,
+        providersList.where((item) => item.totalValue! == 0.0).length,
+      ];
       stateProviders.value = StateApp.success;
     } catch (e) {
       stateProviders.value = StateApp.error;
@@ -78,18 +83,28 @@ class ProvidersController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(
-          msg: message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
 
       stateSearchProviders.value = StateApp.success;
     } catch (e) {
       print("Error Sort Stores: $e");
+      stateSearchProviders.value = StateApp.error;
+    }
+  }
+
+  providerSelling(int status) async {
+    stateSearchProviders.value = StateApp.loading;
+    try {
+      if (status == 0) {
+        providersList = providers.toList();
+      } else if (status == 1) {
+        providersList = providers.where((item) => item.totalValue! == 0.0).toList();
+      } else {
+        providersList = providers.where((item) => item.totalValue! > 0.0).toList();
+      }
+      stateSearchProviders.value = StateApp.success;
+    } catch (e) {
+      print("Error search Requests Stores: $e");
       stateSearchProviders.value = StateApp.error;
     }
   }

@@ -28,39 +28,8 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   void start() async {
-    try {
-      FirebaseMessaging messaging = FirebaseMessaging.instance;
-
-      await NotificationService.initialize();
-
-      NotificationSettings settings = await messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
-
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        String? fcmToken = await messaging.getToken();
-        if (fcmToken != null) {
-          final prefs = await SharedPreferences.getInstance();
-          await prefs.setString('tokenFcm', fcmToken);
-        }
-      } else {
-        print('Permissão de notificação negada pelo usuário.');
-      }
-
-      bool response = await splashController.initApplication();
-      navigatorRoute(response);
-    } catch (e) {
-      if (!mounted) return;
-
-      bool response = await splashController.initApplication();
-      navigatorRoute(response);
-    }
+    bool response = await splashController.initApplication();
+    navigatorRoute(response);
   }
 
   navigatorRoute(response) {

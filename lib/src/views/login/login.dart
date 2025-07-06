@@ -45,10 +45,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void printScreenDensity() async {
-    // 3) Puxa token APNs (iOS)
-    final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
-    print('APNs token: $apnsToken');
-
     final pixelRatio = window.devicePixelRatio;
     final size = window.physicalSize;
 

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/components/app_actions.dart';
@@ -37,8 +38,6 @@ class _HomePageState extends State<HomePage> {
     homeController.findData();
     homeController.findCampaign();
 
-    // await NotificationService.initialize();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initFCM();
     });
@@ -62,17 +61,30 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> _initFCM() async {
     final prefs = await SharedPreferences.getInstance();
-    String? token = await FirebaseMessaging.instance.getToken();
-    print('FCM Token recuperado na Home: $token');
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-    if (token == null) {
-      // Se ainda for nulo, algo na configuração (passos 1-3) está errado.
-      throw Exception("Token FCM é nulo. Verifique a configuração do Xcode/Firebase.");
+    await NotificationService.initialize();
+
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      String? fcmToken = await messaging.getToken();
+      if (fcmToken != null) {
+        final prefs = await SharedPreferences.getInstance();
+        homeController.postTokenFcm(homeController.data!.userCode!.toString(), fcmToken);
+        await prefs.setString('tokenFcm', fcmToken);
+      }
+    } else {
+      print('Permissão de notificação negada pelo usuário.');
     }
-
-    homeController.postTokenFcm(homeController.data!.userCode!.toString(), token);
-
-    await prefs.setString("tokenFcm", token.toString());
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       inspect(message);

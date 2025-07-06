@@ -1,46 +1,5 @@
 workflows:
-  flutter-ios-simulator:
-        name: Flutter iOS Simulator
-        environment:
-          groups:
-            - android
-          flutter: 3.29.0
-          xcode: 16.2
-        scripts:
-          - name: Check envs
-            script: |
-              echo "📦 Bundle Identifier atual: $PRODUCT_BUNDLE_IDENTIFIER"
-              echo "📄 Provisioning Profile: $APPSTORE_MOBILEPROVISION"
-              echo "🏷️ Build Number: $FLUTTER_BUILD_NUMBER"
-              echo "🚀 Build Name: $FLUTTER_BUILD_NAME"
-          - name: Restore GoogleService-Info.plist
-            script: |
-              echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
-          - script: flutter clean
-          - name: Get Flutter packages
-            script: |
-              flutter pub get
-          - name: Check GoogleService-Info.plist exists
-            script: |
-              if [ -f ios/Runner/GoogleService-Info.plist ]; then
-                echo "✅ GoogleService-Info.plist restored!"
-                ls -l ios/Runner/GoogleService-Info.plistN
-              else
-                echo "❌ GoogleService-Info.plist NOT found!"
-                exit 1
-              fi
-          - name: Build for iOS Simulator
-            script: |
-              flutter build ios
-        artifacts:
-          - build/ios/iphonesimulator/Runner.app
-        cache:
-          cache_paths:
-            - $FLUTTER_ROOT/.pub-cache
-            - ios/Pods
-  
-  
-  
+   
   app-store:
     name: Apple Workflow
     environment:
@@ -56,8 +15,6 @@ workflows:
       app_store_connect: api key profair renew
 
     scripts:
-
-
       - script: xcode-project use-profiles
       - script: flutter clean
       - script: flutter --version
@@ -82,124 +39,15 @@ workflows:
           security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
           grep -A1 aps-environment profile.plist
 
-      - name: Verify provisioning profile entitlements
-        script: |
-          echo "🔍 Validando provisioning profile restaurado"
-
-          # extrai para plist
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-
-          echo "✅ application-identifier:"
-          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist || { echo "❌ Não encontrou application-identifier no profile"; exit 1; }
-
-          echo "✅ aps-environment:"
-          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist || echo "none")
-
-          if [[ "$APS_ENV" != "production" ]]; then
-            echo "❌ aps-environment não está setado para production (atual: $APS_ENV)"
-            exit 1
-          fi
-
-          echo "✅ provisioning profile contém aps-environment: production"
-
-      - name: Verify Provisioning Profile
-        script: |
-          echo "🔍 Verificando provisioning profile"
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-
-          UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
-          APP_ID_NAME=$(/usr/libexec/PlistBuddy -c "Print :AppIDName" profile.plist)
-          APP_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist)
-          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist)
-          TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist)
-
-          echo "✅ UUID: $UUID"
-          echo "✅ App ID Name: $APP_ID_NAME"
-          echo "✅ Application Identifier: $APP_IDENTIFIER"
-          echo "✅ APS Environment: $APS_ENV"
-          echo "✅ Team ID: $TEAM_ID"
-
-          if [ "$APS_ENV" != "production" ]; then
-            echo "❌ APS Environment NÃO está em production!"
-            exit 1
-          fi
-
-          if [[ "$APP_IDENTIFIER" != "B4DCW8V3J4.br.com.profair.profair" ]]; then
-            echo "❌ Application Identifier incorreto!"
-            exit 1
-          fi
-
-          export PROFILE_UUID=$UUID
-          echo "📌 Usando PROFILE_UUID=$PROFILE_UUID"
-
-      - name: Verify Certificates
-        script: |
-          echo "🔍 Verificando certificado no keychain"
-          security find-identity -v -p codesigning | grep "Apple Distribution"
-          if [ $? -ne 0 ]; then
-            echo "❌ Certificado Apple Distribution não encontrado no keychain"
-            exit 1
-          fi
-
-      - name: Verify GoogleService-Info.plist
-        script: |
-          echo "🔍 Verificando GoogleService-Info.plist"
-          if [ ! -f ios/Runner/GoogleService-Info.plist ]; then
-            echo "❌ GoogleService-Info.plist NÃO encontrado!"
-            exit 1
-          fi
-
-          GOOGLE_APP_ID=$(/usr/libexec/PlistBuddy -c "Print :GOOGLE_APP_ID" ios/Runner/GoogleService-Info.plist)
-          BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" ios/Runner/GoogleService-Info.plist)
-
-          echo "✅ GOOGLE_APP_ID: $GOOGLE_APP_ID"
-          echo "✅ BUNDLE_ID: $BUNDLE_ID"
-
-          if [[ "$BUNDLE_ID" != "br.com.profair.profair" ]]; then
-            echo "❌ BUNDLE_ID no GoogleService-Info.plist não corresponde ao bundle esperado"
-            exit 1
-          fi
-
-      - name: Verify Info.plist
-        script: |
-          echo "🔍 Verificando Info.plist"
-          if [ ! -f ios/Runner/Info.plist ]; then
-            echo "❌ Info.plist NÃO encontrado!"
-            exit 1
-          fi
-
-          DEPLOYMENT_TARGET=$(/usr/libexec/PlistBuddy -c "Print :MinimumOSVersion" ios/Runner/Info.plist || echo "12.0")
-          BG_MODES=$(/usr/libexec/PlistBuddy -c "Print :UIBackgroundModes:0" ios/Runner/Info.plist || echo "none")
-
-          echo "✅ Deployment Target: $DEPLOYMENT_TARGET"
-          echo "✅ Background Modes: $BG_MODES"
-
-          if (( $(echo "$DEPLOYMENT_TARGET < 12.0" | bc -l) )); then
-            echo "❌ Deployment Target menor que 12.0"
-            exit 1
-          fi
-
-          if [[ "$BG_MODES" != "remote-notification" ]]; then
-            echo "❌ UIBackgroundModes não inclui remote-notification"
-            exit 1
-          fi
-
       - name: Restore GoogleService-Info.plist
         script: |
           echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
-
-      # - name: Install CocoaPods dependencies
-      #   script: |
-      #     flutter pub get
-      #     cd ios
-      #     pod install
 
       - name: Ajustar entitlements para production
         script: |
           echo "🛠️ Corrigindo aps-environment para production"
           sed -i '' 's/development/production/' ios/Runner/Runner.entitlements
           grep -q '<string>production</string>' ios/Runner/Runner.entitlements && echo "✅ Entitlements corrigido!" || echo "❌ Não foi possível corrigir entitlements"
-
 
       - name: Criar export_options.plist
         script: |
@@ -228,13 +76,6 @@ workflows:
           </plist>
           EOF
               cat /Users/builder/export_options.plist
-
-
-      - name: Show Runner.entitlements
-        script: cat ios/Runner/Runner.entitlements
-
-      - name: Show export_options.plist
-        script: cat /Users/builder/export_options.plist
 
       - name: Force CODE_SIGN_ENTITLEMENTS
         script: |
@@ -318,7 +159,6 @@ workflows:
             exit 1
           fi
 
-      
       - name: Verify .entitlements in built app
         script: |
           unzip -q build/ios/ipa/*.ipa -d extracted
@@ -331,19 +171,6 @@ workflows:
           echo "✅ aps-environment presente no app final e configurado para production."
 
 
-      # - name: Verificar aps-environment no .ipa
-      #   script: |
-      #     unzip -q build/ios/ipa/*.ipa -d extracted
-      #     codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-
-      #     echo "🔍 Valor atual de aps-environment no binário:"
-      #     APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :aps-environment" built_entitlements.plist || echo "NÃO ENCONTRADO")
-      #     echo "📋 aps-environment = $APS_ENV"
-
-
-
-
-
     artifacts:
       - build/ios/ipa/*.ipa
 
@@ -353,9 +180,6 @@ workflows:
         submit_to_app_store: true
         release_type: SCHEDULED
         copyright: 2025 Profair
-
-
-
 
 
   android:

@@ -5,6 +5,7 @@ import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class CardWelcome extends StatefulWidget {
@@ -26,39 +27,14 @@ class _CardWelcomeState extends State<CardWelcome> {
     super.initState();
   }
 
-  Future<void> sendNotificationPost() async {
-    final messaging = FirebaseMessaging.instance;
-
+  Future<void> moduleSharedPreferences(String description, String item) async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     try {
-      final settings = await messaging.requestPermission(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
-
-      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        print('Permissão negada');
-        await widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), 'Permissão negada');
-        return;
+      if ((item.isNotEmpty || item != "null") && description.isNotEmpty) {
+        await sharedPreferences.setString(description, item);
       }
-
-      // opcional: ouça mudanças no token
-      FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
-        print('Novo FCM Token: $newToken');
-        widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), newToken);
-      });
-
-      // tenta obter o token
-      String? token = await messaging.getToken();
-      if (token == null) {
-        print('Token ainda não disponível');
-        token = 'Token ainda não disponível';
-      }
-
-      await widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), token);
     } catch (e) {
-      print('Erro ao obter token: $e');
-      await widget.homeController.postTokenFcm(widget.homeController.data!.userCode!.toString(), 'Erro: $e');
+      debugPrint("Error saving to SharedPreferences: $e");
     }
   }
 
@@ -132,7 +108,6 @@ class _CardWelcomeState extends State<CardWelcome> {
                           ),
                           InkWell(
                             onTap: () {
-                              sendNotificationPost();
                               Navigator.of(context).pushNamed("/notifications");
                             },
                             child: Stack(
@@ -208,9 +183,10 @@ class _CardWelcomeState extends State<CardWelcome> {
                                             int indexSelected = widget.homeController.moreData!.indexOf(value!);
                                             widget.homeController.indexSelected = indexSelected;
                                             setState(() {
-                                              selectedItem = value.nameCompany;
+                                              selectedItem = value!.nameCompany;
                                             });
                                             widget.action!();
+                                            moduleSharedPreferences("company", "${value!.codCompany}");
                                           },
                                         ),
                                       )

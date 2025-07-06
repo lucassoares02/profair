@@ -17,6 +17,8 @@ class LoginController extends ValueNotifier<StateApp> {
     try {
       LoginModel? response = await loginRepository.getLogin(data);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
+      await moduleSharedPreferences("direct", "${response.accessTargeting}");
+      await moduleSharedPreferences("company", "${response.codCompany}");
       if (responseShared) {
         debugPrint("Request Login (Login Controller) $responseShared");
       }
@@ -35,6 +37,8 @@ class LoginController extends ValueNotifier<StateApp> {
     try {
       LoginModel? response = await loginRepository.getLogin(data);
       final responseShared = await moduleSharedPreferences("codacesso", "${response!.codAccess}");
+      await moduleSharedPreferences("direct", "${response.accessTargeting}");
+      await moduleSharedPreferences("company", "${response.codCompany}");
 
       if (responseShared) {
         debugPrint("State Login QR (Login Controller) $responseShared");
