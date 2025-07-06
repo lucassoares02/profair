@@ -253,6 +253,10 @@ workflows:
 
           echo "📦 Instalando dependências Flutter"
           flutter pub get
+          cd ios
+          rm -rf Pods Podfile.lock
+          pod install --verbose
+          cd ..
 
           echo "📦 Instalando dependências CocoaPods"
           cd ios
