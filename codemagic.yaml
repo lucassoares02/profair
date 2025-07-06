@@ -253,14 +253,12 @@ workflows:
 
           echo "📦 Instalando dependências Flutter"
           flutter pub get
-          cd ios
-          rm -rf Pods Podfile.lock
-          pod install --verbose
-          cd ..
+          
 
           echo "📦 Instalando dependências CocoaPods"
           cd ios
-          pod install
+          rm -rf Pods Podfile.lock
+          pod install --verbose
           cd ..
 
           if [ ! -f profile_uuid.txt ]; then
