@@ -242,84 +242,12 @@ workflows:
           grep -A2 CODE_SIGN_ENTITLEMENTS ios/Runner.xcodeproj/project.pbxproj
 
 
-      # - name: Flutter build ipa
-      #   script: |
-      #     echo "🏗️ Construindo IPA com flutter"
-      #     flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-
-      - name: Build IPA com xcodebuild
+      - name: Flutter build ipa
         script: |
-          set -euo pipefail
+          echo "🏗️ Construindo IPA com flutter"
+          flutter build ipa --export-options-plist=/Users/builder/export_options.plist
 
-          echo "📦 Instalando dependências Flutter"
-          flutter pub get
-          
-
-          echo "📦 Instalando dependências CocoaPods"
-          cd ios
-          rm -rf Pods Podfile.lock
-          pod install --verbose
-          cd ..
-
-          if [ ! -f profile_uuid.txt ]; then
-            echo "📋 Gerando profile_uuid.txt (UUID do provisioning profile)"
-            security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-            PROFILE_UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
-            echo "$PROFILE_UUID" > profile_uuid.txt
-            echo "✅ PROFILE_UUID gerado: $PROFILE_UUID"
-          else
-            echo "📋 Lendo UUID do provisioning profile de profile_uuid.txt"
-            PROFILE_UUID=$(cat profile_uuid.txt)
-            echo "✅ PROFILE_UUID: $PROFILE_UUID"
-          fi
-
-          echo "🧹 Limpando build antigo"
-          rm -rf build/Runner.xcarchive build/ipa
-
-          echo "🏗️ Arquivando projeto com xcodebuild"
-          xcodebuild -workspace ios/Runner.xcworkspace \
-            -scheme Runner \
-            -configuration Release \
-            -archivePath build/Runner.xcarchive \
-            clean archive \
-            DEVELOPMENT_TEAM=B4DCW8V3J4 \
-            CODE_SIGN_STYLE=Manual \
-            CODE_SIGN_IDENTITY="Apple Distribution" \
-            PRODUCT_BUNDLE_IDENTIFIER=br.com.profair.profair \
-            CODE_SIGN_ENTITLEMENTS=Runner/Runner.entitlements \
-            PROVISIONING_PROFILE_SPECIFIER="$PROFILE_UUID" \
-            | tee xcodebuild-archive.log
-
-          echo "📄 Últimas linhas do xcodebuild-archive.log"
-          tail -n 30 xcodebuild-archive.log
-
-          if [ ! -d build/Runner.xcarchive ]; then
-            echo "❌ Arquivo .xcarchive não foi gerado. Veja o log acima para detalhes."
-            exit 1
-          fi
-
-          echo "✅ .xcarchive gerado com sucesso"
-
-          echo "🗃️ Exportando IPA"
-          xcodebuild -exportArchive \
-            -archivePath build/Runner.xcarchive \
-            -exportPath build/ipa \
-            -exportOptionsPlist /Users/builder/export_options.plist \
-            | tee xcodebuild-export.log
-
-          echo "📄 Últimas linhas do xcodebuild-export.log"
-          tail -n 30 xcodebuild-export.log
-
-          if [ ! -f build/ipa/*.ipa ]; then
-            echo "❌ IPA não foi gerado. Veja o log acima para detalhes."
-            exit 1
-          fi
-
-          echo "🎉 IPA gerado com sucesso em build/ipa/"
-
-
-
-      
+           
       - name: Verify GoogleService-Info.plist in .ipa
         script: |
           echo "🔍 Verificando se GoogleService-Info.plist está embutido no .ipa"
