@@ -47,29 +47,25 @@ install! 'cocoapods',
   :integrate_targets => true
 
 
-  post_install do |installer|
+post_install do |installer|
   installer.pods_project.targets.each do |target|
-    # Adiciona as flags do Flutter
     flutter_additional_ios_build_settings(target)
-
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
       config.build_settings['SWIFT_VERSION'] = '5'
+      config.build_settings.delete('CODE_SIGN_ENTITLEMENTS')
+    end
+  end
 
-      # Remove CODE_SIGN_ENTITLEMENTS se existir
-      if config.build_settings['CODE_SIGN_ENTITLEMENTS']
-        puts "🧹 Removendo CODE_SIGN_ENTITLEMENTS de #{target.name}"
-        config.build_settings.delete('CODE_SIGN_ENTITLEMENTS')
-      end
-
-      # Também força CODE_SIGN_STYLE para Automatic nos Pods
-      if config.build_settings['CODE_SIGN_STYLE']
-        puts "🧹 Ajustando CODE_SIGN_STYLE para Automatic em #{target.name}"
-        config.build_settings['CODE_SIGN_STYLE'] = 'Automatic'
+  installer.generated_projects.each do |project|
+    project.targets.each do |target|
+      target.build_configurations.each do |config|
+        config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
       end
     end
   end
 end
+
 
 
 # post_install do |installer|

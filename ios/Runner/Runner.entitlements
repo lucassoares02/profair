@@ -4,8 +4,5 @@
 	<dict>
 		<key>aps-environment</key>
 		<string>production</string>
-		<array>
-			<string>applinks:profair.com.br</string>
-		</array>
 	</dict>
 </plist>
