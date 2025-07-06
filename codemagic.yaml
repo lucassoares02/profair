@@ -319,27 +319,26 @@ workflows:
           fi
 
       
-      # - name: Verify .entitlements in built app
-      #   script: |
-      #     unzip -q build/ios/ipa/*.ipa -d extracted
-      #     codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-      #     grep -q '<string>development</string>' built_entitlements.plist
-      #     if [ $? -ne 0 ]; then
-      #       echo "❌ aps-environment não está setado para production no app final!"
-      #       exit 1
-      #     fi
-      #     echo "✅ aps-environment presente no app final e configurado para production."
-
-      #!/usr/bin/env bash
-
-      - name: Verificar aps-environment no .ipa
+      - name: Verify .entitlements in built app
         script: |
           unzip -q build/ios/ipa/*.ipa -d extracted
           codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
+          grep -q '<string>development</string>' built_entitlements.plist
+          if [ $? -ne 0 ]; then
+            echo "❌ aps-environment não está setado para production no app final!"
+            exit 1
+          fi
+          echo "✅ aps-environment presente no app final e configurado para production."
 
-          echo "🔍 Valor atual de aps-environment no binário:"
-          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :aps-environment" built_entitlements.plist || echo "NÃO ENCONTRADO")
-          echo "📋 aps-environment = $APS_ENV"
+
+      # - name: Verificar aps-environment no .ipa
+      #   script: |
+      #     unzip -q build/ios/ipa/*.ipa -d extracted
+      #     codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
+
+      #     echo "🔍 Valor atual de aps-environment no binário:"
+      #     APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :aps-environment" built_entitlements.plist || echo "NÃO ENCONTRADO")
+      #     echo "📋 aps-environment = $APS_ENV"
 
 
 
