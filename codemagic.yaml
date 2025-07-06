@@ -215,7 +215,7 @@ workflows:
             <key>provisioningProfiles</key>
             <dict>
               <key>br.com.profair.profair</key>
-              <string>db7be4d2-f1d7-478c-90d8-407bbe2db148</string>
+              <string>ios profair notification</string>
             </dict>
             <key>stripSwiftSymbols</key>
             <true/>
@@ -232,6 +232,11 @@ workflows:
 
       - name: Show export_options.plist
         script: cat /Users/builder/export_options.plist
+
+      - name: Force CODE_SIGN_ENTITLEMENTS
+        script: |
+          plutil -replace CODE_SIGN_ENTITLEMENTS -string "Runner/Runner.entitlements" ios/Runner.xcodeproj/project.pbxproj
+          grep -A2 CODE_SIGN_ENTITLEMENTS ios/Runner.xcodeproj/project.pbxproj
 
 
       - name: Flutter build ipa
