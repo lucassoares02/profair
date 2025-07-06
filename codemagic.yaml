@@ -273,25 +273,15 @@ workflows:
 
       #!/usr/bin/env bash
 
-      - name: Verify .entitlements in built app
+      - name: Verificar aps-environment no .ipa
         script: |
-          set -euo pipefail
-
-          echo "🔍 Extraindo .ipa para verificar entitlements"
           unzip -q build/ios/ipa/*.ipa -d extracted
-
-          echo "🔍 Extraindo entitlements do app assinado"
           codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
 
-          echo "🔍 Buscando valor de aps-environment no app final"
-          APS_LINE=$(grep -A1 '<key>aps-environment</key>' built_entitlements.plist || true)
+          echo "🔍 Valor atual de aps-environment no binário:"
+          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :aps-environment" built_entitlements.plist || echo "NÃO ENCONTRADO")
+          echo "📋 aps-environment = $APS_ENV"
 
-          if [[ -n "$APS_LINE" ]]; then
-            echo "✅ aps-environment encontrado no binário:"
-            echo "$APS_LINE"
-          else
-            echo "⚠️ aps-environment NÃO encontrado no binário!"
-          fi
 
 
 
