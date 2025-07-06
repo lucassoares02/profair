@@ -53,6 +53,14 @@ workflows:
       app_store_connect: api key profair renew
 
     scripts:
+
+
+      - script: xcode-project use-profiles
+      - script: flutter clean
+      - script: flutter --version
+      - script: flutter packages pub get
+      - script: dart pub cache repair
+
       - name: Check Info.plist
         script: |
           echo "📄 Info.plist do projeto:"
@@ -172,12 +180,6 @@ workflows:
             echo "❌ UIBackgroundModes não inclui remote-notification"
             exit 1
           fi
-
-      - script: xcode-project use-profiles
-      - script: flutter clean
-      - script: flutter --version
-      - script: flutter packages pub get
-      - script: dart pub cache repair
 
       - name: Restore GoogleService-Info.plist
         script: |
