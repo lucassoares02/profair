@@ -323,7 +323,7 @@ workflows:
         script: |
           unzip -q build/ios/ipa/*.ipa -d extracted
           codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-          grep -q '<string>development</string>' built_entitlements.plist
+          grep -q '<string>production</string>' built_entitlements.plist
           if [ $? -ne 0 ]; then
             echo "❌ aps-environment não está setado para production no app final!"
             exit 1
