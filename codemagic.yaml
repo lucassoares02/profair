@@ -239,10 +239,31 @@ workflows:
           grep -A2 CODE_SIGN_ENTITLEMENTS ios/Runner.xcodeproj/project.pbxproj
 
 
-      - name: Flutter build ipa
+      # - name: Flutter build ipa
+      #   script: |
+      #     echo "🏗️ Construindo IPA com flutter"
+      #     flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+
+      - name: Build IPA com xcodebuild
         script: |
-          echo "🏗️ Construindo IPA com flutter"
-          flutter build ipa --export-options-plist=/Users/builder/export_options.plist
+          echo "📦 Arquivando projeto com xcodebuild"
+          xcodebuild -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -archivePath build/Runner.xcarchive \
+            clean archive \
+            DEVELOPMENT_TEAM=B4DCW8V3J4 \
+            CODE_SIGN_STYLE=Manual \
+            CODE_SIGN_IDENTITY="Apple Distribution" \
+            PRODUCT_BUNDLE_IDENTIFIER=br.com.profair.profair \
+            CODE_SIGN_ENTITLEMENTS=Runner/Runner.entitlements
+
+          echo "📦 Exportando IPA com xcodebuild"
+          xcodebuild -exportArchive \
+            -archivePath build/Runner.xcarchive \
+            -exportPath build/ipa \
+            -exportOptionsPlist /Users/builder/export_options.plist
+
       
       - name: Verify GoogleService-Info.plist in .ipa
         script: |
