@@ -38,273 +38,106 @@ workflows:
           cache_paths:
             - $FLUTTER_ROOT/.pub-cache
             - ios/Pods
-  app-store:
-    name: Apple Workflow
-    environment:
-      groups:
-        - android
-      flutter: 3.29.0
-      ios_signing:
-        distribution_type: app_store
-        bundle_identifier: br.com.profair.profair
-        certificates:
-          - api_key_profair_renew
-    integrations:
-      app_store_connect: api key profair renew
 
-    scripts:
+app-store:
+  name: Apple Workflow
+  environment:
+    groups:
+      - ios
+    ios_signing:
+      distribution_type: app_store
+      bundle_identifier: br.com.profair.profair
+      certificates:
+        - api_key_profair_renew
 
+  scripts:
+    - name: Restore provisioning profile
+      script: |
+        echo "🔄 Restaurando provisioning profile"
+        rm -f ~/Library/MobileDevice/Provisioning\ Profiles/*
+        echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/profair.mobileprovision
+        security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/profair.mobileprovision > profile.plist
+        UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
+        echo "✅ Provisioning Profile UUID: $UUID"
+        echo $UUID > profile_uuid.txt
 
-      - script: xcode-project use-profiles
-      - script: flutter clean
-      - script: flutter --version
-      - script: flutter packages pub get
-      - script: dart pub cache repair
+    - name: Check Runner.entitlements
+      script: |
+        cat ios/Runner/Runner.entitlements
 
-      - name: Check Info.plist
-        script: |
-          echo "📄 Info.plist do projeto:"
-          cat ios/Runner/Info.plist
+    - name: Ensure CODE_SIGN_ENTITLEMENTS
+      script: |
+        echo "🔍 Garantindo CODE_SIGN_ENTITLEMENTS no .pbxproj"
+        sed -i '' 's|CODE_SIGN_ENTITLEMENTS =.*|CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;|' ios/Runner.xcodeproj/project.pbxproj
+        grep -A2 CODE_SIGN_ENTITLEMENTS ios/Runner.xcodeproj/project.pbxproj
 
-      - name: Restore Provisioning Profile
-        script: |
-          echo "🧹 Limpando outros provisioning profiles"
-          rm -f ~/Library/MobileDevice/Provisioning\ Profiles/*
-          echo "⬇️ Restaurando provisioning profile do \$APPSTORE_MOBILEPROVISION"
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision
-          echo "✅ Provisioning profile restaurado!"
-          ls -l ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "🔎 Verificando provisioning profile restaurado"
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-          grep -A1 aps-environment profile.plist
+    - name: Clean & prepare
+      script: |
+        cd ios
+        pod install
+        cd ..
 
-      - name: Verify provisioning profile entitlements
-        script: |
-          echo "🔍 Validando provisioning profile restaurado"
+    - name: Archive with xcodebuild
+      script: |
+        UUID=$(cat profile_uuid.txt)
+        echo "📦 Arquivando projeto com xcodebuild"
+        xcodebuild -workspace ios/Runner.xcworkspace \
+          -scheme Runner \
+          -configuration Release \
+          -archivePath build/Runner.xcarchive \
+          clean archive \
+          DEVELOPMENT_TEAM=B4DCW8V3J4 \
+          PROVISIONING_PROFILE_SPECIFIER=$UUID \
+          CODE_SIGN_STYLE=Manual \
+          CODE_SIGN_IDENTITY="Apple Distribution" \
+          PRODUCT_BUNDLE_IDENTIFIER=br.com.profair.profair \
+          CODE_SIGN_ENTITLEMENTS=Runner/Runner.entitlements
 
-          # extrai para plist
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-
-          echo "✅ application-identifier:"
-          /usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist || { echo "❌ Não encontrou application-identifier no profile"; exit 1; }
-
-          echo "✅ aps-environment:"
-          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist || echo "none")
-
-          if [[ "$APS_ENV" != "production" ]]; then
-            echo "❌ aps-environment não está setado para production (atual: $APS_ENV)"
-            exit 1
-          fi
-
-          echo "✅ provisioning profile contém aps-environment: production"
-
-      - name: Verify Provisioning Profile
-        script: |
-          echo "🔍 Verificando provisioning profile"
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-
-          UUID=$(/usr/libexec/PlistBuddy -c "Print :UUID" profile.plist)
-          APP_ID_NAME=$(/usr/libexec/PlistBuddy -c "Print :AppIDName" profile.plist)
-          APP_IDENTIFIER=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:application-identifier" profile.plist)
-          APS_ENV=$(/usr/libexec/PlistBuddy -c "Print :Entitlements:aps-environment" profile.plist)
-          TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist)
-
-          echo "✅ UUID: $UUID"
-          echo "✅ App ID Name: $APP_ID_NAME"
-          echo "✅ Application Identifier: $APP_IDENTIFIER"
-          echo "✅ APS Environment: $APS_ENV"
-          echo "✅ Team ID: $TEAM_ID"
-
-          if [ "$APS_ENV" != "production" ]; then
-            echo "❌ APS Environment NÃO está em production!"
-            exit 1
-          fi
-
-          if [[ "$APP_IDENTIFIER" != "B4DCW8V3J4.br.com.profair.profair" ]]; then
-            echo "❌ Application Identifier incorreto!"
-            exit 1
-          fi
-
-          export PROFILE_UUID=$UUID
-          echo "📌 Usando PROFILE_UUID=$PROFILE_UUID"
-
-      - name: Verify Certificates
-        script: |
-          echo "🔍 Verificando certificado no keychain"
-          security find-identity -v -p codesigning | grep "Apple Distribution"
-          if [ $? -ne 0 ]; then
-            echo "❌ Certificado Apple Distribution não encontrado no keychain"
-            exit 1
-          fi
-
-      - name: Verify GoogleService-Info.plist
-        script: |
-          echo "🔍 Verificando GoogleService-Info.plist"
-          if [ ! -f ios/Runner/GoogleService-Info.plist ]; then
-            echo "❌ GoogleService-Info.plist NÃO encontrado!"
-            exit 1
-          fi
-
-          GOOGLE_APP_ID=$(/usr/libexec/PlistBuddy -c "Print :GOOGLE_APP_ID" ios/Runner/GoogleService-Info.plist)
-          BUNDLE_ID=$(/usr/libexec/PlistBuddy -c "Print :BUNDLE_ID" ios/Runner/GoogleService-Info.plist)
-
-          echo "✅ GOOGLE_APP_ID: $GOOGLE_APP_ID"
-          echo "✅ BUNDLE_ID: $BUNDLE_ID"
-
-          if [[ "$BUNDLE_ID" != "br.com.profair.profair" ]]; then
-            echo "❌ BUNDLE_ID no GoogleService-Info.plist não corresponde ao bundle esperado"
-            exit 1
-          fi
-
-      - name: Verify Info.plist
-        script: |
-          echo "🔍 Verificando Info.plist"
-          if [ ! -f ios/Runner/Info.plist ]; then
-            echo "❌ Info.plist NÃO encontrado!"
-            exit 1
-          fi
-
-          DEPLOYMENT_TARGET=$(/usr/libexec/PlistBuddy -c "Print :MinimumOSVersion" ios/Runner/Info.plist || echo "12.0")
-          BG_MODES=$(/usr/libexec/PlistBuddy -c "Print :UIBackgroundModes:0" ios/Runner/Info.plist || echo "none")
-
-          echo "✅ Deployment Target: $DEPLOYMENT_TARGET"
-          echo "✅ Background Modes: $BG_MODES"
-
-          if (( $(echo "$DEPLOYMENT_TARGET < 12.0" | bc -l) )); then
-            echo "❌ Deployment Target menor que 12.0"
-            exit 1
-          fi
-
-          if [[ "$BG_MODES" != "remote-notification" ]]; then
-            echo "❌ UIBackgroundModes não inclui remote-notification"
-            exit 1
-          fi
-
-      - name: Restore GoogleService-Info.plist
-        script: |
-          echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
-
-      - name: Install CocoaPods dependencies
-        script: |
-          flutter pub get
-          cd ios
-          pod install
-
-      - name: Ajustar entitlements para production
-        script: |
-          echo "🛠️ Corrigindo aps-environment para production"
-          sed -i '' 's/development/production/' ios/Runner/Runner.entitlements
-          grep -q '<string>production</string>' ios/Runner/Runner.entitlements && echo "✅ Entitlements corrigido!" || echo "❌ Não foi possível corrigir entitlements"
-
-
-      - name: Criar export_options.plist
-        script: |
-          PROFILE_UUID=$(cat profile_uuid.txt)
-          cat > /Users/builder/export_options.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
+    - name: Export .ipa
+      script: |
+        echo "📦 Exportando IPA com xcodebuild"
+        cat > export_options.plist <<EOF
+        <?xml version="1.0" encoding="UTF-8"?>
+        <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+        <plist version="1.0">
+        <dict>
+          <key>method</key>
+          <string>app-store</string>
+          <key>signingStyle</key>
+          <string>manual</string>
+          <key>teamID</key>
+          <string>B4DCW8V3J4</string>
+          <key>provisioningProfiles</key>
           <dict>
-            <key>method</key>
-            <string>app-store</string>
-            <key>signingStyle</key>
-            <string>manual</string>
-            <key>teamID</key>
-            <string>B4DCW8V3J4</string>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>br.com.profair.profair</key>
-              <string>ios profair notification</string>
-            </dict>
-            <key>stripSwiftSymbols</key>
-            <true/>
-            <key>compileBitcode</key>
-            <true/>
+            <key>br.com.profair.profair</key>
+            <string>$UUID</string>
           </dict>
-          </plist>
-          EOF
-              cat /Users/builder/export_options.plist
+        </dict>
+        </plist>
+        EOF
 
+        xcodebuild -exportArchive \
+          -archivePath build/Runner.xcarchive \
+          -exportPath build/ipa \
+          -exportOptionsPlist export_options.plist
 
-      - name: Show Runner.entitlements
-        script: cat ios/Runner/Runner.entitlements
+    - name: Verify aps-environment in .ipa
+      script: |
+        unzip -q build/ipa/*.ipa -d extracted
+        codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
+        echo "🔍 aps-environment encontrado:"
+        grep -A1 '<key>aps-environment</key>' built_entitlements.plist || echo "⚠️ NÃO encontrado!"
 
-      - name: Show export_options.plist
-        script: cat /Users/builder/export_options.plist
+  artifacts:
+    - build/ipa/*.ipa
 
-      - name: Force CODE_SIGN_ENTITLEMENTS
-        script: |
-          plutil -replace CODE_SIGN_ENTITLEMENTS -string "Runner/Runner.entitlements" ios/Runner.xcodeproj/project.pbxproj
-          grep -A2 CODE_SIGN_ENTITLEMENTS ios/Runner.xcodeproj/project.pbxproj
+  publishing:
+    app_store_connect:
+      auth: integration
+      submit_to_app_store: true
+      release_type: SCHEDULED
+      copyright: 2025 Profair
 
-
-      - name: Flutter build ipa
-        script: |
-          echo "🏗️ Construindo IPA com flutter"
-          flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-      
-      - name: Verify GoogleService-Info.plist in .ipa
-        script: |
-          echo "🔍 Verificando se GoogleService-Info.plist está embutido no .ipa"
-          
-          # Descompacta o IPA para inspecionar
-          unzip -q build/ios/ipa/*.ipa -d extracted_ipa
-          
-          if [ -f extracted_ipa/Payload/*.app/GoogleService-Info.plist ]; then
-            echo "✅ GoogleService-Info.plist encontrado dentro do .ipa"
-            ls -l extracted_ipa/Payload/*.app/GoogleService-Info.plist
-          else
-            echo "❌ GoogleService-Info.plist NÃO encontrado no .ipa"
-            exit 1
-          fi
-
-      
-      # - name: Verify .entitlements in built app
-      #   script: |
-      #     unzip -q build/ios/ipa/*.ipa -d extracted
-      #     codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-      #     grep -q '<string>development</string>' built_entitlements.plist
-      #     if [ $? -ne 0 ]; then
-      #       echo "❌ aps-environment não está setado para production no app final!"
-      #       exit 1
-      #     fi
-      #     echo "✅ aps-environment presente no app final e configurado para production."
-
-      #!/usr/bin/env bash
-
-      - name: Verify .entitlements in built app
-        script: |
-          set -euo pipefail
-
-          echo "🔍 Extraindo .ipa para verificar entitlements"
-          unzip -q build/ios/ipa/*.ipa -d extracted
-
-          echo "🔍 Extraindo entitlements do app assinado"
-          codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-
-          echo "🔍 Buscando valor de aps-environment no app final"
-          APS_LINE=$(grep -A1 '<key>aps-environment</key>' built_entitlements.plist || true)
-
-          if [[ -n "$APS_LINE" ]]; then
-            echo "✅ aps-environment encontrado no binário:"
-            echo "$APS_LINE"
-          else
-            echo "⚠️ aps-environment NÃO encontrado no binário!"
-          fi
-
-
-
-
-    artifacts:
-      - build/ios/ipa/*.ipa
-
-    publishing:
-      app_store_connect:
-        auth: integration
-        submit_to_app_store: true
-        release_type: SCHEDULED
-        copyright: 2025 Profair
 
 
 
