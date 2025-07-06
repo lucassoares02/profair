@@ -46,14 +46,16 @@ install! 'cocoapods',
   :warn_for_unused_master_specs_repo => false,
   :integrate_targets => true
 
-post_install do |installer|
+  post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target) # required by simple_permission
+
     target.build_configurations.each do |config|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
-    end
-    target.build_configurations.each do |config|
       config.build_settings['SWIFT_VERSION'] = '5'  # required by simple_permission
+
+      # 🚫 Remove CODE_SIGN_ENTITLEMENTS dos Pods
+      config.build_settings.delete('CODE_SIGN_ENTITLEMENTS')
     end
   end
 end
