@@ -243,8 +243,6 @@ workflows:
         script: |
           echo "🏗️ Construindo IPA com flutter"
           flutter build ipa --export-options-plist=/Users/builder/export_options.plist
-          codesign -d --entitlements :- build/ios/ipa/Payload/Runner.app
-
       
       - name: Verify GoogleService-Info.plist in .ipa
         script: |
