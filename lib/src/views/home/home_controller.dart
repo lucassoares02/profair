@@ -1,7 +1,9 @@
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/models/response_model.dart';
+import 'package:profair/src/notification/notification_details_model.dart';
 import 'package:profair/src/notification/notification_model.dart';
+import 'package:profair/src/notification/notification_user_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -23,6 +25,8 @@ class HomeController extends ValueNotifier<StateApp> {
   List<RecipeModel> stores = [];
   List<ProvidersModel> topProviders = [];
   List<CustomNotification> notifications = [];
+  NotificationDetailsModel? notification;
+  List<NotificationUserModel> notificationsPeding = [];
   List<BuyersModel> buyers = [];
   CampaignModel? campaign;
   LoginModel? data;
@@ -34,6 +38,9 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateBuyers = ValueNotifier<StateApp>(StateApp.start);
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
   final stateNotifications = ValueNotifier<StateApp>(StateApp.start);
+  final stateNotification = ValueNotifier<StateApp>(StateApp.start);
+  final stateNotificationsPending = ValueNotifier<StateApp>(StateApp.start);
+  final stateCheckNotificationsPending = ValueNotifier<StateApp>(StateApp.start);
   final stateData = ValueNotifier<StateApp>(StateApp.start);
   final stateCampaign = ValueNotifier<StateApp>(StateApp.start);
   final stateTopProvider = ValueNotifier<StateApp>(StateApp.start);
@@ -105,6 +112,39 @@ class HomeController extends ValueNotifier<StateApp> {
       stateNotifications.value = StateApp.success;
     } catch (e) {
       stateNotifications.value = StateApp.error;
+    }
+  }
+
+  Future<void> findNotification(int id) async {
+    stateNotification.value = StateApp.loading;
+    try {
+      final response = await _homeRepository.getNotification(id);
+      notification = response[0];
+      stateNotification.value = StateApp.success;
+    } catch (e) {
+      stateNotification.value = StateApp.error;
+    }
+  }
+
+  Future<void> checkNotificationsUser() async {
+    stateNotificationsPending.value = StateApp.loading;
+    try {
+      final response = await _homeRepository.checkNotificationsUser();
+      notificationsPeding = response;
+      stateNotificationsPending.value = StateApp.success;
+    } catch (e) {
+      stateNotificationsPending.value = StateApp.error;
+    }
+  }
+
+  Future<void> sendCheckNotificationsUser() async {
+    stateCheckNotificationsPending.value = StateApp.loading;
+    try {
+      await _homeRepository.confirmCheckNotificationsUser();
+      stateCheckNotificationsPending.value = StateApp.success;
+      checkNotificationsUser();
+    } catch (e) {
+      stateCheckNotificationsPending.value = StateApp.error;
     }
   }
 

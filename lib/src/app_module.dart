@@ -193,6 +193,8 @@ class AppModule extends Module {
             content: args.data["content"],
             hour: args.data["hour"],
             image: args.data["image"],
+            id: args.data["id"],
+            homeController: args.data["homeController"],
           ),
         ),
         ChildRoute(

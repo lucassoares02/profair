@@ -4,6 +4,9 @@ import 'package:permission_handler/permission_handler.dart' as AppSettings;
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/state/state_app.dart';
+import 'package:profair/src/utils/count_hour.dart';
+import 'package:profair/src/utils/count_hour_separated.dart';
+import 'package:profair/src/utils/format_date.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/home_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -123,11 +126,42 @@ class _NotificationsState extends State<Notifications> {
                                   color: Colors.grey.withValues(alpha: 0.1),
                                 ),
                               ),
+                              contentPadding: EdgeInsets.symmetric(vertical: 10),
                               title: Text(notification.title ?? "Sem título"),
-                              subtitle: Text(notification.body ?? "Sem conteúdo"),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(notification.body!.length > 40 ? "${notification.body!.substring(0, 40)}..." : notification.body!),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        notification.method == 1 ? countHour(notification.createdAt.toString()) : countHourSeparet(notification.hour!, notification.minutes!),
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                               onTap: () {
-                                // Ação ao clicar na notificação
-                                print("Notificação clicada: ${notification.title}");
+                                try {
+                                  Navigator.of(context).pushNamed(
+                                    "/detailsattraction",
+                                    arguments: {
+                                      "title": notification.title,
+                                      "content": notification.body,
+                                      "hour": "Associados",
+                                      "image": "https://via.placeholder.com/150",
+                                      "homeController": homeController,
+                                      "id": notification.id,
+                                    },
+                                  );
+                                } catch (e) {
+                                  print('Erro ao navegar para detalhes: $e');
+                                }
                               },
                             ),
                           ),

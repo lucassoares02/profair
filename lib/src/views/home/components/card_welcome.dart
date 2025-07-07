@@ -106,33 +106,39 @@ class _CardWelcomeState extends State<CardWelcome> {
                               ],
                             ),
                           ),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushNamed("/notifications");
-                            },
-                            child: Stack(
-                              clipBehavior: Clip.none, // permite que a bolinha fique fora da área do Stack
-                              children: [
-                                const SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child: Icon(Icons.notifications),
-                                ),
-                                Positioned(
-                                  top: 12,
-                                  right: 22,
-                                  child: Container(
-                                    width: 9,
-                                    height: 9,
-                                    decoration: const BoxDecoration(
-                                      color: Colors.red,
-                                      shape: BoxShape.circle,
-                                    ),
+                          ValueListenableBuilder(
+                              valueListenable: widget.homeController.stateNotificationsPending,
+                              builder: (context, value, child) {
+                                return InkWell(
+                                  onTap: () async {
+                                    widget.homeController.sendCheckNotificationsUser();
+                                    Navigator.of(context).pushNamed("/notifications");
+                                  },
+                                  child: Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      const SizedBox(
+                                        width: 40,
+                                        height: 40,
+                                        child: Icon(Icons.notifications),
+                                      ),
+                                      if (widget.homeController.notificationsPeding.isNotEmpty)
+                                        Positioned(
+                                          top: 12,
+                                          right: 22,
+                                          child: Container(
+                                            width: 9,
+                                            height: 9,
+                                            decoration: const BoxDecoration(
+                                              color: Colors.red,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                          )
+                                );
+                              })
                         ],
                       ),
                       const SizedBox(height: 10),

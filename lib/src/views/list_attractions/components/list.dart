@@ -82,17 +82,6 @@ class _ComponentListState extends State<ComponentList> {
           Column(
               children: widget.listItems.asMap().entries.map((e) {
             return InkWell(
-              onTap: () {
-                Navigator.of(context).pushNamed(
-                  "/detailsattraction",
-                  arguments: {
-                    "title": e.value.title,
-                    "content": e.value.content,
-                    "hour": e.value.hour,
-                    "image": e.value.image,
-                  },
-                );
-              },
               child: Container(
                 width: width,
                 height: 90,
@@ -116,10 +105,7 @@ class _ComponentListState extends State<ComponentList> {
                           : (e.key == widget.listItems.length - 1)
                               ? 56
                               : double.maxFinite,
-                      decoration: BoxDecoration(
-                          color: int.parse(e.value.hour!.substring(0, 2)) > int.parse(DateTime.now().hour.toString())
-                              ? Colors.grey
-                              : colorSecondary),
+                      decoration: BoxDecoration(color: int.parse(e.value.hour!.substring(0, 2)) > int.parse(DateTime.now().hour.toString()) ? Colors.grey : colorSecondary),
                     ),
                     const AppSpacing(),
                     Column(
@@ -128,9 +114,7 @@ class _ComponentListState extends State<ComponentList> {
                       children: [
                         if (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) == DateTime.now().hour ||
                             (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) < DateTime.now().hour &&
-                                int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!
-                                        .substring(0, 2)) >
-                                    DateTime.now().hour))
+                                int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!.substring(0, 2)) > DateTime.now().hour))
                           Transform.translate(
                             offset: const Offset(-27, 29),
                             child: SpinKitPulse(color: Theme.of(context).colorScheme.onBackground, size: 22),
@@ -141,10 +125,7 @@ class _ComponentListState extends State<ComponentList> {
                             width: 10,
                             height: 10,
                             decoration: BoxDecoration(
-                              color:
-                                  int.parse(e.value.hour!.substring(0, 2)) > int.parse(DateTime.now().hour.toString())
-                                      ? Colors.grey
-                                      : colorSecondary,
+                              color: int.parse(e.value.hour!.substring(0, 2)) > int.parse(DateTime.now().hour.toString()) ? Colors.grey : colorSecondary,
                               borderRadius: const BorderRadius.all(
                                 Radius.circular(10),
                               ),
@@ -154,10 +135,7 @@ class _ComponentListState extends State<ComponentList> {
                         Text(e.value.title!.length < 36 ? '${e.value.title}' : e.value.title!.substring(0, 35),
                             style: (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) == DateTime.now().hour ||
                                     (int.parse(widget.listItems[e.key].hour!.substring(0, 2)) < DateTime.now().hour &&
-                                        int.parse(widget
-                                                .listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!
-                                                .substring(0, 2)) >
-                                            DateTime.now().hour))
+                                        int.parse(widget.listItems[e.key + (widget.listItems.length - 1 == e.key ? 0 : 1)].hour!.substring(0, 2)) > DateTime.now().hour))
                                 ? const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: colorSecondary)
                                 : const TextStyle(fontSize: 14)),
                         const SizedBox(height: 5),

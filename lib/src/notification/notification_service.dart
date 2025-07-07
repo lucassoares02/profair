@@ -60,12 +60,18 @@ class NotificationService {
       await _localNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.createNotificationChannel(channel);
 
       FirebaseMessaging.onMessage.listen(_onMessageForeground);
-      FirebaseMessaging.onMessageOpenedApp.listen(_onMessageOpenedApp);
 
-      // caso app estava fechado
+      FirebaseMessaging.onMessageOpenedApp.listen((message) {
+        log('[NotificationService] App aberto via onMessageOpenedApp: ${message.data}');
+        if (message.data.isNotEmpty) {
+          _handleNotificationClick(_buildPayload(message.data));
+        }
+      });
+
       RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-      if (initialMessage != null) {
-        log('[NotificationService] App foi aberto por notificação (terminated): ${initialMessage.data}');
+
+      if (initialMessage != null && initialMessage.data.isNotEmpty) {
+        log('[NotificationService] App iniciado via getInitialMessage: ${initialMessage.data}');
         _handleNotificationClick(_buildPayload(initialMessage.data));
       }
 
@@ -79,7 +85,6 @@ class NotificationService {
     log('[NotificationService] Notificação em foreground recebida: ${message.data}');
 
     final notification = message.notification;
-    final android = notification?.android;
 
     final String title = message.data['title'] ?? notification?.title ?? 'Notificação Profair';
     final String body = message.data['body'] ?? notification?.body ?? 'Abra e veja mais detalhes.';
@@ -108,10 +113,11 @@ class NotificationService {
             priority: Priority.high,
             icon: 'ic_launcher_notification',
           ),
+          iOS: const DarwinNotificationDetails(),
         );
       } else {
         log('[NotificationService] Nenhuma imagem enviada, exibindo notificação simples.');
-        details = NotificationDetails(
+        details = const NotificationDetails(
           android: AndroidNotificationDetails(
             'high_importance_channel',
             'Notificações Importantes',
@@ -119,11 +125,12 @@ class NotificationService {
             priority: Priority.high,
             icon: 'ic_launcher_notification',
           ),
+          iOS: DarwinNotificationDetails(),
         );
       }
 
       await _localNotificationsPlugin.show(
-        DateTime.now().millisecondsSinceEpoch ~/ 1000, // ID único
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
         title,
         body,
         details,
@@ -134,11 +141,6 @@ class NotificationService {
     } catch (e, s) {
       log('[NotificationService] Erro ao exibir notificação', error: e, stackTrace: s);
     }
-  }
-
-  static void _onMessageOpenedApp(RemoteMessage message) {
-    log('[NotificationService] App foi aberto por notificação (background): ${message.data}');
-    _handleNotificationClick(_buildPayload(message.data));
   }
 
   static String _buildPayload(Map<String, dynamic> data) {

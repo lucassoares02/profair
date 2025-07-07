@@ -35,8 +35,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    homeController.findData();
-    homeController.findCampaign();
+    reloadScreen();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initFCM();
@@ -57,6 +56,7 @@ class _HomePageState extends State<HomePage> {
   reloadScreen() async {
     homeController.findData();
     homeController.findCampaign();
+    homeController.checkNotificationsUser();
   }
 
   Future<void> _initFCM() async {

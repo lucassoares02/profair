@@ -45,7 +45,7 @@ class _ComponentListState extends State<ComponentList> {
           Container(
             width: width,
             decoration: const BoxDecoration(
-              color: colorPrimary,
+              color: Color(0xffB01F24),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,8 +58,12 @@ class _ComponentListState extends State<ComponentList> {
                   },
                 ),
                 const AppSpacing(),
-                const AppSpacing(),
-                const AppSpacing(),
+                Center(
+                  child: Image.network(
+                    "https://drive.google.com/uc?export=view&id=1CXbRVXo5QkrjV960dYFfLlrmpf5TfwT-",
+                    height: 100,
+                  ),
+                ),
                 const AppSpacing(),
                 Container(
                   padding: const EdgeInsets.all(appPadding),

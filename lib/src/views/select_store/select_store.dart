@@ -31,7 +31,7 @@ class _SelectStoreState extends State<SelectStore> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: Color(0xffB1121F)),
+        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: Color(0xffB01F24)),
         child: SafeArea(
           child: SingleChildScrollView(
             child: ValueListenableBuilder(

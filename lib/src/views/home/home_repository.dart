@@ -1,7 +1,9 @@
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/models/response_model.dart';
+import 'package:profair/src/notification/notification_details_model.dart';
 import 'package:profair/src/notification/notification_model.dart';
+import 'package:profair/src/notification/notification_user_model.dart';
 import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
@@ -96,6 +98,42 @@ class HomeRepository {
       return list.map((json) => CustomNotification.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Get Notifications (Home Repository) Error: $e");
+      rethrow;
+    }
+  }
+
+  getNotification(int notification) async {
+    ResponseModel? response;
+    try {
+      response = await httpService.get('notification/$notification');
+      List list = response.data as List;
+      return list.map((json) => NotificationDetailsModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Get Notifications (Home Repository) Error: $e");
+      rethrow;
+    }
+  }
+
+  checkNotificationsUser() async {
+    ResponseModel? response;
+    try {
+      response = await httpService.get('notification/pending');
+      List list = response.data as List;
+      print("Notifications User: ${response.data}");
+      return list.map((json) => NotificationUserModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Get Pending Notifications (Home Repository) Error: $e");
+      rethrow;
+    }
+  }
+
+  confirmCheckNotificationsUser() async {
+    ResponseModel? response;
+    try {
+      response = await httpService.get('notification/check');
+      return response;
+    } catch (e) {
+      debugPrint("Get Check Notifications (Home Repository) Error: $e");
       rethrow;
     }
   }
