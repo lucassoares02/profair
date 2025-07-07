@@ -152,7 +152,9 @@ class _CardWelcomeState extends State<CardWelcome> {
                                     ? Container(
                                         padding: const EdgeInsets.symmetric(horizontal: appMargin),
                                         decoration: BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.2),
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(
+                                                alpha: 0.1,
+                                              ),
                                           borderRadius: BorderRadius.circular(appRadius),
                                         ),
                                         child: DropdownButton<LoginModel>(
@@ -178,7 +180,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                                   ),
                                                   const SizedBox(width: 10),
                                                   Text(
-                                                    e.nameCompany!.length > 35 ? "${e.nameCompany!.substring(0, 35)}..." : e.nameCompany!,
+                                                    e.nameCompany!.length > 30 ? "${e.nameCompany!.substring(0, 30)}..." : e.nameCompany!,
                                                     style: const TextStyle(fontWeight: FontWeight.w600),
                                                   ),
                                                 ],
@@ -189,7 +191,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                             int indexSelected = widget.homeController.moreData!.indexOf(value!);
                                             widget.homeController.indexSelected = indexSelected;
                                             setState(() {
-                                              selectedItem = value!.nameCompany;
+                                              selectedItem = value.nameCompany;
                                             });
                                             widget.action!();
                                             moduleSharedPreferences("company", "${value!.codCompany}");
@@ -200,7 +202,9 @@ class _CardWelcomeState extends State<CardWelcome> {
                                         width: double.maxFinite,
                                         padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
                                         decoration: BoxDecoration(
-                                          color: Colors.grey.withOpacity(0.1),
+                                          color: Theme.of(context).colorScheme.onSurface.withValues(
+                                                alpha: 0.1,
+                                              ),
                                           borderRadius: BorderRadius.circular(appRadius),
                                         ),
                                         child: Text(

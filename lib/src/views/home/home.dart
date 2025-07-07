@@ -164,7 +164,7 @@ class _HomePageState extends State<HomePage> {
                               );
                       },
                     ),
-                    const AppSpacing(),
+                    // const AppSpacing(),
                     ValueListenableBuilder(
                         valueListenable: homeController.stateCampaign,
                         builder: (context, value, child) {
@@ -247,7 +247,10 @@ class _HomePageState extends State<HomePage> {
                       },
                       child: Container(
                         margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                        decoration: BoxDecoration(color: Colors.grey.withOpacity(0.2), borderRadius: BorderRadius.circular(appRadius)),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(appRadius),
+                        ),
                         padding: const EdgeInsets.all(appPadding * 1.1),
                         child: const Row(children: [
                           Icon(

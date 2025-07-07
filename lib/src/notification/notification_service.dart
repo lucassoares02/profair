@@ -22,7 +22,8 @@ Future<String> _downloadAndSaveFile(String url, String fileName) async {
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
+  static String? _initialPayload;
+  static String? get initialPayload => _initialPayload;
   static Future<void> initialize() async {
     try {
       log('[NotificationService] Inicializando…');
@@ -45,7 +46,7 @@ class NotificationService {
           final payload = response.payload;
           if (payload != null) {
             log('[NotificationService] Clique em notificação local: $payload');
-            _handleNotificationClick(payload);
+            handleNotificationClick(payload);
           }
         },
       );
@@ -64,7 +65,7 @@ class NotificationService {
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
         log('[NotificationService] App aberto via onMessageOpenedApp: ${message.data}');
         if (message.data.isNotEmpty) {
-          _handleNotificationClick(_buildPayload(message.data));
+          handleNotificationClick(_buildPayload(message.data));
         }
       });
 
@@ -72,7 +73,7 @@ class NotificationService {
 
       if (initialMessage != null && initialMessage.data.isNotEmpty) {
         log('[NotificationService] App iniciado via getInitialMessage: ${initialMessage.data}');
-        _handleNotificationClick(_buildPayload(initialMessage.data));
+        // handleNotificationClick(_buildPayload(initialMessage.data));
       }
 
       log('[NotificationService] Inicializado com sucesso.');
@@ -147,7 +148,7 @@ class NotificationService {
     return "${data['notificationId']}|${data['provider']}|${data['direct']}";
   }
 
-  static Future<void> _handleNotificationClick(String? payload) async {
+  static Future<void> handleNotificationClick(String? payload) async {
     if (payload == null || payload.isEmpty) {
       log('[NotificationService] Payload inválido: $payload');
       return;
