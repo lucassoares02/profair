@@ -1,11 +1,14 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart' as AppSettings;
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/state/state_app.dart';
+import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/count_hour.dart';
 import 'package:profair/src/utils/count_hour_separated.dart';
+import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/home_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -110,6 +113,42 @@ class _NotificationsState extends State<Notifications> {
               },
             ),
             ValueListenableBuilder(
+                valueListenable: homeController.stateNotifications,
+                builder: (context, stateNoti, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      if (homeController.notifications.any((notification) => notification.viewed == 0))
+                        InkWell(
+                          onTap: () async {
+                            await homeController.sendCheckNotificationsUser();
+                            await homeController.findNotifications();
+                            Fluttertoast.showToast(
+                              msg: "Todas as notificações marcadas como lidas.",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              textColor: Colors.white,
+                              fontSize: 16.0,
+                            );
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(left: appPadding),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              border: Border.all(color: colorSecondary.withValues(alpha: .9), width: 1),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding / 2),
+                            child: const Text(
+                              "Marcar todas como lidas",
+                              style: TextStyle(color: colorSecondary, fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+            ValueListenableBuilder(
               valueListenable: homeController.stateNotifications,
               builder: (context, stateNotifications, child) {
                 return stateNotifications == StateApp.loading
@@ -125,12 +164,42 @@ class _NotificationsState extends State<Notifications> {
                                   color: Colors.grey.withValues(alpha: 0.1),
                                 ),
                               ),
-                              contentPadding: EdgeInsets.symmetric(vertical: 10),
-                              title: Text(notification.title ?? "Sem título"),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                              title: Row(
+                                children: [
+                                  if (notification.viewed == 0)
+                                    Row(
+                                      children: [
+                                        Container(
+                                          width: 9,
+                                          height: 9,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                      ],
+                                    ),
+                                  Text(
+                                    notification.title ?? "Sem título",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      color: notification.viewed != 0 ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7) : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
+                                ],
+                              ),
                               subtitle: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(notification.body!.length > 40 ? "${notification.body!.substring(0, 40)}..." : notification.body!),
+                                  Text(
+                                    notification.body!.length > 40 ? "${notification.body!.substring(0, 40)}..." : notification.body!,
+                                    style: TextStyle(
+                                      color: notification.viewed != 0 ? Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6) : Theme.of(context).colorScheme.onSurface,
+                                    ),
+                                  ),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
@@ -145,8 +214,21 @@ class _NotificationsState extends State<Notifications> {
                                   ),
                                 ],
                               ),
-                              onTap: () {
+                              onTap: () async {
+                                final prefs = await SharedPreferences.getInstance();
+                                final token = prefs.getString("tokenFcm");
                                 try {
+                                  homeController.updateNotification({
+                                    "notificationId": notification.id,
+                                    "tokenFcm": token,
+                                  });
+
+                                  homeController.notifications.where((n) => n.id == notification.id).forEach((n) {
+                                    n.viewed = 1; // Atualiza o estado local
+                                  });
+
+                                  homeController.findNotifications();
+
                                   Navigator.of(context).pushNamed(
                                     "/detailsattraction",
                                     arguments: {

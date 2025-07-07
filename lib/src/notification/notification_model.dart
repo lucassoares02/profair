@@ -7,6 +7,7 @@ class CustomNotification {
   int? hour;
   int? minutes;
   int? method;
+  int? viewed;
 
   CustomNotification({
     required this.id,
@@ -17,6 +18,7 @@ class CustomNotification {
     this.hour,
     this.method,
     this.minutes,
+    this.viewed,
   });
 
   CustomNotification.fromJson(Map<String, dynamic> json) {
@@ -28,5 +30,6 @@ class CustomNotification {
     hour = json['hour'] ?? 0;
     minutes = json['minute'] ?? 0;
     method = json['method'] ?? 0;
+    viewed = json['viewed'] ?? 0;
   }
 }

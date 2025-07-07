@@ -40,6 +40,7 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateNotifications = ValueNotifier<StateApp>(StateApp.start);
   final stateNotification = ValueNotifier<StateApp>(StateApp.start);
   final stateNotificationsPending = ValueNotifier<StateApp>(StateApp.start);
+
   final stateCheckNotificationsPending = ValueNotifier<StateApp>(StateApp.start);
   final stateData = ValueNotifier<StateApp>(StateApp.start);
   final stateCampaign = ValueNotifier<StateApp>(StateApp.start);
@@ -135,6 +136,10 @@ class HomeController extends ValueNotifier<StateApp> {
     } catch (e) {
       stateNotificationsPending.value = StateApp.error;
     }
+  }
+
+  Future<void> updateNotification(Object data) async {
+    await _homeRepository.updateNotification(data);
   }
 
   Future<void> sendCheckNotificationsUser() async {

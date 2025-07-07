@@ -111,7 +111,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                               builder: (context, value, child) {
                                 return InkWell(
                                   onTap: () async {
-                                    widget.homeController.sendCheckNotificationsUser();
+                                    // widget.homeController.sendCheckNotificationsUser();
                                     Navigator.of(context).pushNamed("/notifications");
                                   },
                                   child: Stack(

@@ -102,6 +102,16 @@ class HomeRepository {
     }
   }
 
+  updateNotification(Object data) async {
+    try {
+      await httpService.post('/notification/opened', data);
+      return true;
+    } catch (e) {
+      debugPrint("Get Notifications (Home Repository) Error: $e");
+      rethrow;
+    }
+  }
+
   getNotification(int notification) async {
     ResponseModel? response;
     try {

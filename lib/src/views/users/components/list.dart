@@ -30,6 +30,7 @@ class _ComponentListState extends State<ComponentList> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final height = MediaQuery.of(context).size.height;
     return StateManagement(
       width: width,
       listenable: widget.state,
@@ -59,20 +60,23 @@ class _ComponentListState extends State<ComponentList> {
                         context: context,
                         builder: ((context) {
                           return AlertDialog(
-                              content: SizedBox(
-                            width: width,
-                            height: 300,
-                            child: Center(
-                              child: RepaintBoundary(
-                                key: GlobalKey(),
-                                child: QrImageView(
-                                  data: e.codeAcess!,
-                                  version: QrVersions.auto,
-                                  size: 250.0,
-                                ),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(appRadius),
                               ),
-                            ),
-                          ));
+                              backgroundColor: colorWhite,
+                              content: SizedBox(
+                                width: width,
+                                height: height * 0.4,
+                                child: Center(
+                                  child: RepaintBoundary(
+                                    key: GlobalKey(),
+                                    child: QrImageView(
+                                      data: e.codeAcess!,
+                                      version: QrVersions.auto,
+                                    ),
+                                  ),
+                                ),
+                              ));
                         }),
                       );
                     },
@@ -80,8 +84,7 @@ class _ComponentListState extends State<ComponentList> {
                       width: width,
                       // height: 90,
                       padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
-                      decoration:
-                          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.3)))),
+                      decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey.withOpacity(0.3)))),
 
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,11 +112,7 @@ class _ComponentListState extends State<ComponentList> {
                                       borderRadius: BorderRadius.circular(appRadius),
                                     ),
                                     child: Text(
-                                      (type == 1)
-                                          ? "Fornecedor"
-                                          : (type == 2)
-                                              ? "Associado"
-                                              : "Organização",
+                                      e.codeAcess.toString(),
                                       style: const TextStyle(color: colorWhite),
                                     ),
                                   ),
@@ -129,10 +128,6 @@ class _ComponentListState extends State<ComponentList> {
                                 children: [
                                   Text(
                                     e.nameProvider.toString(),
-                                    style: const TextStyle(color: colorGreyDark),
-                                  ),
-                                  Text(
-                                    e.codeAcess.toString(),
                                     style: const TextStyle(color: colorGreyDark),
                                   ),
                                 ],
