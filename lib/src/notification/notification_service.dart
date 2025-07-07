@@ -195,6 +195,13 @@ class NotificationService {
               "codeProvider": int.parse(provider),
             },
           );
+        } else {
+          Modular.to.pushNamed(
+            "detailsattraction",
+            arguments: {
+              "id": int.parse(notificationId),
+            },
+          );
         }
       }
 

@@ -1,34 +1,24 @@
+import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/views/details_attraction/components/details.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/home/home_controller.dart';
+import 'package:profair/src/views/home/home_repository.dart';
 
 class DetailsAttractions extends StatefulWidget {
-  DetailsAttractions({
-    super.key,
-    required this.id,
-    required this.title,
-    required this.content,
-    required this.hour,
-    required this.image,
-    required this.homeController,
-  });
+  DetailsAttractions({super.key, required this.id});
 
   int id;
-  String title;
-  String content;
-  String hour;
-  String image;
-  HomeController homeController;
 
   @override
   State<DetailsAttractions> createState() => _DetailsAttractionsState();
 }
 
 class _DetailsAttractionsState extends State<DetailsAttractions> {
+  HomeController homeController = HomeController(StateApp.start, HomeRepository());
   @override
   void initState() {
     super.initState();
-    widget.homeController.findNotification(widget.id);
+    homeController.findNotification(widget.id);
   }
 
   @override
@@ -37,11 +27,7 @@ class _DetailsAttractionsState extends State<DetailsAttractions> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: ComponentDetails(
-            homeController: widget.homeController,
-            title: widget.title,
-            content: widget.content,
-            hour: widget.hour,
-            image: widget.image,
+            homeController: homeController,
           ),
         ),
       ),

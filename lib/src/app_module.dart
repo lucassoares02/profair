@@ -189,12 +189,7 @@ class AppModule extends Module {
         ChildRoute(
           '/detailsattraction',
           child: (context, args) => DetailsAttractions(
-            title: args.data["title"],
-            content: args.data["content"],
-            hour: args.data["hour"],
-            image: args.data["image"],
             id: args.data["id"],
-            homeController: args.data["homeController"],
           ),
         ),
         ChildRoute(

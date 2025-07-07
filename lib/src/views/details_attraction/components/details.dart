@@ -13,17 +13,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ComponentDetails extends StatefulWidget {
   ComponentDetails({
     super.key,
-    required this.title,
-    required this.content,
-    required this.hour,
-    required this.image,
     required this.homeController,
   });
 
-  String title;
-  String content;
-  String hour;
-  String image;
   HomeController homeController;
 
   @override
@@ -79,7 +71,16 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                                     ),
                                     padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding / 2),
                                     child: Row(children: [
-                                      Text(widget.hour),
+                                      Text(
+                                          widget.homeController.notification!.target == 2
+                                              ? "Associados"
+                                              : widget.homeController.notification!.target == 1
+                                                  ? "Fornecedores"
+                                                  : "Organizadores",
+                                          style: TextStyle(
+                                            color: Theme.of(context).colorScheme.onSurface,
+                                            fontSize: 14,
+                                          )),
                                       const SizedBox(width: 5),
                                       Icon(
                                         Icons.sell_outlined,
@@ -92,7 +93,7 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                               ),
                               const AppSpacing(),
                               Text(
-                                widget.title,
+                                widget.homeController.notification!.title!,
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -100,7 +101,7 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                               ),
                               const AppSpacing(),
                               Text(
-                                widget.content,
+                                widget.homeController.notification!.content!,
                                 style: const TextStyle(
                                   color: colorGreyDark,
                                   fontStyle: FontStyle.normal,
@@ -133,72 +134,6 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                                   iconButton: Icons.arrow_outward_outlined,
                                   colorButton: widget.homeController.notification!.color != null ? Color(int.parse(widget.homeController.notification!.color!)) : Colors.red,
                                 )
-                              // Container(
-                              //   width: double.maxFinite,
-                              //   padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appMargin),
-                              //   decoration: BoxDecoration(
-                              //     border: Border.all(color: colorGreyLigth),
-                              //     borderRadius: const BorderRadius.all(
-                              //       Radius.circular(appRadius),
-                              //     ),
-                              //   ),
-                              //   child: Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     children: [
-                              //       Container(
-                              //         decoration: const BoxDecoration(
-                              //           border: Border(
-                              //             bottom: BorderSide(
-                              //               color: colorGreyLigth,
-                              //             ),
-                              //           ),
-                              //         ),
-                              //         padding: const EdgeInsets.only(bottom: appMargin, top: 5),
-                              //         child: Row(
-                              //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //           children: const [
-                              //             Text(
-                              //               "Informações adicionais",
-                              //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                              //             ),
-                              //             Icon(
-                              //               Icons.check_circle,
-                              //               size: 16,
-                              //               color: Colors.green,
-                              //             )
-                              //             // Text(
-                              //             //   "Novo",
-                              //             //   style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.green),
-                              //             // ),
-                              //           ],
-                              //         ),
-                              //       ),
-                              //       const AppSpacing(),
-                              //       Column(
-                              //         crossAxisAlignment: CrossAxisAlignment.start,
-                              //         children: [
-                              //           Text("10 de Janeiro de 2024", style: TextStyle(color: colorGrey, fontSize: 12)),
-                              //           SizedBox(height: 10),
-                              //           Text(
-                              //             "Hoje é 10 de janeiro, estamos realizando teste desse layhout, parece que tudo está indo bem!",
-                              //             style: TextStyle(fontSize: 12),
-                              //           ),
-                              //           Container(
-                              //             margin: EdgeInsets.symmetric(vertical: 5),
-                              //             height: 20,
-                              //             decoration: const BoxDecoration(border: Border(left: BorderSide(color: colorGreyLigth, width: 3))),
-                              //           ),
-                              //           Text("10 de Janeiro, 10:40", style: TextStyle(color: colorGrey, fontSize: 12)),
-                              //           SizedBox(height: 10),
-                              //           Text(
-                              //             "Hoje é 10 de janeiro, estamos realizando teste desse layhout, parece que tudo está indo bem!",
-                              //             style: TextStyle(fontSize: 12),
-                              //           ),
-                              //         ],
-                              //       )
-                              //     ],
-                              //   ),
-                              // ),
                             ],
                           ),
                         );

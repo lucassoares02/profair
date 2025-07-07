@@ -6,7 +6,6 @@ import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/count_hour.dart';
 import 'package:profair/src/utils/count_hour_separated.dart';
-import 'package:profair/src/utils/format_date.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 import 'package:profair/src/views/home/home_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -151,11 +150,6 @@ class _NotificationsState extends State<Notifications> {
                                   Navigator.of(context).pushNamed(
                                     "/detailsattraction",
                                     arguments: {
-                                      "title": notification.title,
-                                      "content": notification.body,
-                                      "hour": "Associados",
-                                      "image": "https://via.placeholder.com/150",
-                                      "homeController": homeController,
                                       "id": notification.id,
                                     },
                                   );
