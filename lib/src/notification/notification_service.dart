@@ -22,8 +22,7 @@ Future<String> _downloadAndSaveFile(String url, String fileName) async {
 
 class NotificationService {
   static final FlutterLocalNotificationsPlugin _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
-  static String? _initialPayload;
-  static String? get initialPayload => _initialPayload;
+
   static Future<void> initialize() async {
     try {
       log('[NotificationService] Inicializando…');
@@ -73,7 +72,7 @@ class NotificationService {
 
       if (initialMessage != null && initialMessage.data.isNotEmpty) {
         log('[NotificationService] App iniciado via getInitialMessage: ${initialMessage.data}');
-        // handleNotificationClick(_buildPayload(initialMessage.data));
+        handleNotificationClick(_buildPayload(initialMessage.data));
       }
 
       log('[NotificationService] Inicializado com sucesso.');

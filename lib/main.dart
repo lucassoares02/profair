@@ -7,7 +7,6 @@ import 'package:profair/src/app_module.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:profair/src/notification/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,20 +14,10 @@ void main() async {
     options: Platform.isAndroid ? null : DefaultFirebaseOptions.currentPlatform,
   );
 
-  await NotificationService.initialize();
-
   runApp(ModularApp(
     module: AppModule(),
     child: const MyApp(),
   ));
-
-  // espera um pouco a árvore de navegação estar pronta
-  Future.delayed(const Duration(milliseconds: 500), () {
-    final payload = NotificationService.initialPayload;
-    if (payload != null) {
-      NotificationService.handleNotificationClick(payload);
-    }
-  });
 }
 
 class MyApp extends StatelessWidget {
