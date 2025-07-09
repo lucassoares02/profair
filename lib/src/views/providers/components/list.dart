@@ -1,5 +1,6 @@
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/providers_controller.dart';
+import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -9,6 +10,7 @@ import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class ComponentList extends StatefulWidget {
   ComponentList({
@@ -36,6 +38,13 @@ class ComponentList extends StatefulWidget {
 
 class _ComponentListState extends State<ComponentList> {
   int selling = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.providersController.findMap();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -56,6 +65,63 @@ class _ComponentListState extends State<ComponentList> {
             },
             label: "Fornecedores",
           ),
+          ValueListenableBuilder(
+              valueListenable: widget.providersController.stateMap,
+              builder: (context, stateM, child) {
+                return stateM == StateApp.loading
+                    ? const Skeletonizer(
+                        child: SizedBox(
+                          height: 100,
+                          width: double.infinity,
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                      )
+                    : (widget.providersController.mapUrl != null && widget.providersController.mapUrl != "null" && widget.providersController.mapUrl != "")
+                        ? Column(
+                            children: [
+                              const AppSpacing(),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).pushNamed(
+                                    "mapevent",
+                                    arguments: {"map": widget.providersController.mapUrl},
+                                  );
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.all(appPadding),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.blue.withOpacity(0.1),
+                                    border: Border.all(color: Colors.blue.withOpacity(0.9)),
+                                  ),
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.map_outlined, color: Colors.blue),
+                                      AppSpacing(),
+                                      // Aqui: Column agora fica dentro de um Expanded
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text("Mapa do Evento"),
+                                            SizedBox(height: 4),
+                                            Text(
+                                              "Acesse o mapa do evento para ver os stands dos fornecedores.",
+                                              softWrap: true,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const AppSpacing(),
+                            ],
+                          )
+                        : Container();
+              }),
           ValueListenableBuilder(
               valueListenable: widget.providersController.stateProviders,
               builder: (context, stateSell, child) {

@@ -37,6 +37,8 @@ class HeaderList extends StatefulWidget {
   State<HeaderList> createState() => _HeaderListState();
 }
 
+enum _OpcoesMenu { ordemAlfabetica, abrirBusca }
+
 class _HeaderListState extends State<HeaderList> {
   TextEditingController controllerSearch = TextEditingController();
   ValueNotifier<bool> visibleSearch = ValueNotifier(false);

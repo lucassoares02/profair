@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:permission_handler/permission_handler.dart' as AppSettings;
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
+import 'package:profair/src/notification/notification_user_model.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/count_hour.dart';
@@ -14,7 +15,12 @@ import 'package:profair/src/views/home/home_repository.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Notifications extends StatefulWidget {
-  const Notifications({super.key});
+  Notifications({
+    super.key,
+    required this.notificationsPeding,
+  });
+
+  final bool notificationsPeding;
 
   @override
   State<Notifications> createState() => _NotificationsState();
@@ -118,7 +124,7 @@ class _NotificationsState extends State<Notifications> {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      if (homeController.notifications.any((notification) => notification.viewed == 0))
+                      if (widget.notificationsPeding! && homeController.notifications.any((notification) => notification.viewed == 0))
                         InkWell(
                           onTap: () async {
                             await homeController.sendCheckNotificationsUser();

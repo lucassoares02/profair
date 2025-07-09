@@ -112,7 +112,10 @@ class _CardWelcomeState extends State<CardWelcome> {
                                 return InkWell(
                                   onTap: () async {
                                     // widget.homeController.sendCheckNotificationsUser();
-                                    Navigator.of(context).pushNamed("/notifications");
+                                    Navigator.of(context).pushNamed(
+                                      "/notifications",
+                                      arguments: widget.homeController.notificationsPeding.isNotEmpty,
+                                    );
                                   },
                                   child: Stack(
                                     clipBehavior: Clip.none,
@@ -194,7 +197,7 @@ class _CardWelcomeState extends State<CardWelcome> {
                                               selectedItem = value.nameCompany;
                                             });
                                             widget.action!();
-                                            moduleSharedPreferences("company", "${value!.codCompany}");
+                                            moduleSharedPreferences("company", "${value.codCompany}");
                                           },
                                         ),
                                       )

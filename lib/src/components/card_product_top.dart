@@ -93,7 +93,7 @@ class _CardProductTopState extends State<CardProductTop> {
                       style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      "${widget.packing} | ${widget.factor} - Negociação: ${widget.negotiation}",
+                      "${widget.packing} | ${widget.factor}",
                       style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
                     ),
                   ],

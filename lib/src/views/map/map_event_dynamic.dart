@@ -1,10 +1,9 @@
-import 'dart:convert';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class MapEventDynamic extends StatefulWidget {
-  const MapEventDynamic({super.key});
-
+  const MapEventDynamic({super.key, required this.map});
+  final String map;
   @override
   State<MapEventDynamic> createState() => _MapEventDynamicState();
 }
@@ -19,14 +18,7 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
   }
 
   Future<void> _carregarStands() async {
-    final jsonString = [
-      {"id": "A1", "nome": "Stand A1", "fornecedor": "Acme Corp", "left": 100, "top": 150, "width": 30, "height": 30, "color": const Color(0xffff0000)},
-      {"id": "B3", "nome": "Stand B3", "fornecedor": "GlobalTech", "left": 200, "top": 300, "width": 30, "height": 30, "color": const Color(0xff00ffff)}
-    ];
-    final data = jsonString as List;
-    setState(() {
-      _stands = data.cast<Map<String, dynamic>>();
-    });
+    setState(() => _stands = []);
   }
 
   @override
@@ -38,31 +30,38 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
         maxScale: 9,
         child: Stack(
           children: [
-            // A imagem do mapa agora ocupa toda a tela
+            // === background rotacionado, ocupando só 90% do container ===
             Positioned.fill(
-              child: Image.network(
-                'https://www.centrodeconvencoes.ms.gov.br/wp-content/uploads/2015/05/Geral2.jpg',
-                fit: BoxFit.cover, // Garantir que a imagem preencha a tela
-              ),
-            ),
-            // Marcadores de stands
-            ..._stands.map((stand) => Positioned(
-                  left: stand['left'].toDouble(),
-                  top: stand['top'].toDouble(),
-                  width: stand['width'].toDouble(),
-                  height: stand['height'].toDouble(),
-                  child: GestureDetector(
-                    onTap: () => _mostrarDetalhesDoStand(
-                      context,
-                      stand['nome'],
-                      'Fornecedor: ${stand['fornecedor']}',
-                    ),
-                    child: Container(
-                      decoration: BoxDecoration(color: stand["color"] // Forma circular
-                          ),
+              child: Center(
+                child: FractionallySizedBox(
+                  child: RotatedBox(
+                    quarterTurns: 3,
+                    child: Image.network(
+                      widget.map,
+                      fit: BoxFit.cover, // preenche o boxFraction mantendo proporção
                     ),
                   ),
-                )),
+                ),
+              ),
+            ),
+
+            // === marcadores de stands ===
+            ..._stands.map((stand) {
+              return Positioned(
+                left: stand['left'].toDouble(),
+                top: stand['top'].toDouble(),
+                width: stand['width'].toDouble(),
+                height: stand['height'].toDouble(),
+                child: GestureDetector(
+                  onTap: () => _mostrarDetalhesDoStand(
+                    context,
+                    stand['nome'],
+                    'Fornecedor: ${stand['fornecedor']}',
+                  ),
+                  child: Container(color: stand['color']),
+                ),
+              );
+            }).toList(),
           ],
         ),
       ),
@@ -76,10 +75,7 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
         title: Text(titulo),
         content: Text(descricao),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Fechar'),
-          )
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Fechar')),
         ],
       ),
     );

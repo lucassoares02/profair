@@ -26,8 +26,8 @@ class ProvidersModel {
     codeProvider = json['codForn'];
     image = json['image'];
     color = json['color'];
-    totalValue = json['valorTotal'].toDouble();
-    totalVolume = json['volumeTotal'].toString();
+    totalValue = json['valorTotal'] != null ? json['valorTotal'].toDouble() : 0.0;
+    totalVolume = json['volumeTotal'] != null ? json['volumeTotal'].toString() : "0";
   }
 
   Map<String, dynamic> toJson() {

@@ -12,6 +12,7 @@ class OrderDetailsController extends ValueNotifier<StateApp> {
   final stateSearchProducts = ValueNotifier<StateApp>(StateApp.start);
 
   final stateProducts = ValueNotifier<StateApp>(StateApp.start);
+  final stateShare = ValueNotifier<StateApp>(StateApp.start);
 
   final OrderDetailsRepository _orderDetailsRepository;
 
@@ -67,14 +68,7 @@ class OrderDetailsController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(
-          msg: message,
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
+      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
 
       stateSearchProducts.value = StateApp.success;
     } catch (e) {

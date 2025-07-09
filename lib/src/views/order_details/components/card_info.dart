@@ -3,6 +3,7 @@ import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/format_currency.dart';
+import 'package:intl/intl.dart';
 import 'package:profair/src/utils/spacing.dart';
 
 class CardInfo extends StatelessWidget {
@@ -53,16 +54,29 @@ class CardInfo extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          "Cliente",
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              "Cliente",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              order.razaoClient!,
+                            ),
+                          ],
                         ),
-                        Text(
-                          order.razaoClient!,
-                        ),
+                        if (order.termNegotiation != null && order.termNegotiation != "")
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Entrega"),
+                              Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(order.termNegotiation!))),
+                            ],
+                          ),
                       ],
                     ),
                     const AppSpacing(),

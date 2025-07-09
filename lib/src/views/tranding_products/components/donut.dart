@@ -21,7 +21,6 @@ class PieChart2State extends State<PieChartSample2> {
     colorSecondary,
     colorTertiary,
     colorRed,
-    colorGrey,
     colorGreyDark,
     colorBlue,
     colorGreen,
@@ -32,7 +31,6 @@ class PieChart2State extends State<PieChartSample2> {
     colorSecondary,
     colorTertiary,
     colorRed,
-    colorGrey,
     colorGreyDark,
     colorBlue,
     colorGreen,
@@ -71,7 +69,7 @@ class PieChart2State extends State<PieChartSample2> {
     if (total == 0) {
       return "0%";
     }
-    return "${((value / total) * 100).toStringAsFixed(1)}%";
+    return "${((value / total) * 100).toStringAsFixed(0)}%";
   }
 
   @override
@@ -88,13 +86,16 @@ class PieChart2State extends State<PieChartSample2> {
                   PieChartData(
                     pieTouchData: PieTouchData(
                       touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                        setState(() {
-                          if (!event.isInterestedForInteractions || pieTouchResponse == null || pieTouchResponse.touchedSection == null) {
-                            touchedIndex = -1;
-                            return;
-                          }
-                          touchedIndex = pieTouchResponse.touchedSection!.touchedSectionIndex;
-                        });
+                        // só processa quando for um "tap down" e houver de fato uma seção tocada
+                        if (event is FlTapDownEvent && pieTouchResponse != null && pieTouchResponse.touchedSection != null) {
+                          final index = pieTouchResponse.touchedSection!.touchedSectionIndex;
+                          setState(() {
+                            // se já estava selecionada, desliga; se não, seleciona
+                            touchedIndex = (touchedIndex == index) ? -1 : index;
+                          });
+                        }
+                        // nos demais eventos (tap up, pan, etc.) não faz nada,
+                        // logo a seleção permanece até um novo tap down
                       },
                     ),
                     borderData: FlBorderData(
@@ -134,34 +135,56 @@ class PieChart2State extends State<PieChartSample2> {
     );
   }
 
-  List<PieChartSectionData>? showingSections() {
+  List<PieChartSectionData> showingSections() {
     final totalValue = getTotalValue();
+    return widget.products.asMap().entries.take(10).map((entry) {
+      final index = entry.key;
+      final item = entry.value;
+      final isTouched = index == touchedIndex;
 
-    return widget.products.asMap().entries.take(10).map((item) {
-      final isTouched = item.key == touchedIndex;
-      const fontSize = 15.0;
-      final radius = isTouched ? 43.0 : 40.0;
-      const style = TextStyle(fontSize: fontSize, color: colorWhite, fontWeight: FontWeight.bold);
+      // raio maior quando tocado
+      final double radius = isTouched ? 43 : 40;
+      // força o fundo 100% opaco
+      final Color sectionColor = colors[index].withOpacity(1.0);
+      // percentual formatado
+      final String percentage = formatPercentage(item.total!, totalValue);
 
-      final double value = item.value.total!;
-      final String percentage = formatPercentage(value, totalValue);
+      // só cria o badge quando tocado
+      final Widget? badge = isTouched
+          ? Container(
+              decoration: BoxDecoration(
+                color: sectionColor, // fundo opaco
+                borderRadius: BorderRadius.circular(8),
+              ),
+              padding: const EdgeInsets.symmetric(
+                vertical: 5,
+                horizontal: appPadding,
+              ),
+              child: Text(
+                "$percentage – ${item.title}",
+                style: const TextStyle(
+                  fontSize: 15,
+                  color: colorWhite,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            )
+          : null;
 
       return PieChartSectionData(
-        badgeWidget: isTouched
-            ? Container(
-                decoration: BoxDecoration(color: colors[item.key], borderRadius: BorderRadius.all(Radius.circular(radius))),
-                padding: const EdgeInsets.symmetric(vertical: 5, horizontal: appPadding),
-                child: Text(
-                  "${item.value.title}",
-                  style: style,
-                ),
-              )
-            : Container(),
-        color: colors[item.key],
-        value: value,
-        title: isTouched ? "" : percentage,
+        color: sectionColor,
+        value: item.total!,
         radius: radius,
-        titleStyle: style,
+        title: (isTouched || double.parse(percentage.replaceAll('%', '')) < 5) ? '' : percentage,
+        titleStyle: const TextStyle(
+          fontSize: 15,
+          color: colorWhite,
+          fontWeight: FontWeight.bold,
+        ),
+
+        // aqui: posiciona o badge mais perto do centro, evitando overflow
+        badgePositionPercentageOffset: isTouched ? 0.75 : 0.0,
+        badgeWidget: badge,
       );
     }).toList();
   }

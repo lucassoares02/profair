@@ -114,7 +114,10 @@ class _ComponentListState extends State<ComponentList> {
                                 )
                               : Column(
                                   children: [
-                                    SizedBox(height: 300, child: BarChartTeste(reportsClients: widget.reportsController.reportsTotalProvider)),
+                                    SizedBox(
+                                      height: 300,
+                                      child: BarChartTeste(reportsClients: widget.reportsController.reportsTotalProvider),
+                                    ),
                                     const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
@@ -153,7 +156,10 @@ class _ComponentListState extends State<ComponentList> {
                                     SizedBox(
                                         // padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
                                         height: 300,
-                                        child: BarChartSample1(reportsProducts: widget.reportsController.reportsTotalProducts)),
+                                        child: BarChartSample1(
+                                          reportsProducts: widget.reportsController.reportsTotalProducts,
+                                          barColor: colorSecondary,
+                                        )),
                                     const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [

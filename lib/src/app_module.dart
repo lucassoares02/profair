@@ -6,6 +6,7 @@ import 'package:profair/src/views/details_balance/details_balance.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider.dart';
 import 'package:profair/src/views/finish_trading/finish_trading_products.dart';
 import 'package:profair/src/views/list_attractions/list_attractions.dart';
+import 'package:profair/src/views/map/map_event_dynamic.dart';
 import 'package:profair/src/views/notifications/notifications.dart';
 import 'package:profair/src/views/order_details/order_details.dart';
 import 'package:profair/src/views/preorder/preorder.dart';
@@ -192,15 +193,25 @@ class AppModule extends Module {
             id: args.data["id"],
           ),
         ),
+        // ChildRoute(
+        //   '/ticket',
+        //   child: (context, args) => MapEventDynamic(),
+        // ),
         ChildRoute(
           '/ticket',
           child: (context, args) => Ticket(
             homeController: args.data,
           ),
         ),
+        ChildRoute('/mapevent',
+            child: (context, args) => MapEventDynamic(
+                  map: args.data["map"],
+                )),
         ChildRoute(
           '/notifications',
-          child: (context, args) => const Notifications(),
+          child: (context, args) => Notifications(
+            notificationsPeding: args.data, // Pass the notifications pending list
+          ),
         ),
       ];
 

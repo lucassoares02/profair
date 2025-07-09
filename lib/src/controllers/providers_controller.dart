@@ -13,6 +13,8 @@ class ProvidersController extends ValueNotifier<StateApp> {
   List<int> sellCounts = [0, 0, 0];
 
   final stateProviders = ValueNotifier<StateApp>(StateApp.start);
+  final stateMap = ValueNotifier<StateApp>(StateApp.start);
+  String? mapUrl;
 
   final ProvidersRepository _providersRepository;
 
@@ -43,6 +45,18 @@ class ProvidersController extends ValueNotifier<StateApp> {
       stateProviders.value = StateApp.success;
     } catch (e) {
       stateProviders.value = StateApp.error;
+    }
+  }
+
+  Future findMap() async {
+    stateMap.value = StateApp.loading;
+    try {
+      mapUrl = await _providersRepository.getMap();
+      print("Map URL: $mapUrl");
+
+      stateMap.value = StateApp.success;
+    } catch (e) {
+      stateMap.value = StateApp.error;
     }
   }
 
@@ -83,7 +97,7 @@ class ProvidersController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
 
       stateSearchProviders.value = StateApp.success;
     } catch (e) {

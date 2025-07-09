@@ -183,8 +183,6 @@ class NotificationService {
         final response = await httpService.get('providerdetails/$provider');
 
         if (directFromPayload == "2" && direct == "2") {
-          log('[NotificationService] Navegando para detalhes do provedor $provider');
-
           Modular.to.pushNamed(
             "detailsprovider",
             arguments: {

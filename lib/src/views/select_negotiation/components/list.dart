@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -69,23 +70,34 @@ class _ComponentListState extends State<ComponentList> {
                           widget.listItems[i].checked = false;
                         }
                       }
-                      Navigator.of(context).pushNamed('tradingproducts', arguments: {
-                        "codeProvider": widget.codeProvider,
-                        "codeBranch": widget.codeBranch,
-                        "nameBranch": widget.nameBranch,
-                        "codeClient": widget.codeClient,
-                        "codeTrading": e.value.negotiation,
-                        "tradings": widget.listItems,
-                        "listBranchs": widget.listBranchs,
-                        "codeConsult": widget.codeConsult,
-                      });
+                      if (e.value.confirm != null) {
+                        Navigator.of(context).pushNamed('tradingproducts', arguments: {
+                          "codeProvider": widget.codeProvider,
+                          "codeBranch": widget.codeBranch,
+                          "nameBranch": widget.nameBranch,
+                          "codeClient": widget.codeClient,
+                          "codeTrading": e.value.negotiation,
+                          "tradings": widget.listItems,
+                          "listBranchs": widget.listBranchs,
+                          "codeConsult": widget.codeConsult,
+                        });
+                      } else {
+                        Fluttertoast.showToast(
+                          msg: "Negociação não possui pedidos!",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
                     },
                     child: Container(
                       height: 90,
                       padding: const EdgeInsets.all(appMargin),
                       margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                      decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: colorGrey)),
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3))),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

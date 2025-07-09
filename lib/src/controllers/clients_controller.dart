@@ -36,6 +36,7 @@ class ClientsController extends ValueNotifier<StateApp> {
     try {
       List<PercentageClientsModel> clientsPercentage = await _clientsRepository.getPercentageProviders(provider);
       percentageClients = clientsPercentage.first;
+      print("Percentage Clients: ${percentageClients!.percentage}");
       statePercentageClients.value = StateApp.success;
     } catch (e) {
       statePercentageClients.value = StateApp.error;
@@ -78,7 +79,7 @@ class ClientsController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
 
       stateClients.value = StateApp.success;
     } catch (e) {

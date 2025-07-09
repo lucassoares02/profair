@@ -1,11 +1,8 @@
 import 'package:profair/src/controllers/clients_controller.dart';
 import 'package:profair/src/repositories/clients_repository.dart';
 import 'package:profair/src/state/state_app.dart';
-import 'package:profair/src/utils/colors.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/views/clients/components/list.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Clients extends StatefulWidget {
   const Clients({super.key, required this.codeProvider, this.accessTargenting, this.merchandise, this.trading});

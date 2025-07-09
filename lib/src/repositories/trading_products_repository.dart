@@ -33,6 +33,11 @@ class TradingProductsRepository {
   exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation, int? codeBranch}) async {
     Response? response;
 
+    print(codeProvider);
+    print(codeNegotiation);
+    print(codeBranch);
+    print(codeBuyer);
+
     try {
       // Fazendo a solicitação com a opção de resposta para obter os bytes
       response = await clientDioRequest.get(

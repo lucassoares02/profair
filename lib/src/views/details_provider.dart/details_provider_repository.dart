@@ -54,6 +54,7 @@ class DetailsProviderRepository {
     try {
       response = await clientDio.get('requestsnegotiationbyclient/$codeProvider');
       List list = response.data as List;
+      inspect(list);
       return list.map((json) => RequestsStoresModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Get Request Stores (Details Balance Repository) Error: $e");

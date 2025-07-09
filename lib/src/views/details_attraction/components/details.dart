@@ -23,6 +23,20 @@ class ComponentDetails extends StatefulWidget {
 }
 
 class _ComponentDetailsState extends State<ComponentDetails> {
+  String acessTargeting = "";
+  String codeBranch = "";
+
+  @override
+  void initState() {
+    loadSharedPreserences();
+  }
+
+  loadSharedPreserences() async {
+    final prefs = await SharedPreferences.getInstance();
+    acessTargeting = prefs.getString("direct").toString();
+    codeBranch = prefs.getString("company").toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -114,11 +128,9 @@ class _ComponentDetailsState extends State<ComponentDetails> {
                                 thickness: 1,
                               ),
                               const AppSpacing(),
-                              if (widget.homeController.notification!.provider != 0)
+                              if (widget.homeController.notification!.provider != 0 && acessTargeting == '2' && codeBranch != "")
                                 AppButton(
                                   onPressButton: () async {
-                                    final prefs = await SharedPreferences.getInstance();
-                                    final codeBranch = prefs.getString("company");
                                     Modular.to.pushNamed(
                                       "detailsprovider",
                                       arguments: {

@@ -57,9 +57,11 @@ class _ComponentListState extends State<ComponentList> {
                       height: 90,
                       padding: const EdgeInsets.all(appMargin),
                       margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                      decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: colorGrey)),
-                      ),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
+                      ))),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -94,7 +96,9 @@ class _ComponentListState extends State<ComponentList> {
                               ),
                               Text(
                                 '${e.totalVolume} | R\$ ${e.totalValue}',
-                                style: TextStyle(color: (e.totalVolume != "0") ? colorGreyDark : colorGrey, fontWeight: FontWeight.bold),
+                                style: TextStyle(
+                                    color: (e.totalVolume != "0") ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                                    fontWeight: FontWeight.bold),
                               ),
                             ],
                           ),

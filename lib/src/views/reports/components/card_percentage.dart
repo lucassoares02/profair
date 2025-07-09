@@ -107,7 +107,7 @@ class _CardPercentageState extends State<CardPercentage> {
                               animation: true,
                               trailing: Text(
                                 "${double.parse(widget.value.toString()).toStringAsFixed(0)}%",
-                                style: const TextStyle(color: colorWhite, fontSize: 12),
+                                // style: const TextStyle(color: colorWhite, fontSize: 12),
                               ),
                               animationDuration: 500,
                               padding: const EdgeInsets.only(right: 10),

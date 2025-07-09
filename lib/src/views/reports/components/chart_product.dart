@@ -1,9 +1,10 @@
-import 'dart:developer';
-
+import 'dart:math';
 import 'package:profair/src/models/total_value_clients.dart';
+import 'package:profair/src/utils/abreviation_number.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:profair/src/utils/format_currency.dart';
 
 class BarChartTeste extends StatefulWidget {
   BarChartTeste({
@@ -12,150 +13,180 @@ class BarChartTeste extends StatefulWidget {
     this.barColor = colorPrimary,
     this.barBackgroundColor = transparent,
     this.touchedBarColor = colorSecondary,
+    this.legendValue = true,
   });
 
-  List<TotalValueClients> reportsClients;
-
+  final List<TotalValueClients> reportsClients;
+  final Color barColor;
   final Color barBackgroundColor;
-  Color? barColor;
   final Color touchedBarColor;
+  final bool legendValue;
 
   @override
-  State<StatefulWidget> createState() => BarChartTesteState();
+  State<BarChartTeste> createState() => _BarChartTesteState();
 }
 
-class BarChartTesteState extends State<BarChartTeste> {
-  final Duration animDuration = const Duration(milliseconds: 250);
-
+class _BarChartTesteState extends State<BarChartTeste> {
+  final Duration animDuration = const Duration(milliseconds: 350);
+  final List<Color> topClientColors = [
+    Colors.amber, // 🥇
+    Colors.grey, // 🥈
+    Colors.brown, // 🥉
+  ];
   int touchedIndex = -1;
-
-  bool isPlaying = false;
-
-  String formatCurrency(double amount) {
-    String formattedAmount = amount.toStringAsFixed(2);
-    formattedAmount = formattedAmount.replaceAll('.', ',');
-    List<String> parts = formattedAmount.split(',');
-    String integerPart = parts[0];
-    String decimalPart = parts[1];
-
-    String formattedIntegerPart = '';
-    for (int i = integerPart.length - 1, count = 0; i >= 0; i--, count++) {
-      if (count != 0 && count % 3 == 0) {
-        formattedIntegerPart = ".$formattedIntegerPart";
-      }
-      formattedIntegerPart = integerPart[i] + formattedIntegerPart;
-    }
-
-    return 'R\$$formattedIntegerPart,$decimalPart';
-  }
 
   @override
   Widget build(BuildContext context) {
-    return BarChart(mainBarData());
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: BarChart(
+        _buildChartData(),
+        swapAnimationDuration: animDuration,
+      ),
+    );
   }
 
-  BarChartData mainBarData() {
-    return BarChartData(
-      barTouchData: BarTouchData(
-        touchTooltipData: BarTouchTooltipData(
-          tooltipHorizontalAlignment: FLHorizontalAlignment.right,
-          tooltipMargin: 5,
-          getTooltipItem: (group, groupIndex, rod, rodIndex) {
-            return BarTooltipItem(
-              "${widget.reportsClients[group.x].client!}\n\n",
-              const TextStyle(
-                color: Colors.white,
-                fontSize: 12,
+  BarChartData _buildChartData() {
+    if (widget.reportsClients.isEmpty) {
+      return BarChartData();
+    }
+
+    final maxValue = widget.reportsClients.map((c) => c.total!).reduce((a, b) => a > b ? a : b);
+    final maxY = (maxValue * 1.1).ceilToDouble();
+
+    return maxValue == 0
+        ? BarChartData(
+            maxY: 1,
+            alignment: BarChartAlignment.spaceBetween,
+            barTouchData: BarTouchData(enabled: false),
+            titlesData: FlTitlesData(show: false),
+            gridData: FlGridData(show: false),
+            borderData: FlBorderData(show: false),
+            barGroups: [],
+          )
+        : BarChartData(
+            maxY: maxY,
+            alignment: BarChartAlignment.spaceBetween,
+            barTouchData: BarTouchData(
+              enabled: true,
+              touchTooltipData: BarTouchTooltipData(
+                getTooltipItem: (group, _, rod, __) {
+                  final client = widget.reportsClients[group.x].client!;
+                  final value = widget.reportsClients[group.x].total!;
+                  return BarTooltipItem(
+                    '$client\n',
+                    const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    children: [
+                      TextSpan(
+                        text: formatCurrency(value),
+                        style: const TextStyle(color: Colors.white70),
+                      ),
+                    ],
+                  );
+                },
               ),
-              children: <TextSpan>[
-                TextSpan(
-                  text: formatCurrency(rod.toY),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+              touchCallback: (event, response) {
+                setState(() {
+                  touchedIndex = response?.spot?.touchedBarGroupIndex ?? -1;
+                });
+              },
+            ),
+            titlesData: FlTitlesData(
+              show: true,
+              bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  reservedSize: 44,
+                  interval: 1,
+                  getTitlesWidget: _buildBottomTitle,
+                ),
+              ),
+              leftTitles: AxisTitles(
+                sideTitles: SideTitles(
+                  showTitles: true,
+                  interval: maxY / 5,
+                  reservedSize: 40,
+                  getTitlesWidget: (value, _) => Text(
+                    abbreviateNumber(value),
+                    style: const TextStyle(
+                      fontSize: 12,
+                    ),
                   ),
                 ),
-              ],
-            );
-          },
-        ),
-        touchCallback: (FlTouchEvent event, barTouchResponse) {
-          setState(() {
-            if (!event.isInterestedForInteractions || barTouchResponse == null || barTouchResponse.spot == null) {
-              touchedIndex = -1;
-              return;
-            }
-            touchedIndex = barTouchResponse.spot!.touchedBarGroupIndex;
-          });
-        },
-      ),
-      titlesData: FlTitlesData(
-        show: true,
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        bottomTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: true,
-            getTitlesWidget: getTitles,
-            reservedSize: 38,
-          ),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: SideTitles(
-            showTitles: false,
-          ),
-        ),
-      ),
-      borderData: FlBorderData(
-        show: false,
-      ),
-      barGroups: showingGroups(),
-      gridData: FlGridData(show: true, drawVerticalLine: false),
-    );
+              ),
+              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            ),
+            gridData: FlGridData(
+              show: true,
+              drawVerticalLine: false,
+              horizontalInterval: maxY / 5,
+              getDrawingHorizontalLine: (value) => FlLine(color: Colors.grey.withOpacity(0.3), strokeWidth: 1),
+            ),
+            borderData: FlBorderData(show: false),
+            barGroups: _buildBarGroups(maxY),
+          );
   }
 
-  List<BarChartGroupData> showingGroups() => List.generate(widget.reportsClients.length < 10 ? widget.reportsClients.length : 10, (e) {
-        return makeGroupData(e, widget.reportsClients[e].total!, isTouched: e == touchedIndex);
-      });
+  List<BarChartGroupData> _buildBarGroups(double maxY) {
+    final count = min(widget.reportsClients.length, 10);
+    return List.generate(count, (i) {
+      final clientData = widget.reportsClients[i];
+      final isTouched = i == touchedIndex;
+      final baseColor = i < 3 ? topClientColors[i] : widget.barColor;
+      final displayColor = isTouched ? widget.touchedBarColor : baseColor;
 
-  BarChartGroupData makeGroupData(int x, double y, {bool isTouched = false, Color? barColor, double width = 20, List<int> showTooltips = const []}) {
-    barColor ??= widget.barColor;
-    return BarChartGroupData(
-      x: x,
-      barRods: [
-        BarChartRodData(
-          toY: isTouched ? y + 0 : y,
-          color: isTouched ? widget.touchedBarColor : barColor,
-          width: width,
-          borderRadius: BorderRadius.circular(3),
-          borderSide: isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.white, width: 0),
-          backDrawRodData: BackgroundBarChartRodData(
-            show: true,
-            toY: 20,
-            color: widget.barBackgroundColor,
+      return BarChartGroupData(
+        x: i,
+        barsSpace: 4,
+        barRods: [
+          BarChartRodData(
+            toY: clientData.total!,
+            width: 18,
+            borderRadius: BorderRadius.circular(6),
+            gradient: LinearGradient(
+              colors: [displayColor.withOpacity(0.8), displayColor],
+              begin: Alignment.bottomCenter,
+              end: Alignment.topCenter,
+            ),
+            backDrawRodData: BackgroundBarChartRodData(
+              show: true,
+              toY: maxY,
+              color: widget.barBackgroundColor,
+            ),
+            borderSide: isTouched ? BorderSide(color: widget.touchedBarColor) : const BorderSide(color: Colors.transparent),
           ),
-        ),
-      ],
-      showingTooltipIndicators: showTooltips,
-    );
+        ],
+        showingTooltipIndicators: isTouched ? [0] : [],
+      );
+    });
   }
 
-  Widget getTitles(double value, TitleMeta meta) {
-    final style = TextStyle(
-      color: widget.barColor,
-      fontWeight: FontWeight.bold,
-      fontSize: 14,
-    );
-    Widget text;
+  Widget _buildBottomTitle(double value, TitleMeta meta) {
+    final idx = value.toInt();
+    if (idx < 0 || idx >= widget.reportsClients.length) return const SizedBox();
+    final name = widget.reportsClients[idx].client!;
+    final color = idx < 3 ? topClientColors[idx] : widget.barColor;
+
     return SideTitleWidget(
       meta: meta,
-      space: 10,
-      child: Text(widget.reportsClients[value.toInt()].client!.substring(0, 1), style: style),
+      space: 6,
+      child: Transform.rotate(
+        angle: pi / 4,
+        child: SizedBox(
+          width: 60,
+          child: Text(
+            name,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

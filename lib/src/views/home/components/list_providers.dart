@@ -170,14 +170,26 @@ class _ListProvidersState extends State<ListProviders> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "${widget.homeController.topProviders[index].nameProvider}",
+                                                    widget.homeController.topProviders[index].nameProvider!.length > 20
+                                                        ? "${widget.homeController.topProviders[index].nameProvider!.substring(0, 20)}..."
+                                                        : widget.homeController.topProviders[index].nameProvider.toString(),
                                                     style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                                                     overflow: TextOverflow.fade,
                                                   ),
-                                                  Text(
-                                                    formatCurrency(widget.homeController.topProviders[index].totalValue!),
-                                                    style: const TextStyle(fontSize: 12),
-                                                    overflow: TextOverflow.fade,
+                                                  const SizedBox(height: 10),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        formatCurrency(widget.homeController.topProviders[index].totalValue!),
+                                                        overflow: TextOverflow.fade,
+                                                      ),
+                                                      const Icon(
+                                                        Icons.check_circle_rounded,
+                                                        color: Colors.green,
+                                                        size: 16,
+                                                      )
+                                                    ],
                                                   ),
                                                 ],
                                               ),

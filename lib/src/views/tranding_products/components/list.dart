@@ -73,7 +73,7 @@ class _ComponentListState extends State<ComponentList> {
             },
             aditionAction: Row(
               children: [
-                if (widget.codeClient == 0)
+                if (widget.codeClient == 0 && widget.tradingProductsController.detailsSell!.quantity != 0)
                   IconButton(
                       onPressed: () {
                         widget.tradingProductsController.exportData(widget.codeProvider, widget.codeTrading, widget.codeBranch);
@@ -83,9 +83,11 @@ class _ComponentListState extends State<ComponentList> {
                       ))
               ],
             ),
-            onSort: () {
-              widget.tradingProductsController.sort();
-            },
+            onSort: widget.tradingProductsController.detailsSell!.quantity != 0
+                ? () {
+                    widget.tradingProductsController.sort();
+                  }
+                : null,
             label: "Produtos",
           ),
           Column(

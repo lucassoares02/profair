@@ -68,8 +68,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
       tradingsProviderController.stateFinishTrading.value = StateApp.success;
     } catch (e) {
       debugPrint("Error saveOrder: $e");
-      Fluttertoast.showToast(
-          msg: "Pedido não foi salvo!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, backgroundColor: Colors.red, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(msg: "Pedido não foi salvo!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
     }
   }
 
@@ -275,7 +274,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                               ),
                                               const AppSpacing(),
                                               const Text(
-                                                "Lojas",
+                                                "Lojass",
                                                 style: TextStyle(fontWeight: FontWeight.bold),
                                               ),
                                               const AppSpacing(),

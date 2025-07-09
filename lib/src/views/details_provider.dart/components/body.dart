@@ -1,3 +1,4 @@
+import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'package:profair/src/components/best_selling_productcard.dart';
 import 'package:profair/src/components/card_product.dart';
@@ -13,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:profair/src/views/details_provider.dart/components/list_negotiations.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider_controller.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-
 import '../../reports/components/chart_negotiation.dart';
 
 class DetailsProviderScreen extends StatefulWidget {
@@ -303,7 +303,13 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                                                                   child: Column(
                                                                     crossAxisAlignment: CrossAxisAlignment.start,
                                                                     children: [
-                                                                      Text(e.codeNegotiation.toString()),
+                                                                      Row(
+                                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                                        children: [
+                                                                          Text(e.codeNegotiation.toString()),
+                                                                          Text(DateFormat("dd/MM/yyyy").format(DateTime.parse(e.termNegotiation!))),
+                                                                        ],
+                                                                      ),
                                                                       Text(widget.codeBranch == 0 ? e.razaoClient! : e.descriptionNegotiation!),
                                                                       stateRequest == StateApp.loading
                                                                           ? const Skeletonizer(

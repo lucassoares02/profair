@@ -68,8 +68,8 @@ class _ComponentListState extends State<ComponentList> {
                       height: 100,
                       padding: const EdgeInsets.all(appMargin),
                       margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                      decoration: const BoxDecoration(
-                        border: Border(bottom: BorderSide(color: colorGrey)),
+                      decoration: BoxDecoration(
+                        border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2))),
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,3 +1,4 @@
+import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/repositories/recipe_model.dart';
 import 'package:profair/src/repositories/window_negotiation.dart';
 import 'package:profair/src/state/state_app.dart';
@@ -10,12 +11,14 @@ class TicketController extends ValueNotifier<StateApp> {
   final stateLikes = ValueNotifier<StateApp>(StateApp.start);
   final stateWindowNegotiation = ValueNotifier<StateApp>(StateApp.start);
   final stateShared = ValueNotifier<StateApp>(StateApp.start);
+  final stateDetailsProvider = ValueNotifier<StateApp>(StateApp.start);
 
   final TicketRepository _profileRepository;
 
   TicketController(super.value, this._profileRepository);
 
   WindowNegotiationModel? windowNegotiation;
+  ProvidersModel? provider;
 
   Future getInfo() async {
     stateLikes.value = StateApp.loading;
@@ -35,6 +38,18 @@ class TicketController extends ValueNotifier<StateApp> {
     } catch (e) {
       windowNegotiation = null;
       stateWindowNegotiation.value = StateApp.error;
+    }
+  }
+
+  Future getDetailsProvider(int user) async {
+    stateDetailsProvider.value = StateApp.loading;
+    try {
+      final response = await _profileRepository.getDetailsProvider(user);
+      provider = response;
+      stateDetailsProvider.value = StateApp.success;
+    } catch (e) {
+      print("Error in getDetailsProvider: $e");
+      stateDetailsProvider.value = StateApp.error;
     }
   }
 }

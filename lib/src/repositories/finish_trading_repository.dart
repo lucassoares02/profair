@@ -86,9 +86,12 @@ class FinishTradingRepository {
     }
   }
 
-  exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation, int? codeBranch}) async {
+  exportDataProvider({int? codeProvider, int? codeNegotiation, int? codeBranch}) async {
     Response? response;
 
+    print(codeProvider);
+    print(codeNegotiation);
+    print(codeBranch);
     try {
       // Fazendo a solicitação com a opção de resposta para obter os bytes
       response = await clientDioExport.get(

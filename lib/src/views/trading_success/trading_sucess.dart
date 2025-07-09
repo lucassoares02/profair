@@ -56,12 +56,27 @@ class _TradingSucessState extends State<TradingSucess> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.network(
-                      "https://cdn-icons-png.freepik.com/512/6815/6815090.png",
-                      width: 100,
+                    // Image.network(
+                    //   "https://cdn-icons-png.freepik.com/512/6815/6815090.png",
+                    //   width: 100,
+                    // ),
+                    Container(
+                      width: 80,
+                      height: 80,
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      alignment: Alignment.center,
+                      child: Icon(
+                        Icons.check_circle,
+                        color: Colors.green,
+                        size: 90,
+                      ),
                     ),
                     const AppSpacing(),
                     const AppSpacing(),
@@ -73,7 +88,6 @@ class _TradingSucessState extends State<TradingSucess> {
                     const AppSpacing(),
                     const Text(
                       "Para acompanhar os detalhes do pedido acesse a lista de pedidos na tela inicial.",
-                      textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.grey),
                     ),
                     const AppSpacing(),
@@ -114,9 +128,7 @@ class _TradingSucessState extends State<TradingSucess> {
                     //       },
                     //       child: Container(
                     //         padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: 10),
-                    //         decoration: BoxDecoration(
-                    //             borderRadius: BorderRadius.circular(50),
-                    //             border: Border.all(color: Theme.of(context).colorScheme.onBackground)),
+                    //         decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), border: Border.all(color: Theme.of(context).colorScheme.onBackground)),
                     //         child: const Row(
                     //           children: [
                     //             Icon(
@@ -136,8 +148,6 @@ class _TradingSucessState extends State<TradingSucess> {
                     // ),
                   ],
                 ),
-                const AppSpacing(),
-                const AppSpacing(),
                 const AppSpacing(),
                 Divider(
                   color: Colors.grey.withOpacity(0.1),

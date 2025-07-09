@@ -5,6 +5,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:profair/src/components/header_list.dart';
+import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/spacing.dart';
@@ -50,7 +51,6 @@ class _TicketState extends State<Ticket> {
   @override
   void initState() {
     super.initState();
-
     // Chamada inicial
     // profileController.getWindowNegotiation(widget.homeController.data!.userCode!);
   }
@@ -62,332 +62,359 @@ class _TicketState extends State<Ticket> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return AnnotatedRegion(
-      value: const SystemUiOverlayStyle(
-        statusBarColor: colorSecondary,
-      ),
-      child: Scaffold(
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // HeaderList(
-                //   label: "Perfil do Usuário",
-                //   activeSearch: false,
-                // ),
-                Column(
-                  children: [
-                    // Container(
-                    //   padding: const EdgeInsets.all(appPadding),
-                    //   height: 150,
-                    //   decoration: const BoxDecoration(),
-                    //   child: Row(
-                    //     mainAxisAlignment: MainAxisAlignment.center,
-                    //     children: [
-                    //       Column(
-                    //         crossAxisAlignment: CrossAxisAlignment.center,
-                    //         mainAxisAlignment: MainAxisAlignment.center,
-                    //         children: [
-                    //           // const Text(
-                    //           //   "Organização",
-                    //           //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    //           // ),
-                    //           const AppSpacing(),
-                    //           Image.asset("assets/images/logowhite.png", width: size.width - 200),
-                    //         ],
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    Container(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          widget.homeController.data!.accessTargeting == 2
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // const Text(
-                                    //   "Agilize seus pedidos",
-                                    //   style: TextStyle(
-                                    //     fontSize: 18,
-                                    //     fontWeight: FontWeight.bold,
-                                    //   ),
-                                    // ),
-                                    // const AppSpacing(),
-                                    // const Text(
-                                    //   "Utilize o código abaixo, para que o fornecedor possa identificar o seu acesso!",
-                                    //   style: TextStyle(
-                                    //     fontSize: 16,
-                                    //     fontWeight: FontWeight.w500,
-                                    //     color: colorGreyDark,
-                                    //   ),
-                                    // ),
-
-                                    ValueListenableBuilder(
-                                        valueListenable: profileController.stateWindowNegotiation,
-                                        builder: (context, stateWindowNegotiation, child) {
-                                          return Container(
-                                            decoration: const BoxDecoration(
-                                              gradient: LinearGradient(
-                                                end: Alignment.topCenter,
-                                                begin: Alignment.bottomCenter,
-                                                // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
-                                                colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
-                                              ),
-                                            ),
-                                            child: Column(
+    return ValueListenableBuilder(
+        valueListenable: profileController.stateDetailsProvider,
+        builder: (context, stateDetails, child) {
+          return stateDetails == StateApp.loading
+              ? LoadingList()
+              : AnnotatedRegion(
+                  value: const SystemUiOverlayStyle(
+                    statusBarColor: colorSecondary,
+                  ),
+                  child: Scaffold(
+                    body: SafeArea(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // HeaderList(
+                            //   label: "Perfil do Usuário",
+                            //   activeSearch: false,
+                            // ),
+                            Column(
+                              children: [
+                                // Container(
+                                //   padding: const EdgeInsets.all(appPadding),
+                                //   height: 150,
+                                //   decoration: const BoxDecoration(),
+                                //   child: Row(
+                                //     mainAxisAlignment: MainAxisAlignment.center,
+                                //     children: [
+                                //       Column(
+                                //         crossAxisAlignment: CrossAxisAlignment.center,
+                                //         mainAxisAlignment: MainAxisAlignment.center,
+                                //         children: [
+                                //           // const Text(
+                                //           //   "Organização",
+                                //           //   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                //           // ),
+                                //           const AppSpacing(),
+                                //           Image.asset("assets/images/logowhite.png", width: size.width - 200),
+                                //         ],
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      widget.homeController.data!.accessTargeting == 2
+                                          ? Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
                                               children: [
-                                                Container(
-                                                  margin: EdgeInsets.only(top: appPadding, left: 5),
-                                                  child: Row(
-                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                // const Text(
+                                                //   "Agilize seus pedidos",
+                                                //   style: TextStyle(
+                                                //     fontSize: 18,
+                                                //     fontWeight: FontWeight.bold,
+                                                //   ),
+                                                // ),
+                                                // const AppSpacing(),
+                                                // const Text(
+                                                //   "Utilize o código abaixo, para que o fornecedor possa identificar o seu acesso!",
+                                                //   style: TextStyle(
+                                                //     fontSize: 16,
+                                                //     fontWeight: FontWeight.w500,
+                                                //     color: colorGreyDark,
+                                                //   ),
+                                                // ),
+
+                                                ValueListenableBuilder(
+                                                    valueListenable: profileController.stateWindowNegotiation,
+                                                    builder: (context, stateWindowNegotiation, child) {
+                                                      return Container(
+                                                        decoration: const BoxDecoration(
+                                                          gradient: LinearGradient(
+                                                            end: Alignment.topCenter,
+                                                            begin: Alignment.bottomCenter,
+                                                            // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
+                                                            colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
+                                                          ),
+                                                        ),
+                                                        child: Column(
+                                                          children: [
+                                                            Container(
+                                                              margin: EdgeInsets.only(top: appPadding, left: 5),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                children: [
+                                                                  IconButton(
+                                                                    icon: const Icon(Icons.arrow_back_ios_new, color: colorWhite), // Altere o ícone aqui
+                                                                    onPressed: () {
+                                                                      Navigator.pop(context);
+                                                                    },
+                                                                  )
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            const AppSpacing(),
+                                                            const AppSpacing(),
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Image.asset("assets/images/logowhite.png", width: 140),
+                                                              ],
+                                                            ),
+                                                            const AppSpacing(),
+                                                            const AppSpacing(),
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Container(
+                                                                  padding: const EdgeInsets.all(appPadding),
+                                                                  decoration: const BoxDecoration(
+                                                                    color: colorWhite,
+                                                                    borderRadius: BorderRadius.all(
+                                                                      Radius.circular(appRadius),
+                                                                    ),
+                                                                  ),
+                                                                  child: Animate(
+                                                                    effects: const [ShimmerEffect(delay: Duration(milliseconds: 500), duration: Duration(milliseconds: 1000))],
+                                                                    child: QrImageView(
+                                                                      data: "0x9E89738274392874.${widget.homeController.data!.codAccess!}.9327329847372939",
+                                                                      size: size.width - 150,
+                                                                      version: QrVersions.auto,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const AppSpacing(),
+                                                            Row(
+                                                              mainAxisAlignment: MainAxisAlignment.center,
+                                                              children: [
+                                                                Text(
+                                                                  widget.homeController.data!.codAccess!,
+
+                                                                  // widget.homeController.data!.userCode.toString(),
+                                                                  style: const TextStyle(
+                                                                    fontSize: 18,
+                                                                    fontWeight: FontWeight.bold,
+                                                                    color: colorWhite,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            const AppSpacing(),
+                                                            const AppSpacing(),
+                                                            const AppSpacing(),
+                                                            const AppSpacing(),
+                                                            const AppSpacing(),
+                                                          ],
+                                                        ),
+                                                      );
+                                                    }),
+                                              ],
+                                            )
+                                          : Container(
+                                              decoration: const BoxDecoration(
+                                                gradient: LinearGradient(
+                                                  end: Alignment.topCenter,
+                                                  begin: Alignment.bottomCenter,
+                                                  // colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
+                                                  colors: [colorPrimary, colorSecondary], // Defina suas cores de gradiente
+                                                ),
+                                              ),
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    margin: EdgeInsets.only(top: appPadding, left: 5),
+                                                    child: Row(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      children: [
+                                                        IconButton(
+                                                          icon: const Icon(Icons.arrow_back_ios_new, color: colorWhite), // Altere o ícone aqui
+                                                          onPressed: () {
+                                                            Navigator.pop(context);
+                                                          },
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  const AppSpacing(),
+                                                  const AppSpacing(),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
                                                     children: [
-                                                      IconButton(
-                                                        icon: const Icon(Icons.arrow_back_ios_new, color: colorWhite), // Altere o ícone aqui
-                                                        onPressed: () {
-                                                          Navigator.pop(context);
-                                                        },
-                                                      )
+                                                      Image.asset("assets/images/logowhite.png", width: 140),
                                                     ],
                                                   ),
-                                                ),
-                                                const AppSpacing(),
-                                                const AppSpacing(),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  const AppSpacing(),
+                                                  const AppSpacing(),
+                                                  const AppSpacing(),
+                                                  const AppSpacing(),
+                                                  const AppSpacing(),
+                                                  const AppSpacing(),
+                                                ],
+                                              ),
+                                            ),
+                                      const AppSpacing(),
+                                      const AppSpacing(),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            if (widget.homeController.data!.accessTargeting != 2)
+                                              Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    "Código:",
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight: FontWeight.w500,
+                                                      color: colorGrey,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(height: 5),
+                                                  Text(
+                                                    widget.homeController.data!.codAccess!,
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            const AppSpacing(),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Image.asset("assets/images/logowhite.png", width: 140),
-                                                  ],
-                                                ),
-                                                const AppSpacing(),
-                                                const AppSpacing(),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      padding: const EdgeInsets.all(appPadding),
-                                                      decoration: const BoxDecoration(
-                                                        color: colorWhite,
-                                                        borderRadius: BorderRadius.all(
-                                                          Radius.circular(appRadius),
-                                                        ),
-                                                      ),
-                                                      child: Animate(
-                                                        effects: const [ShimmerEffect(delay: Duration(milliseconds: 500), duration: Duration(milliseconds: 1000))],
-                                                        child: QrImageView(
-                                                          data: "0x9E89738274392874.${widget.homeController.data!.codAccess!}.9327329847372939",
-                                                          size: size.width - 150,
-                                                          version: QrVersions.auto,
-                                                        ),
+                                                    const Text(
+                                                      "Nome:",
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight: FontWeight.w500,
+                                                        color: colorGrey,
                                                       ),
                                                     ),
-                                                  ],
-                                                ),
-                                                const AppSpacing(),
-                                                Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
+                                                    const SizedBox(height: 5),
                                                     Text(
-                                                      widget.homeController.data!.codAccess!,
-                                                      // widget.homeController.data!.userCode.toString(),
+                                                      widget.homeController.data!.nameUser!,
                                                       style: const TextStyle(
                                                         fontSize: 18,
                                                         fontWeight: FontWeight.bold,
-                                                        color: colorWhite,
                                                       ),
                                                     ),
                                                   ],
                                                 ),
-                                                const AppSpacing(),
-                                                const AppSpacing(),
-                                                const AppSpacing(),
-                                                const AppSpacing(),
-                                                const AppSpacing(),
+                                                if (widget.homeController.data!.accessTargeting == 2)
+                                                  Container(
+                                                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
+                                                    decoration: const BoxDecoration(
+                                                      color: colorGreen,
+                                                      borderRadius: BorderRadius.all(
+                                                        Radius.circular(appRadius),
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                      "Associado",
+                                                      style: TextStyle(
+                                                        color: colorWhite,
+                                                        fontSize: 18,
+                                                        fontWeight: FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
                                               ],
                                             ),
-                                          );
-                                        }),
-                                  ],
-                                )
-                              : Container(
-                                  margin: EdgeInsets.only(top: appPadding, left: 5),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      IconButton(
-                                        icon: const Icon(Icons.arrow_back_ios_new, color: colorWhite), // Altere o ícone aqui
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ),
-                                      const Text("Perfil do usuário",
-                                          style: TextStyle(
-                                            color: colorWhite,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                    ],
-                                  ),
-                                ),
-                          const AppSpacing(),
-                          const AppSpacing(),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: appPadding),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (widget.homeController.data!.accessTargeting != 2)
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        "Código:",
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500,
-                                          color: colorGrey,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        widget.homeController.data!.codAccess!,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                const AppSpacing(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text(
-                                          "Nome:",
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: colorGrey,
-                                          ),
-                                        ),
-                                        const SizedBox(height: 5),
-                                        Text(
-                                          widget.homeController.data!.nameUser!,
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    if (widget.homeController.data!.accessTargeting == 2)
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
-                                        decoration: const BoxDecoration(
-                                          color: colorGreen,
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(appRadius),
-                                          ),
-                                        ),
-                                        child: const Text(
-                                          "Associado",
-                                          style: TextStyle(
-                                            color: colorWhite,
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                                const AppSpacing(),
-                                const Text(
-                                  "Código da Loja:",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: colorGrey,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  widget.homeController.data!.codCompany.toString(),
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const AppSpacing(),
-                                const Text(
-                                  "Razão:",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: colorGrey,
-                                  ),
-                                ),
-                                const SizedBox(height: 5),
-                                Text(
-                                  widget.homeController.data!.nameCompany!,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                const AppSpacing(),
-                                const Divider(),
-                                const AppSpacing(),
-                                const Divider(),
-                                TextButton(
-                                  onPressed: () {
-                                    _launchPrivacyPolicyUrl();
-                                  },
-                                  child: const Text(
-                                    'Termos e Privacidade',
-                                    style: TextStyle(
-                                      color: Colors.blueAccent, // Cor do texto // Sublinhar o texto
-                                    ),
-                                  ),
-                                ),
-                                const AppSpacing(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    TextButton.icon(
-                                      icon: const Icon(Icons.logout),
-                                      onPressed: () async {
-                                        FirebaseMessaging messaging = FirebaseMessaging.instance;
+                                            const AppSpacing(),
+                                            const Text(
+                                              "Código Empresa:",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: colorGrey,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              widget.homeController.data!.codCompany.toString(),
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const AppSpacing(),
+                                            const Text(
+                                              "Razão:",
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w500,
+                                                color: colorGrey,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 5),
+                                            Text(
+                                              widget.homeController.data!.nameCompany!,
+                                              style: const TextStyle(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const AppSpacing(),
+                                            const Divider(),
+                                            TextButton(
+                                              onPressed: () {
+                                                _launchPrivacyPolicyUrl();
+                                              },
+                                              child: const Text(
+                                                'Termos e Privacidade',
+                                                style: TextStyle(
+                                                  color: Colors.blueAccent, // Cor do texto // Sublinhar o texto
+                                                ),
+                                              ),
+                                            ),
+                                            const AppSpacing(),
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                TextButton.icon(
+                                                  icon: const Icon(Icons.logout),
+                                                  onPressed: () async {
+                                                    FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-                                        // 🔥 Força a geração de um novo token
-                                        await messaging.deleteToken();
-                                        widget.homeController.logout();
-                                        Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
-                                      },
-                                      label: const Text("Sair"),
-                                    ),
-                                  ],
-                                )
+                                                    // 🔥 Força a geração de um novo token
+                                                    await messaging.deleteToken();
+                                                    widget.homeController.logout();
+                                                    Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+                                                  },
+                                                  label: const Text("Sair"),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                                const AppSpacing(),
+                                const AppSpacing(),
                               ],
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    const AppSpacing(),
-                    const AppSpacing(),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
+                  ),
+                );
+        });
   }
 }
