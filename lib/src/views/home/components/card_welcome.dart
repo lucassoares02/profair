@@ -85,25 +85,27 @@ class _CardWelcomeState extends State<CardWelcome> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           // const AppSpacing(),
-                          InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                "ticket",
-                                arguments: widget.homeController,
-                              );
-                            },
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Seja Bem-vindo!',
-                                  style: TextStyle(fontSize: 16, color: Colors.grey),
-                                ),
-                                Text(
-                                  '${widget.homeController.data!.nameUser}',
-                                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                          Expanded(
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                  "ticket",
+                                  arguments: widget.homeController,
+                                );
+                              },
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Seja Bem-vindo!',
+                                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                                  ),
+                                  Text(
+                                    '${widget.homeController.data!.nameUser}',
+                                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           ValueListenableBuilder(

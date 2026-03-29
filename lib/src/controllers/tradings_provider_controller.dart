@@ -39,6 +39,7 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
 
   List<NegotiationModel> negotiations = [];
   List<NegotiationModel> negotiationsProductsTrading = [];
+  List<NegotiationModel> negotiationsProductsTradingImutable = [];
 
   Future findTradingsProvider(int codeBranch, int codeProvider) async {
     stateRequest.value = StateApp.loading;
@@ -47,6 +48,7 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
       // negotiationsProductsTrading = await tradingsProviderRepository.getTradingProvider(codeBranch, codeProvider);
       negotiations.add(NegotiationModel(title: "Resumo do pedido", merchandises: []));
       negotiationsProductsTrading = negotiations.map((e) => e.clone()).toList();
+      negotiationsProductsTradingImutable = negotiations.map((e) => e.copyWith()).toList();
       makeSum();
       stateRequest.value = StateApp.success;
     } catch (e) {
@@ -123,7 +125,7 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     for (int i = 0; i < negotiations.length; i++) {
       List<dynamic> teste = [];
       for (int j = 0; j < negotiations[i].merchandises!.length; j++) {
-        if (int.parse(negotiations[i].merchandises![j].amount!) > 0 || int.parse(negotiationsProductsTrading[i].merchandises![j].amount!) > 0) {
+        if (int.parse(negotiations[i].merchandises![j].amount!) > 0 || int.parse(negotiationsProductsTradingImutable[i].merchandises![j].amount!) > 0) {
           teste.add(ProductModel(
                   codeProduct: negotiations[i].merchandises![j].codeProduct,
                   amount: negotiations[i].merchandises![j].amount,

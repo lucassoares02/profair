@@ -29,6 +29,7 @@ class HomeController extends ValueNotifier<StateApp> {
   List<NotificationUserModel> notificationsPeding = [];
   List<BuyersModel> buyers = [];
   CampaignModel? campaign;
+  List<CampaignModel> campaigns = [];
   LoginModel? data;
   List<LoginModel>? moreData;
 
@@ -157,7 +158,8 @@ class HomeController extends ValueNotifier<StateApp> {
     stateCampaign.value = StateApp.loading;
     try {
       List<CampaignModel?> response = await _homeRepository.getNotices();
-      campaign = response[3] ?? CampaignModel();
+      campaigns = response.whereType<CampaignModel>().toList();
+      campaign = campaigns.isNotEmpty ? campaigns.first : CampaignModel();
       stateCampaign.value = StateApp.success;
     } catch (e) {
       stateCampaign.value = StateApp.error;

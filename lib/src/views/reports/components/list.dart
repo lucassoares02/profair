@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:profair/src/components/line_chart.dart';
 import 'package:profair/src/components/line_chart3.dart';
 import 'package:profair/src/views/reports/components/card_percentage.dart';
@@ -13,11 +14,15 @@ import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 class ComponentList extends StatefulWidget {
-  ComponentList({super.key, required this.reportsController, this.codeProvider, this.accessTargeting});
+  const ComponentList({
+    super.key,
+    required this.reportsController,
+    this.codeProvider,
+    this.accessTargeting,
+  });
 
-  int? codeProvider;
-  int? accessTargeting;
-
+  final int? codeProvider;
+  final int? accessTargeting;
   final ReportsController reportsController;
 
   @override
@@ -30,20 +35,26 @@ class _ComponentListState extends State<ComponentList> {
   double maxValuePeriod = 20000;
   double horizontalIntervalPeriod = 5000;
 
-  getMaxValue() {
-    for (int i = 0; i < widget.reportsController.reportValueMinutes.length; i++) {
-      if (widget.reportsController.reportValueMinutes[i].totalValue! > maxValue) {
-        maxValue = widget.reportsController.reportValueMinutes[i].totalValue! + widget.reportsController.reportValueMinutes[i].totalValue!;
+  // ── Helpers de acesso rápido ──
+  ReportsController get _ctrl => widget.reportsController;
+  int get _access => widget.accessTargeting ?? 0;
+  bool get _isProvider => _access == 1;
+  bool get _isAdmin => _access == 3;
+  bool get _isBuyer => _access == 2;
+
+  void _calcMaxValue() {
+    for (final item in _ctrl.reportValueMinutes) {
+      if (item.totalValue! > maxValue) {
+        maxValue = item.totalValue! * 2;
       }
     }
-    print("MaxValue $maxValue");
     horizontalInterval = maxValue / 5;
   }
 
-  getMaxValuePeriod() {
-    for (int i = 0; i < widget.reportsController.reportValueMinutes.length; i++) {
-      if (widget.reportsController.reportValueMinutes[i].value! > maxValuePeriod) {
-        maxValuePeriod = widget.reportsController.reportValueMinutes[i].value! + widget.reportsController.reportValueMinutes[i].value! * 0.2;
+  void _calcMaxValuePeriod() {
+    for (final item in _ctrl.reportValueMinutes) {
+      if (item.value! > maxValuePeriod) {
+        maxValuePeriod = item.value! * 1.2;
       }
     }
     horizontalIntervalPeriod = maxValuePeriod / 5;
@@ -52,6 +63,7 @@ class _ComponentListState extends State<ComponentList> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -60,290 +72,443 @@ class _ComponentListState extends State<ComponentList> {
           activeSearch: false,
           label: "Relatórios",
         ),
-        Container(
-          padding: const EdgeInsets.all(appPadding),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: appPadding),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              if (widget.accessTargeting == 3)
-                ValueListenableBuilder(
-                    valueListenable: widget.reportsController.statePercentageClients,
-                    builder: (context, value, child) {
-                      return value == StateApp.loading
-                          ? Skeletonizer(
-                              effect: const ShimmerEffect(),
-                              child: Card(
-                                child: SizedBox(
-                                  height: 100,
-                                  width: width,
-                                ),
-                              ),
-                            )
-                          : CardPercentage(
-                              backgroundColor: colorRed,
-                              reportsController: widget.reportsController,
-                              title: "Fornecedores com venda",
-                              value: widget.reportsController.percentageProviders!.percentage,
-                              footer: "${widget.reportsController.percentageProviders!.parcial} de ${widget.reportsController.percentageProviders!.total} realizaram vendas.",
-                            );
-                    }),
-              const AppSpacing(),
-              if (widget.accessTargeting == 3 || widget.accessTargeting == 1)
-                Text(
-                  widget.accessTargeting == 3 ? "Ranking Fornecedores" : "Ranking de produtos",
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+              const SizedBox(height: 8),
+
+              // ═══════════════════════════════════════
+              // 1) Card: Fornecedores com venda (admin)
+              // ═══════════════════════════════════════
+              if (_isAdmin)
+                _buildAsyncCard(
+                  listenable: _ctrl.statePercentageClients,
+                  width: width,
+                  builder: () => CardPercentage(
+                    backgroundColor: colorRed,
+                    reportsController: _ctrl,
+                    title: "Fornecedores com venda",
+                    value: _ctrl.percentageProviders!.percentage,
+                    footer: "${_ctrl.percentageProviders!.parcial} de ${_ctrl.percentageProviders!.total} realizaram vendas.",
                   ),
                 ),
-              const AppSpacing(),
-              if (widget.accessTargeting == 3 || widget.accessTargeting == 1)
-                (widget.accessTargeting == 3)
-                    ? ValueListenableBuilder(
-                        valueListenable: widget.reportsController.stateReportsProducts,
-                        builder: (context, value, child) {
-                          return value == StateApp.loading
-                              ? Skeletonizer(
-                                  effect: const ShimmerEffect(),
-                                  child: Card(
-                                    child: SizedBox(
-                                      height: 300,
-                                      width: width,
-                                    ),
-                                  ),
-                                )
-                              : Column(
-                                  children: [
-                                    SizedBox(
-                                      height: 300,
-                                      child: BarChartTeste(reportsClients: widget.reportsController.reportsTotalProvider),
-                                    ),
-                                    const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.touch_app_outlined,
-                                          size: 20,
-                                        ),
-                                        Text(
-                                          "Toque para obter mais informações",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                        },
-                      )
-                    : ValueListenableBuilder(
-                        valueListenable: widget.reportsController.stateReportsProducts,
-                        builder: (context, value, child) {
-                          return value == StateApp.loading
-                              ? Skeletonizer(
-                                  effect: const ShimmerEffect(),
-                                  child: Card(
-                                    child: SizedBox(
-                                      height: 300,
-                                      width: width,
-                                    ),
-                                  ),
-                                )
-                              // : BarChartTeste(listItems: widget.reportsController.reportsTotalProducts);
-                              : Column(
-                                  children: [
-                                    SizedBox(
-                                        // padding: const EdgeInsets.only(top: appPadding * 3, right: appPadding * 2, left: appPadding * 2, bottom: appPadding),
-                                        height: 300,
-                                        child: BarChartSample1(
-                                          reportsProducts: widget.reportsController.reportsTotalProducts,
-                                          barColor: colorSecondary,
-                                        )),
-                                    const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.touch_app_outlined,
-                                          size: 20,
-                                        ),
-                                        Text(
-                                          "Toque para obter mais informações",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                        }),
-              const AppSpacing(),
-              const AppSpacing(),
-              ValueListenableBuilder(
-                  valueListenable: widget.reportsController.statePercentageClients,
-                  builder: (context, value, child) {
-                    return value == StateApp.loading
-                        ? Skeletonizer(
-                            effect: const ShimmerEffect(),
-                            child: Card(
-                              child: SizedBox(
-                                height: 100,
-                                width: width,
-                              ),
-                            ),
-                          )
-                        : CardPercentage(
-                            title: widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "Clientes Atendidos" : "Fornecedores visitados",
-                            content:
-                                "Nessa sessão é possível visualizar quantos ${widget.accessTargeting == 1 || widget.accessTargeting == 3 ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes no evento.",
-                            value: widget.reportsController.percentageClients!.percentage,
-                            footer: "${widget.reportsController.percentageClients!.parcial} de ${widget.reportsController.percentageClients!.total} foram atendidos",
-                            reportsController: widget.reportsController,
-                          );
-                  }),
-              const AppSpacing(),
-              const AppSpacing(),
-              Text(
-                widget.accessTargeting == 1
-                    ? "Ranking de Clientes"
-                    : widget.accessTargeting == 2
-                        ? "Ranking de Fornecedores"
-                        : "Ranking de Associados",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+
+              // ═══════════════════════════════════════
+              // 2) Ranking Fornecedores / Produtos
+              // ═══════════════════════════════════════
+              if (_isAdmin || _isProvider) ...[
+                const SizedBox(height: 24),
+                _SectionHeader(
+                  title: _isAdmin ? "Ranking Fornecedores" : "Ranking de produtos",
+                  icon: Icons.emoji_events_outlined,
+                ),
+                const SizedBox(height: 16),
+                _buildRankingChart(width),
+              ],
+
+              // ═══════════════════════════════════════
+              // 3) Card: Clientes atendidos / Fornecedores visitados
+              // ═══════════════════════════════════════
+              const SizedBox(height: 28),
+              _buildAsyncCard(
+                listenable: _ctrl.statePercentageClients,
+                width: width,
+                builder: () => CardPercentage(
+                  title: (_isProvider || _isAdmin) ? "Clientes Atendidos" : "Fornecedores visitados",
+                  content:
+                      "Nessa sessão é possível visualizar quantos ${(_isProvider || _isAdmin) ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes no evento.",
+                  value: _ctrl.percentageClients!.percentage,
+                  footer: "${_ctrl.percentageClients!.parcial} de ${_ctrl.percentageClients!.total} foram atendidos",
+                  reportsController: _ctrl,
                 ),
               ),
-              const Text(
-                "Aqui você pode acompanhar o ranking de valores movimentados até agora para sua empresa. Para saber mais sobre os dados e informações toque nas barras do gráfico.",
-                style: TextStyle(fontWeight: FontWeight.w300),
+
+              // ═══════════════════════════════════════
+              // 4) Ranking de valores movimentados
+              // ═══════════════════════════════════════
+              const SizedBox(height: 28),
+              _SectionHeader(
+                title: _isProvider
+                    ? "Ranking de Clientes"
+                    : _isBuyer
+                        ? "Ranking de Fornecedores"
+                        : "Ranking de Associados",
+                icon: Icons.bar_chart_rounded,
               ),
-              const AppSpacing(),
-              const AppSpacing(),
-              ValueListenableBuilder(
-                valueListenable: widget.reportsController.stateReports,
-                builder: (context, value, child) {
-                  return value == StateApp.loading
-                      ? Skeletonizer(
-                          effect: const ShimmerEffect(),
-                          child: Card(
-                            child: SizedBox(
-                              height: 250,
-                              width: width,
-                            ),
-                          ),
-                        )
-                      : Column(
-                          children: [
-                            SizedBox(
-                                height: 300,
-                                child: BarChartTeste(
-                                  reportsClients: widget.reportsController.reportsTotalClient,
-                                  barColor: colorBlueDark,
-                                  touchedBarColor: colorBlue,
-                                )),
-                            const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.touch_app_outlined,
-                                  size: 20,
-                                ),
-                                Text(
-                                  "Toque para obter mais informações",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                },
+              const SizedBox(height: 6),
+              Text(
+                "Acompanhe o ranking de valores movimentados até agora. Toque nas barras para mais detalhes.",
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                  height: 1.4,
+                ),
               ),
-              const AppSpacing(),
-              const AppSpacing(),
-              if (widget.accessTargeting == 1)
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text("Evolução das vendas",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    const AppSpacing(),
-                    ValueListenableBuilder(
-                      valueListenable: widget.reportsController.stateReportsSells,
-                      builder: (context, value, child) {
-                        getMaxValue();
-                        return value == StateApp.loading
-                            ? Skeletonizer(
-                                effect: const ShimmerEffect(),
-                                child: Card(
-                                  child: SizedBox(
-                                    height: 250,
-                                    width: width,
-                                  ),
-                                ),
-                              )
-                            : widget.reportsController.reportValueMinutes.isNotEmpty
-                                ? Container(
-                                    width: double.maxFinite,
-                                    height: 250,
-                                    padding: const EdgeInsets.all(5),
-                                    child: LineChartSample3(
-                                      values: widget.reportsController.reportValueMinutes,
-                                      maxValue: maxValue,
-                                      horizontalInterval: horizontalInterval,
-                                    ),
-                                  )
-                                : Container();
-                      },
-                    ),
-                    const AppSpacing(),
-                    const AppSpacing(),
-                    const Text("Venda por período",
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    const AppSpacing(),
-                    ValueListenableBuilder(
-                      valueListenable: widget.reportsController.stateReportsSells,
-                      builder: (context, value, child) {
-                        getMaxValuePeriod();
-                        return value == StateApp.loading
-                            ? Skeletonizer(
-                                effect: const ShimmerEffect(),
-                                child: Card(
-                                  child: SizedBox(
-                                    height: 250,
-                                    width: width,
-                                  ),
-                                ),
-                              )
-                            : widget.reportsController.reportValueMinutes.isNotEmpty
-                                ? Container(
-                                    width: double.maxFinite,
-                                    height: 250,
-                                    padding: const EdgeInsets.all(5),
-                                    child: LineChartSample2(
-                                      values: widget.reportsController.reportValueMinutes,
-                                      maxValue: maxValuePeriod,
-                                      horizontalInterval: horizontalIntervalPeriod,
-                                    ),
-                                  )
-                                : Container();
-                      },
-                    ),
-                  ],
-                )
+              const SizedBox(height: 20),
+              _buildAsyncChart(
+                listenable: _ctrl.stateReports,
+                width: width,
+                skeletonHeight: 280,
+                chartBuilder: () => _ChartWithHint(
+                  height: 300,
+                  chart: BarChartTeste(
+                    reportsClients: _ctrl.reportsTotalClient,
+                    barColor: colorBlueDark,
+                    touchedBarColor: colorBlue,
+                  ),
+                ),
+              ),
+
+              // ═══════════════════════════════════════
+              // 5) Evolução e período (fornecedor)
+              // ═══════════════════════════════════════
+              if (_isProvider) ...[
+                const SizedBox(height: 32),
+                _buildSalesEvolutionSection(width),
+                const SizedBox(height: 32),
+                _buildSalesPeriodSection(width),
+              ],
+
+              const SizedBox(height: 32),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  // Ranking chart (fornecedores ou produtos)
+  // ─────────────────────────────────────────────
+  Widget _buildRankingChart(double width) {
+    if (_isAdmin) {
+      return _buildAsyncChart(
+        listenable: _ctrl.stateReportsProducts,
+        width: width,
+        skeletonHeight: 300,
+        chartBuilder: () => _ChartWithHint(
+          height: 300,
+          chart: BarChartTeste(reportsClients: _ctrl.reportsTotalProvider),
+        ),
+      );
+    }
+
+    return _buildAsyncChart(
+      listenable: _ctrl.stateReportsProducts,
+      width: width,
+      skeletonHeight: 300,
+      chartBuilder: () => _ChartWithHint(
+        height: 300,
+        chart: BarChartSample1(
+          reportsProducts: _ctrl.reportsTotalProducts,
+          barColor: colorSecondary,
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  // Evolução de vendas (line chart acumulado)
+  // ─────────────────────────────────────────────
+  Widget _buildSalesEvolutionSection(double width) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeader(
+          title: "Evolução das vendas",
+          icon: Icons.trending_up_rounded,
+        ),
+        const SizedBox(height: 16),
+        ValueListenableBuilder(
+          valueListenable: _ctrl.stateReportsSells,
+          builder: (context, value, child) {
+            _calcMaxValue();
+            if (value == StateApp.loading) {
+              return _SkeletonCard(height: 250, width: width);
+            }
+            if (_ctrl.reportValueMinutes.isEmpty) {
+              return const _EmptyChartState(
+                message: "Sem dados de evolução disponíveis",
+              );
+            }
+            return _ChartContainer(
+              height: 250,
+              child: LineChartSample3(
+                values: _ctrl.reportValueMinutes,
+                maxValue: maxValue,
+                horizontalInterval: horizontalInterval,
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  // Venda por período (line chart por intervalo)
+  // ─────────────────────────────────────────────
+  Widget _buildSalesPeriodSection(double width) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const _SectionHeader(
+          title: "Venda por período",
+          icon: Icons.schedule_rounded,
+        ),
+        const SizedBox(height: 16),
+        ValueListenableBuilder(
+          valueListenable: _ctrl.stateReportsSells,
+          builder: (context, value, child) {
+            _calcMaxValuePeriod();
+            if (value == StateApp.loading) {
+              return _SkeletonCard(height: 250, width: width);
+            }
+            if (_ctrl.reportValueMinutes.isEmpty) {
+              return const _EmptyChartState(
+                message: "Sem dados de período disponíveis",
+              );
+            }
+            return _ChartContainer(
+              height: 250,
+              child: LineChartSample2(
+                values: _ctrl.reportValueMinutes,
+                maxValue: maxValuePeriod,
+                horizontalInterval: horizontalIntervalPeriod,
+              ),
+            );
+          },
+        ),
+      ],
+    );
+  }
+
+  // ─────────────────────────────────────────────
+  // Builders genéricos para reduzir repetição
+  // ─────────────────────────────────────────────
+
+  /// Card assíncrono com skeleton (usado para CardPercentage)
+  Widget _buildAsyncCard({
+    required ValueListenable listenable,
+    required double width,
+    required Widget Function() builder,
+  }) {
+    return ValueListenableBuilder(
+      valueListenable: listenable,
+      builder: (context, value, child) {
+        if (value == StateApp.loading) {
+          return _SkeletonCard(height: 100, width: width);
+        }
+        return builder();
+      },
+    );
+  }
+
+  /// Gráfico assíncrono com skeleton (usado para bar charts)
+  Widget _buildAsyncChart({
+    required ValueListenable listenable,
+    required double width,
+    required double skeletonHeight,
+    required Widget Function() chartBuilder,
+  }) {
+    return ValueListenableBuilder(
+      valueListenable: listenable,
+      builder: (context, value, child) {
+        if (value == StateApp.loading) {
+          return _SkeletonCard(height: skeletonHeight, width: width);
+        }
+        return chartBuilder();
+      },
+    );
+  }
+}
+
+// ═══════════════════════════════════════════════
+// Widgets auxiliares reutilizáveis
+// ═══════════════════════════════════════════════
+
+/// Header de seção com ícone e título
+class _SectionHeader extends StatelessWidget {
+  final String title;
+  final IconData icon;
+
+  const _SectionHeader({required this.title, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: colorScheme.primary.withValues(alpha: 0.08),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Icon(
+            icon,
+            size: 18,
+            color: colorScheme.primary,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface.withValues(alpha: 0.85),
+              letterSpacing: -0.3,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// Container estilizado para gráficos de linha
+class _ChartContainer extends StatelessWidget {
+  final double height;
+  final Widget child;
+
+  const _ChartContainer({required this.height, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.maxFinite,
+      height: height,
+      padding: const EdgeInsets.fromLTRB(4, 12, 16, 8),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.06),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
+/// Gráfico de barras + dica de toque
+class _ChartWithHint extends StatelessWidget {
+  final double height;
+  final Widget chart;
+
+  const _ChartWithHint({required this.height, required this.chart});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Column(
+      children: [
+        Container(
+          height: height,
+          decoration: BoxDecoration(
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: colorScheme.onSurface.withValues(alpha: 0.06),
+            ),
+          ),
+          padding: const EdgeInsets.fromLTRB(4, 12, 16, 8),
+          child: chart,
+        ),
+        const SizedBox(height: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.touch_app_outlined,
+              size: 16,
+              color: colorScheme.onSurface.withValues(alpha: 0.35),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              "Toque para mais informações",
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color: colorScheme.onSurface.withValues(alpha: 0.35),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// Skeleton padronizado
+class _SkeletonCard extends StatelessWidget {
+  final double height;
+  final double width;
+
+  const _SkeletonCard({required this.height, required this.width});
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      effect: const ShimmerEffect(),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: SizedBox(height: height, width: width),
+      ),
+    );
+  }
+}
+
+/// Estado vazio para gráficos sem dados
+class _EmptyChartState extends StatelessWidget {
+  final String message;
+
+  const _EmptyChartState({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      width: double.maxFinite,
+      height: 180,
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.06),
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.insert_chart_outlined_rounded,
+            size: 40,
+            color: colorScheme.onSurface.withValues(alpha: 0.15),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            message,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: colorScheme.onSurface.withValues(alpha: 0.35),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

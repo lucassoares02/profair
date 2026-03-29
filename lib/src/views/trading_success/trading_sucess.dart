@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:profair/src/components/button.dart';
-import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/utils/colors.dart';
@@ -48,147 +46,314 @@ class _TradingSucessState extends State<TradingSucess> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(appPadding),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Image.network(
-                    //   "https://cdn-icons-png.freepik.com/512/6815/6815090.png",
-                    //   width: 100,
-                    // ),
-                    Container(
-                      width: 80,
-                      height: 80,
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(50),
-                      ),
-                      alignment: Alignment.center,
-                      child: Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                        size: 90,
-                      ),
-                    ),
-                    const AppSpacing(),
-                    const AppSpacing(),
-                    const AppSpacing(),
-                    const Text(
-                      "Pedido Realizado com sucesso!",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    const AppSpacing(),
-                    const Text(
-                      "Para acompanhar os detalhes do pedido acesse a lista de pedidos na tela inicial.",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    ),
-                    const AppSpacing(),
-                    Divider(
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                    const AppSpacing(),
-                    Row(
+      body: Stack(
+        children: [
+          Positioned(
+            top: -80,
+            left: -80,
+            right: -80,
+            child: Container(
+              height: 360,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  colors: [
+                    colorSecondary.withValues(alpha: 0.12),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: appPadding * 1.2, vertical: appPadding),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Expanded(
+                        SizedBox(
+                          width: 128,
+                          height: 128,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Container(
+                                width: 128,
+                                height: 128,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.green.withValues(alpha: 0.12),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.green.withValues(alpha: 0.22),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 74,
+                                height: 74,
+                                decoration: BoxDecoration(
+                                  color: Colors.green.withValues(alpha: 0.14),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.check_rounded,
+                                  color: Colors.green,
+                                  size: 38,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: colorSecondary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                           child: Text(
-                            widget.value,
+                            "Pedido #${widget.trading}",
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: colorSecondary,
+                              letterSpacing: 0.4,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          widget.value,
+                          style: const TextStyle(
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -1.5,
+                            height: 1,
+                          ),
+                        ),
+                        if (widget.clientModel?.nameCompany != null) ...[
+                          const SizedBox(height: 8),
+                          Text(
+                            widget.clientModel!.nameCompany!,
                             textAlign: TextAlign.center,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 36),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.07),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _infoCell(
+                                icon: Icons.receipt_long_rounded,
+                                label: "Número",
+                                value: "#${widget.trading}",
+                              ),
+                              Container(
+                                width: 1,
+                                height: 36,
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                              ),
+                              _infoCell(
+                                icon: Icons.check_circle_outline_rounded,
+                                label: "Status",
+                                value: "Confirmado",
+                                valueColor: Colors.green,
+                              ),
+                              Container(
+                                width: 1,
+                                height: 36,
+                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                              ),
+                              _infoCell(
+                                icon: Icons.access_time_rounded,
+                                label: "Horário",
+                                value: widget.hour,
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
-                    const AppSpacing(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(width: 5),
-                        Text(
-                          "Agora mesmo • ${widget.hour}",
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                    const AppSpacing(),
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.center,
-                    //   children: [
-                    //     InkWell(
-                    //       onTap: () {
-                    //         widget.finishTradingController.exportData(widget.provider, widget.trading, widget.branch);
-                    //       },
-                    //       child: Container(
-                    //         padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: 10),
-                    //         decoration: BoxDecoration(borderRadius: BorderRadius.circular(50), border: Border.all(color: Theme.of(context).colorScheme.onBackground)),
-                    //         child: const Row(
-                    //           children: [
-                    //             Icon(
-                    //               Icons.share,
-                    //               size: 15,
-                    //             ),
-                    //             SizedBox(width: 5),
-                    //             Text(
-                    //               "Comprovante",
-                    //               style: TextStyle(fontWeight: FontWeight.w500),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
-                ),
-                const AppSpacing(),
-                Divider(
-                  color: Colors.grey.withOpacity(0.1),
-                ),
-                const AppSpacing(),
-                const AppSpacing(),
-                Column(
-                  children: [
-                    ValueListenableBuilder(
-                      valueListenable: widget.finishTradingController.stateClient,
-                      builder: (context, value, child) {
-                        return value != null
-                            ? AppButton(
-                                label: "Novo pedido",
-                                iconButton: Icons.add,
-                                type: "filled",
-                                colorButton: colorSecondary,
-                                onPressButton: () {
-                                  // Navigator.of(context).pushNamed("/selectstore", arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult});
-                                  Navigator.of(context).pushNamedAndRemoveUntil("/selectstore", (route) => false,
-                                      arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult});
-                                },
-                              )
-                            : Container();
-                      },
-                    ),
-                    const AppSpacing(),
-                    AppButton(
-                      label: "Concluir",
-                      colorButton: Colors.green,
-                      iconButton: Icons.check,
-                      loading: false,
-                      onPressButton: () {
-                        Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                  Column(
+                    children: [
+                      ValueListenableBuilder(
+                        valueListenable: widget.finishTradingController.stateClient,
+                        builder: (context, value, child) {
+                          return value != null
+                              ? Column(
+                                  children: [
+                                    _outlinedButton(
+                                      label: "Novo pedido",
+                                      icon: Icons.add_rounded,
+                                      color: colorSecondary,
+                                      onPressed: () {
+                                        Navigator.of(context).pushNamedAndRemoveUntil(
+                                          "/selectstore",
+                                          (route) => false,
+                                          arguments: {
+                                            "client": widget.clientModel!,
+                                            "codeProvider": widget.provider,
+                                            "consult": widget.consult,
+                                          },
+                                        );
+                                      },
+                                    ),
+                                    const SizedBox(height: 12),
+                                  ],
+                                )
+                              : const SizedBox.shrink();
+                        },
+                      ),
+                      _filledButton(
+                        label: "Concluir",
+                        icon: Icons.check_rounded,
+                        color: Colors.green,
+                        onPressed: () {
+                          Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                        },
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoCell({
+    required IconData icon,
+    required String label,
+    required String value,
+    Color? valueColor,
+  }) {
+    return Expanded(
+      child: Column(
+        children: [
+          Icon(icon, size: 16, color: Colors.grey),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 11, color: Colors.grey, height: 1),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            value,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+              color: valueColor,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _filledButton({
+    required String label,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 18),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _outlinedButton({
+    required String label,
+    required IconData icon,
+    required Color color,
+    required VoidCallback onPressed,
+  }) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: TextButton(
+        onPressed: onPressed,
+        style: TextButton.styleFrom(
+          backgroundColor: color.withValues(alpha: 0.07),
+          foregroundColor: color,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+            side: BorderSide(color: color.withValues(alpha: 0.25), width: 1.5),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 18, color: color),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 15,
+                color: color,
+              ),
+            ),
+          ],
         ),
       ),
     );

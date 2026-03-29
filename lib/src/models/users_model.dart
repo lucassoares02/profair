@@ -7,6 +7,7 @@ class UsersModel {
   int? codeProvider;
   String? nameUser;
   String? documentUser;
+  bool? present;
 
   UsersModel({
     this.codeAcess,
@@ -17,6 +18,7 @@ class UsersModel {
     this.codeProvider,
     this.nameUser,
     this.documentUser,
+    this.present,
   });
 
   UsersModel.fromJson(Map<String, dynamic> json) {
@@ -28,6 +30,7 @@ class UsersModel {
     codeProvider = json['codForn'];
     nameUser = json['nomeConsult'];
     documentUser = json['cpfConsult'];
+    present = json['present'] == 1 ? true : false;
   }
 
   Map<String, dynamic> toJson() {
@@ -40,6 +43,7 @@ class UsersModel {
     data['codUsuario'] = codeUser;
     data['codForn'] = codeProvider;
     data['nomeConsult'] = nameUser;
+    data['present'] = present;
     data['cpfConsult'] = documentUser;
     return data;
   }

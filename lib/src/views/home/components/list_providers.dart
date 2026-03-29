@@ -31,228 +31,250 @@ class _ListProvidersState extends State<ListProviders> {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return ValueListenableBuilder(
-        valueListenable: widget.homeController.stateTopProvider,
-        builder: (context, state, child) {
-          return StateManagement(
-            width: width,
-            listenable: widget.homeController.stateTopProvider,
-            widgetLoading: Column(
-              children: [
-                Skeletonizer(
-                  effect: const ShimmerEffect(),
-                  child: Card(
-                    child: SizedBox(
-                      width: width / 2,
+      valueListenable: widget.homeController.stateTopProvider,
+      builder: (context, state, child) {
+        return StateManagement(
+          width: width,
+          listenable: widget.homeController.stateTopProvider,
+          widgetLoading: _buildSkeleton(width),
+          component: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildHeader(context),
+              const SizedBox(height: 12),
+              widget.homeController.topProviders.isEmpty ? _buildEmptyState(context) : _buildList(context),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // ── Skeleton ──────────────────────────────────
+  Widget _buildSkeleton(double width) {
+    return SizedBox(
+      height: 178,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: appPadding),
+        itemCount: 4,
+        itemBuilder: (_, __) => Skeletonizer(
+          effect: const ShimmerEffect(),
+          child: Container(
+            width: 150,
+            margin: const EdgeInsets.only(right: 10),
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(14),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ── Cabeçalho ─────────────────────────────────
+  Widget _buildHeader(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: appPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            widget.description ?? "",
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
+              letterSpacing: -0.2,
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.of(context).pushNamed(
+              "selectprovider",
+              arguments: {
+                "codeClient": 0,
+                "codeBuyer": 0,
+                "codeBranch": widget.homeController.data!.codCompany,
+              },
+            ),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Ver todos",
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
+                  const SizedBox(width: 4),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 11,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Estado vazio ──────────────────────────────
+  Widget _buildEmptyState(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: 20),
+      child: Text(
+        "Nenhum fornecedor encontrado",
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          fontWeight: FontWeight.w500,
+          fontSize: 14,
+        ),
+      ),
+    );
+  }
+
+  // ── Lista horizontal ──────────────────────────
+  Widget _buildList(BuildContext context) {
+    final providers = widget.homeController.topProviders;
+    return SizedBox(
+      height: 178,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: appPadding),
+        itemCount: providers.length,
+        itemBuilder: (context, index) {
+          final p = providers[index];
+          final providerColor = p.color != null ? Color(int.parse(p.color!)) : colorPrimary;
+          final isLast = index == providers.length - 1;
+          return GestureDetector(
+            onTap: () => Navigator.of(context).pushNamed(
+              "detailsprovider",
+              arguments: {
+                "codeProvider": p.codeProvider,
+                "imageProvider": p.image,
+                "nameProvider": p.nameProvider,
+                "codeBranch": widget.homeController.data!.codCompany,
+                "color": p.color,
+              },
+            ),
+            child: Container(
+              width: 170,
+              margin: EdgeInsets.only(right: isLast ? 0 : 10),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.07),
                 ),
-                Container(
-                  margin: const EdgeInsets.only(left: 10),
-                  child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: 7,
-                      itemBuilder: (context, index) {
-                        return Skeletonizer(
-                          effect: const ShimmerEffect(),
-                          child: Card(
-                            child: SizedBox(
-                              height: 90,
-                              width: width,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Área da imagem
+                  Container(
+                    height: 96,
+                    decoration: BoxDecoration(
+                      color: providerColor.withValues(alpha: 0.9),
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(13)),
+                    ),
+                    child: Center(
+                      child: p.image != null
+                          ? ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                p.image!,
+                                width: 72,
+                                height: 72,
+                                fit: BoxFit.contain,
+                                errorBuilder: (_, __, ___) => _providerInitial(p.nameProvider, providerColor),
+                              ),
+                            )
+                          : _providerInitial(p.nameProvider, providerColor),
+                    ),
+                  ),
+
+                  // Informações
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 8, 10, 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            p.nameProvider ?? "-",
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              height: 1.3,
+                              color: Theme.of(context).colorScheme.onSurface,
                             ),
                           ),
-                        );
-                      }),
-                ),
-              ],
-            ),
-            component: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(bottom: appMargin, left: appPadding),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.description ?? "",
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            Navigator.of(context).pushNamed(
-                              "selectprovider",
-                              arguments: {
-                                "codeClient": 0,
-                                "codeBuyer": 0,
-                                "codeBranch": widget.homeController.data!.codCompany,
-                              },
-                            );
-                          },
-                          icon: const Icon(Icons.arrow_forward))
-                    ],
-                  ),
-                ),
-                widget.homeController.topProviders.isEmpty
-                    ? Container(
-                        padding: const EdgeInsets.only(left: appPadding),
-                        child: const Row(
-                          children: [
-                            Text(
-                              "Não possui Fornecedores!",
-                              style: TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      )
-                    : SizedBox(
-                        height: 210,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: widget.homeController.topProviders.length,
-                            itemBuilder: ((context, index) {
-                              final lastItem = widget.homeController.topProviders.length - 1 == index;
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.of(context).pushNamed(
-                                    "detailsprovider",
-                                    arguments: {
-                                      "codeProvider": widget.homeController.topProviders[index].codeProvider,
-                                      "imageProvider": widget.homeController.topProviders[index].image,
-                                      "nameProvider": widget.homeController.topProviders[index].nameProvider,
-                                      "codeBranch": widget.homeController.data!.codCompany,
-                                      "color": widget.homeController.topProviders[index].color
-                                    },
-                                  );
-                                },
-                                child: Container(
-                                  width: 250,
-                                  margin: EdgeInsets.only(left: appMargin, right: lastItem ? appMargin : 0),
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(appRadius),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          mainAxisAlignment: MainAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height: 120,
-                                              padding: const EdgeInsets.symmetric(vertical: appPadding),
-                                              decoration: BoxDecoration(
-                                                  color: widget.homeController.topProviders[index].color != null ? Color(int.parse(widget.homeController.topProviders[index].color!)) : colorPrimary,
-                                                  borderRadius: BorderRadius.circular(5)),
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  widget.homeController.topProviders[index].image != null
-                                                      ? Image.network(
-                                                          widget.homeController.topProviders[index].image!,
-                                                          width: 80,
-                                                        )
-                                                      : Container(
-                                                          width: 100,
-                                                          height: 100,
-                                                          child: Icon(
-                                                            Icons.image_not_supported_outlined,
-                                                            color: colorWhite.withOpacity(0.3),
-                                                          ),
-                                                        )
-                                                ],
-                                              ),
-                                            ),
-                                            Container(
-                                              padding: const EdgeInsets.all(appMargin),
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    widget.homeController.topProviders[index].nameProvider!.length > 20
-                                                        ? "${widget.homeController.topProviders[index].nameProvider!.substring(0, 20)}..."
-                                                        : widget.homeController.topProviders[index].nameProvider.toString(),
-                                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                                                    overflow: TextOverflow.fade,
-                                                  ),
-                                                  const SizedBox(height: 10),
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      Text(
-                                                        formatCurrency(widget.homeController.topProviders[index].totalValue!),
-                                                        overflow: TextOverflow.fade,
-                                                      ),
-                                                      const Icon(
-                                                        Icons.check_circle_rounded,
-                                                        color: Colors.green,
-                                                        size: 16,
-                                                      )
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                          Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFF10B981).withValues(alpha: 0.10),
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                child: Text(
+                                  formatCurrency(p.totalValue ?? 0),
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    fontWeight: FontWeight.w700,
+                                    color: Color(0xFF10B981),
                                   ),
                                 ),
-                              );
-                            })),
-                      )
-                // : Row(
-                //     children: widget.listItems.map((e) {
-                //     return InkWell(
-                //       onTap: () {
-                //         // Navigator.of(context).pushNamed('detailsrecipe', arguments: e);
-                //       },
-                //       child: Container(
-                //         width: 250,
-                //         height: 150,
-                //         padding: const EdgeInsets.symmetric(horizontal: appMargin),
-                //         margin: const EdgeInsets.symmetric(vertical: appMargin / 2),
-                //         decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.circular(appRadius)),
-                //         child: Row(
-                //           children: [
-                //             Expanded(
-                //               child: Column(
-                //                 crossAxisAlignment: CrossAxisAlignment.start,
-                //                 mainAxisAlignment: MainAxisAlignment.center,
-                //                 children: [
-                //                   Row(
-                //                     children: [
-                //                       Text(
-                //                         "Teste",
-                //                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                   const SizedBox(height: 5),
-                //                   Row(
-                //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //                     children: [
-                //                       Text(
-                //                         formatCurrency(e.totalValue!),
-                //                         style: const TextStyle(
-                //                             // color: colorGreyDark,
-                //                             ),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                 ],
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //       ),
-                //     );
-                //   }).toList())
-              ],
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
-        });
+        },
+      ),
+    );
+  }
+
+  Widget _providerInitial(String? name, Color color) {
+    return Container(
+      width: 52,
+      height: 52,
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Center(
+        child: Text(
+          name?.isNotEmpty == true ? name![0].toUpperCase() : "?",
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            color: color,
+          ),
+        ),
+      ),
+    );
   }
 }

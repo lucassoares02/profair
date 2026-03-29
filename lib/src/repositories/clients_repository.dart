@@ -19,7 +19,8 @@ class ClientsRepository {
         response = await clientDio.get("stores");
       } else if (accessTargenting == 1 && codeProvider != null) {
         print("STEPPPPPPPPPPPPPPPPP 3");
-        response = await clientDio.get("storespresentbyprovider/$codeProvider");
+        // response = await clientDio.get("storespresentbyprovider/$codeProvider");
+        response = await clientDio.get("groupspresentbyprovider/$codeProvider");
       } else {
         print("STEPPPPPPPPPPPPPPPPP 4");
         response = await clientDio.get("storesbyprovider/$codeProvider");
@@ -35,7 +36,8 @@ class ClientsRepository {
   getPercentageProviders(int provider) async {
     ResponseModel? response;
     try {
-      response = await clientDio.get("percentageclients/$provider");
+      // response = await clientDio.get("percentageclients/$provider");
+      response = await clientDio.get("percentagegroups/$provider");
       List list = response.data as List;
 
       return list.map((json) => PercentageClientsModel.fromJson(json)).toList();

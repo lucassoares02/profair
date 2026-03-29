@@ -21,4 +21,14 @@ class NegotiationController extends ValueNotifier<StateApp> {
       stateNegotiations.value = StateApp.error;
     }
   }
+
+  Future findNegotiationsGroup(int? codeGroup, int? codeProvider) async {
+    stateNegotiations.value = StateApp.loading;
+    try {
+      negotiations = await _negotiationsRepository.findNegotiationsGroup(codeGroup, codeProvider);
+      stateNegotiations.value = StateApp.success;
+    } catch (e) {
+      stateNegotiations.value = StateApp.error;
+    }
+  }
 }

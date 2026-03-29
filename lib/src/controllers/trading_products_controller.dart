@@ -46,6 +46,22 @@ class TradingProductsController extends ValueNotifier<StateApp> {
     }
   }
 
+  Future findTradingProductsHistory(int? codeBranch, int? codeProvider, int? codeTrading) async {
+    stateProductsTrading.value = StateApp.loading;
+    try {
+      productsTrading = await _negotiationsRepository.findTradingProductsHistory(codeBranch, codeProvider, codeTrading);
+      products = productsTrading;
+      initialListproducts = productsTrading.map<ProductModel>((product) => ProductModel.clone(product)).toList();
+      for (var element in products) {
+        detailsSell!.volume = detailsSell!.volume! + int.parse(element.amount!);
+      }
+      detailsSell!.quantity = products.length;
+      stateProductsTrading.value = StateApp.success;
+    } catch (e) {
+      stateProductsTrading.value = StateApp.error;
+    }
+  }
+
   String formatCurrency(double amount) {
     String formattedAmount = amount.toStringAsFixed(2);
     formattedAmount = formattedAmount.replaceAll('.', ',');

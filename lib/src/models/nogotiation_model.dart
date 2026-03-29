@@ -2,6 +2,8 @@ import 'package:profair/src/models/product_model.dart';
 
 class NegotiationModel {
   int? negotiation;
+  int? codAssoc;
+  String? razaoAssociado;
   String? title;
   int? confirm;
   bool? checked;
@@ -11,6 +13,8 @@ class NegotiationModel {
 
   NegotiationModel({
     this.negotiation,
+    this.codAssoc,
+    this.razaoAssociado,
     this.title,
     this.confirm,
     this.checked,
@@ -22,6 +26,8 @@ class NegotiationModel {
   NegotiationModel.fromJson(Map<String, dynamic> json) {
     print(json);
     negotiation = json["codNegociacao"];
+    codAssoc = json["codAssociado"];
+    razaoAssociado = json["razaoAssociado"];
     title = json["descNegociacao"];
     confirm = json["confirma"];
     term = json["prazo"];
@@ -35,6 +41,8 @@ class NegotiationModel {
   NegotiationModel clone() {
     return NegotiationModel(
       negotiation: negotiation,
+      codAssoc: codAssoc,
+      razaoAssociado: razaoAssociado,
       title: title,
       confirm: confirm,
       checked: checked,
@@ -44,10 +52,26 @@ class NegotiationModel {
     );
   }
 
+  NegotiationModel copyWith() {
+    return NegotiationModel(
+      negotiation: negotiation,
+      codAssoc: codAssoc,
+      razaoAssociado: razaoAssociado,
+      title: title,
+      confirm: confirm,
+      checked: checked,
+      term: term,
+      observation: observation,
+      merchandises: merchandises != null ? List<ProductModel>.from(merchandises!.map((x) => ProductModel.clone(x))) : null,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
 
     data["codNegociacao"] = negotiation;
+    data["codAssociado"] = codAssoc;
+    data["razaoAssociado"] = razaoAssociado;
     data["descNegociacao"] = title;
     data["confirma"] = confirm;
     data["prazo"] = term;

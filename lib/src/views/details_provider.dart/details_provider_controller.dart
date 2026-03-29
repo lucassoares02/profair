@@ -1,4 +1,5 @@
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:profair/src/models/history_clients_tradings_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/models/users_model.dart';
@@ -17,12 +18,14 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
   List<ProductsProviderModel> merchandisesBackup = [];
   List<RequestsStoresModel> requestsStores = [];
   List<UsersModel> consults = [];
+  List<HistoryClientsTradingsModel> history = [];
   RequestsStoresModel? request;
   final stateNegotiations = ValueNotifier<StateApp>(StateApp.start);
   final stateConsults = ValueNotifier<StateApp>(StateApp.start);
   final stateMerchandises = ValueNotifier<StateApp>(StateApp.start);
   final stateTopMerchandises = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestStores = ValueNotifier<StateApp>(StateApp.start);
+  final stateHistory = ValueNotifier<StateApp>(StateApp.start);
   ValueNotifier<int> indexNegotiationSelected = ValueNotifier(0);
   final DetailsProviderRepository _detailsProviderRepository;
   int sortInt = 0;
@@ -105,6 +108,17 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
     } catch (e) {
       debugPrint("Find Request Stores (Details Provider Controller) Error: $e");
       stateConsults.value = StateApp.error;
+    }
+  }
+
+  Future findHistory(int client, int provider) async {
+    stateHistory.value = StateApp.loading;
+    try {
+      history = await _detailsProviderRepository.getHistory(client, provider);
+      stateHistory.value = StateApp.success;
+    } catch (e) {
+      debugPrint("Find History (Details Provider Controller) Error: $e");
+      stateHistory.value = StateApp.error;
     }
   }
 

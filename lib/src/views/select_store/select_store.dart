@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:profair/src/controllers/stores_controller.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/repositories/stores_repository.dart';
+import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/views/select_store/components/list.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,7 @@ class _SelectStoreState extends State<SelectStore> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: Color(0xffB01F24)),
+        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
         child: SafeArea(
           child: SingleChildScrollView(
             child: ValueListenableBuilder(

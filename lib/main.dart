@@ -40,12 +40,12 @@ class MyApp extends StatelessWidget {
       supportedLocales: S.delegate.supportedLocales,
       theme: ThemeData(
         brightness: Brightness.light,
-        fontFamily: "Plus",
+        fontFamily: "Inter",
         primarySwatch: Colors.blue,
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        fontFamily: "Plus",
+        fontFamily: "Inter",
         primarySwatch: Colors.blue,
       ),
       themeMode: ThemeMode.system,

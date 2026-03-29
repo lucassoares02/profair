@@ -1,9 +1,7 @@
 import 'package:percent_indicator/linear_percent_indicator.dart';
-import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/clients_controller.dart';
 import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
@@ -30,105 +28,172 @@ class CardPercentageClientsProvider extends StatefulWidget {
 }
 
 class _CardPercentageClientsProviderState extends State<CardPercentageClientsProvider> {
-  bool visibleContent = true;
+  bool visibleContent = false;
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    // Safe parse with fallback — avoids FormatException on null/invalid values
+    final percent = double.tryParse('${widget.value}') ?? 0.0;
+    final percentClamped = (percent / 100).clamp(0.0, 1.0);
 
-    return InkWell(
-      onTap: () {
-        setState(() {
-          visibleContent = !visibleContent;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.all(appPadding),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
-          color: widget.backgroundColor,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "${widget.title}",
-              style: const TextStyle(
-                fontSize: 18,
-                color: colorWhite,
-                fontWeight: FontWeight.bold,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () => setState(() => visibleContent = !visibleContent),
+        // Rounded splash matches card shape
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        splashColor: Colors.white12,
+        highlightColor: Colors.white10,
+        child: Ink(
+          decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            color: widget.backgroundColor,
+            // Colour-tinted shadow gives depth without heavy elevation
+            boxShadow: [
+              BoxShadow(
+                color: (widget.backgroundColor ?? colorBlueDark).withValues(alpha: 0.40),
+                blurRadius: 18,
+                offset: const Offset(0, 6),
               ),
-            ),
-            if (visibleContent)
-              Column(
-                children: [
-                  const AppSpacing(),
-                  if (widget.content != null)
-                    Text(
-                      "${widget.content}",
-                      style: const TextStyle(fontSize: 16, color: colorWhite),
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ── Header: title + animated collapse chevron ─────────────
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        '${widget.title}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          color: colorWhite,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
                     ),
-                  const AppSpacing(),
-                ],
-              ),
-            const AppSpacing(),
-            ValueListenableBuilder(
-                valueListenable: widget.clientsController.statePercentageClients,
-                builder: (context, value, child) {
-                  return value == StateApp.loading
-                      ? Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Skeletonizer(
-                              effect: const ShimmerEffect(),
-                              child: Card(
-                                child: SizedBox(
-                                  height: 20,
-                                  width: width,
-                                ),
-                              ),
+                    // Chevron rotates 180° to signal expand/collapse state
+                    AnimatedRotation(
+                      turns: visibleContent ? 0 : 0.5,
+                      duration: const Duration(milliseconds: 250),
+                      curve: Curves.easeInOut,
+                      child: const Icon(
+                        Icons.keyboard_arrow_up_rounded,
+                        color: Colors.white60,
+                        size: 22,
+                      ),
+                    ),
+                  ],
+                ),
+
+                // ── Optional content — animates height smoothly ───────────
+                AnimatedSize(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  child: visibleContent && widget.content != null
+                      ? Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: Text(
+                            '${widget.content}',
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: Colors.white70,
+                              height: 1.45,
                             ),
-                            const AppSpacing(),
-                            const Skeletonizer(
-                              effect: ShimmerEffect(),
-                              child: Card(
-                                margin: EdgeInsets.symmetric(horizontal: 16),
-                                child: SizedBox(
-                                  height: 15,
-                                  width: 30,
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         )
-                      : Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            LinearPercentIndicator(
-                              animation: true,
-                              trailing: Text(
-                                "${double.parse(widget.value.toString()).toStringAsFixed(0)}%",
-                                style: const TextStyle(color: colorWhite, fontSize: 12),
+                      : const SizedBox.shrink(),
+                ),
+
+                const SizedBox(height: 16),
+
+                // ── Progress bar + footer ─────────────────────────────────
+                ValueListenableBuilder(
+                  valueListenable: widget.clientsController.statePercentageClients,
+                  builder: (context, value, child) {
+                    if (value == StateApp.loading) {
+                      // Skeleton mirrors real layout: bar then label
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Skeletonizer(
+                            effect: const ShimmerEffect(),
+                            child: Container(
+                              height: 10,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: Colors.white24,
+                                borderRadius: BorderRadius.circular(6),
                               ),
-                              animationDuration: 500,
-                              padding: const EdgeInsets.only(right: 10),
-                              lineHeight: visibleContent ? 8 : 10,
-                              barRadius: const Radius.circular(5),
-                              percent: (double.parse("${widget.value}") / 100),
-                              backgroundColor: Colors.white24,
-                              progressColor: colorWhite,
                             ),
-                            const SizedBox(height: 10),
+                          ),
+                          const SizedBox(height: 8),
+                          Skeletonizer(
+                            effect: const ShimmerEffect(),
+                            child: Container(
+                              height: 12,
+                              width: 90,
+                              decoration: BoxDecoration(
+                                color: Colors.white24,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Footer label and percentage on the same row for
+                        // better scannability — no need to read the bar first
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
                             Text(
-                              "${widget.footer}",
+                              '${widget.footer}',
                               style: const TextStyle(
                                 fontSize: 12,
+                                color: Colors.white70,
+                                letterSpacing: 0.1,
+                              ),
+                            ),
+                            Text(
+                              '${percent.toStringAsFixed(0)}%',
+                              style: const TextStyle(
+                                fontSize: 13,
                                 color: colorWhite,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ],
-                        );
-                }),
-          ],
+                        ),
+                        const SizedBox(height: 8),
+                        // Bar height grows slightly when content is collapsed
+                        // so there is still a strong visual anchor
+                        LinearPercentIndicator(
+                          animation: true,
+                          animationDuration: 600,
+                          padding: EdgeInsets.zero,
+                          lineHeight: visibleContent ? 8 : 10,
+                          barRadius: const Radius.circular(6),
+                          percent: percentClamped,
+                          backgroundColor: Colors.white24,
+                          progressColor: colorWhite,
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -6,6 +6,10 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
 class ClientsController extends ValueNotifier<StateApp> {
+  ClientsController(super.value, this._clientsRepository);
+
+  final ClientsRepository _clientsRepository;
+
   List<ClientsModel> clientsList = [];
   List<ClientsModel> clients = [];
 
@@ -14,10 +18,8 @@ class ClientsController extends ValueNotifier<StateApp> {
   final stateClients = ValueNotifier<StateApp>(StateApp.start);
   final statePercentageClients = ValueNotifier<StateApp>(StateApp.start);
 
-  final ClientsRepository _clientsRepository;
   PercentageClientsModel? percentageClients;
   int sortInt = 0;
-  ClientsController(super.value, this._clientsRepository);
 
   Future findClients({String? codeProvider, int? accessTargenting, int? merchandise, int? trading}) async {
     stateClients.value = StateApp.loading;

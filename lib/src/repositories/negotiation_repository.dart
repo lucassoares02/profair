@@ -15,4 +15,16 @@ class NegotiationRepository {
       debugPrint("Error return Negotiation Model Mapper: $e");
     }
   }
+
+  findNegotiationsGroup(int? codeGroup, int? codeProvider) async {
+    print("codeGroup: $codeGroup, codeProvider: $codeProvider");
+    try {
+      final response = await clientDio.get("negotiationgroup/$codeGroup/$codeProvider");
+
+      List list = response.data as List;
+      return list.map((json) => NegotiationModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Error return Negotiation Model Mapper: $e");
+    }
+  }
 }

@@ -1,4 +1,7 @@
-String formatCurrency(double amount) {
+String formatCurrency(double? amount) {
+  if (amount == null || amount == 0 || amount.isNaN) {
+    return 'R\$0,00';
+  }
   String formattedAmount = amount.toStringAsFixed(2);
   formattedAmount = formattedAmount.replaceAll('.', ',');
   List<String> parts = formattedAmount.split(',');

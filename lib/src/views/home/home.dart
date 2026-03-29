@@ -174,7 +174,7 @@ class _HomePageState extends State<HomePage> {
                                   child: Card(
                                     margin: EdgeInsets.symmetric(horizontal: appPadding),
                                     child: SizedBox(
-                                      height: 240, // altura desejada pro esqueleto
+                                      height: 200,
                                       width: double.infinity,
                                     ),
                                   ),

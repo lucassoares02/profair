@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:profair/src/models/history_clients_tradings_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/models/response_model.dart';
@@ -8,9 +9,11 @@ import 'package:profair/src/models/users_model.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/shared/http_service.dart';
+import 'package:profair/src/shared/http_service_history.dart';
 
 class DetailsProviderRepository {
   final clientDio = HttpService();
+  final clientDioHistory = HttpServiceHistory();
 
   getNegotiations(int codeBranch, int codeProvider) async {
     try {
@@ -80,6 +83,19 @@ class DetailsProviderRepository {
       return list.map((json) => UsersModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Get Request Stores (Details Balance Repository) Error: $e");
+    }
+  }
+
+  getHistory(int client, int provider) async {
+    print(client);
+    print(provider);
+    try {
+      final response = await clientDioHistory.get("history/details/client/$provider/$client");
+      List list = response.data as List;
+      return list.map((json) => HistoryClientsTradingsModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Get History (Details Provider Repository) Error: $e");
+      return e;
     }
   }
 }

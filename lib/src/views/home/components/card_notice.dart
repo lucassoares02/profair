@@ -1,161 +1,280 @@
-import 'package:profair/src/components/spacing.dart';
+import 'dart:async';
+import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/home/home_controller.dart';
 
 class CardNotice extends StatefulWidget {
-  CardNotice({super.key, required this.homeController});
+  const CardNotice({super.key, required this.homeController});
 
-  HomeController homeController;
+  final HomeController homeController;
 
   @override
   State<CardNotice> createState() => _CardNoticeState();
 }
 
 class _CardNoticeState extends State<CardNotice> {
+  late final PageController _pageController;
+  Timer? _autoScrollTimer;
+  int _currentPage = 0;
+
+  List<CampaignModel> get _campaigns {
+    final list = widget.homeController.campaigns;
+    return list.isNotEmpty ? list : [if (widget.homeController.campaign != null) widget.homeController.campaign!];
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _startAutoScroll();
+  }
+
+  void _startAutoScroll() {
+    _autoScrollTimer?.cancel();
+    if (_campaigns.length <= 1) return;
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+      if (!mounted || !_pageController.hasClients) return;
+      final next = (_currentPage + 1) % _campaigns.length;
+      _pageController.animateToPage(
+        next,
+        duration: const Duration(milliseconds: 700),
+        curve: Curves.easeOutCubic,
+      );
+    });
+  }
+
+  @override
+  void dispose() {
+    _autoScrollTimer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final campaigns = _campaigns;
+    if (campaigns.isEmpty) return const SizedBox.shrink();
 
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).pushNamed("/listattractions");
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: appPadding),
-        width: width,
-        height: 240,
-        decoration: BoxDecoration(
-          // color: colorTertiary,
-          color: Color(int.parse(widget.homeController.campaign!.secondaryColor ?? "#f2f2f2")),
-          borderRadius: BorderRadius.circular(appRadius),
-          // image: const DecorationImage(
-          //   fit: BoxFit.cover,
-          //   opacity: 0.2,
-          //   image: NetworkImage(
-          //     "https://images.pexels.com/photos/1855214/pexels-photo-1855214.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-          //   ),
-          // ),
-        ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: -30,
-              right: -30,
-              child: CircleAvatar(
-                radius: 60,
-                backgroundColor: colorTertiary.withValues(alpha: 0.2),
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: appPadding),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 240,
+            child: PageView.builder(
+              controller: _pageController,
+              itemCount: campaigns.length,
+              onPageChanged: (index) => setState(() => _currentPage = index),
+              itemBuilder: (context, index) {
+                return _SlideCard(campaign: campaigns[index]);
+              },
             ),
-            Positioned(
-              bottom: -20,
-              left: -20,
-              child: CircleAvatar(
-                radius: 80,
-                backgroundColor: colorSecondary.withValues(alpha: 0.2),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Image.asset(
-                  //   fit: BoxFit.contain,
-                  //   'assets/images/logo-client.png',
-                  // ),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: 5),
-                        decoration: BoxDecoration(
-                          color: Color(int.parse(widget.homeController.campaign!.primaryColor ?? "#a3a3a3")),
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(20),
-                          ),
-                        ),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.event,
-                              size: 18,
-                              color: colorWhite,
-                            ),
-                            const SizedBox(width: 5),
-                            Text(
-                              widget.homeController.campaign!.stamp ?? "",
-                              style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.homeController.campaign!.title ?? "",
-                            style: const TextStyle(
-                              fontSize: 22,
-                              color: colorWhite,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const AppSpacing(),
-                          Text(
-                            widget.homeController.campaign!.description ?? "",
-                            style: const TextStyle(fontSize: 16, color: colorWhite, fontWeight: FontWeight.w300),
-                          ),
-                        ],
-                      ),
-                      const AppSpacing(),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Text(
-                            "Saiba mais",
-                            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-                          ),
-                          SizedBox(width: 5),
-                          Icon(
-                            Icons.arrow_forward,
-                            size: 20,
-                            color: colorWhite,
-                          )
-                        ],
-                      )
-                      // Container(
-                      //   width: double.maxFinite,
-                      //   height: 37,
-                      //   decoration: const BoxDecoration(
-                      //       color: colorSecondary, borderRadius: BorderRadius.all(Radius.circular(appRadius))),
-                      //   child: const Center(
-                      //       child:
-                      //   ),
-                      // )
-                    ],
-                  ),
-                ],
-              ),
+          ),
+          if (campaigns.length > 1) ...[
+            const SizedBox(height: 10),
+            _PageIndicator(
+              count: campaigns.length,
+              current: _currentPage,
             ),
           ],
-        ),
-        // child: FittedBox(
-        //   fit: BoxFit.none,
-        //   alignment: Alignment.bottomCenter,
-        //   child: Image.network(
-        //     'assets/images/people.png',
-        //     height: 150,
-        //   ),
-        // ),
+        ],
       ),
+    );
+  }
+}
+
+// ─── Slide individual ────────────────────────────────────────────────────────
+
+class _SlideCard extends StatelessWidget {
+  const _SlideCard({required this.campaign});
+
+  final CampaignModel campaign;
+
+  @override
+  Widget build(BuildContext context) {
+    final cardColor = Color(int.parse(campaign.secondaryColor ?? "0xFF1a1a2e"));
+    final accentColor = Color(int.parse(campaign.primaryColor ?? "0xFF6e41ff"));
+    final hasImage = campaign.image != null && campaign.image!.isNotEmpty;
+
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () => Navigator.of(context).pushNamed("/listattractions"),
+          splashColor: Colors.white.withValues(alpha: 0.08),
+          highlightColor: Colors.white.withValues(alpha: 0.04),
+          child: Ink(
+            decoration: BoxDecoration(
+              color: cardColor,
+              image: hasImage
+                  ? DecorationImage(
+                      image: NetworkImage(campaign.image!),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+            ),
+            child: Stack(
+              children: [
+                // Scrim para legibilidade
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: hasImage
+                            ? [
+                                Colors.black.withValues(alpha: 0.05),
+                                Colors.black.withValues(alpha: 0.72),
+                              ]
+                            : [
+                                cardColor.withValues(alpha: 0.0),
+                                cardColor.withValues(alpha: 0.6),
+                              ],
+                        stops: const [0.25, 1.0],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Barra de accent lateral (sem imagem)
+                if (!hasImage)
+                  Positioned(
+                    left: 0,
+                    top: 0,
+                    bottom: 0,
+                    child: Container(width: 4, color: accentColor),
+                  ),
+
+                // Conteúdo
+                Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // Badge de evento
+                      if ((campaign.stamp ?? '').isNotEmpty) _StampBadge(label: campaign.stamp!, color: accentColor),
+
+                      // Texto + CTA
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if ((campaign.title ?? '').isNotEmpty)
+                            Text(
+                              campaign.title!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                color: colorWhite,
+                                fontWeight: FontWeight.w700,
+                                letterSpacing: -0.3,
+                                height: 1.2,
+                              ),
+                            ),
+                          if ((campaign.description ?? '').isNotEmpty) ...[
+                            const SizedBox(height: 4),
+                            Text(
+                              campaign.description!,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: colorWhite.withValues(
+                                  alpha: 0.9,
+                                ),
+                                fontWeight: FontWeight.w400,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Badge de evento ─────────────────────────────────────────────────────────
+
+class _StampBadge extends StatelessWidget {
+  const _StampBadge({required this.label, required this.color});
+
+  final String label;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.85),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: const BoxDecoration(
+              color: colorWhite,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            label.toUpperCase(),
+            style: const TextStyle(
+              color: colorWhite,
+              fontWeight: FontWeight.w700,
+              fontSize: 11,
+              letterSpacing: 0.8,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+// ─── Indicador de página ─────────────────────────────────────────────────────
+
+class _PageIndicator extends StatelessWidget {
+  const _PageIndicator({required this.count, required this.current});
+
+  final int count;
+  final int current;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(count, (i) {
+        final isActive = i == current;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeOutCubic,
+          width: isActive ? 20 : 6,
+          height: 4,
+          margin: const EdgeInsets.symmetric(horizontal: 2),
+          decoration: BoxDecoration(
+            color: isActive ? Theme.of(context).colorScheme.onSurface : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.18),
+            borderRadius: BorderRadius.circular(4),
+          ),
+        );
+      }),
     );
   }
 }

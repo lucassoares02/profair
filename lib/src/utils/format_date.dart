@@ -1,4 +1,8 @@
-String formatHour(String isoString) {
+String formatHour(String? isoString) {
+  if (isoString == null || isoString.isEmpty) {
+    return "";
+  }
+
   final date = DateTime.parse(isoString).toLocal();
 
   final hour = date.hour.toString().padLeft(2, '0');

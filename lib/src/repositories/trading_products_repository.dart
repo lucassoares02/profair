@@ -7,20 +7,26 @@ import 'package:dio/dio.dart';
 import 'package:profair/src/models/response_model.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:profair/src/shared/http_service.dart';
+import 'package:profair/src/shared/http_service_history.dart';
 
 class TradingProductsRepository {
   final Dio clientDioRequest = Dio();
   final String url = "https://profair.click/";
   final clientDio = HttpService();
+  final clientDioHistory = HttpServiceHistory();
 
   getTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading, int? codeClient) async {
     ResponseModel? response;
     try {
       if (codeClient == 0 && codeBranch == 0) {
+        print("etapa 1");
         response = await clientDio.get("merchandisenegotiationprovider/$codeProvider/$codeTrading");
       } else if (codeClient == 0) {
+        print("etapa 2");
+        print("codeBranch: $codeBranch, codeProvider: $codeProvider, codeTrading: $codeTrading");
         response = await clientDio.get("merchandiseclientprovidernegotiation/$codeBranch/$codeProvider/$codeTrading");
       } else {
+        print("etapa 3");
         response = await clientDio.get("merchandiseproviderifclient/$codeBranch/$codeProvider/$codeTrading");
       }
       List list = response.data as List;
@@ -30,13 +36,19 @@ class TradingProductsRepository {
     }
   }
 
+  findTradingProductsHistory(int? codeBranch, int? codeProvider, int? codeTrading) async {
+    ResponseModel? response;
+    try {
+      response = await clientDioHistory.get("history/details/negotiation/$codeProvider/$codeBranch/$codeTrading");
+      List list = response.data as List;
+      return list.map((json) => ProductModel.fromJson(json)).toList();
+    } catch (e) {
+      debugPrint("Error return Negotiation Model Mapper: $e");
+    }
+  }
+
   exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation, int? codeBranch}) async {
     Response? response;
-
-    print(codeProvider);
-    print(codeNegotiation);
-    print(codeBranch);
-    print(codeBuyer);
 
     try {
       // Fazendo a solicitação com a opção de resposta para obter os bytes

@@ -96,6 +96,8 @@ class _AppActionsState extends State<AppActions> {
       }
     } else if (route == "ticket") {
       navigatorRoutes(route, widget.homeController);
+    } else if (route == "history-clients") {
+      navigatorRoutes(route, {"codeProvider": widget.homeController.data!.codCompany});
     }
   }
 
@@ -156,54 +158,60 @@ class _AppActionsState extends State<AppActions> {
           component: SizedBox(
             height: 100,
             child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: widget.homeController.categories.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      actionButton(widget.homeController.categories[index].route, height);
-                      // testeInterno();
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(left: (index == 0) ? 20 : appPadding * 1.3, right: (index == widget.homeController.categories.length - 1) ? appPadding * 1.3 : 0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(Radius.circular(50)),
-                              border: Border.all(color: colorSecondary, width: 2),
-                              color: colorWhite,
-                            ),
-                            padding: const EdgeInsets.all(3),
-                            child: Container(
-                              padding: const EdgeInsets.all(appPadding),
-                              decoration: const BoxDecoration(
-                                color: colorSecondary,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(50),
-                                ),
-                              ),
-                              child: Icon(
-                                widget.homeController.categories[index].icon,
-                                size: 22,
-                                color: colorWhite,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            '${widget.homeController.categories[index].title}',
-                            style: const TextStyle(fontWeight: FontWeight.w500),
-                          ),
-                        ],
-                      ),
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemCount: widget.homeController.categories.length,
+              itemBuilder: (context, index) {
+                return InkWell(
+                  onTap: () {
+                    actionButton(widget.homeController.categories[index].route, height);
+                  },
+                  borderRadius: BorderRadius.circular(20),
+                  splashColor: colorSecondary.withOpacity(0.15),
+                  highlightColor: colorSecondary.withOpacity(0.08),
+                  child: Container(
+                    margin: EdgeInsets.only(
+                      left: (index == 0) ? 20 : appPadding * 1.3,
+                      right: (index == widget.homeController.categories.length - 1) ? appPadding * 1.3 : 0,
                     ),
-                  );
-                }),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                colorSecondary,
+                                colorSecondary.withOpacity(0.75),
+                              ],
+                            ),
+                          ),
+                          padding: const EdgeInsets.all(appPadding * 1.1),
+                          child: Icon(
+                            widget.homeController.categories[index].icon,
+                            size: 24,
+                            color: colorWhite,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          '${widget.homeController.categories[index].title}',
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                            letterSpacing: 0.2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
           ),
         );
       },

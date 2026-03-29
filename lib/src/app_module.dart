@@ -5,6 +5,9 @@ import 'package:profair/src/views/details_attraction/details_attraction.dart';
 import 'package:profair/src/views/details_balance/details_balance.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider.dart';
 import 'package:profair/src/views/finish_trading/finish_trading_products.dart';
+import 'package:profair/src/views/history_clients/history_clients.dart';
+import 'package:profair/src/views/history_clients_tradings/history_clients_tradings.dart';
+import 'package:profair/src/views/history_providers_by_clients/history_providers_by_clients.dart';
 import 'package:profair/src/views/list_attractions/list_attractions.dart';
 import 'package:profair/src/views/map/map_event_dynamic.dart';
 import 'package:profair/src/views/notifications/notifications.dart';
@@ -16,6 +19,7 @@ import 'package:profair/src/views/providers_by_group/providers_by_group.dart';
 import 'package:profair/src/views/reports/reports.dart';
 import 'package:profair/src/views/requests_stores/requests_stores.dart';
 import 'package:profair/src/views/select_negotiation/select_negotiation.dart';
+import 'package:profair/src/views/select_negotiation_group/select_negotiation_group.dart';
 import 'package:profair/src/views/select_store/select_store.dart';
 import 'package:profair/src/views/ticket/ticket.dart';
 import 'package:profair/src/views/trading_success/trading_sucess.dart';
@@ -29,6 +33,7 @@ import 'package:profair/src/views/splash/splash.dart';
 import 'package:profair/src/views/login/login.dart';
 import 'package:profair/src/views/home/home.dart';
 import 'package:profair/src/views/app.dart';
+import 'package:profair/src/views/tranding_products_history/trading_products_history.dart';
 import 'package:profair/src/views/users/users.dart';
 
 class AppModule extends Module {
@@ -172,6 +177,18 @@ class AppModule extends Module {
             listBranchs: args.data["listBranchs"],
           ),
         ),
+
+        ChildRoute(
+          '/selectnegotiationgroup',
+          child: (context, args) => SelectNegotiationGroup(
+              codeGroup: args.data["codeGroup"],
+              nameBranch: args.data["nameBranch"],
+              codeClient: args.data["codeClient"],
+              codeProvider: args.data["codeProvider"],
+              listBranchs: args.data["listBranchs"],
+              codeConsult: args.data["consult"],
+              balance: args.data["balance"]),
+        ),
         ChildRoute(
           '/finishtrading',
           child: (context, args) => FinishTrading(
@@ -211,6 +228,37 @@ class AppModule extends Module {
           '/notifications',
           child: (context, args) => Notifications(
             notificationsPeding: args.data, // Pass the notifications pending list
+          ),
+        ),
+        ChildRoute(
+          '/history-clients',
+          child: (context, args) => HistoryClients(
+            provider: args.data["codeProvider"],
+          ),
+        ),
+        ChildRoute(
+          '/history-clients-tradings',
+          child: (context, args) => HistoryClientsTradings(
+            provider: args.data["provider"],
+            client: args.data["client"],
+          ),
+        ),
+        ChildRoute(
+          '/history-providers-by-clients',
+          child: (context, args) => HistoryProvidersByClients(
+            client: args.data["client"],
+            isProvider: args.data["isProvider"],
+          ),
+        ),
+        ChildRoute(
+          '/tradingproductshistory',
+          child: (context, args) => TradingProductsHistory(
+            codeBranch: args.data["codeBranch"],
+            codeProvider: args.data["codeProvider"],
+            codeTrading: args.data["codeTrading"],
+            comprador: args.data["comprador"],
+            vendedor: args.data["vendedor"],
+            date: args.data["date"],
           ),
         ),
       ];

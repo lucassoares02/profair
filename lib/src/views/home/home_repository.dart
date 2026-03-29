@@ -204,6 +204,13 @@ class HomeRepository {
           "icon": Icons.swap_horiz_rounded,
           "route": "tradings",
         },
+      if (code == 1 || code == 3)
+        {
+          "id": 104,
+          "title": 'Histórico',
+          "icon": Icons.history_rounded,
+          "route": "history-clients",
+        },
       // {
       //   "id": 84,
       //   "title": 'Relatórios',

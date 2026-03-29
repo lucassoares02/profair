@@ -145,29 +145,44 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                           leading: Container(),
                           actions: [
                             ValueListenableBuilder(
-                                valueListenable: tradingsProviderController.itemTotal,
-                                builder: (context, value, child) {
-                                  return HeaderActions(
-                                    activeSearch: tradingsProviderController.tabSelected == (tradingsProviderController.negotiations.length - 1) ? false : true,
-                                    label: tradingsProviderController.totalValue == 0.0 || (tradingsProviderController.tabController.index == (tradingsProviderController.negotiations.length - 1))
-                                        ? "Negociações"
-                                        : formatCurrency(tradingsProviderController.totalValue),
-                                    onSearch: tradingsProviderController.tabSelected == (tradingsProviderController.negotiations.length - 1)
-                                        ? null
-                                        : (value) {
-                                            tradingsProviderController.search(value);
-                                          },
-                                    alertClose: true,
-                                    onSort: tradingsProviderController.tabSelected == (tradingsProviderController.negotiations.length - 1)
-                                        ? null
-                                        : () {
-                                            tradingsProviderController.sort();
-                                          },
-                                    onCloseInfo: () {
-                                      tradingsProviderController.updateTrading();
-                                    },
-                                  );
-                                }),
+                              valueListenable: tradingsProviderController.itemTotal,
+                              builder: (context, value, child) {
+                                return HeaderActions(
+                                  activeSearch: tradingsProviderController.tabSelected == (tradingsProviderController.negotiations.length - 1) ? false : true,
+                                  label: tradingsProviderController.totalValue == 0.0 || (tradingsProviderController.tabController.index == (tradingsProviderController.negotiations.length - 1))
+                                      ? "Negociações"
+                                      : formatCurrency(tradingsProviderController.totalValue),
+                                  onSearch: tradingsProviderController.tabSelected == (tradingsProviderController.negotiations.length - 1)
+                                      ? null
+                                      : (value) {
+                                          tradingsProviderController.search(value);
+                                        },
+                                  alertClose: true,
+                                  onSort: tradingsProviderController.tabSelected == (tradingsProviderController.negotiations.length - 1)
+                                      ? null
+                                      : () {
+                                          tradingsProviderController.sort();
+                                        },
+                                  onCloseInfo: () {
+                                    tradingsProviderController.updateTrading();
+                                  },
+                                  addIcon: Padding(
+                                    padding: const EdgeInsets.only(right: 6),
+                                    child: IconButton(
+                                        onPressed: () {
+                                          Navigator.of(context).pushNamed(
+                                            "/history-clients-tradings",
+                                            arguments: {
+                                              "provider": widget.codeProvider,
+                                              "client": widget.codeBranch,
+                                            },
+                                          );
+                                        },
+                                        icon: const Icon(Icons.history_outlined)),
+                                  ),
+                                );
+                              },
+                            ),
                           ],
                           bottom: TabBar(
                             isScrollable: true,
@@ -206,345 +221,461 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                 ? ValueListenableBuilder(
                                     valueListenable: tradingsProviderController.itemTotal,
                                     builder: (context, value, child) {
-                                      return SingleChildScrollView(
-                                        child: Container(
-                                          padding: const EdgeInsets.all(appPadding),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Container(
+                                      return Column(
+                                        children: [
+                                          Expanded(
+                                            child: SingleChildScrollView(
+                                              child: Padding(
                                                 padding: const EdgeInsets.all(appPadding),
-                                                decoration: BoxDecoration(
-                                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                                                  borderRadius: BorderRadius.circular(appRadius),
-                                                ),
                                                 child: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Column(
-                                                      children: [
-                                                        Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Row(
-                                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                Text(
-                                                                  formatCurrency(tradingsProviderController.totalValue),
-                                                                  style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                                                                ),
-                                                                Text("${tradingsProviderController.totalVolume}", style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                                              ],
-                                                            ),
-                                                          ],
+                                                    // ── Hero Card ────────────────────────────────────────────
+                                                    Container(
+                                                      width: double.maxFinite,
+                                                      padding: const EdgeInsets.all(appPadding + 4),
+                                                      decoration: BoxDecoration(
+                                                        gradient: const LinearGradient(
+                                                          colors: [colorSecondary, colorPrimary],
+                                                          begin: Alignment.topLeft,
+                                                          end: Alignment.bottomRight,
                                                         ),
-                                                        Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                const Text(
-                                                                  "para ",
-                                                                  style: TextStyle(fontSize: 14, color: colorGreyDark),
-                                                                ),
-                                                                Text(
-                                                                  "${widget.listBranchs!.first.nameUser}",
-                                                                  style: const TextStyle(
-                                                                    fontSize: 14,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Text(
-                                                              // "${DateTime.now().hour}:${DateTime.now().minute}",
-                                                              DateFormat.Hm().format(DateTime.now()),
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                                                              ),
-                                                            )
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const AppSpacing(),
-                                              const Text(
-                                                "Lojass",
-                                                style: TextStyle(fontWeight: FontWeight.bold),
-                                              ),
-                                              const AppSpacing(),
-                                              Container(
-                                                // padding: const EdgeInsets.symmetric(horizontal: appPadding),
-                                                decoration: BoxDecoration(
-                                                  // color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                                                  borderRadius: BorderRadius.circular(appRadius),
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    Column(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                      crossAxisAlignment: CrossAxisAlignment.end,
-                                                      children: [
-                                                        ValueListenableBuilder(
-                                                            valueListenable: tradingsProviderController.stateTradings,
-                                                            builder: (context, value, child) {
-                                                              return Column(
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: widget.listBranchs!.asMap().entries.map((e) {
-                                                                  return e.value.checked!
-                                                                      ? Container(
-                                                                          width: double.maxFinite,
-                                                                          margin: const EdgeInsets.symmetric(vertical: appMargin),
-                                                                          child: Column(
-                                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                                            children: [
-                                                                              Text(
-                                                                                e.value.documentCompany!,
-                                                                                style: const TextStyle(fontSize: 14),
-                                                                                overflow: TextOverflow.fade,
-                                                                              ),
-                                                                              // const SizedBox(height: 5),
-                                                                              // Text(
-                                                                              //   e.value.documentCompany.toString(),
-                                                                              //   style: const TextStyle(fontSize: 14, color: colorGreyDark),
-                                                                              // ),
-                                                                            ],
-                                                                          ),
-                                                                        )
-                                                                      : Container();
-                                                                }).toList(),
-                                                              );
-                                                            }),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              if (widget.listBranchs!.length > 1)
-                                                ExpansionTile(
-                                                  title: const Text(
-                                                    "Deseja adicionar outras lojas?",
-                                                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                                  ),
-                                                  tilePadding: const EdgeInsets.all(0),
-                                                  dense: true,
-                                                  shape: const Border.symmetric(horizontal: BorderSide(color: Colors.transparent)),
-                                                  children: [
-                                                    Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        Container(
-                                                          padding: const EdgeInsets.all(appMargin),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(appRadius),
-                                                            border: Border.all(
-                                                              color: Colors.grey,
-                                                            ),
-                                                          ),
-                                                          child: const Column(
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                        borderRadius: BorderRadius.circular(appRadius),
+                                                      ),
+                                                      child: Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
                                                               Text(
-                                                                "Importante! Caso outras opções sejam selecionadas, o mesmo pedido será replicado para as demais filiais, confira a diferença de valor na sessão acima.",
-                                                                style: TextStyle(fontSize: 14),
+                                                                "RESUMO DO PEDIDO",
+                                                                style: TextStyle(
+                                                                  fontSize: 11,
+                                                                  color: Colors.white.withValues(alpha: 0.75),
+                                                                  letterSpacing: 1.2,
+                                                                  fontWeight: FontWeight.w600,
+                                                                ),
+                                                              ),
+                                                              Text(
+                                                                DateFormat.Hm().format(DateTime.now()),
+                                                                style: TextStyle(
+                                                                  fontSize: 12,
+                                                                  color: Colors.white.withValues(alpha: 0.75),
+                                                                ),
                                                               ),
                                                             ],
                                                           ),
-                                                        ),
-                                                        SizedBox(
-                                                          width: size.width,
-                                                          child: Column(
-                                                            children: widget.listBranchs!.asMap().entries.map(
-                                                              (e) {
-                                                                return InkWell(
-                                                                  onTap: () {
-                                                                    if (e.value.checked! && tradingsProviderController.totalCheckedBranch > 1) {
-                                                                      tradingsProviderController.totalCheckedBranch -= 1;
-                                                                      widget.listBranchs![e.key].checked = !e.value.checked!;
-                                                                    } else if (e.value.checked! == false) {
-                                                                      tradingsProviderController.totalCheckedBranch += 1;
-                                                                      widget.listBranchs![e.key].checked = !e.value.checked!;
-                                                                    }
-                                                                    tradingsProviderController.updateTrading();
-                                                                  },
-                                                                  child: Container(
-                                                                    width: double.maxFinite,
-                                                                    decoration: const BoxDecoration(
-                                                                      border: Border(bottom: BorderSide(color: colorGrey)),
+                                                          const SizedBox(height: 10),
+                                                          Text(
+                                                            formatCurrency(tradingsProviderController.totalValue),
+                                                            style: const TextStyle(
+                                                              fontSize: 34,
+                                                              fontWeight: FontWeight.bold,
+                                                              color: Colors.white,
+                                                              letterSpacing: -0.5,
+                                                            ),
+                                                          ),
+                                                          const SizedBox(height: 10),
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                                            children: [
+                                                              Row(
+                                                                children: [
+                                                                  Icon(Icons.person_outline, size: 14, color: Colors.white.withValues(alpha: 0.75)),
+                                                                  const SizedBox(width: 4),
+                                                                  Text(
+                                                                    "para ",
+                                                                    style: TextStyle(fontSize: 13, color: Colors.white.withValues(alpha: 0.7)),
+                                                                  ),
+                                                                  Text(
+                                                                    "${widget.listBranchs!.first.nameUser}",
+                                                                    style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              Container(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                                                decoration: BoxDecoration(
+                                                                  color: Colors.white.withValues(alpha: 0.15),
+                                                                  borderRadius: BorderRadius.circular(20),
+                                                                ),
+                                                                child: Row(
+                                                                  mainAxisSize: MainAxisSize.min,
+                                                                  children: [
+                                                                    const Icon(Icons.inventory_2_outlined, size: 14, color: Colors.white),
+                                                                    const SizedBox(width: 5),
+                                                                    Text(
+                                                                      "${tradingsProviderController.totalVolume} volumes",
+                                                                      style: const TextStyle(fontSize: 13, color: Colors.white, fontWeight: FontWeight.w600),
                                                                     ),
-                                                                    child: Row(
-                                                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                                                      mainAxisAlignment: MainAxisAlignment.start,
-                                                                      children: [
-                                                                        ValueListenableBuilder(
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                    const AppSpacing(),
+
+                                                    // ── Lojas selecionadas ────────────────────────────────
+                                                    const Text(
+                                                      "Lojas selecionadas",
+                                                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    ValueListenableBuilder(
+                                                        valueListenable: tradingsProviderController.stateTradings,
+                                                        builder: (context, value, child) {
+                                                          return Column(
+                                                            children: widget.listBranchs!.asMap().entries.map((e) {
+                                                              return e.value.checked!
+                                                                  ? Container(
+                                                                      width: double.maxFinite,
+                                                                      margin: const EdgeInsets.only(bottom: 8),
+                                                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                                                      decoration: BoxDecoration(
+                                                                        color: colorSecondary.withValues(alpha: 0.06),
+                                                                        borderRadius: BorderRadius.circular(appRadius),
+                                                                        border: Border.all(color: colorSecondary.withValues(alpha: 0.2)),
+                                                                      ),
+                                                                      child: Row(
+                                                                        children: [
+                                                                          const Icon(Icons.store_outlined, size: 16, color: colorSecondary),
+                                                                          const SizedBox(width: 10),
+                                                                          Expanded(
+                                                                            child: Text(
+                                                                              e.value.documentCompany!,
+                                                                              style: const TextStyle(fontSize: 13, color: colorSecondary, fontWeight: FontWeight.w500),
+                                                                              overflow: TextOverflow.ellipsis,
+                                                                              maxLines: 2,
+                                                                            ),
+                                                                          ),
+                                                                        ],
+                                                                      ),
+                                                                    )
+                                                                  : const SizedBox.shrink();
+                                                            }).toList(),
+                                                          );
+                                                        }),
+
+                                                    // ── Duplicar para outras lojas ────────────────────────
+                                                    if (widget.listBranchs!.length > 1) ...[
+                                                      const AppSpacing(),
+                                                      Container(
+                                                        decoration: BoxDecoration(
+                                                          borderRadius: BorderRadius.circular(appRadius),
+                                                          border: Border.all(
+                                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                                                          ),
+                                                        ),
+                                                        child: ExpansionTile(
+                                                          leading: Container(
+                                                            width: 36,
+                                                            height: 36,
+                                                            decoration: BoxDecoration(
+                                                              color: colorSecondary.withValues(alpha: 0.1),
+                                                              borderRadius: BorderRadius.circular(8),
+                                                            ),
+                                                            child: const Icon(Icons.store_outlined, color: colorSecondary, size: 18),
+                                                          ),
+                                                          title: const Text(
+                                                            "Duplicar para outras lojas",
+                                                            style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                                          ),
+                                                          subtitle: Text(
+                                                            "Replique este pedido para filiais",
+                                                            style: TextStyle(fontSize: 11, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45)),
+                                                          ),
+                                                          tilePadding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: 4),
+                                                          shape: const Border.symmetric(horizontal: BorderSide(color: Colors.transparent)),
+                                                          children: [
+                                                            Padding(
+                                                              padding: const EdgeInsets.fromLTRB(appPadding, 0, appPadding, appPadding),
+                                                              child: Column(
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Divider(
+                                                                    height: 1,
+                                                                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                                                                  ),
+                                                                  const SizedBox(height: appMargin),
+                                                                  Row(
+                                                                    children: [
+                                                                      Icon(Icons.info_outline, size: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4)),
+                                                                      const SizedBox(width: 6),
+                                                                      Expanded(
+                                                                        child: Text(
+                                                                          "O pedido será replicado para as filiais selecionadas.",
+                                                                          style: TextStyle(fontSize: 12, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45)),
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  ),
+                                                                  const SizedBox(height: appPadding),
+                                                                  Column(
+                                                                    children: widget.listBranchs!.asMap().entries.map(
+                                                                      (e) {
+                                                                        return InkWell(
+                                                                          onTap: () {
+                                                                            if (e.value.checked! && tradingsProviderController.totalCheckedBranch > 1) {
+                                                                              tradingsProviderController.totalCheckedBranch -= 1;
+                                                                              widget.listBranchs![e.key].checked = !e.value.checked!;
+                                                                            } else if (e.value.checked! == false) {
+                                                                              tradingsProviderController.totalCheckedBranch += 1;
+                                                                              widget.listBranchs![e.key].checked = !e.value.checked!;
+                                                                            }
+                                                                            tradingsProviderController.updateTrading();
+                                                                          },
+                                                                          borderRadius: BorderRadius.circular(appRadius),
+                                                                          child: ValueListenableBuilder(
                                                                             valueListenable: tradingsProviderController.stateTradings,
-                                                                            builder: (context, bool value, child) {
+                                                                            builder: (context, bool stateValue, child) {
                                                                               inspect(e.value);
-                                                                              return Checkbox(
-                                                                                activeColor: colorSecondary,
-                                                                                value: e.value.checked,
-                                                                                side: const BorderSide(color: colorGrey),
-                                                                                shape: const RoundedRectangleBorder(
-                                                                                  borderRadius: BorderRadius.all(
-                                                                                    Radius.circular(4),
+                                                                              return AnimatedContainer(
+                                                                                duration: const Duration(milliseconds: 180),
+                                                                                margin: const EdgeInsets.only(bottom: 8),
+                                                                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                                                                decoration: BoxDecoration(
+                                                                                  color: e.value.checked!
+                                                                                      ? colorSecondary.withValues(alpha: 0.07)
+                                                                                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
+                                                                                  borderRadius: BorderRadius.circular(appRadius),
+                                                                                  border: Border.all(
+                                                                                    color: e.value.checked!
+                                                                                        ? colorSecondary.withValues(alpha: 0.35)
+                                                                                        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.07),
+                                                                                    width: e.value.checked! ? 1.5 : 1,
                                                                                   ),
                                                                                 ),
-                                                                                onChanged: (value) {
-                                                                                  if (e.value.checked! && tradingsProviderController.totalCheckedBranch > 1) {
-                                                                                    tradingsProviderController.totalCheckedBranch -= 1;
-                                                                                    widget.listBranchs![e.key].checked = !e.value.checked!;
-                                                                                  } else if (e.value.checked! == false) {
-                                                                                    tradingsProviderController.totalCheckedBranch += 1;
-                                                                                    widget.listBranchs![e.key].checked = !e.value.checked!;
-                                                                                  }
-                                                                                  tradingsProviderController.updateTrading();
-                                                                                },
+                                                                                child: Row(
+                                                                                  children: [
+                                                                                    Container(
+                                                                                      width: 32,
+                                                                                      height: 32,
+                                                                                      decoration: BoxDecoration(
+                                                                                        color: e.value.checked!
+                                                                                            ? colorSecondary.withValues(alpha: 0.15)
+                                                                                            : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.06),
+                                                                                        borderRadius: BorderRadius.circular(8),
+                                                                                      ),
+                                                                                      child: Icon(
+                                                                                        e.value.checked! ? Icons.store : Icons.store_outlined,
+                                                                                        size: 15,
+                                                                                        color: e.value.checked! ? colorSecondary : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.35),
+                                                                                      ),
+                                                                                    ),
+                                                                                    const SizedBox(width: 12),
+                                                                                    Expanded(
+                                                                                      child: Column(
+                                                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                                                        children: [
+                                                                                          Text(
+                                                                                            '${e.value.nameCompany}',
+                                                                                            style: TextStyle(
+                                                                                              fontSize: 13,
+                                                                                              fontWeight: FontWeight.w600,
+                                                                                              color: e.value.checked!
+                                                                                                  ? Theme.of(context).colorScheme.onSurface
+                                                                                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
+                                                                                            ),
+                                                                                            overflow: TextOverflow.ellipsis,
+                                                                                            maxLines: 1,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            '${e.value.relationshipCode}',
+                                                                                            style: TextStyle(
+                                                                                              fontSize: 11,
+                                                                                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+                                                                                            ),
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ),
+                                                                                    Checkbox(
+                                                                                      activeColor: colorSecondary,
+                                                                                      value: e.value.checked,
+                                                                                      side: const BorderSide(color: colorGrey),
+                                                                                      shape: const RoundedRectangleBorder(
+                                                                                        borderRadius: BorderRadius.all(Radius.circular(4)),
+                                                                                      ),
+                                                                                      onChanged: (value) {
+                                                                                        if (e.value.checked! && tradingsProviderController.totalCheckedBranch > 1) {
+                                                                                          tradingsProviderController.totalCheckedBranch -= 1;
+                                                                                          widget.listBranchs![e.key].checked = !e.value.checked!;
+                                                                                        } else if (e.value.checked! == false) {
+                                                                                          tradingsProviderController.totalCheckedBranch += 1;
+                                                                                          widget.listBranchs![e.key].checked = !e.value.checked!;
+                                                                                        }
+                                                                                        tradingsProviderController.updateTrading();
+                                                                                      },
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
                                                                               );
-                                                                            }),
-                                                                        Column(
-                                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                                            },
+                                                                          ),
+                                                                        );
+                                                                      },
+                                                                    ).toList(),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+
+                                                    const AppSpacing(),
+                                                    Divider(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1)),
+                                                    const AppSpacing(),
+
+                                                    // ── Negociações ───────────────────────────────────────
+                                                    Row(
+                                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                      children: [
+                                                        const Text(
+                                                          "Negociações",
+                                                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                                        ),
+                                                        Tooltip(
+                                                          message: "Clique na negociação e navegue até a aba para confirmar os itens pedidos.",
+                                                          child: Icon(
+                                                            Icons.info_outline,
+                                                            size: 18,
+                                                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    const SizedBox(height: 8),
+                                                    Column(
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: tradingsProviderController.negotiationResume.map((negotiation) {
+                                                        return InkWell(
+                                                          onTap: () {
+                                                            // search index position negotiation per id and navigate to tab
+                                                            int index = tradingsProviderController.negotiations.indexWhere((element) => element.negotiation == negotiation.negotiation);
+                                                            if (index != -1) {
+                                                              tradingsProviderController.tabController.animateTo(index);
+                                                              tradingsProviderController.itemSelected.value = index;
+                                                              tradingsProviderController.tabSelected = index;
+                                                              tradingsProviderController.tabController.index = index;
+                                                              tradingsProviderController.updateTrading();
+                                                            }
+                                                          },
+                                                          borderRadius: BorderRadius.circular(appRadius),
+                                                          child: Container(
+                                                            margin: const EdgeInsets.only(bottom: appMargin),
+                                                            decoration: BoxDecoration(
+                                                              borderRadius: BorderRadius.circular(appRadius),
+                                                              border: Border.all(
+                                                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                                                              ),
+                                                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
+                                                            ),
+                                                            child: Row(
+                                                              children: [
+                                                                Container(
+                                                                  width: 4,
+                                                                  height: 68,
+                                                                  decoration: const BoxDecoration(
+                                                                    color: colorSecondary,
+                                                                    borderRadius: BorderRadius.only(
+                                                                      topLeft: Radius.circular(appRadius),
+                                                                      bottomLeft: Radius.circular(appRadius),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Expanded(
+                                                                  child: Padding(
+                                                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                                                                    child: Column(
+                                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                                      children: [
+                                                                        Text(
+                                                                          "${negotiation.negotiation} · ${negotiation.title}",
+                                                                          style: TextStyle(
+                                                                            fontSize: 13,
+                                                                            color: Theme.of(context).colorScheme.onSurface,
+                                                                            fontWeight: FontWeight.bold,
+                                                                          ),
+                                                                        ),
+                                                                        const SizedBox(height: 6),
+                                                                        Row(
                                                                           children: [
+                                                                            Icon(Icons.inventory_2_outlined, size: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.45)),
+                                                                            const SizedBox(width: 4),
                                                                             Text(
-                                                                              e.value.nameCompany!.length < 40
-                                                                                  ? '${e.value.relationshipCode} - ${e.value.nameCompany}'
-                                                                                  : '${e.value.relationshipCode} - ${e.value.nameCompany!.substring(0, 40)}',
-                                                                              style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
+                                                                              "${negotiation.volume} itens",
+                                                                              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55)),
                                                                             ),
-                                                                            // Text(
-                                                                            //   '${e.value.documentCompany}',
-                                                                            //   style: const TextStyle(fontSize: 14, fontStyle: FontStyle.italic),
-                                                                            // ),
+                                                                            const SizedBox(width: 16),
+                                                                            Text(
+                                                                              formatCurrency(negotiation.value),
+                                                                              style: TextStyle(fontSize: 13, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55)),
+                                                                            ),
                                                                           ],
-                                                                        )
+                                                                        ),
                                                                       ],
                                                                     ),
                                                                   ),
-                                                                );
-                                                              },
-                                                            ).toList(),
+                                                                ),
+                                                                Padding(
+                                                                  padding: const EdgeInsets.only(right: 12),
+                                                                  child: Icon(
+                                                                    Icons.arrow_forward_ios,
+                                                                    size: 13,
+                                                                    color: colorSecondary.withValues(alpha: 0.6),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        );
+                                                      }).toList(),
                                                     ),
+
+                                                    const AppSpacing(),
                                                   ],
                                                 ),
-                                              const AppSpacing(),
-                                              Divider(
-                                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.3),
                                               ),
-                                              const AppSpacing(),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Row(
-                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                    children: [
-                                                      const Text(
-                                                        "Negociações",
-                                                        style: TextStyle(fontWeight: FontWeight.bold),
-                                                      ),
-                                                      Tooltip(
-                                                        message: "Clique na negociação e navegue até a aba para confirmar os itens pedidos.",
-                                                        child: Icon(
-                                                          Icons.info_outline,
-                                                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
-                                                        ),
-                                                      )
-                                                    ],
-                                                  ),
-                                                  const AppSpacing(),
-                                                  Column(
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    mainAxisAlignment: MainAxisAlignment.start,
-                                                    children: tradingsProviderController.negotiationResume.map((negotiation) {
-                                                      return InkWell(
-                                                        onTap: () {
-                                                          // search index position negotiation per id and navigate to tab
-                                                          int index = tradingsProviderController.negotiations.indexWhere((element) => element.negotiation == negotiation.negotiation);
-                                                          if (index != -1) {
-                                                            tradingsProviderController.tabController.animateTo(index);
-                                                            tradingsProviderController.itemSelected.value = index;
-                                                            tradingsProviderController.tabSelected = index;
-                                                            tradingsProviderController.tabController.index = index;
-                                                            tradingsProviderController.updateTrading();
-                                                          }
-                                                        },
-                                                        child: Container(
-                                                          margin: const EdgeInsets.only(bottom: appMargin),
-                                                          padding: const EdgeInsets.all(appPadding),
-                                                          decoration: BoxDecoration(
-                                                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
-                                                              borderRadius: BorderRadius.circular(appRadius),
-                                                              border: Border.all(
-                                                                width: 1,
-                                                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                                                              )),
-                                                          child: Column(
-                                                            children: [
-                                                              Row(
-                                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Text(
-                                                                    "${negotiation.negotiation} - ${negotiation.title}",
-                                                                    style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onSurface, fontWeight: FontWeight.bold),
-                                                                  ),
-                                                                  const SizedBox(width: 5),
-                                                                  Icon(
-                                                                    Icons.subdirectory_arrow_left,
-                                                                    size: 20,
-                                                                    color: Theme.of(context).colorScheme.onSurface,
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                              const AppSpacing(),
-                                                              Row(
-                                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                children: [
-                                                                  Text("Volume: ${negotiation.volume}"),
-                                                                  Text(
-                                                                    "Valor total: ${formatCurrency(negotiation.value)}",
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                  ),
-                                                ],
-                                              ),
-                                              Column(
-                                                children: [
-                                                  const SizedBox(height: appMargin),
-                                                  ValueListenableBuilder(
-                                                      valueListenable: tradingsProviderController.stateFinishTrading,
-                                                      builder: (context, value, child) {
-                                                        return AppButton(
-                                                          label: "Finalizar Pedido",
-                                                          colorButton: colorSecondary,
-                                                          state: tradingsProviderController.stateFinishTrading.value,
-                                                          iconButton: Icons.done_all,
-                                                          loading: value == StateApp.loading,
-                                                          onPressButton: () {
-                                                            saveOrder();
-                                                          },
-                                                        );
-                                                      }),
-                                                  const AppSpacing()
-                                                ],
-                                              ),
-                                            ],
+                                            ),
                                           ),
-                                        ),
+                                          // ── Finalizar Pedido (footer fixo) ───────────────────
+                                          Container(
+                                            padding: const EdgeInsets.fromLTRB(appPadding, appPadding, appPadding, appPadding),
+                                            decoration: BoxDecoration(
+                                              color: Theme.of(context).scaffoldBackgroundColor,
+                                              border: Border(
+                                                top: BorderSide(
+                                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                                                ),
+                                              ),
+                                            ),
+                                            child: SafeArea(
+                                              top: false,
+                                              child: ValueListenableBuilder(
+                                                valueListenable: tradingsProviderController.stateFinishTrading,
+                                                builder: (context, value, child) {
+                                                  return AppButton(
+                                                    label: "Finalizar Pedido",
+                                                    colorButton: colorSecondary,
+                                                    state: tradingsProviderController.stateFinishTrading.value,
+                                                    iconButton: Icons.done_all,
+                                                    loading: value == StateApp.loading,
+                                                    onPressButton: () {
+                                                      saveOrder();
+                                                    },
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       );
                                     })
                                 : ComponentList(
