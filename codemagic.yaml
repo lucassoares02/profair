@@ -15,42 +15,33 @@ workflows:
 
     scripts:
       - script: xcode-project use-profiles
+
       - script: flutter clean
       - script: flutter --version
       - script: flutter packages pub get
       - script: dart pub cache repair
 
-      - name: Check Info.plist
-        script: |
-          echo "📄 Info.plist do projeto:"
-          cat ios/Runner/Info.plist
-
-      - name: Restore Provisioning Profile
-        script: |
-          echo "🧹 Limpando outros provisioning profiles"
-          rm -f ~/Library/MobileDevice/Provisioning\ Profiles/*
-          echo "⬇️ Restaurando provisioning profile do \$APPSTORE_MOBILEPROVISION"
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "$APPSTORE_MOBILEPROVISION" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision
-          echo "✅ Provisioning profile restaurado!"
-          ls -l ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "🔎 Verificando provisioning profile restaurado"
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-          grep -A1 aps-environment profile.plist
-
       - name: Restore GoogleService-Info.plist
         script: |
           echo "$GOOGLE_SERVICE_PLIST_B64" | base64 --decode > ios/Runner/GoogleService-Info.plist
 
-      - name: Ajustar entitlements para production
+      - name: Ajustar Runner.entitlements
         script: |
-          echo "🛠️ Corrigindo aps-environment para production"
-          sed -i '' 's/development/production/' ios/Runner/Runner.entitlements
-          grep -q '<string>production</string>' ios/Runner/Runner.entitlements && echo "✅ Entitlements corrigido!" || echo "❌ Não foi possível corrigir entitlements"
+          plutil -replace aps-environment -string production ios/Runner/Runner.entitlements
+          echo "✅ Runner.entitlements:"
+          cat ios/Runner/Runner.entitlements
 
-      - name: Criar export_options.plist
+      - name: Gerar export_options.plist
         script: |
-          PROFILE_UUID=$(cat profile_uuid.txt)
+          # Lê o perfil que o Codemagic já instalou
+          PROFILE_PATH=$(ls ~/Library/MobileDevice/Provisioning\ Profiles/*.mobileprovision | head -1)
+          security cms -D -i "$PROFILE_PATH" > profile.plist
+
+          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" profile.plist)
+          TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist)
+
+          echo "✅ Profile: $PROFILE_NAME | Team: $TEAM_ID"
+
           cat > /Users/builder/export_options.plist <<EOF
           <?xml version="1.0" encoding="UTF-8"?>
           <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -61,110 +52,40 @@ workflows:
             <key>signingStyle</key>
             <string>manual</string>
             <key>teamID</key>
-            <string>B4DCW8V3J4</string>
-            <key>provisioningProfiles</key>
-            <dict>
-              <key>br.com.profair.profair</key>
-              <string>ios profair notification</string>
-            </dict>
-            <key>stripSwiftSymbols</key>
-            <true/>
-            <key>compileBitcode</key>
-            <true/>
-          </dict>
-          </plist>
-          EOF
-              cat /Users/builder/export_options.plist
-
-      - name: Force CODE_SIGN_ENTITLEMENTS
-        script: |
-          plutil -replace CODE_SIGN_ENTITLEMENTS -string "Runner/Runner.entitlements" ios/Runner.xcodeproj/project.pbxproj
-          grep -A2 CODE_SIGN_ENTITLEMENTS ios/Runner.xcodeproj/project.pbxproj
-
-      - name: Gerar export_options.plist
-        script: |
-          echo "📋 Extraindo informações do .mobileprovision"
-          security cms -D -i ~/Library/MobileDevice/Provisioning\ Profiles/ios_profair_notification.mobileprovision > profile.plist
-
-          PROFILE_NAME=$(/usr/libexec/PlistBuddy -c "Print :Name" profile.plist)
-          TEAM_ID=$(/usr/libexec/PlistBuddy -c "Print :TeamIdentifier:0" profile.plist)
-
-          echo "✅ Provisioning profile name: $PROFILE_NAME"
-          echo "✅ Team ID: $TEAM_ID"
-
-          cat > ios/export_options.plist <<EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
-          <dict>
-            <key>method</key>
-            <string>app-store</string>
-
-            <key>signingStyle</key>
-            <string>manual</string>
-
-            <key>teamID</key>
             <string>${TEAM_ID}</string>
-
             <key>provisioningProfiles</key>
             <dict>
               <key>br.com.profair.profair</key>
               <string>${PROFILE_NAME}</string>
             </dict>
-
             <key>stripSwiftSymbols</key>
-            <true/>
-
-            <key>compileBitcode</key>
             <true/>
           </dict>
           </plist>
           EOF
-
-          echo "📄 export_options.plist gerado:"
-          cat ios/export_options.plist
-
-      - name: Ajustar Runner.entitlements
-        script: |
-          if ! grep -q "<string>production</string>" ios/Runner/Runner.entitlements; then
-            echo "🛠️ Adicionando aps-environment=production em Runner.entitlements"
-            plutil -replace aps-environment -string production ios/Runner/Runner.entitlements || {
-              echo "❌ Falha ao ajustar Runner.entitlements"; exit 1;
-            }
-          fi
-          echo "✅ Runner.entitlements:"
-          cat ios/Runner/Runner.entitlements
+          cat /Users/builder/export_options.plist
 
       - name: Flutter build ipa
         script: |
-          echo "🏗️ Construindo IPA com flutter"
           flutter build ipa --export-options-plist=/Users/builder/export_options.plist
 
       - name: Verify GoogleService-Info.plist in .ipa
         script: |
-          echo "🔍 Verificando se GoogleService-Info.plist está embutido no .ipa"
-
-          # Descompacta o IPA para inspecionar
           unzip -q build/ios/ipa/*.ipa -d extracted_ipa
-
           if [ -f extracted_ipa/Payload/*.app/GoogleService-Info.plist ]; then
-            echo "✅ GoogleService-Info.plist encontrado dentro do .ipa"
-            ls -l extracted_ipa/Payload/*.app/GoogleService-Info.plist
+            echo "✅ GoogleService-Info.plist encontrado no .ipa"
           else
             echo "❌ GoogleService-Info.plist NÃO encontrado no .ipa"
             exit 1
           fi
 
-      - name: Verify .entitlements in built app
+      - name: Verify entitlements in built app
         script: |
           unzip -q build/ios/ipa/*.ipa -d extracted
           codesign -d --entitlements :- extracted/Payload/*.app > built_entitlements.plist
-          grep -q '<string>production</string>' built_entitlements.plist
-          if [ $? -ne 0 ]; then
-            echo "❌ aps-environment não está setado para production no app final!"
-            exit 1
-          fi
-          echo "✅ aps-environment presente no app final e configurado para production."
+          grep -q '<string>production</string>' built_entitlements.plist \
+            && echo "✅ aps-environment=production ok" \
+            || { echo "❌ aps-environment não está production"; exit 1; }
 
     artifacts:
       - build/ios/ipa/*.ipa
