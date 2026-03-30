@@ -9,7 +9,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: br.com.profair.profair
         certificates:
-          - api_app_store
+          - app_store_certificate_integration
     integrations:
       app_store_connect: api key profair renew
 
