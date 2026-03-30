@@ -1,5 +1,4 @@
 workflows:
-   
   app-store:
     name: Apple Workflow
     environment:
@@ -10,7 +9,7 @@ workflows:
         distribution_type: app_store
         bundle_identifier: br.com.profair.profair
         certificates:
-          - api_key_profair_renew
+          - api_app_store
     integrations:
       app_store_connect: api key profair renew
 
@@ -125,7 +124,6 @@ workflows:
           echo "📄 export_options.plist gerado:"
           cat ios/export_options.plist
 
-
       - name: Ajustar Runner.entitlements
         script: |
           if ! grep -q "<string>production</string>" ios/Runner/Runner.entitlements; then
@@ -137,20 +135,18 @@ workflows:
           echo "✅ Runner.entitlements:"
           cat ios/Runner/Runner.entitlements
 
-
       - name: Flutter build ipa
         script: |
           echo "🏗️ Construindo IPA com flutter"
           flutter build ipa --export-options-plist=/Users/builder/export_options.plist
 
-           
       - name: Verify GoogleService-Info.plist in .ipa
         script: |
           echo "🔍 Verificando se GoogleService-Info.plist está embutido no .ipa"
-          
+
           # Descompacta o IPA para inspecionar
           unzip -q build/ios/ipa/*.ipa -d extracted_ipa
-          
+
           if [ -f extracted_ipa/Payload/*.app/GoogleService-Info.plist ]; then
             echo "✅ GoogleService-Info.plist encontrado dentro do .ipa"
             ls -l extracted_ipa/Payload/*.app/GoogleService-Info.plist
@@ -170,7 +166,6 @@ workflows:
           fi
           echo "✅ aps-environment presente no app final e configurado para production."
 
-
     artifacts:
       - build/ios/ipa/*.ipa
 
@@ -180,7 +175,6 @@ workflows:
         submit_to_app_store: true
         release_type: SCHEDULED
         copyright: 2025 Profair
-
 
   android:
     name: Android Workflow
