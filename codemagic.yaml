@@ -4,7 +4,7 @@ workflows:
     environment:
       groups:
         - android
-      flutter: 3.29.0
+      flutter: 3.41.6
       ios_signing:
         provisioning_profiles:
           - profair_appstore_new
