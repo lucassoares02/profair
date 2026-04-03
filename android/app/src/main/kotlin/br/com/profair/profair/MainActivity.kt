@@ -1,4 +1,4 @@
-package br.com.profair.mobile
+package br.com.profair.profair
 
 import io.flutter.embedding.android.FlutterActivity
 
