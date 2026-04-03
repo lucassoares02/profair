@@ -273,6 +273,7 @@ class _ProviderEmptyState extends StatelessWidget {
     final onSurface = Theme.of(context).colorScheme.onSurface;
 
     return Container(
+      width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
       decoration: BoxDecoration(
@@ -320,7 +321,7 @@ class _ProviderEmptyState extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Nenhum pedido registrado ainda.\nSelecione um cliente e inicie sua primeira venda.',
+            'Use o botão "Novo" para iniciar seu primero pedido. Quando um cliente for até você.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
@@ -328,28 +329,28 @@ class _ProviderEmptyState extends StatelessWidget {
               height: 1.55,
             ),
           ),
-          const SizedBox(height: 22),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: onStartSale,
-              icon: const Icon(Icons.person_search_outlined, size: 18),
-              label: const Text('Selecionar cliente'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: colorSecondary,
-                foregroundColor: colorWhite,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                elevation: 0,
-                textStyle: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ),
+          // const SizedBox(height: 22),
+          // SizedBox(
+          //   width: double.infinity,
+          //   child: ElevatedButton.icon(
+          //     onPressed: onStartSale,
+          //     icon: const Icon(Icons.person_search_outlined, size: 18),
+          //     label: const Text('Selecionar cliente'),
+          //     style: ElevatedButton.styleFrom(
+          //       backgroundColor: colorSecondary,
+          //       foregroundColor: colorWhite,
+          //       padding: const EdgeInsets.symmetric(vertical: 14),
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(12),
+          //       ),
+          //       elevation: 0,
+          //       textStyle: const TextStyle(
+          //         fontSize: 14,
+          //         fontWeight: FontWeight.w600,
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
