@@ -109,7 +109,7 @@ final ThemeData appLightTheme = ThemeData(
       color: AppColors.lightOnSurface,
     ),
   ),
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     elevation: 0,
     color: AppColors.lightSurface,
     surfaceTintColor: Colors.transparent,
@@ -222,7 +222,7 @@ final ThemeData appLightTheme = ThemeData(
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: AppColors.lightSurface,
     surfaceTintColor: Colors.transparent,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -293,7 +293,7 @@ final ThemeData appDarkTheme = ThemeData(
       color: AppColors.darkOnSurface,
     ),
   ),
-  cardTheme: CardTheme(
+  cardTheme: CardThemeData(
     elevation: 0,
     color: AppColors.darkSurface,
     surfaceTintColor: Colors.transparent,
@@ -406,7 +406,7 @@ final ThemeData appDarkTheme = ThemeData(
     behavior: SnackBarBehavior.floating,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
   ),
-  dialogTheme: DialogTheme(
+  dialogTheme: DialogThemeData(
     backgroundColor: AppColors.darkSurface,
     surfaceTintColor: Colors.transparent,
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
