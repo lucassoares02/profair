@@ -42,10 +42,6 @@ class _HomePageState extends State<HomePage> {
     });
 
     FirebaseMessaging.instance.onTokenRefresh.listen((String token) async {
-      print('==========================================================');
-      print('FCM Token Refresh: $token');
-      print('==========================================================');
-
       homeController.postTokenFcm(homeController.data!.userCode!.toString(), token.toString());
 
       final prefs = await SharedPreferences.getInstance();
@@ -168,6 +164,9 @@ class _HomePageState extends State<HomePage> {
                     ValueListenableBuilder(
                         valueListenable: homeController.stateCampaign,
                         builder: (context, value, child) {
+                          if (value == StateApp.success && homeController.campaigns.isEmpty) {
+                            return Container();
+                          }
                           return value == StateApp.loading
                               ? const Skeletonizer(
                                   effect: ShimmerEffect(),
@@ -181,6 +180,7 @@ class _HomePageState extends State<HomePage> {
                                 )
                               : CardNotice(homeController: homeController);
                         }),
+                    const AppSpacing(),
                     CardCount(homeController: homeController),
                     ValueListenableBuilder(
                       valueListenable: homeController.stateData,
@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage> {
                       child: ValueListenableBuilder(
                         valueListenable: homeController.stateData,
                         builder: (context, value, child) {
-                          return value == StateApp.loading
+                          return (value == StateApp.loading)
                               ? LoadingList(loadingHeader: false)
                               : homeController.data!.accessTargeting == 2
                                   ? Column(
@@ -312,27 +312,27 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),
-                      child: ValueListenableBuilder(
-                        valueListenable: homeController.stateData,
-                        builder: (context, value, child) {
-                          return value == StateApp.loading
-                              ? Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: appPadding),
-                                  child: LoadingList(loadingHeader: false),
-                                )
-                              : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
-                                  ? LastRequests(
-                                      description: "Últimos pedidos",
-                                      listItems: homeController.requestStores,
-                                      state: homeController.stateRequestsStore,
-                                      homeController: homeController,
-                                    )
-                                  : Container();
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   padding: const EdgeInsets.only(left: appPadding, right: appPadding, bottom: appPadding),
+                    //   child: ValueListenableBuilder(
+                    //     valueListenable: homeController.stateData,
+                    //     builder: (context, value, child) {
+                    //       return value == StateApp.loading
+                    //           ? Padding(
+                    //               padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                    //               child: LoadingList(loadingHeader: false),
+                    //             )
+                    //           : homeController.data!.accessTargeting == 1 || homeController.data!.accessTargeting == 2
+                    //               ? LastRequests(
+                    //                   description: "Últimos pedidos",
+                    //                   listItems: homeController.requestStores,
+                    //                   state: homeController.stateRequestsStore,
+                    //                   homeController: homeController,
+                    //                 )
+                    //               : Container();
+                    //     },
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

@@ -7,6 +7,7 @@ import 'package:profair/src/app_module.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:profair/src/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,16 +39,8 @@ class MyApp extends StatelessWidget {
       ],
       debugShowCheckedModeBanner: false,
       supportedLocales: S.delegate.supportedLocales,
-      theme: ThemeData(
-        brightness: Brightness.light,
-        fontFamily: "Inter",
-        primarySwatch: Colors.blue,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        fontFamily: "Inter",
-        primarySwatch: Colors.blue,
-      ),
+      theme: appLightTheme,
+      darkTheme: appDarkTheme,
       themeMode: ThemeMode.system,
       routerDelegate: Modular.routerDelegate,
       routeInformationParser: Modular.routeInformationParser,

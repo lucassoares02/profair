@@ -20,6 +20,7 @@ class ProvidersModel {
   });
 
   ProvidersModel.fromJson(Map<String, dynamic> json) {
+    print(json);
     document = json['cnpjForn'];
     nameProvider = json['nomeForn'];
     socialName = json['razao'];

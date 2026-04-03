@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "252078218557",
+    "project_id": "appprofair",
+    "storage_bucket": "appprofair.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:252078218557:android:69553b56689ed42e43f954",
+        "android_client_info": {
+          "package_name": "br.com.profair.profair"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "252078218557-he5ebhd37o21h88p5s5aasdl5sov4lr2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA8ECpdohAXZfWMgf9DdSkJto-cbe4JMU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "252078218557-he5ebhd37o21h88p5s5aasdl5sov4lr2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -9,7 +9,6 @@ class ProvidersController extends ValueNotifier<StateApp> {
   List<ProvidersModel> providers = [];
 
   final stateSearchProviders = ValueNotifier<StateApp>(StateApp.start);
-  int sortInt = 0;
   List<int> sellCounts = [0, 0, 0];
 
   final stateProviders = ValueNotifier<StateApp>(StateApp.start);
@@ -77,26 +76,21 @@ class ProvidersController extends ValueNotifier<StateApp> {
     }
   }
 
-  sort() async {
-    print("sort");
+  sort(int sortInt) async {
     stateSearchProviders.value = StateApp.loading;
     String? message = "";
     try {
-      if (sortInt == 0) {
+      if (sortInt == 2) {
         providersList.sort(((a, b) => a.nameProvider!.compareTo(b.nameProvider!)));
         message = "Ordenado por ordem alfabética!";
       } else if (sortInt == 1) {
         providersList.sort(((a, b) => int.parse(b.totalVolume!) - int.parse(a.totalVolume!)));
         message = "Ordenado volume vendido!";
-      } else if (sortInt == 2) {
+      } else if (sortInt == 0) {
         providersList.sort(((a, b) => b.totalValue!.compareTo(a.totalValue!)));
         message = "Ordenado por valor total de vendas!";
       }
-      if (sortInt == 2) {
-        sortInt = 0;
-      } else {
-        sortInt += 1;
-      }
+
       Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
 
       stateSearchProviders.value = StateApp.success;

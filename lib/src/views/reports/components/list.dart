@@ -112,18 +112,18 @@ class _ComponentListState extends State<ComponentList> {
               // 3) Card: Clientes atendidos / Fornecedores visitados
               // ═══════════════════════════════════════
               const SizedBox(height: 28),
-              _buildAsyncCard(
-                listenable: _ctrl.statePercentageClients,
-                width: width,
-                builder: () => CardPercentage(
-                  title: (_isProvider || _isAdmin) ? "Clientes Atendidos" : "Fornecedores visitados",
-                  content:
-                      "Nessa sessão é possível visualizar quantos ${(_isProvider || _isAdmin) ? "associados" : "fornecedores"} foram atendidos até o momento em relação a quantidade total presentes no evento.",
-                  value: _ctrl.percentageClients!.percentage,
-                  footer: "${_ctrl.percentageClients!.parcial} de ${_ctrl.percentageClients!.total} foram atendidos",
-                  reportsController: _ctrl,
+              if (!_isProvider && !_isAdmin)
+                _buildAsyncCard(
+                  listenable: _ctrl.statePercentageClients,
+                  width: width,
+                  builder: () => CardPercentage(
+                    title: "Fornecedores visitados",
+                    content: "Nessa sessão é possível visualizar quantos fornecedores foram atendidos até o momento em relação a quantidade total presentes no evento.",
+                    value: _ctrl.percentageClients!.percentage,
+                    footer: "${_ctrl.percentageClients!.parcial} de ${_ctrl.percentageClients!.total} foram visitados.",
+                    reportsController: _ctrl,
+                  ),
                 ),
-              ),
 
               // ═══════════════════════════════════════
               // 4) Ranking de valores movimentados

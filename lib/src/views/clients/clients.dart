@@ -5,12 +5,20 @@ import 'package:profair/src/views/clients/components/list.dart';
 import 'package:flutter/material.dart';
 
 class Clients extends StatefulWidget {
-  const Clients({super.key, required this.codeProvider, this.accessTargenting, this.merchandise, this.trading});
+  const Clients({
+    super.key,
+    required this.codeProvider,
+    this.accessTargenting,
+    this.merchandise,
+    this.trading,
+    this.groups,
+  });
 
   final int? codeProvider;
   final int? accessTargenting;
   final int? merchandise;
   final int? trading;
+  final int? groups;
 
   @override
   State<Clients> createState() => _ClientsState();
@@ -27,6 +35,7 @@ class _ClientsState extends State<Clients> {
       accessTargenting: widget.accessTargenting,
       trading: widget.trading,
       merchandise: widget.merchandise,
+      groups: widget.groups,
     );
 
     super.initState();
@@ -46,6 +55,7 @@ class _ClientsState extends State<Clients> {
                   codeProvider: widget.codeProvider,
                   listItems: clientsController.clientsList,
                   clientsController: clientsController,
+                  group: widget.groups,
                   onClickCard: true,
                   accessTargenting: widget.accessTargenting!);
             },

@@ -21,10 +21,10 @@ class ClientsController extends ValueNotifier<StateApp> {
   PercentageClientsModel? percentageClients;
   int sortInt = 0;
 
-  Future findClients({String? codeProvider, int? accessTargenting, int? merchandise, int? trading}) async {
+  Future findClients({String? codeProvider, int? accessTargenting, int? merchandise, int? trading, int? groups}) async {
     stateClients.value = StateApp.loading;
     try {
-      clientsList = await _clientsRepository.getClients(codeProvider, accessTargenting!, merchandise!, trading!);
+      clientsList = await _clientsRepository.getClients(codeProvider, accessTargenting!, merchandise!, trading!, groups);
       clients = clientsList;
 
       stateClients.value = StateApp.success;

@@ -67,6 +67,17 @@ class _AppActionsState extends State<AppActions> {
           "codeTrading": 0,
         },
       );
+    } else if (route == "groups") {
+      navigatorRoutes(
+        "clients",
+        {
+          "codeProvider": widget.homeController.data!.codCompany,
+          "accessTargenting": widget.homeController.data!.accessTargeting,
+          "merchandise": 0,
+          "codeTrading": 0,
+          "groups": 1,
+        },
+      );
     } else if (route == "tradings") {
       navigatorRoutes(route, widget.homeController);
     } else if (route == "reports") {

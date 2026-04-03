@@ -23,6 +23,7 @@ class ComponentList extends StatefulWidget {
     required this.clientsController,
     this.onClickCard = true,
     required this.accessTargenting,
+    this.group,
   });
 
   final Iterable<ClientsModel> listItems;
@@ -32,6 +33,7 @@ class ComponentList extends StatefulWidget {
   final ClientsController clientsController;
   final int accessTargenting;
   final bool onClickCard;
+  final int? group;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -50,6 +52,20 @@ class _ComponentListState extends State<ComponentList> {
         backgroundColor: Colors.red.shade600,
         textColor: Colors.white,
         fontSize: 14.0,
+      );
+      return;
+    }
+
+    if (widget.group == 1) {
+      Navigator.of(context).pushNamed(
+        "clients",
+        arguments: {
+          "codeProvider": client.codeGroup,
+          "accessTargenting": widget.accessTargenting,
+          "merchandise": 0,
+          "codeTrading": 0,
+          "groups": 2,
+        },
       );
       return;
     }

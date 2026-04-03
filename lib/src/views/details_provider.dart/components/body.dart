@@ -1695,26 +1695,6 @@ class _HistoryTimelineCard extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              "Ver detalhes",
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                                color: providerColor.withValues(alpha: 0.75),
-                              ),
-                            ),
-                            const SizedBox(width: 4),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 11,
-                              color: providerColor.withValues(alpha: 0.75),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),

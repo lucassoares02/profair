@@ -11,19 +11,7 @@ class NoticeModel {
   int? type;
   int? provider;
 
-  NoticeModel({
-    this.code,
-    this.title,
-    this.description,
-    this.image,
-    this.action,
-    this.priority,
-    this.primaryColor,
-    this.secondaryColor,
-    this.stamp,
-    this.type,
-    this.provider,
-  });
+  NoticeModel({this.code, this.title, this.description, this.image, this.action, this.priority, this.primaryColor, this.secondaryColor, this.stamp, this.type, this.provider});
 
   NoticeModel.fromJson(Map<String, dynamic> json) {
     code = json['codNotice'];

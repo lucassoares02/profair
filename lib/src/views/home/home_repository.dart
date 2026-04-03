@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/models/response_model.dart';
@@ -8,6 +10,7 @@ import 'package:profair/src/repositories/buyers_model.dart';
 import 'package:profair/src/repositories/campaign_model.dart';
 import 'package:profair/src/repositories/categories_icon.dart';
 import 'package:profair/src/repositories/categories_model.dart';
+import 'package:profair/src/repositories/notice_model.dart';
 import 'package:profair/src/repositories/recipe_model.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:flutter/material.dart';
@@ -124,12 +127,33 @@ class HomeRepository {
     }
   }
 
+  getNotice(int notification) async {
+    ResponseModel? response;
+    try {
+      response = await httpService.get('notice/$notification');
+      return NoticeModel.fromJson(response.data);
+    } catch (e) {
+      debugPrint("Get Notices (Home Repository) Error: $e");
+      rethrow;
+    }
+  }
+
+  getProvider(int id) async {
+    ResponseModel? response;
+    response = await httpService.get('/allproviderdetails/$id');
+    try {
+      return ProvidersModel.fromJson(response.data[0]);
+    } catch (e) {
+      debugPrint("Get Providers (Home Repository) Error: $e");
+      rethrow;
+    }
+  }
+
   checkNotificationsUser() async {
     ResponseModel? response;
     try {
       response = await httpService.get('notification/pending');
       List list = response.data as List;
-      print("Notifications User: ${response.data}");
       return list.map((json) => NotificationUserModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Get Pending Notifications (Home Repository) Error: $e");
@@ -182,6 +206,13 @@ class HomeRepository {
           "title": code == 1 ? 'Clientes' : 'Lojas',
           "icon": Icons.store,
           "route": "clients",
+        },
+      if (code == 3)
+        {
+          "id": 105,
+          "title": 'Grupos',
+          "icon": Icons.groups,
+          "route": "groups",
         },
       // if (code == 3)
       //   {

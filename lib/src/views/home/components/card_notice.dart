@@ -4,6 +4,7 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/home/home_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CardNotice extends StatefulWidget {
   const CardNotice({super.key, required this.homeController});
@@ -34,12 +35,12 @@ class _CardNoticeState extends State<CardNotice> {
   void _startAutoScroll() {
     _autoScrollTimer?.cancel();
     if (_campaigns.length <= 1) return;
-    _autoScrollTimer = Timer.periodic(const Duration(seconds: 5), (_) {
+    _autoScrollTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       if (!mounted || !_pageController.hasClients) return;
       final next = (_currentPage + 1) % _campaigns.length;
       _pageController.animateToPage(
         next,
-        duration: const Duration(milliseconds: 700),
+        duration: const Duration(milliseconds: 600),
         curve: Curves.easeOutCubic,
       );
     });
@@ -68,7 +69,10 @@ class _CardNoticeState extends State<CardNotice> {
               itemCount: campaigns.length,
               onPageChanged: (index) => setState(() => _currentPage = index),
               itemBuilder: (context, index) {
-                return _SlideCard(campaign: campaigns[index]);
+                return _SlideCard(
+                  campaign: campaigns[index],
+                  homeController: widget.homeController,
+                );
               },
             ),
           ),
@@ -88,9 +92,10 @@ class _CardNoticeState extends State<CardNotice> {
 // ─── Slide individual ────────────────────────────────────────────────────────
 
 class _SlideCard extends StatelessWidget {
-  const _SlideCard({required this.campaign});
+  const _SlideCard({required this.campaign, required this.homeController});
 
   final CampaignModel campaign;
+  final HomeController homeController;
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +108,20 @@ class _SlideCard extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: () => Navigator.of(context).pushNamed("/listattractions"),
+          onTap: () async {
+            // final action = campaign.action;
+            // if (action != null && action.isNotEmpty) {
+            //   final uri = Uri.parse(action);
+            //   if (await canLaunchUrl(uri)) {
+            //     await launchUrl(uri, mode: LaunchMode.externalApplication);
+            //     return;
+            //   }
+            // }
+            if (context.mounted) {
+              Navigator.of(context)
+                  .pushNamed("/detailsnotice", arguments: {"id": campaign.code, "codeBranch": homeController.data!.codCompany, "accessTargeting": homeController.data!.accessTargeting});
+            }
+          },
           splashColor: Colors.white.withValues(alpha: 0.08),
           highlightColor: Colors.white.withValues(alpha: 0.04),
           child: Ink(

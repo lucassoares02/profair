@@ -3,6 +3,7 @@ import 'package:profair/src/views/clients_product/clients_product.dart';
 import 'package:profair/src/views/customers/customers.dart';
 import 'package:profair/src/views/details_attraction/details_attraction.dart';
 import 'package:profair/src/views/details_balance/details_balance.dart';
+import 'package:profair/src/views/details_notice/details_notice.dart';
 import 'package:profair/src/views/details_provider.dart/details_provider.dart';
 import 'package:profair/src/views/finish_trading/finish_trading_products.dart';
 import 'package:profair/src/views/history_clients/history_clients.dart';
@@ -81,9 +82,16 @@ class AppModule extends Module {
             order: args.data["order"],
           ),
         ),
-        ChildRoute('/clients',
-            child: (context, args) =>
-                Clients(trading: args.data["codeTrading"], merchandise: args.data["merchandise"], codeProvider: args.data["codeProvider"], accessTargenting: args.data["accessTargenting"])),
+        ChildRoute(
+          '/clients',
+          child: (context, args) => Clients(
+            trading: args.data["codeTrading"],
+            merchandise: args.data["merchandise"],
+            codeProvider: args.data["codeProvider"],
+            accessTargenting: args.data["accessTargenting"],
+            groups: args.data["groups"],
+          ),
+        ),
         ChildRoute(
           '/selectprovider',
           child: (context, args) => Providers(
@@ -208,6 +216,14 @@ class AppModule extends Module {
           '/detailsattraction',
           child: (context, args) => DetailsAttractions(
             id: args.data["id"],
+          ),
+        ),
+        ChildRoute(
+          '/detailsnotice',
+          child: (context, args) => DetailsNotice(
+            id: args.data["id"],
+            codeBranch: args.data["codeBranch"],
+            accessTargeting: args.data["accessTargeting"],
           ),
         ),
         // ChildRoute(

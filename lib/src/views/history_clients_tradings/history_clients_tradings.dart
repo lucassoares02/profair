@@ -763,28 +763,6 @@ class _TimelineItem extends StatelessWidget {
                             ),
                           ],
                         ),
-
-                        // ── Seta indicativa
-                        const SizedBox(height: 8),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            Text(
-                              'Ver detalhes',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w500,
-                                color: color.withValues(alpha: 0.5),
-                              ),
-                            ),
-                            const SizedBox(width: 2),
-                            Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 10,
-                              color: color.withValues(alpha: 0.5),
-                            ),
-                          ],
-                        ),
                       ],
                     ),
                   ),

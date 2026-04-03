@@ -26,6 +26,8 @@ class HomeController extends ValueNotifier<StateApp> {
   List<ProvidersModel> topProviders = [];
   List<CustomNotification> notifications = [];
   NotificationDetailsModel? notification;
+  NoticeModel? notice;
+  ProvidersModel? provider;
   List<NotificationUserModel> notificationsPeding = [];
   List<BuyersModel> buyers = [];
   CampaignModel? campaign;
@@ -39,6 +41,8 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateBuyers = ValueNotifier<StateApp>(StateApp.start);
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
   final stateNotifications = ValueNotifier<StateApp>(StateApp.start);
+  final stateNotice = ValueNotifier<StateApp>(StateApp.start);
+  final stateProvider = ValueNotifier<StateApp>(StateApp.start);
   final stateNotification = ValueNotifier<StateApp>(StateApp.start);
   final stateNotificationsPending = ValueNotifier<StateApp>(StateApp.start);
 
@@ -67,7 +71,7 @@ class HomeController extends ValueNotifier<StateApp> {
       if (data!.accessTargeting == 1 || data!.accessTargeting == 2) {
         codeRequest = data!.codCompany!;
       }
-      await findLastTradings(codeRequest, data!.accessTargeting);
+      // await findLastTradings(codeRequest, data!.accessTargeting);
       getCategories();
       if (data!.accessTargeting == 3 || data!.accessTargeting == 1) {
         if (data!.accessTargeting == 1) {
@@ -125,6 +129,30 @@ class HomeController extends ValueNotifier<StateApp> {
       stateNotification.value = StateApp.success;
     } catch (e) {
       stateNotification.value = StateApp.error;
+    }
+  }
+
+  Future<void> getNotice(int id) async {
+    stateNotice.value = StateApp.loading;
+    try {
+      final response = await _homeRepository.getNotice(id);
+      notice = response;
+      stateNotice.value = StateApp.success;
+    } catch (e) {
+      debugPrint("Get Notice (Home Controller) Error: $e");
+      stateNotice.value = StateApp.error;
+    }
+  }
+
+  Future<void> getProvider(int id) async {
+    stateProvider.value = StateApp.loading;
+    try {
+      final response = await _homeRepository.getProvider(id);
+      provider = response;
+      stateProvider.value = StateApp.success;
+    } catch (e) {
+      debugPrint("Get Provider (Home Controller) Error: $e");
+      stateProvider.value = StateApp.error;
     }
   }
 

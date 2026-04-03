@@ -30,7 +30,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "br.com.profair.profair"
+    namespace "br.com.profair.mobile"
     compileSdkVersion 35
     ndkVersion flutter.ndkVersion
     compileOptions {
@@ -67,13 +67,13 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "br.com.profair.profair"
+        applicationId "br.com.profair.mobile"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         // minSdkVersion flutter.minSdkVersion
         minSdkVersion flutter.minSdkVersion
-        targetSdkVersion 34
-        versionCode 43
+        targetSdkVersion 35
+        versionCode 45
         versionName "13.0.31"
         multiDexEnabled true
     }

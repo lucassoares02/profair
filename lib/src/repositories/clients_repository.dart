@@ -6,14 +6,22 @@ import 'package:profair/src/shared/http_service.dart';
 class ClientsRepository {
   final clientDio = HttpService();
 
-  getClients(String? codeProvider, int accessTargenting, int merchandise, int? trading) async {
+  getClients(String? codeProvider, int accessTargenting, int merchandise, int? trading, int? groups) async {
     ResponseModel? response;
+
     print(accessTargenting);
     print(codeProvider);
+
     try {
       if (merchandise != 0 && trading != 0) {
         print("STEPPPPPPPPPPPPPPPPP 1");
         response = await clientDio.get("clientmerchandisetrading/$merchandise/$trading");
+      } else if (accessTargenting == 3 && groups == 2) {
+        print("STEP 6");
+        response = await clientDio.get("groupspresentbygroup/$codeProvider");
+      } else if (accessTargenting == 3 && groups == 1) {
+        print("STEP 5");
+        response = await clientDio.get("groupspresent");
       } else if (accessTargenting == 3) {
         print("STEPPPPPPPPPPPPPPPPP 2");
         response = await clientDio.get("stores");

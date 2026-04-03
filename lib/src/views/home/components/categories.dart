@@ -39,96 +39,244 @@ class _CategoriesState extends State<Categories> {
         return StateManagement(
           width: width,
           listenable: widget.homeController.stateBuyers,
-          widgetLoading: Container(
-            margin: const EdgeInsets.only(left: 10),
-            height: 80,
+          widgetLoading: SizedBox(
+            height: 100,
             child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: 6,
-                itemBuilder: (context, index) {
-                  return const Skeletonizer(
-                    effect: ShimmerEffect(),
-                    child: Card(
-                      margin: EdgeInsets.symmetric(horizontal: 16),
-                      child: SizedBox(height: 80, width: 80),
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(horizontal: appMargin),
+              itemCount: 5,
+              itemBuilder: (context, index) {
+                return Skeletonizer(
+                  effect: const ShimmerEffect(),
+                  child: Container(
+                    width: 160,
+                    margin: const EdgeInsets.only(right: appMargin),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(appRadius),
                     ),
-                  );
-                }),
+                  ),
+                );
+              },
+            ),
           ),
           component: SizedBox(
-            height: organization ? 110 : 50,
+            height: organization ? 106 : 62,
             child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                // shrinkWrap: true,
-                itemCount: widget.homeController.buyers.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      if (widget.homeController.data!.accessTargeting == 3) {
-                        Navigator.of(context).pushNamed('selectprovider', arguments: {"codeBuyer": widget.homeController.buyers[index].codeBuyer, "codeClient": 0, "codeBranch": 0});
-                      } else {
-                        widget.filter!(widget.homeController.buyers[index].codeBuyer);
-                      }
-                    },
-                    child: Container(
-                      width: organization ? 200 : null,
-                      padding: organization ? const EdgeInsets.all(appPadding) : const EdgeInsets.symmetric(horizontal: appPadding * 1.5),
-                      margin: EdgeInsets.only(left: appMargin, right: index == widget.homeController.buyers.length - 1 ? appMargin : 0),
-                      decoration: BoxDecoration(
-                          color: widget.index == widget.homeController.buyers[index].codeBuyer ? colorSecondary : Colors.grey.withOpacity(0.2),
-                          borderRadius: BorderRadius.all(Radius.circular(organization ? appRadius : appRadius * 3))),
-                      child: Column(
-                        mainAxisAlignment: organization ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (organization)
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                // Text(
-                                //   widget.homeController.buyers[index].category!,
-                                //   style: const TextStyle(
-                                //     fontSize: 12,
-                                //   ),
-                                // ),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                      color: widget.homeController.buyers[index].color != null
-                                          ? Color(int.parse("0X51A${widget.homeController.buyers[index].color}"))
-                                          : Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                                      borderRadius: BorderRadius.circular(appRadius)),
-                                  child: Icon(
-                                    Icons.category_outlined,
-                                    size: 20,
-                                    color: widget.homeController.buyers[index].color != null
-                                        ? Color(int.parse("0XFF${widget.homeController.buyers[index].color}"))
-                                        : Theme.of(context).colorScheme.primary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          if (organization)
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          Text(
-                            '${widget.homeController.buyers[index].nameBuyer}',
-                            style: TextStyle(fontWeight: FontWeight.w500, fontSize: 12, color: widget.index == widget.homeController.buyers[index].codeBuyer ? Colors.white : null),
-                          ),
-                          Text(
-                            formatCurrency(widget.homeController.buyers[index].total!),
-                            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16, color: widget.index == widget.homeController.buyers[index].codeBuyer ? Colors.white : null),
-                          ),
-                        ],
-                      ),
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: appMargin),
+              itemCount: widget.homeController.buyers.length,
+              itemBuilder: (context, index) {
+                final buyer = widget.homeController.buyers[index];
+                final isSelected = widget.index == buyer.codeBuyer;
+
+                if (organization) {
+                  return _OrgCard(
+                    buyer: buyer,
+                    isSelected: isSelected,
+                    isLast: index == widget.homeController.buyers.length - 1,
+                    onTap: () => Navigator.of(context).pushNamed(
+                      'selectprovider',
+                      arguments: {
+                        "codeBuyer": buyer.codeBuyer,
+                        "codeClient": 0,
+                        "codeBranch": 0,
+                      },
                     ),
+                    context: context,
                   );
-                }),
+                }
+
+                return _FilterChip(
+                  buyer: buyer,
+                  isSelected: isSelected,
+                  isLast: index == widget.homeController.buyers.length - 1,
+                  onTap: () => widget.filter!(buyer.codeBuyer),
+                );
+              },
+            ),
           ),
         );
       },
+    );
+  }
+}
+
+class _OrgCard extends StatelessWidget {
+  const _OrgCard({
+    required this.buyer,
+    required this.isSelected,
+    required this.isLast,
+    required this.onTap,
+    required this.context,
+  });
+
+  final dynamic buyer;
+  final bool isSelected;
+  final bool isLast;
+  final VoidCallback onTap;
+  final BuildContext context;
+
+  Color get _accentColor {
+    if (buyer.color != null) {
+      return Color(int.parse("0XFF${buyer.color}"));
+    }
+    return colorSecondary;
+  }
+
+  Color get _iconBgColor {
+    if (buyer.color != null) {
+      return Color(int.parse("0X28${buyer.color}"));
+    }
+    return colorSecondary.withValues(alpha: 0.15);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: 165,
+        margin: EdgeInsets.only(right: isLast ? 0 : appMargin),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          gradient: isSelected
+              ? const LinearGradient(
+                  colors: [colorPrimary, colorSecondary],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(appRadius),
+          border: isSelected ? null : Border.all(color: Colors.grey.withValues(alpha: 0.15), width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected ? colorSecondary.withValues(alpha: 0.35) : Colors.black.withValues(alpha: 0.05),
+              blurRadius: isSelected ? 10 : 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: isSelected ? Colors.white.withValues(alpha: 0.2) : _iconBgColor,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.storefront_outlined,
+                    size: 16,
+                    color: isSelected ? Colors.white : _accentColor,
+                  ),
+                ),
+                if (isSelected) const Icon(Icons.arrow_forward_ios_rounded, size: 12, color: Colors.white70),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${buyer.nameBuyer}',
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 11,
+                    color: isSelected ? Colors.white.withValues(alpha: 0.85) : Colors.grey.shade600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  formatCurrency(buyer.total!),
+                  style: TextStyle(
+                    fontWeight: FontWeight.w700,
+                    fontSize: 15,
+                    color: isSelected ? Colors.white : null,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _FilterChip extends StatelessWidget {
+  const _FilterChip({
+    required this.buyer,
+    required this.isSelected,
+    required this.isLast,
+    required this.onTap,
+  });
+
+  final dynamic buyer;
+  final bool isSelected;
+  final bool isLast;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        margin: EdgeInsets.only(right: isLast ? 0 : 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        decoration: BoxDecoration(
+          gradient: isSelected
+              ? const LinearGradient(
+                  colors: [colorPrimary, colorSecondary],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                )
+              : null,
+          color: isSelected ? null : Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(appRadius),
+          border: isSelected ? null : Border.all(color: Colors.grey.withValues(alpha: 0.15), width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected ? colorSecondary.withValues(alpha: 0.3) : Colors.black.withValues(alpha: 0.04),
+              blurRadius: isSelected ? 8 : 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${buyer.nameBuyer}',
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 11,
+                color: isSelected ? Colors.white.withValues(alpha: 0.85) : Colors.grey.shade600,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              formatCurrency(buyer.total!),
+              style: TextStyle(
+                fontWeight: FontWeight.w700,
+                fontSize: 14,
+                color: isSelected ? Colors.white : null,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

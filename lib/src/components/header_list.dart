@@ -17,7 +17,8 @@ class HeaderList extends StatefulWidget {
       this.iconColor,
       this.onBackButton,
       this.aditionAction,
-      this.onCloseInfo});
+      this.onCloseInfo,
+      this.onSortMenu});
 
   String? label;
   bool? activeSearch;
@@ -32,6 +33,7 @@ class HeaderList extends StatefulWidget {
   IconData? icon;
   bool activePop;
   Widget? aditionAction;
+  Function(int)? onSortMenu;
 
   @override
   State<HeaderList> createState() => _HeaderListState();
@@ -140,6 +142,38 @@ class _HeaderListState extends State<HeaderList> {
                                   Icons.sort_outlined,
                                   color: widget.iconColor,
                                 ),
+                              ),
+                            if (widget.onSortMenu != null)
+                              PopupMenuButton<int>(
+                                icon: Icon(
+                                  Icons.more_vert,
+                                  color: widget.iconColor,
+                                ),
+                                color: Theme.of(context).colorScheme.surface,
+                                onSelected: (id) => widget.onSortMenu!(id),
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                    value: 0,
+                                    child: Text(
+                                      'Ordenar por valor',
+                                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 1,
+                                    child: Text(
+                                      'Ordenar por volume',
+                                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: 2,
+                                    child: Text(
+                                      'Ordem alfabética',
+                                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                                    ),
+                                  ),
+                                ],
                               ),
                           ],
                         )
