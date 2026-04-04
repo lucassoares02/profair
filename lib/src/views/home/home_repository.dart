@@ -184,6 +184,20 @@ class HomeRepository {
     }
   }
 
+  postAction(String user, String notice, String action) async {
+    print("Posting action: user=$user, notice=$notice, action=$action");
+    try {
+      ResponseModel response = await httpService.post('notices/interactions', {
+        "userId": user,
+        "codNotice": notice,
+        "interactionType": action,
+      });
+      print(response.data);
+    } catch (e) {
+      debugPrint("Post Action (Home Repository) Error: $e");
+    }
+  }
+
   getCategoriesss(int code) async {
     List list = [
       if (code == 1)

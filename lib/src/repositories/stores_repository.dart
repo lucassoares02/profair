@@ -5,6 +5,7 @@ class StoresRepository {
   final httpService = HttpService();
 
   getStores(String? userCode, int consultant, int supplier) async {
+    print("Get Stores Repository: $userCode, $consultant, $supplier");
     // final response = await httpService.get("stores/$userCode");
     final response = await httpService.get("stores/$userCode/$consultant/$supplier");
 

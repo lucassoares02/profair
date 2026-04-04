@@ -167,13 +167,10 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
                     const SizedBox(height: 12),
                     // Avatar with glow ring
                     widget.image != null
-                        ? ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: Image.network(
-                              widget.image!,
-                              height: 80,
-                              fit: BoxFit.contain,
-                            ),
+                        ? Image.network(
+                            widget.image!,
+                            height: 80,
+                            fit: BoxFit.cover,
                           )
                         : Container(
                             width: 84,

@@ -1,5 +1,6 @@
 import 'package:profair/src/views/clients/clients.dart';
 import 'package:profair/src/views/clients_product/clients_product.dart';
+import 'package:profair/src/views/consultants/consultants.dart';
 import 'package:profair/src/views/customers/customers.dart';
 import 'package:profair/src/views/details_attraction/details_attraction.dart';
 import 'package:profair/src/views/details_balance/details_balance.dart';
@@ -275,6 +276,12 @@ class AppModule extends Module {
             comprador: args.data["comprador"],
             vendedor: args.data["vendedor"],
             date: args.data["date"],
+          ),
+        ),
+        ChildRoute(
+          '/consultants',
+          child: (context, args) => Consultants(
+            provider: args.data["provider"],
           ),
         ),
       ];

@@ -8,6 +8,7 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/home_controller.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ComponentDetails extends StatefulWidget {
@@ -49,6 +50,21 @@ class _ComponentDetailsState extends State<ComponentDetails> with SingleTickerPr
       parent: _animController,
       curve: Curves.easeOutCubic,
     ));
+  }
+
+  setNoticeActions(String action, String? notice) async {
+    try {
+      final prefs = SharedPreferences.getInstance();
+      final sharedPreferences = await prefs;
+      final userCode = sharedPreferences.getInt("codeUser");
+      widget.homeController.postAction(
+        userCode?.toString() ?? '',
+        notice ?? '',
+        action,
+      );
+    } catch (e) {
+      print("Error posting action: $e");
+    }
   }
 
   @override
@@ -127,8 +143,9 @@ class _ComponentDetailsState extends State<ComponentDetails> with SingleTickerPr
     }
   }
 
-  Future<void> _launchAction(String? action) async {
-    print("Launching action: $action");
+  Future<void> _launchAction(String? action, {String? notice}) async {
+    setNoticeActions('click', notice);
+
     if (action == null || action.isEmpty) return;
     final uri = Uri.parse(action);
     if (await canLaunchUrl(uri)) {
@@ -164,6 +181,11 @@ class _ComponentDetailsState extends State<ComponentDetails> with SingleTickerPr
           widget.homeController.getProvider(notice.provider!);
         }
 
+        if (state == StateApp.success && notice.code != null) {
+          setNoticeActions('view', widget.homeController.notice?.code?.toString());
+        }
+        inspect(notice);
+
         return FadeTransition(
           opacity: _fadeAnim,
           child: Column(
@@ -188,7 +210,7 @@ class _ComponentDetailsState extends State<ComponentDetails> with SingleTickerPr
                   priorityColor: _priorityColor(notice.priority),
                   typeLabel: _typeLabel(notice.type),
                   typeIcon: _typeIcon(notice.type),
-                  onAction: () => _launchAction(notice.action),
+                  onAction: () => _launchAction(notice.action, notice: notice.code?.toString()),
                 ),
               ),
             ],

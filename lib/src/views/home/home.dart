@@ -87,6 +87,32 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  logoutApp() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    await messaging.deleteToken();
+    homeController.logout();
+    if (!mounted) return;
+    Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+  }
+
+  logoutInfo(BuildContext context) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Você foi desconectado!"),
+            content: const Text("Faça login novamente para acessar o aplicativo"),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    logoutApp();
+                  },
+                  child: const Text("Entrar novamente"))
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     Brightness currentBrightness = MediaQuery.of(context).platformBrightness;
@@ -109,55 +135,71 @@ class _HomePageState extends State<HomePage> {
                     ValueListenableBuilder(
                       valueListenable: homeController.stateData,
                       builder: (context, value, child) {
-                        return value == StateApp.loading
-                            ? Container(
-                                padding: const EdgeInsets.only(top: appMargin * 2),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const AppSpacing(),
-                                    Skeletonizer(
-                                      effect: const ShimmerEffect(),
-                                      child: Card(
-                                        margin: const EdgeInsets.symmetric(horizontal: appPadding),
-                                        child: SizedBox(
-                                          width: width / 3,
-                                          height: 10,
-                                        ),
-                                      ),
+                        if (value == StateApp.loading) {
+                          return Container(
+                            padding: const EdgeInsets.only(top: appMargin * 2),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const AppSpacing(),
+                                Skeletonizer(
+                                  effect: const ShimmerEffect(),
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                                    child: SizedBox(
+                                      width: width / 3,
+                                      height: 10,
                                     ),
-                                    const SizedBox(height: 10),
-                                    Skeletonizer(
-                                      effect: const ShimmerEffect(),
-                                      child: Card(
-                                        margin: const EdgeInsets.symmetric(horizontal: appPadding),
-                                        child: SizedBox(
-                                          height: 15,
-                                          width: width / 2,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 10),
-                                    const Skeletonizer(
-                                      effect: ShimmerEffect(),
-                                      child: Card(
-                                        margin: EdgeInsets.symmetric(horizontal: appPadding),
-                                        child: SizedBox(
-                                          height: 45,
-                                          width: double.maxFinite,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: appPadding)
-                                  ],
+                                  ),
                                 ),
-                              )
-                            : CardWelcome(
-                                homeController: homeController,
-                                action: () {
-                                  reloadScreen();
-                                },
-                              );
+                                const SizedBox(height: 10),
+                                Skeletonizer(
+                                  effect: const ShimmerEffect(),
+                                  child: Card(
+                                    margin: const EdgeInsets.symmetric(horizontal: appPadding),
+                                    child: SizedBox(
+                                      height: 15,
+                                      width: width / 2,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                const Skeletonizer(
+                                  effect: ShimmerEffect(),
+                                  child: Card(
+                                    margin: EdgeInsets.symmetric(horizontal: appPadding),
+                                    child: SizedBox(
+                                      height: 45,
+                                      width: double.maxFinite,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: appPadding)
+                              ],
+                            ),
+                          );
+                        }
+
+                        if (value == StateApp.error) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            logoutInfo(context);
+                          });
+                          return const Padding(
+                            padding: EdgeInsets.all(appPadding),
+                            child: Text(""),
+                          );
+                        }
+
+                        if (value == StateApp.success) {
+                          return CardWelcome(
+                            homeController: homeController,
+                            action: () {
+                              reloadScreen();
+                            },
+                          );
+                        }
+
+                        return Container();
                       },
                     ),
                     // const AppSpacing(),
@@ -185,56 +227,66 @@ class _HomePageState extends State<HomePage> {
                     ValueListenableBuilder(
                       valueListenable: homeController.stateData,
                       builder: (context, value, child) {
-                        return value == StateApp.loading
-                            ? Container(
-                                margin: const EdgeInsets.only(bottom: appPadding),
-                                padding: const EdgeInsets.symmetric(horizontal: appPadding),
-                                child: Row(
-                                  children: [
-                                    Skeletonizer(
-                                      effect: const ShimmerEffect(),
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                        margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
-                                        child: const SizedBox(
-                                          height: 70,
-                                          width: 70,
-                                        ),
-                                      ),
+                        if (value == StateApp.loading) {
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: appPadding),
+                            padding: const EdgeInsets.symmetric(horizontal: appPadding),
+                            child: Row(
+                              children: [
+                                Skeletonizer(
+                                  effect: const ShimmerEffect(),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                    margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
+                                    child: const SizedBox(
+                                      height: 70,
+                                      width: 70,
                                     ),
-                                    Skeletonizer(
-                                      effect: const ShimmerEffect(),
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                        margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
-                                        child: const SizedBox(
-                                          height: 70,
-                                          width: 70,
-                                        ),
-                                      ),
-                                    ),
-                                    Skeletonizer(
-                                      effect: const ShimmerEffect(),
-                                      child: Card(
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
-                                        margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
-                                        child: const SizedBox(
-                                          height: 70,
-                                          width: 70,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
                                 ),
-                              )
-                            : homeController.data!.accessTargeting == 3 || homeController.data!.accessTargeting == 1
-                                ? Column(
-                                    children: [
-                                      AppActions(homeController: homeController),
-                                      const AppSpacing(),
-                                    ],
-                                  )
-                                : Container();
+                                Skeletonizer(
+                                  effect: const ShimmerEffect(),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                    margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
+                                    child: const SizedBox(
+                                      height: 70,
+                                      width: 70,
+                                    ),
+                                  ),
+                                ),
+                                Skeletonizer(
+                                  effect: const ShimmerEffect(),
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                    margin: const EdgeInsets.only(bottom: appPadding, right: appPadding),
+                                    child: const SizedBox(
+                                      height: 70,
+                                      width: 70,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                        if (value == StateApp.error) {
+                          return const Padding(
+                            padding: EdgeInsets.all(appPadding),
+                            child: Text(""),
+                          );
+                        }
+                        if (value == StateApp.success) {
+                          return homeController.data!.accessTargeting == 3 || homeController.data!.accessTargeting == 1
+                              ? Column(
+                                  children: [
+                                    AppActions(homeController: homeController),
+                                    const AppSpacing(),
+                                  ],
+                                )
+                              : Container();
+                        }
+                        return Container();
                       },
                     ),
                     const AppSpacing(),
@@ -268,47 +320,69 @@ class _HomePageState extends State<HomePage> {
                     ValueListenableBuilder(
                         valueListenable: homeController.stateData,
                         builder: (context, value, child) {
-                          return value == StateApp.loading
-                              ? Padding(
-                                  padding: const EdgeInsets.all(appPadding),
-                                  child: LoadingList(loadingHeader: false),
-                                )
-                              : homeController.data!.accessTargeting == 3
-                                  ? Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.only(left: appPadding, bottom: appPadding),
-                                          child: Text(
-                                            homeController.data!.accessTargeting == 3 ? "Carteiras" : "Consultores",
-                                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
-                                          ),
+                          if (value == StateApp.loading) {
+                            return Padding(
+                              padding: const EdgeInsets.all(appPadding),
+                              child: LoadingList(loadingHeader: false),
+                            );
+                          }
+
+                          if (value == StateApp.error) {
+                            return const Padding(
+                              padding: EdgeInsets.all(appPadding),
+                              child: Text(""),
+                            );
+                          }
+
+                          if (value == StateApp.success) {
+                            return homeController.data!.accessTargeting == 3
+                                ? Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: appPadding, bottom: appPadding),
+                                        child: Text(
+                                          homeController.data!.accessTargeting == 3 ? "Carteiras" : "Consultores",
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: colorGreyDark),
                                         ),
-                                        Categories(homeController: homeController),
-                                        const AppSpacing(),
-                                        const AppSpacing(),
-                                      ],
-                                    )
-                                  : Container();
+                                      ),
+                                      Categories(homeController: homeController),
+                                      const AppSpacing(),
+                                      const AppSpacing(),
+                                    ],
+                                  )
+                                : Container();
+                          }
+                          return Container();
                         }),
                     Container(
                       margin: const EdgeInsets.only(bottom: appPadding),
                       child: ValueListenableBuilder(
                         valueListenable: homeController.stateData,
                         builder: (context, value, child) {
-                          return (value == StateApp.loading)
-                              ? LoadingList(loadingHeader: false)
-                              : homeController.data!.accessTargeting == 2
-                                  ? Column(
-                                      children: [
-                                        ListProviders(
-                                          homeController: homeController,
-                                          description: "Fornecedores",
-                                        ),
-                                        // const Divider(),
-                                      ],
-                                    )
-                                  : Container();
+                          if (value == StateApp.loading) {
+                            return LoadingList(loadingHeader: false);
+                          }
+                          if (value == StateApp.error) {
+                            return const Padding(
+                              padding: EdgeInsets.all(appPadding),
+                              child: Text(""),
+                            );
+                          }
+                          if (value == StateApp.success) {
+                            return homeController.data!.accessTargeting == 2
+                                ? Column(
+                                    children: [
+                                      ListProviders(
+                                        homeController: homeController,
+                                        description: "Fornecedores",
+                                      ),
+                                      // const Divider(),
+                                    ],
+                                  )
+                                : Container();
+                          }
+                          return Container();
                         },
                       ),
                     ),

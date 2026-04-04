@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/models/providers_model.dart';
 import 'package:profair/src/models/response_model.dart';
@@ -54,6 +56,7 @@ class HomeController extends ValueNotifier<StateApp> {
   final stateShared = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestsStore = ValueNotifier<StateApp>(StateApp.start);
   final stateSaveToken = ValueNotifier<StateApp>(StateApp.start);
+  final stateSaveAction = ValueNotifier<StateApp>(StateApp.start);
 
   final HomeRepository _homeRepository;
 
@@ -66,6 +69,12 @@ class HomeController extends ValueNotifier<StateApp> {
       moreData = await _homeRepository.getData({"codacesso": code});
 
       data = moreData![indexSelected];
+
+      try {
+        sharedPreferences.setInt("codeUser", data!.userCode!);
+      } catch (e) {
+        print("Error saving codeUser to shared preferences: $e");
+      }
 
       int codeRequest = 0;
       if (data!.accessTargeting == 1 || data!.accessTargeting == 2) {
@@ -260,6 +269,16 @@ class HomeController extends ValueNotifier<StateApp> {
       stateSaveToken.value = StateApp.error;
     }
     stateSaveToken.value = StateApp.success;
+  }
+
+  Future postAction(String user, String notice, String action) async {
+    stateSaveAction.value = StateApp.loading;
+    try {
+      requestStores = await _homeRepository.postAction(user, notice, action);
+    } catch (e) {
+      stateSaveAction.value = StateApp.error;
+    }
+    stateSaveAction.value = StateApp.success;
   }
 
   Future findAlert(int accessTargeting) async {}

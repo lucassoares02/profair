@@ -365,7 +365,7 @@ class _ProviderCard extends StatelessWidget {
                     height: 56,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: brandColor.withValues(alpha: 0.12),
+                      color: brandColor,
                       border: Border.all(
                         color: hasSale ? const Color(0xFF22C55E) : brandColor.withValues(alpha: 0.4),
                         width: 2.5,

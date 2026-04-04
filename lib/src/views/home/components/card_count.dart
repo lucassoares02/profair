@@ -78,6 +78,58 @@ class _CardCountState extends State<CardCount> {
           );
         }
 
+        if (value == StateApp.error) {
+          return Container(
+            width: double.infinity,
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              color: colorScheme.errorContainer.withValues(alpha: 0.12),
+              border: Border.all(
+                color: colorScheme.errorContainer.withValues(alpha: 0.18),
+                width: 1.5,
+              ),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorScheme.error,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Icon(
+                    Icons.error_outline,
+                    size: 32,
+                    color: colorWhite,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  'Ops, algo deu errado',
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w700,
+                    color: onSurface,
+                    letterSpacing: -0.2,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Não foi possível carregar o total de pedidos. Tente novamente mais tarde.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: onSurface.withValues(alpha: 0.55),
+                    height: 1.55,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
         final isProviderEmpty = widget.homeController.data?.accessTargeting == 1 && !_hasOrders;
 
         if (isProviderEmpty) {

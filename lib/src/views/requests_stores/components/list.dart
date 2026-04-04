@@ -80,47 +80,146 @@ class _ComponentListState extends State<ComponentList> {
                               : Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Padding(
-                                      padding: EdgeInsets.all(appPadding),
-                                      child: Text(
-                                        "Consultores",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey,
-                                          fontSize: 18,
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(appMargin, appMargin, appMargin, 0),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Theme.of(context).cardColor,
+                                          borderRadius: BorderRadius.circular(14),
+                                          border: Border.all(color: Colors.grey.withValues(alpha: 0.12)),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.black.withValues(alpha: 0.05),
+                                              blurRadius: 8,
+                                              offset: const Offset(0, 2),
+                                            ),
+                                          ],
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.fromLTRB(appPadding, appPadding, appPadding, 4),
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    padding: const EdgeInsets.all(7),
+                                                    decoration: BoxDecoration(
+                                                      color: colorBlueAccent.withValues(alpha: 0.1),
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                    child: const Icon(Icons.people_alt_rounded, size: 16, color: colorBlueAccent),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  const Column(
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        "Consultores",
+                                                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                                                      ),
+                                                      Text(
+                                                        "Filtre os pedidos por consultor",
+                                                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            const SizedBox(height: 8),
+                                            ValueListenableBuilder(
+                                              valueListenable: widget.requestsStoresController.filterValue,
+                                              builder: (context, int? indexFilter, child) {
+                                                return Categories(
+                                                  index: indexFilter,
+                                                  homeController: widget.homeController!,
+                                                  filter: (value) {
+                                                    widget.requestsStoresController.filter(value);
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                            const SizedBox(height: 8),
+                                            Divider(height: 1, color: Colors.grey.withValues(alpha: 0.12)),
+                                            Material(
+                                              color: Colors.transparent,
+                                              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(14)),
+                                              child: InkWell(
+                                                borderRadius: const BorderRadius.vertical(bottom: Radius.circular(14)),
+                                                onTap: () {
+                                                  Navigator.of(context).pushNamed(
+                                                    "consultants",
+                                                    arguments: {
+                                                      "provider": widget.codeProvider.toString(),
+                                                    },
+                                                  );
+                                                },
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: 12),
+                                                  child: Row(
+                                                    children: [
+                                                      Container(
+                                                        padding: const EdgeInsets.all(6),
+                                                        decoration: BoxDecoration(
+                                                          gradient: const LinearGradient(
+                                                            colors: [colorBlueAccent, colorPrimary],
+                                                            begin: Alignment.topLeft,
+                                                            end: Alignment.bottomRight,
+                                                          ),
+                                                          borderRadius: BorderRadius.circular(7),
+                                                        ),
+                                                        child: const Icon(Icons.groups_rounded, size: 14, color: Colors.white),
+                                                      ),
+                                                      const SizedBox(width: 10),
+                                                      const Expanded(
+                                                        child: Column(
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            Text(
+                                                              "Atendimentos da equipe",
+                                                              style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                                                            ),
+                                                            Text(
+                                                              "Ver sessões de atendimento da equipe",
+                                                              style: TextStyle(fontSize: 11, color: Colors.grey),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: Colors.grey),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
-                                    ValueListenableBuilder(
-                                        valueListenable: widget.requestsStoresController.filterValue,
-                                        builder: (context, int? indexFilter, child) {
-                                          return Categories(
-                                            index: indexFilter,
-                                            homeController: widget.homeController!,
-                                            filter: (value) {
-                                              widget.requestsStoresController.filter(value);
-                                            },
-                                          );
-                                        }),
-                                    if (widget.homeController != null && widget.homeController!.buyers.length > 1) const AppSpacing(),
+                                    const AppSpacing(),
                                     const Divider(),
                                   ],
                                 );
                         },
                       ),
                     if (widget.homeController != null && widget.homeController!.buyers.length > 2 && (widget.visibleBuyers != null && widget.visibleBuyers! == true))
-                      const Padding(
-                        padding: EdgeInsets.only(left: appPadding),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(appPadding, appPadding, appPadding, 4),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Pedidos",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.grey,
-                                fontSize: 18,
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: colorBlueAccent.withValues(alpha: 0.1),
+                                borderRadius: BorderRadius.circular(7),
                               ),
+                              child: const Icon(Icons.handshake_outlined, size: 14, color: colorBlueAccent),
+                            ),
+                            const SizedBox(width: 8),
+                            const Text(
+                              "Pedidos",
+                              style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
                             ),
                           ],
                         ),
@@ -164,41 +263,104 @@ class _ComponentListState extends State<ComponentList> {
                         },
                         child: Container(
                           width: double.maxFinite,
-                          height: 100,
-                          padding: const EdgeInsets.all(appMargin),
-                          margin: const EdgeInsets.symmetric(horizontal: appMargin),
+                          margin: const EdgeInsets.symmetric(horizontal: appMargin, vertical: 4),
                           decoration: BoxDecoration(
-                            border: Border(bottom: BorderSide(color: colorGrey.withOpacity(0.3))),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                e.razaoClient!,
-                                style: const TextStyle(fontSize: 16),
-                              ),
-                              const SizedBox(height: 5),
-                              if (e.nameForn != null)
-                                Text(
-                                  e.nameForn!,
-                                  style: const TextStyle(color: colorGreyDark),
-                                ),
-                              const SizedBox(height: 5),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    formatCurrency(e.value!),
-                                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    '${e.hour}',
-                                    style: const TextStyle(color: colorGreyDark),
-                                  ),
-                                ],
+                            color: Theme.of(context).cardColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.04),
+                                blurRadius: 6,
+                                offset: const Offset(0, 2),
                               ),
                             ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(appPadding),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(9),
+                                  decoration: BoxDecoration(
+                                    color: colorBlueAccent.withValues(alpha: 0.08),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Icon(Icons.storefront_outlined, size: 20, color: colorBlueAccent),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        e.razaoClient!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                                      ),
+                                      if (e.nameForn != null) ...[
+                                        const SizedBox(height: 2),
+                                        Text(
+                                          e.nameForn!,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(fontSize: 12, color: colorGreyDark),
+                                        ),
+                                      ],
+                                      const SizedBox(height: 8),
+                                      Row(
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                            decoration: BoxDecoration(
+                                              color: colorBlueAccent.withValues(alpha: 0.1),
+                                              borderRadius: BorderRadius.circular(6),
+                                            ),
+                                            child: Text(
+                                              formatCurrency(e.value!),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w700,
+                                                color: colorBlueAccent,
+                                              ),
+                                            ),
+                                          ),
+                                          if (e.termNegotiation != null && e.termNegotiation!.isNotEmpty) ...[
+                                            const SizedBox(width: 6),
+                                            Container(
+                                              padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                                              decoration: BoxDecoration(
+                                                color: Colors.grey.withValues(alpha: 0.1),
+                                                borderRadius: BorderRadius.circular(6),
+                                              ),
+                                              child: Text(
+                                                e.termNegotiation!,
+                                                style: const TextStyle(fontSize: 11, color: colorGreyDark),
+                                              ),
+                                            ),
+                                          ],
+                                          const Spacer(),
+                                          Row(
+                                            children: [
+                                              const Icon(Icons.access_time_rounded, size: 12, color: colorGreyDark),
+                                              const SizedBox(width: 3),
+                                              Text(
+                                                '${e.hour}',
+                                                style: const TextStyle(fontSize: 11, color: colorGreyDark),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                const Icon(Icons.arrow_forward_ios_rounded, size: 13, color: colorGreyDark),
+                              ],
+                            ),
                           ),
                         ),
                       );
