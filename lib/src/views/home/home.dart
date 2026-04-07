@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
-import 'package:profair/src/navigation/app_route_observer.dart';
 import 'package:profair/src/notification/notification_service.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
@@ -28,9 +27,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with RouteAware {
+class _HomePageState extends State<HomePage> {
   HomeController homeController = HomeController(StateApp.start, HomeRepository());
-  PageRoute<dynamic>? _route;
 
   @override
   void initState() {
@@ -48,31 +46,6 @@ class _HomePageState extends State<HomePage> with RouteAware {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString("tokenFcm", token.toString());
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    final route = ModalRoute.of(context);
-    if (route is PageRoute<dynamic> && route != _route) {
-      if (_route != null) {
-        appRouteObserver.unsubscribe(this);
-      }
-      _route = route;
-      appRouteObserver.subscribe(this, route);
-    }
-  }
-
-  @override
-  void didPopNext() {
-    reloadScreen();
-  }
-
-  @override
-  void dispose() {
-    appRouteObserver.unsubscribe(this);
-    super.dispose();
   }
 
   Future<void> reloadScreen() async {

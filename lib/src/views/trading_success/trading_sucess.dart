@@ -243,7 +243,9 @@ class _TradingSucessState extends State<TradingSucess> {
                         icon: Icons.check_rounded,
                         color: Colors.green,
                         onPressed: () {
-                          Modular.to.navigate("/home");
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                          });
                         },
                       ),
                       const SizedBox(height: 8),
