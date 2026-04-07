@@ -18,6 +18,7 @@ import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/tradings_provider/components/list.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TradingsProvider extends StatefulWidget {
   const TradingsProvider({
@@ -48,11 +49,18 @@ class TradingsProvider extends StatefulWidget {
 class _TradingsProviderState extends State<TradingsProvider> with SingleTickerProviderStateMixin {
   final TradingsProviderController tradingsProviderController = TradingsProviderController(StateApp.start, TradingsProviderRepository());
   final FinishTradingController finishTradingController = FinishTradingController(StateApp.start, FinishTradingRepository());
+  int? history;
 
   @override
   void initState() {
     getFindTradingsProvider();
+    loadHistory();
     super.initState();
+  }
+
+  loadHistory() async {
+    final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    history = sharedPreferences.getInt("history");
   }
 
   saveOrder() async {
@@ -94,32 +102,33 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
 // Intercepta a ação de voltar
   onPop(Size size) async {
     return await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            elevation: 0.1,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(appRadius),
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          elevation: 0.1,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(appRadius),
+          ),
+          title: const Text('Deseja realmente sair?'),
+          content: SizedBox(width: size.width * 1, child: const Text('Caso você volte as informações que foram digitadas serão perdidas, para que isso não aconteça finalize o pedido primeiro!')),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Cancelar"),
             ),
-            title: const Text('Deseja realmente sair?'),
-            content: SizedBox(width: size.width * 1, child: const Text('Caso você volte as informações que foram digitadas serão perdidas, para que isso não aconteça finalize o pedido primeiro!')),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Cancelar"),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Confirmar"),
-              ),
-            ],
-          );
-        });
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text("Confirmar"),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -166,20 +175,22 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                   onCloseInfo: () {
                                     tradingsProviderController.updateTrading();
                                   },
-                                  addIcon: Padding(
-                                    padding: const EdgeInsets.only(right: 6),
-                                    child: IconButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pushNamed(
-                                            "/history-clients-tradings",
-                                            arguments: {
-                                              "provider": widget.codeProvider,
-                                              "client": widget.codeBranch,
-                                            },
-                                          );
-                                        },
-                                        icon: const Icon(Icons.history_outlined)),
-                                  ),
+                                  addIcon: history == 1
+                                      ? Padding(
+                                          padding: const EdgeInsets.only(right: 6),
+                                          child: IconButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pushNamed(
+                                                  "/history-clients-tradings",
+                                                  arguments: {
+                                                    "provider": widget.codeProvider,
+                                                    "client": widget.codeBranch,
+                                                  },
+                                                );
+                                              },
+                                              icon: const Icon(Icons.history_outlined)),
+                                        )
+                                      : null,
                                 );
                               },
                             ),

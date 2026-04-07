@@ -185,7 +185,6 @@ class HomeRepository {
   }
 
   postAction(String user, String notice, String action) async {
-    print("Posting action: user=$user, notice=$notice, action=$action");
     try {
       ResponseModel response = await httpService.post('notices/interactions', {
         "userId": user,
@@ -198,7 +197,7 @@ class HomeRepository {
     }
   }
 
-  getCategoriesss(int code) async {
+  getCategoriesss(int code, {int? history}) async {
     List list = [
       if (code == 1)
         {
@@ -249,7 +248,7 @@ class HomeRepository {
           "icon": Icons.swap_horiz_rounded,
           "route": "tradings",
         },
-      if (code == 1 || code == 3)
+      if ((code == 1 && history == 1) || code == 3)
         {
           "id": 104,
           "title": 'Histórico',

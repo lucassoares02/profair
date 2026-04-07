@@ -7,6 +7,30 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+Color _parseHexColor(String? hex, Color fallback) {
+  if (hex == null || hex.isEmpty) return fallback;
+  try {
+    // Inteiro decimal (ex: "4291962416")
+    final asInt = int.tryParse(hex);
+    if (asInt != null) return Color(asInt);
+    // Remove prefixos: #, 0x, 0X
+    final clean = hex.replaceAll(RegExp(r'^(0x|0X|#)'), '');
+    if (clean.length == 6) return Color(int.parse('FF$clean', radix: 16));
+    if (clean.length == 8) return Color(int.parse(clean, radix: 16));
+  } catch (_) {}
+  return fallback;
+}
+
+Color _darken(Color color, [double amount = 0.25]) {
+  final hsl = HSLColor.fromColor(color);
+  return hsl.withLightness((hsl.lightness - amount).clamp(0.0, 1.0)).toColor();
+}
+
+Color _lighten(Color color, [double amount = 0.15]) {
+  final hsl = HSLColor.fromColor(color);
+  return hsl.withLightness((hsl.lightness + amount).clamp(0.0, 1.0)).toColor();
+}
+
 class CardCount extends StatefulWidget {
   CardCount({super.key, required this.homeController});
 
@@ -110,7 +134,7 @@ class _CardCountState extends State<CardCount> {
                   'Ops, algo deu errado',
                   style: TextStyle(
                     fontSize: 17,
-                    fontWeight: FontWeight.w700,
+                    fontWeight: FontWeight.bold,
                     color: onSurface,
                     letterSpacing: -0.2,
                   ),
@@ -130,10 +154,14 @@ class _CardCountState extends State<CardCount> {
           );
         }
 
-        final isProviderEmpty = widget.homeController.data?.accessTargeting == 1 && !_hasOrders;
+        final isProvider = widget.homeController.data?.accessTargeting == 1;
+        final isProviderEmpty = isProvider && !_hasOrders;
 
         if (isProviderEmpty) {
           return _ProviderEmptyState(
+            brandColor: _parseHexColor(widget.homeController.data?.color, colorSecondary),
+            imageUrl: widget.homeController.data?.image,
+            companyName: widget.homeController.data?.nameCompany,
             onStartSale: () => Navigator.of(context).pushNamed(
               'clients',
               arguments: {
@@ -146,14 +174,21 @@ class _CardCountState extends State<CardCount> {
           );
         }
 
+        if (isProvider) {
+          return _ProviderBrandCard(
+            homeController: widget.homeController,
+            valueVisible: _valueVisible,
+            onToggleVisibility: () => setState(() => _valueVisible = !_valueVisible),
+            onTap: () => _navigate(context),
+          );
+        }
+
         return StateManagement(
           width: width,
           listenable: widget.homeController.stateData,
           component: Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
-            // padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
             child: Material(
-              // color: colorSecondary.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(12),
               child: InkWell(
                 onTap: () => _navigate(context),
@@ -165,7 +200,6 @@ class _CardCountState extends State<CardCount> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // — Header row —
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -175,7 +209,7 @@ class _CardCountState extends State<CardCount> {
                                 "Total em pedidos",
                                 style: TextStyle(
                                   fontSize: 13,
-                                  fontWeight: FontWeight.w500,
+                                  fontWeight: FontWeight.bold,
                                   color: onSurface.withValues(alpha: 0.55),
                                   letterSpacing: 0.1,
                                 ),
@@ -200,10 +234,7 @@ class _CardCountState extends State<CardCount> {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 2),
-
-                      // — Value —
                       Row(
                         children: [
                           AnimatedSwitcher(
@@ -226,16 +257,15 @@ class _CardCountState extends State<CardCount> {
                                       "R\$ ${widget.homeController.data!.valueOrder!}",
                                       style: TextStyle(
                                         fontSize: 26,
-                                        fontWeight: FontWeight.w700,
+                                        fontWeight: FontWeight.bold,
                                         color: onSurface,
-                                        letterSpacing: -0.5,
                                       ),
                                     )
                                   : Text(
                                       "R\$ ••••••••",
                                       style: TextStyle(
                                         fontSize: 26,
-                                        fontWeight: FontWeight.w700,
+                                        fontWeight: FontWeight.bold,
                                         color: onSurface.withValues(alpha: 0.3),
                                         letterSpacing: 2,
                                       ),
@@ -261,10 +291,7 @@ class _CardCountState extends State<CardCount> {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 6),
-
-                      // — Footer tags —
                       const Row(
                         children: [
                           _Tag(
@@ -284,6 +311,261 @@ class _CardCountState extends State<CardCount> {
     );
   }
 }
+
+// ─── Card premium para fornecedor ────────────────────────────────────────────
+
+class _ProviderBrandCard extends StatelessWidget {
+  final HomeController homeController;
+  final bool valueVisible;
+  final VoidCallback onToggleVisibility;
+  final VoidCallback onTap;
+
+  const _ProviderBrandCard({
+    required this.homeController,
+    required this.valueVisible,
+    required this.onToggleVisibility,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final data = homeController.data!;
+    final brandColor = _parseHexColor(data.color, colorSecondary);
+    final colorDark = _darken(brandColor, 0.22);
+    final colorLight = _lighten(brandColor, 0.08);
+    final hasImage = data.image != null && data.image!.isNotEmpty;
+    final companyName = data.nameCompany ?? '';
+    final initials = companyName.isNotEmpty ? companyName.trim().split(' ').take(2).map((w) => w[0].toUpperCase()).join() : '?';
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [colorDark, brandColor, colorLight],
+            stops: const [0.0, 0.55, 1.0],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: brandColor.withValues(alpha: 0.45),
+              blurRadius: 20,
+              offset: const Offset(0, 8),
+              spreadRadius: -4,
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(20),
+          child: Stack(
+            children: [
+              // — Decoração de fundo: círculos difusos —
+              Positioned(
+                top: -32,
+                right: -32,
+                child: Container(
+                  width: 130,
+                  height: 130,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorWhite.withValues(alpha: 0.08),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: -48,
+                right: 60,
+                child: Container(
+                  width: 160,
+                  height: 160,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorWhite.withValues(alpha: 0.05),
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 12,
+                left: -20,
+                child: Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colorWhite.withValues(alpha: 0.04),
+                  ),
+                ),
+              ),
+
+              // — Conteúdo principal —
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Header: logo + empresa + seta
+                    Row(
+                      children: [
+                        // Logo
+                        Container(
+                          width: 48,
+                          height: 48,
+                          // padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            // color: colorWhite.withValues(alpha: 0.18),
+                            // borderRadius: BorderRadius.circular(10),
+                            // border: Border.all(
+                            //   color: colorWhite.withValues(alpha: 0.25),
+                            //   width: 1,
+                            // ),
+                          ),
+                          // clipBehavior: Clip.antiAlias,
+                          child: hasImage
+                              ? Image.network(
+                                  data.image!,
+                                  fit: BoxFit.contain,
+                                  errorBuilder: (_, __, ___) => Center(
+                                    child: Text(
+                                      initials,
+                                      style: const TextStyle(
+                                        color: colorWhite,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Center(
+                                  child: Text(
+                                    initials,
+                                    style: const TextStyle(
+                                      color: colorWhite,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            companyName,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: colorWhite.withValues(alpha: 0.9),
+                              letterSpacing: 0.1,
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: colorWhite.withValues(alpha: 0.15),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Icon(
+                            FontAwesomeIcons.chevronRight,
+                            size: 10,
+                            color: colorWhite.withValues(alpha: 0.85),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 14),
+
+                    // Label + valor
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Total em pedidos',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                            color: colorWhite.withValues(alpha: 0.65),
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 250),
+                              transitionBuilder: (child, animation) => FadeTransition(
+                                opacity: animation,
+                                child: SlideTransition(
+                                  position: Tween<Offset>(
+                                    begin: const Offset(0, 0.15),
+                                    end: Offset.zero,
+                                  ).animate(animation),
+                                  child: child,
+                                ),
+                              ),
+                              child: valueVisible
+                                  ? Text(
+                                      key: const ValueKey(true),
+                                      "R\$ ${data.valueOrder!}",
+                                      style: const TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold,
+                                        color: colorWhite,
+                                        letterSpacing: -0.5,
+                                      ),
+                                    )
+                                  : Text(
+                                      key: const ValueKey(false),
+                                      "R\$ ••••••••",
+                                      style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.bold,
+                                        color: colorWhite.withValues(alpha: 0.4),
+                                        letterSpacing: 2,
+                                      ),
+                                    ),
+                            ),
+                            const SizedBox(width: 10),
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTap: onToggleVisibility,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4),
+                                child: AnimatedSwitcher(
+                                  duration: const Duration(milliseconds: 200),
+                                  child: Icon(
+                                    valueVisible ? FontAwesomeIcons.eye : FontAwesomeIcons.eyeSlash,
+                                    key: ValueKey(valueVisible),
+                                    size: 16,
+                                    color: colorWhite.withValues(alpha: 0.55),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Tag genérica ─────────────────────────────────────────────────────────────
 
 class _Tag extends StatelessWidget {
   final String label;
@@ -306,7 +588,7 @@ class _Tag extends StatelessWidget {
         label,
         style: TextStyle(
           fontSize: 11,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.bold,
           color: color,
           letterSpacing: 0.2,
         ),
@@ -315,14 +597,27 @@ class _Tag extends StatelessWidget {
   }
 }
 
+// ─── Estado vazio para fornecedor ─────────────────────────────────────────────
+
 class _ProviderEmptyState extends StatelessWidget {
   final VoidCallback onStartSale;
+  final Color brandColor;
+  final String? imageUrl;
+  final String? companyName;
 
-  const _ProviderEmptyState({required this.onStartSale});
+  const _ProviderEmptyState({
+    required this.onStartSale,
+    required this.brandColor,
+    this.imageUrl,
+    this.companyName,
+  });
 
   @override
   Widget build(BuildContext context) {
     final onSurface = Theme.of(context).colorScheme.onSurface;
+    final colorDark = _darken(brandColor, 0.18);
+    final hasImage = imageUrl != null && imageUrl!.isNotEmpty;
+    final initials = (companyName ?? '').trim().split(' ').take(2).map((w) => w[0].toUpperCase()).join();
 
     return Container(
       width: double.infinity,
@@ -334,46 +629,76 @@ class _ProviderEmptyState extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            colorSecondary.withValues(alpha: 0.07),
+            brandColor.withValues(alpha: 0.07),
             colorPrimary.withValues(alpha: 0.04),
           ],
         ),
         border: Border.all(
-          color: colorSecondary.withValues(alpha: 0.18),
+          color: brandColor.withValues(alpha: 0.18),
           width: 1.5,
         ),
       ),
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            width: 64,
+            height: 64,
+            padding: const EdgeInsets.all(6),
             decoration: BoxDecoration(
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [colorSecondary, colorPrimary],
+                colors: [colorDark, brandColor],
               ),
               borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: brandColor.withValues(alpha: 0.35),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
-            child: const Icon(
-              Icons.storefront_outlined,
-              size: 32,
-              color: colorWhite,
-            ),
+            clipBehavior: Clip.antiAlias,
+            child: hasImage
+                ? Image.network(
+                    imageUrl!,
+                    fit: BoxFit.contain,
+                    errorBuilder: (_, __, ___) => Center(
+                      child: Text(
+                        initials.isNotEmpty ? initials : '?',
+                        style: const TextStyle(
+                          color: colorWhite,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                  )
+                : Center(
+                    child: Text(
+                      initials.isNotEmpty ? initials : '?',
+                      style: const TextStyle(
+                        color: colorWhite,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
           ),
           const SizedBox(height: 16),
           Text(
             'Pronto para vender?',
             style: TextStyle(
               fontSize: 17,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.bold,
               color: onSurface,
               letterSpacing: -0.2,
             ),
           ),
           const SizedBox(height: 8),
           Text(
-            'Use o botão "Novo" para iniciar seu primero pedido. Quando um cliente for até você.',
+            'Use o botão "Novo" para iniciar seu primeiro pedido quando um cliente for até você.',
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 13,
@@ -381,28 +706,6 @@ class _ProviderEmptyState extends StatelessWidget {
               height: 1.55,
             ),
           ),
-          // const SizedBox(height: 22),
-          // SizedBox(
-          //   width: double.infinity,
-          //   child: ElevatedButton.icon(
-          //     onPressed: onStartSale,
-          //     icon: const Icon(Icons.person_search_outlined, size: 18),
-          //     label: const Text('Selecionar cliente'),
-          //     style: ElevatedButton.styleFrom(
-          //       backgroundColor: colorSecondary,
-          //       foregroundColor: colorWhite,
-          //       padding: const EdgeInsets.symmetric(vertical: 14),
-          //       shape: RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(12),
-          //       ),
-          //       elevation: 0,
-          //       textStyle: const TextStyle(
-          //         fontSize: 14,
-          //         fontWeight: FontWeight.w600,
-          //       ),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );

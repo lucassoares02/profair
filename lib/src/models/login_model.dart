@@ -12,6 +12,9 @@ class LoginModel {
   String? valueOrder;
   String? email;
   int? active;
+  int? history;
+  String? color;
+  String? image;
 
   LoginModel({
     this.codAccess,
@@ -25,27 +28,27 @@ class LoginModel {
     this.valueOrder,
     this.email,
     this.active,
+    this.history,
+    this.color,
+    this.image,
   });
 
   LoginModel.fromJson(Map<String, dynamic> json) {
-    print("================================================================");
-    inspect(json);
-    print("================================================================");
-    try {
-      codAccess = json["codAcesso"];
-      accessTargeting = json["direcAcesso"];
-      nameCompany = json["nomeForn"];
-      document = json["cnpjForn"];
-      userCode = json["codUsuario"];
-      codCompany = json["codForn"];
-      active = json["ativo"];
-      nameUser = json["nomeConsult"];
-      documentUser = json["cpfConsult"];
-      valueOrder = json["valorPedido"];
-      email = json["emailConsult"];
-    } catch (e) {
-      print("Error login model: $e");
-    }
+    print(json);
+    codAccess = json["codAcesso"];
+    accessTargeting = json["direcAcesso"];
+    nameCompany = json["nomeForn"];
+    document = json["cnpjForn"];
+    userCode = json["codUsuario"];
+    codCompany = json["codForn"];
+    active = json["ativo"];
+    nameUser = json["nomeConsult"];
+    documentUser = json["cpfConsult"];
+    valueOrder = json["valorPedido"];
+    email = json["emailConsult"];
+    history = json["history"];
+    color = json["color"];
+    image = json["image"];
   }
 
   Map<String, dynamic> toJson() {

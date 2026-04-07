@@ -68,6 +68,15 @@ class HomeController extends ValueNotifier<StateApp> {
 
       moreData = await _homeRepository.getData({"codacesso": code});
 
+      inspect(moreData);
+
+      if (moreData != null && moreData!.isNotEmpty) {
+        final info = moreData![indexSelected];
+        if (info.history != null) {
+          sharedPreferences.setInt("history", info.history!);
+        }
+      }
+
       data = moreData![indexSelected];
 
       try {
@@ -234,7 +243,11 @@ class HomeController extends ValueNotifier<StateApp> {
   Future getCategories() async {
     stateCategories.value = StateApp.loading;
     try {
-      categories = await _homeRepository.getCategoriesss(data!.accessTargeting!);
+      final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      final history = sharedPreferences.getInt("history");
+
+      categories = await _homeRepository.getCategoriesss(data!.accessTargeting!, history: history);
+
       stateCategories.value = StateApp.success;
     } catch (e) {
       stateCategories.value = StateApp.error;
