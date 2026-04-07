@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/login_model.dart';
+import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 
@@ -211,7 +212,9 @@ class _TradingSucessState extends State<TradingSucess> {
                       ValueListenableBuilder(
                         valueListenable: widget.finishTradingController.stateClient,
                         builder: (context, value, child) {
-                          return value != null
+                          final client = widget.clientModel ?? widget.finishTradingController.client;
+
+                          return value == StateApp.success && client != null
                               ? Column(
                                   children: [
                                     _outlinedButton(
@@ -219,17 +222,14 @@ class _TradingSucessState extends State<TradingSucess> {
                                       icon: Icons.add_rounded,
                                       color: colorSecondary,
                                       onPressed: () {
-                                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                                          Navigator.of(context).pushNamedAndRemoveUntil(
-                                            "/selectstore",
-                                            (route) => false,
-                                            arguments: {
-                                              "client": widget.clientModel!,
-                                              "codeProvider": widget.provider,
-                                              "consult": widget.consult,
-                                            },
-                                          );
-                                        });
+                                        Modular.to.navigate(
+                                          "/selectstore",
+                                          arguments: {
+                                            "client": client,
+                                            "codeProvider": widget.provider,
+                                            "consult": widget.consult,
+                                          },
+                                        );
                                       },
                                     ),
                                     const SizedBox(height: 12),
@@ -243,9 +243,7 @@ class _TradingSucessState extends State<TradingSucess> {
                         icon: Icons.check_rounded,
                         color: Colors.green,
                         onPressed: () {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
-                          });
+                          Modular.to.navigate("/home");
                         },
                       ),
                       const SizedBox(height: 8),
