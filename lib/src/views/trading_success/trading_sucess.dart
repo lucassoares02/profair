@@ -218,15 +218,17 @@ class _TradingSucessState extends State<TradingSucess> {
                                       icon: Icons.add_rounded,
                                       color: colorSecondary,
                                       onPressed: () {
-                                        Navigator.of(context).pushNamedAndRemoveUntil(
-                                          "/selectstore",
-                                          (route) => false,
-                                          arguments: {
-                                            "client": widget.clientModel!,
-                                            "codeProvider": widget.provider,
-                                            "consult": widget.consult,
-                                          },
-                                        );
+                                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                                          Navigator.of(context).pushNamedAndRemoveUntil(
+                                            "/selectstore",
+                                            (route) => false,
+                                            arguments: {
+                                              "client": widget.clientModel!,
+                                              "codeProvider": widget.provider,
+                                              "consult": widget.consult,
+                                            },
+                                          );
+                                        });
                                       },
                                     ),
                                     const SizedBox(height: 12),
@@ -240,7 +242,9 @@ class _TradingSucessState extends State<TradingSucess> {
                         icon: Icons.check_rounded,
                         color: Colors.green,
                         onPressed: () {
-                          Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                          });
                         },
                       ),
                       const SizedBox(height: 8),
