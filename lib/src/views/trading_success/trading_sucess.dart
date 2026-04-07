@@ -214,7 +214,7 @@ class _TradingSucessState extends State<TradingSucess> {
                         builder: (context, value, child) {
                           final client = widget.clientModel ?? widget.finishTradingController.client;
 
-                          return value == StateApp.success && client != null
+                          return value != null
                               ? Column(
                                   children: [
                                     _outlinedButton(
