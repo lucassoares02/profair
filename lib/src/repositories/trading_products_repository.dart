@@ -47,20 +47,35 @@ class TradingProductsRepository {
     }
   }
 
+  Rect? _sharePositionOrigin(BuildContext? context) {
+    if (!Platform.isIOS || context == null) return null;
+
+    final renderObject = context.findRenderObject();
+    final screenSize = MediaQuery.maybeOf(context)?.size;
+    var center = screenSize?.center(Offset.zero) ?? const Offset(1, 1);
+
+    if (renderObject is RenderBox && renderObject.hasSize) {
+      center = renderObject.localToGlobal(renderObject.size.center(Offset.zero));
+    }
+
+    if (screenSize != null) {
+      center = Offset(
+        _clampShareCoordinate(center.dx, screenSize.width),
+        _clampShareCoordinate(center.dy, screenSize.height),
+      );
+    }
+
+    return Rect.fromCenter(center: center, width: 1, height: 1);
+  }
+
+  double _clampShareCoordinate(double value, double max) {
+    if (max <= 1) return max / 2;
+    return value.clamp(0.5, max - 0.5).toDouble();
+  }
+
   exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation, int? codeBranch, BuildContext? context}) async {
     Response? response;
-
-    // Extrair valores do context antes de qualquer gap assíncrono
-    Rect? shareOrigin;
-    if (Platform.isIOS && context != null) {
-      final isIpad = MediaQuery.of(context).size.shortestSide >= 600;
-      if (isIpad) {
-        final box = context.findRenderObject() as RenderBox?;
-        if (box != null) {
-          shareOrigin = box.localToGlobal(Offset.zero) & box.size;
-        }
-      }
-    }
+    final shareOrigin = _sharePositionOrigin(context);
 
     try {
       response = await clientDioRequest.get(

@@ -7,6 +7,7 @@ import 'package:profair/src/app_module.dart';
 import 'package:profair/generated/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:profair/src/navigation/app_route_observer.dart';
 import 'package:profair/src/theme/app_theme.dart';
 
 void main() async {
@@ -21,14 +22,24 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    Modular.setInitialRoute('/splash');
+    Modular.setObservers([appRouteObserver]);
+  }
+
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-    Modular.setInitialRoute('/splash');
-
     return MaterialApp.router(
       title: "profair",
       localizationsDelegates: const [

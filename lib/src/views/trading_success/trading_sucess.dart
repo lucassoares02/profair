@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_modular/flutter_modular.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/login_model.dart';
 import 'package:profair/src/utils/colors.dart';

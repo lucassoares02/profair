@@ -1,13 +1,10 @@
 import 'package:profair/src/components/card_product.dart';
-import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/controllers/order_details_controller.dart';
 import 'package:profair/src/controllers/trading_products_controller.dart';
 import 'package:profair/src/repositories/order_details_model.dart';
 import 'package:profair/src/repositories/requests_stores_model.dart';
 import 'package:profair/src/repositories/trading_products_repository.dart';
 import 'package:profair/src/state/state_app.dart';
-import 'package:profair/src/utils/colors.dart';
-import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/order_details/components/card_info.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/loading_list.dart';
@@ -57,13 +54,18 @@ class _ComponentListState extends State<ComponentList> {
             icon: Icons.shopping_basket_rounded,
             aditionAction: Row(
               children: [
-                IconButton(
-                    onPressed: () {
-                      tradingProductsController.exportData(widget.codeProvider, widget.order.codeNegotiation, widget.order.codeBranch, context);
-                    },
-                    icon: const Icon(
-                      Icons.share_rounded,
-                    ))
+                Builder(
+                  builder: (shareContext) {
+                    return IconButton(
+                      onPressed: () {
+                        tradingProductsController.exportData(widget.codeProvider, widget.order.codeNegotiation, widget.order.codeBranch, shareContext);
+                      },
+                      icon: const Icon(
+                        Icons.share_rounded,
+                      ),
+                    );
+                  },
+                )
               ],
             ),
             onSearch: (String? value) {

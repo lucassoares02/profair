@@ -5,13 +5,10 @@ import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/controllers/trading_products_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
-import 'package:profair/src/state/state_app.dart';
-import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/spacing.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/views/tranding_products/components/badge.dart';
@@ -74,11 +71,16 @@ class _ComponentListState extends State<ComponentList> {
             aditionAction: Row(
               children: [
                 if (widget.codeClient == 0 && widget.tradingProductsController.detailsSell!.quantity != 0)
-                  IconButton(
-                      onPressed: () {
-                        widget.tradingProductsController.exportData(widget.codeProvider, widget.codeTrading, widget.codeBranch, context);
-                      },
-                      icon: const Icon(Icons.share_rounded))
+                  Builder(
+                    builder: (shareContext) {
+                      return IconButton(
+                        onPressed: () {
+                          widget.tradingProductsController.exportData(widget.codeProvider, widget.codeTrading, widget.codeBranch, shareContext);
+                        },
+                        icon: const Icon(Icons.share_rounded),
+                      );
+                    },
+                  )
               ],
             ),
             onSort: widget.tradingProductsController.detailsSell!.quantity != 0
