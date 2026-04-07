@@ -76,7 +76,7 @@ class _ComponentListState extends State<ComponentList> {
                 if (widget.codeClient == 0 && widget.tradingProductsController.detailsSell!.quantity != 0)
                   IconButton(
                       onPressed: () {
-                        widget.tradingProductsController.exportData(widget.codeProvider, widget.codeTrading, widget.codeBranch);
+                        widget.tradingProductsController.exportData(widget.codeProvider, widget.codeTrading, widget.codeBranch, context);
                       },
                       icon: const Icon(Icons.share_rounded))
               ],

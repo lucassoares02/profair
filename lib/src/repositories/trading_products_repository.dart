@@ -47,9 +47,10 @@ class TradingProductsRepository {
     }
   }
 
-  exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation, int? codeBranch}) async {
+  exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation, int? codeBranch, BuildContext? context}) async {
     Response? response;
 
+    final box = context?.findRenderObject() as RenderBox?;
     try {
       // Fazendo a solicitação com a opção de resposta para obter os bytes
       response = await clientDioRequest.get(
@@ -66,13 +67,14 @@ class TradingProductsRepository {
         File tempFile = File('${tempDir.path}/${DateTime.now().toString().replaceAll(RegExp("[.: -]"), "_")}.pdf');
 
         // Gravando os bytes diretamente no arquivo
-        await tempFile.writeAsBytes(response.data);
+        await tempFile.writeAsBytes(List<int>.from(response.data));
 
         // Compartilhando o arquivo PDF
         await Share.shareXFiles(
           [XFile(tempFile.path)],
           text: 'Compartilhando Negociações Profair',
           subject: 'Arquivo de pedidos Profair',
+          sharePositionOrigin: box != null ? box.localToGlobal(Offset.zero) & box.size : const Rect.fromLTWH(0, 0, 100, 100), // fallback
         );
 
         return response;

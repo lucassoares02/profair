@@ -138,10 +138,10 @@ class TradingProductsController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch) async {
+  Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch, BuildContext? context) async {
     stateShare.value = StateApp.loading;
     try {
-      await _negotiationsRepository.exportDataProvider(codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch);
+      await _negotiationsRepository.exportDataProvider(codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch, context: context);
     } catch (e) {
       stateShare.value = StateApp.error;
     }

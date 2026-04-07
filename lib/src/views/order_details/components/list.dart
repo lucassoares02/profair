@@ -59,7 +59,7 @@ class _ComponentListState extends State<ComponentList> {
               children: [
                 IconButton(
                     onPressed: () {
-                      tradingProductsController.exportData(widget.codeProvider, widget.order.codeNegotiation, widget.order.codeBranch);
+                      tradingProductsController.exportData(widget.codeProvider, widget.order.codeNegotiation, widget.order.codeBranch, context);
                     },
                     icon: const Icon(
                       Icons.share_rounded,
