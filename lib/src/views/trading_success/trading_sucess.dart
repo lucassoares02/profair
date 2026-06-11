@@ -222,8 +222,17 @@ class _TradingSucessState extends State<TradingSucess> {
                                       icon: Icons.add_rounded,
                                       color: colorSecondary,
                                       onPressed: () {
-                                        Modular.to.navigate(
+                                        // Modular.to.navigate(
+                                        //   "/selectstore",
+                                        //   arguments: {
+                                        //     "client": client,
+                                        //     "codeProvider": widget.provider,
+                                        //     "consult": widget.consult,
+                                        //   },
+                                        // );
+                                        Navigator.of(context).pushNamedAndRemoveUntil(
                                           "/selectstore",
+                                          (route) => false,
                                           arguments: {
                                             "client": client,
                                             "codeProvider": widget.provider,
