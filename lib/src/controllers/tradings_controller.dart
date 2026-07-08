@@ -11,6 +11,8 @@ class TradingsController extends ValueNotifier<StateApp> {
 
   final stateTradings = ValueNotifier<StateApp>(StateApp.start);
 
+  final stateSaveOrder = ValueNotifier<StateApp>(StateApp.start);
+
   final TradingsRepository _tradingsRepository;
 
   TradingsController(super.value, this._tradingsRepository);
@@ -24,6 +26,38 @@ class TradingsController extends ValueNotifier<StateApp> {
       stateTradings.value = StateApp.success;
     } catch (e) {
       stateTradings.value = StateApp.error;
+    }
+  }
+
+  // Reordena localmente a lista movendo o item de [oldIndex] para [newIndex]
+  void reorder(int oldIndex, int newIndex) {
+    final list = tradingList.toList();
+    if (newIndex > oldIndex) newIndex -= 1;
+    final item = list.removeAt(oldIndex);
+    list.insert(newIndex, item);
+    tradingList = list;
+    tradings = list;
+  }
+
+  // Persiste a ordem atual da lista atribuindo o sort_order conforme a posição
+  Future<bool> saveOrder() async {
+    stateSaveOrder.value = StateApp.loading;
+    try {
+      final orders = <Map<String, dynamic>>[];
+      int position = 0;
+      for (final trading in tradingList) {
+        orders.add({"codNegociacao": trading.code, "sortOrder": position});
+        trading.sortOrder = position;
+        position++;
+      }
+
+      final success = await _tradingsRepository.updateOrder(orders);
+      stateSaveOrder.value = success ? StateApp.success : StateApp.error;
+      return success;
+    } catch (e) {
+      print("Error saving tradings order: $e");
+      stateSaveOrder.value = StateApp.error;
+      return false;
     }
   }
 

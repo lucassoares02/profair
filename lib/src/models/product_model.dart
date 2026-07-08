@@ -11,6 +11,8 @@ class ProductModel {
   double? unitPrice;
   String? barcode;
   String? negotiation;
+  bool? highlight;
+  String? tag;
 
   ProductModel({
     this.codeProduct,
@@ -25,6 +27,8 @@ class ProductModel {
     this.brand,
     this.complement,
     this.barcode,
+    this.highlight,
+    this.tag,
   });
 
   ProductModel.fromJson(Map<String, dynamic> json) {
@@ -40,6 +44,8 @@ class ProductModel {
     amount = json["quantMercadoria"].toString();
     unitPrice = double.parse(json["precoUnit"].toString());
     total = json["valorTotal"] != null ? double.parse(json["valorTotal"].toString()) : json["valorTotal"];
+    highlight = json["highlight"] == null ? false : (json["highlight"] == 1 || json["highlight"] == true);
+    tag = json["tag"];
   }
 
   factory ProductModel.clone(ProductModel product) {
@@ -56,6 +62,8 @@ class ProductModel {
       title: product.title,
       total: product.total,
       unitPrice: product.unitPrice,
+      highlight: product.highlight,
+      tag: product.tag,
     );
   }
 
@@ -73,6 +81,8 @@ class ProductModel {
       title: title,
       total: total,
       unitPrice: unitPrice,
+      highlight: highlight,
+      tag: tag,
     );
   }
 
@@ -91,6 +101,8 @@ class ProductModel {
     data["precoUnit"] = unitPrice;
     data["quantMercadoria"] = amount;
     data["valorTotal"] = total;
+    data["highlight"] = highlight;
+    data["tag"] = tag;
     return data;
   }
 }

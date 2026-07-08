@@ -113,7 +113,16 @@ class _ComponentListState extends State<ComponentList> with SingleTickerProvider
                   padding: const EdgeInsets.only(left: 8, top: 4),
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      // Quando a tela está sozinha na pilha (fluxo "Novo pedido"),
+                      // não há para onde dar pop — voltar deve ir para a home,
+                      // evitando a tela preta.
+                      if (Navigator.of(context).canPop()) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                      }
+                    },
                     child: const Padding(
                       padding: EdgeInsets.all(10),
                       child: Icon(Icons.arrow_back_ios_new, color: colorWhite, size: 18),
@@ -365,6 +374,26 @@ class _StoreCardState extends State<_StoreCard> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    if (widget.store.city != null && widget.store.city!.trim().isNotEmpty) ...[
+                      const SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Icon(Icons.location_on_outlined, size: 13, color: colorGreyDark.withValues(alpha: 0.8)),
+                          const SizedBox(width: 3),
+                          Expanded(
+                            child: Text(
+                              widget.store.city!,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: colorGreyDark.withValues(alpha: 0.9),
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ],
                 ),
               ),

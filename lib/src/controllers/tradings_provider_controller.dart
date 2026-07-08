@@ -195,6 +195,11 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
             return item.codeProduct.toString().contains(value);
           }).toList();
         }
+        if (negotiations[tabSelected].merchandises!.isEmpty) {
+          negotiations[tabSelected].merchandises = negotiationsProductsTrading[tabSelected].merchandises!.where((item) {
+            return (item.tag ?? "").toLowerCase().contains(value.toLowerCase());
+          }).toList();
+        }
       }
 
       stateSearchProductsTrading.value = StateApp.success;

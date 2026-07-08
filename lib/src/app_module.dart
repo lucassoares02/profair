@@ -18,6 +18,8 @@ import 'package:profair/src/views/preorder/preorder.dart';
 import 'package:profair/src/views/products_provider/products_provider.dart';
 import 'package:profair/src/views/providers/providers.dart';
 import 'package:profair/src/views/providers_by_group/providers_by_group.dart';
+import 'package:profair/src/views/negotiation_products/negotiation_products.dart';
+import 'package:profair/src/views/reorder_tradings/reorder_tradings.dart';
 import 'package:profair/src/views/reports/reports.dart';
 import 'package:profair/src/views/requests_stores/requests_stores.dart';
 import 'package:profair/src/views/select_negotiation/select_negotiation.dart';
@@ -138,6 +140,16 @@ class AppModule extends Module {
         ChildRoute('/tradings',
             child: (context, args) => Tradings(
                   homeController: args.data,
+                )),
+        ChildRoute('/reordertradings',
+            child: (context, args) => ReorderTradings(
+                  homeController: args.data,
+                )),
+        ChildRoute('/negotiationproducts',
+            child: (context, args) => NegotiationProducts(
+                  codeProvider: args.data["codeProvider"],
+                  codeTrading: args.data["codeTrading"],
+                  title: args.data["title"],
                 )),
         ChildRoute('/clientsproduct', child: (context, args) => ClientsProducts(product: args.data)),
         ChildRoute('/reports', child: (context, args) => Reports(codeProvider: args.data["codeProvider"], accessTargeting: args.data["accessTargeting"])),

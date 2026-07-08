@@ -124,9 +124,15 @@ class _ComponentListState extends State<ComponentList> {
                     padding: const EdgeInsets.all(appMargin),
                     margin: const EdgeInsets.only(left: appMargin, right: appMargin, top: appMargin),
                     decoration: BoxDecoration(
-                      color: e.value.amount == "0" ? transparent : colorSecondary.withOpacity(0.2),
+                      color: e.value.amount != "0"
+                          ? colorSecondary.withOpacity(0.2)
+                          : (e.value.highlight ?? false)
+                              ? Colors.amber.withOpacity(0.06)
+                              : transparent,
                       borderRadius: BorderRadius.circular(appRadius),
-                      border: const Border(bottom: BorderSide(color: colorGrey)),
+                      border: (e.value.highlight ?? false)
+                          ? Border.all(color: Colors.amber.withOpacity(0.4), width: 1)
+                          : const Border(bottom: BorderSide(color: colorGrey)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -147,13 +153,25 @@ class _ComponentListState extends State<ComponentList> {
                           ],
                         ),
                         const SizedBox(height: 5),
-                        Text(
-                          e.value.title!,
-                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            if (e.value.highlight ?? false) ...[
+                              const Icon(Icons.star, color: Colors.amber, size: 18),
+                              const SizedBox(width: 4),
+                            ],
+                            Expanded(
+                              child: Text(
+                                e.value.title!,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(height: 5),
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Wrap(
+                          runSpacing: 5,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
@@ -177,6 +195,7 @@ class _ComponentListState extends State<ComponentList> {
                               padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
                               decoration: const BoxDecoration(color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
                               child: Row(
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   const Icon(
                                     Icons.sell,
@@ -207,7 +226,7 @@ class _ComponentListState extends State<ComponentList> {
                                   return value == false || widget.tradingsProviderController.itemSelected.value != e.key
                                       ? Expanded(
                                           child: Row(
-                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
                                               Column(
@@ -231,20 +250,43 @@ class _ComponentListState extends State<ComponentList> {
                                                   // ),
                                                 ],
                                               ),
-                                              widget.codeClient == 0
-                                                  ? Text(
-                                                      formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
-                                                      style: const TextStyle(
-                                                        fontSize: 14,
-                                                      ),
-                                                    )
-                                                  : Text(
-                                                      formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
-                                                      style: TextStyle(
-                                                        fontWeight: (double.parse(e.value.amount!) * e.value.price!) == 0.0 ? FontWeight.normal : FontWeight.w600,
-                                                        fontSize: 14,
+                                              Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  if (e.value.tag != null && e.value.tag!.trim().isNotEmpty) ...[
+                                                    Container(
+                                                      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                                                      decoration: BoxDecoration(color: colorSecondary, borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                                      child: Row(
+                                                        mainAxisSize: MainAxisSize.min,
+                                                        children: [
+                                                          const Icon(Icons.local_offer, color: colorWhite, size: 12),
+                                                          const SizedBox(width: 4),
+                                                          Text(
+                                                            e.value.tag!,
+                                                            style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
+                                                    const SizedBox(width: 8),
+                                                  ],
+                                                  widget.codeClient == 0
+                                                      ? Text(
+                                                          formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                          style: const TextStyle(
+                                                            fontSize: 14,
+                                                          ),
+                                                        )
+                                                      : Text(
+                                                          formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                          style: TextStyle(
+                                                            fontWeight: (double.parse(e.value.amount!) * e.value.price!) == 0.0 ? FontWeight.normal : FontWeight.w600,
+                                                            fontSize: 14,
+                                                          ),
+                                                        ),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                         )

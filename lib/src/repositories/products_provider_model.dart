@@ -14,6 +14,8 @@ class ProductsProviderModel {
   double? totalValue;
   String? totalVolume;
   String? barcode;
+  bool? highlight;
+  String? tag;
 
   ProductsProviderModel({
     this.codeProvider,
@@ -29,6 +31,8 @@ class ProductsProviderModel {
     this.barcode,
     this.totalValue,
     this.totalVolume,
+    this.highlight,
+    this.tag,
   });
 
   ProductsProviderModel.fromJson(Map<String, dynamic> json) {
@@ -47,6 +51,8 @@ class ProductsProviderModel {
       unitPrice = json['precoUnit'] != null ? double.parse(json['precoUnit'].toString()) : json['precoUnit'];
       totalValue = json['precoMercadoria'] * double.parse(json["volumeTotal"].toString());
       totalVolume = json['volumeTotal'].toString();
+      highlight = json['highlight'] == null ? false : (json['highlight'] == 1 || json['highlight'] == true);
+      tag = json['tag'];
     } catch (e) {
       debugPrint("Error (Products Provider Model) Error: $e");
     }
@@ -68,6 +74,8 @@ class ProductsProviderModel {
     data['precoUnit'] = unitPrice;
     data['codForn'] = codeProvider;
     data['nomeForn'] = nameProvider;
+    data['highlight'] = highlight;
+    data['tag'] = tag;
     return data;
   }
 }

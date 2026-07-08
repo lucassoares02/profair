@@ -35,8 +35,11 @@ class ProductsProviderController extends ValueNotifier<StateApp> {
       if (value! == "") {
         productsProvider = requests;
       }
+      final query = value.toLowerCase();
       productsProvider = requests.where((item) {
-        return item.nameProduct!.toLowerCase().contains(value.toLowerCase());
+        final name = (item.nameProduct ?? "").toLowerCase();
+        final tag = (item.tag ?? "").toLowerCase();
+        return name.contains(query) || tag.contains(query);
       }).toList();
 
       stateSearchProducts.value = StateApp.success;

@@ -74,8 +74,8 @@ android {
         // minSdkVersion flutter.minSdkVersion
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion 35
-        versionCode 50
-        versionName "13.0.42"
+        versionCode 51
+        versionName "13.0.43"
         multiDexEnabled true
     }
 
@@ -88,6 +88,9 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            ndk {
+                debugSymbolLevel 'NONE'
+            }
             
         }
     }

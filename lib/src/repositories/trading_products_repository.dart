@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
@@ -33,6 +34,32 @@ class TradingProductsRepository {
       return list.map((json) => ProductModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Error return Negotiation Model Mapper: $e");
+    }
+  }
+
+  Future<bool> updateHighlight(List<int> codes, bool highlight) async {
+    try {
+      final response = await clientDio.post("merchandisehighlight", {
+        "codes": jsonEncode(codes),
+        "highlight": highlight ? 1 : 0,
+      });
+      return response.success;
+    } catch (e) {
+      debugPrint("Error updating merchandise highlight: $e");
+      return false;
+    }
+  }
+
+  Future<bool> updateTag(List<int> codes, String? tag) async {
+    try {
+      final response = await clientDio.post("merchandisetag", {
+        "codes": jsonEncode(codes),
+        "tag": tag ?? "",
+      });
+      return response.success;
+    } catch (e) {
+      debugPrint("Error updating merchandise tag: $e");
+      return false;
     }
   }
 

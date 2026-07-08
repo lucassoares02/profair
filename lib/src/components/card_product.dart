@@ -17,6 +17,10 @@ class CardProduct extends StatefulWidget {
       required this.factor,
       this.barcode,
       this.visibleActions = true,
+      this.highlight = false,
+      this.tag,
+      this.selected = false,
+      this.onLongPress,
       this.action});
 
   String description;
@@ -31,6 +35,10 @@ class CardProduct extends StatefulWidget {
   String total;
   String? barcode;
   bool visibleActions;
+  bool highlight;
+  String? tag;
+  bool selected;
+  Function()? onLongPress;
   Function()? action;
 
   @override
@@ -38,31 +46,53 @@ class CardProduct extends StatefulWidget {
 }
 
 class _CardProductState extends State<CardProduct> {
+  // Tons dourados para o destaque premium
+  static const Color _gold = Color(0xFFE0A400);
+  static const Color _goldBg = Color(0xFFFFFBEF);
+
   @override
   Widget build(BuildContext context) {
+    final bool isHighlight = widget.highlight;
+    final bool hasTag = widget.tag != null && widget.tag!.trim().isNotEmpty;
+    final bool isSelected = widget.selected;
+
+    BoxDecoration decoration;
+    if (isSelected) {
+      decoration = BoxDecoration(
+        color: colorSecondary.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(appRadius),
+        border: Border.all(color: colorSecondary, width: 1.4),
+      );
+    } else if (isHighlight) {
+      decoration = BoxDecoration(
+        color: _goldBg,
+        borderRadius: BorderRadius.circular(appRadius),
+        border: Border.all(color: _gold.withOpacity(0.55), width: 1.3),
+        boxShadow: [
+          BoxShadow(
+            color: _gold.withOpacity(0.12),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      );
+    } else {
+      decoration = BoxDecoration(
+        border: Border(bottom: BorderSide(color: colorGrey.withOpacity(0.3))),
+      );
+    }
+
     return InkWell(
       onTap: widget.action,
+      onLongPress: widget.onLongPress,
       child: Container(
         padding: const EdgeInsets.all(appMargin),
         margin: const EdgeInsets.only(left: appMargin, right: appMargin, top: appMargin),
-        decoration: BoxDecoration(
-          border: Border(bottom: BorderSide(color: colorGrey.withOpacity(0.3))),
-        ),
+        decoration: decoration,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Container(
-            //   width: 80,
-            //   height: 80,
-            //   decoration: const BoxDecoration(
-            //     borderRadius: BorderRadius.all(Radius.circular(appRadius)),
-            //   ),
-            //   child: Image.network(
-            //     "http://www.eanpictures.com.br:9000/api/gtin/${widget.barcode}",
-            //     fit: BoxFit.cover,
-            //   ),
-            // ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -77,10 +107,42 @@ class _CardProductState extends State<CardProduct> {
               ],
             ),
             const SizedBox(height: 5),
-            Text(
-              widget.description,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (isSelected) ...[
+                  const Icon(Icons.check_circle_rounded, size: 18, color: colorSecondary),
+                  const SizedBox(width: 4),
+                ] else if (isHighlight) ...[
+                  const Icon(Icons.star_rounded, size: 18, color: _gold),
+                  const SizedBox(width: 4),
+                ],
+                Expanded(
+                  child: Text(
+                    widget.description,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  ),
+                ),
+              ],
             ),
+            if (hasTag && !isHighlight) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+                decoration: BoxDecoration(color: colorSecondary.withOpacity(0.12), borderRadius: const BorderRadius.all(Radius.circular(8))),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.sell_rounded, size: 12, color: colorSecondary),
+                    const SizedBox(width: 3),
+                    Text(
+                      widget.tag!,
+                      style: const TextStyle(color: colorSecondary, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.3),
+                    ),
+                  ],
+                ),
+              ),
+            ],
             const SizedBox(height: 5),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,

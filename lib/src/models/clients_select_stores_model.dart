@@ -4,6 +4,7 @@ class ClientsSelectStoreModel {
   int? codeBranch;
   String? nameCompany;
   String? documentCompany;
+  String? city;
   double? totalValue;
   String? totalVolume;
   bool? checked;
@@ -14,6 +15,7 @@ class ClientsSelectStoreModel {
     this.nameCompany,
     this.codeBranch,
     this.documentCompany,
+    this.city,
     this.totalValue,
     this.totalVolume,
     this.checked,
@@ -27,6 +29,7 @@ class ClientsSelectStoreModel {
       relationshipCode = json['codConsultRelaciona'];
       nameCompany = json['razaoAssociado'];
       documentCompany = json['cnpjAssociado'];
+      city = json['cidade'];
       totalValue = json['valor'].toDouble();
       totalVolume = json['volume'];
     } catch (e) {
@@ -42,6 +45,7 @@ class ClientsSelectStoreModel {
     data['codConsultRelaciona'] = relationshipCode;
     data['razao'] = nameCompany;
     data['cnpjAssociado'] = documentCompany;
+    data['cidade'] = city;
     data['valorTotal'] = totalValue;
     data['volumeTotal'] = totalVolume;
     return data;

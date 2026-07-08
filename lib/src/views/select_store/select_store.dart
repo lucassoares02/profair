@@ -30,28 +30,36 @@ class _SelectStoreState extends State<SelectStore> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: ValueListenableBuilder(
-              valueListenable: storesController.stateStores,
-              builder: (context, value, child) {
-                return ComponentList(
-                    description: "Selecione a Filial",
-                    state: storesController.stateStores,
-                    codeProvider: widget.codeProvider,
-                    listItems: storesController.stores,
-                    client: widget.client,
-                    consult: widget.codeConsult);
-              },
+    return PopScope(
+      // Se houver tela anterior, deixa o pop normal acontecer; se a tela está
+      // sozinha na pilha (fluxo "Novo pedido"), intercepta para ir à home e
+      // evitar a tela preta.
+      canPop: Navigator.of(context).canPop(),
+      onPopInvoked: (didPop) {
+        if (didPop) return;
+        Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+      },
+      child: Scaffold(
+        body: AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: ValueListenableBuilder(
+                valueListenable: storesController.stateStores,
+                builder: (context, value, child) {
+                  return ComponentList(
+                      description: "Selecione a Filial",
+                      state: storesController.stateStores,
+                      codeProvider: widget.codeProvider,
+                      listItems: storesController.stores,
+                      client: widget.client,
+                      consult: widget.codeConsult);
+                },
+              ),
             ),
           ),
         ),
       ),
     );
-    //   ),
-    // );
   }
 }

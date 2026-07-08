@@ -94,45 +94,48 @@ class _HeaderListState extends State<HeaderList> {
                   : Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              if (widget.activePop)
+                                IconButton(
+                                  onPressed: widget.onBackButton ??
+                                      () {
+                                        Navigator.of(context).pop();
+                                      },
+                                  icon: Icon(
+                                    Icons.arrow_back_ios_new,
+                                    size: 20,
+                                    color: widget.iconColor,
+                                  ),
+                                ),
+                              Flexible(
+                                child: Text(
+                                  "${widget.label}",
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         Row(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            if (widget.activePop)
+                            if (widget.aditionAction != null) widget.aditionAction!,
+                            if (widget.activeSearch!)
                               IconButton(
-                                onPressed: widget.onBackButton ??
-                                    () {
-                                      Navigator.of(context).pop();
-                                    },
+                                onPressed: () {
+                                  visibleSearch.value = !visibleSearch.value;
+                                  if (widget.onCloseInfo != null) widget.onCloseInfo!();
+                                  if (widget.onOpenSearch != null) widget.onOpenSearch!();
+                                },
                                 icon: Icon(
-                                  Icons.arrow_back_ios_new,
-                                  size: 20,
+                                  Icons.search,
                                   color: widget.iconColor,
                                 ),
                               ),
-                            Text(
-                              "${widget.label}",
-                              overflow: TextOverflow.clip,
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            if (widget.aditionAction != null) widget.aditionAction!,
-                            widget.activeSearch!
-                                ? IconButton(
-                                    onPressed: widget.activeSearch!
-                                        ? () {
-                                            visibleSearch.value = !visibleSearch.value;
-                                            if (widget.onCloseInfo != null) widget.onCloseInfo!();
-                                            if (widget.onOpenSearch != null) widget.onOpenSearch!();
-                                          }
-                                        : null,
-                                    icon: Icon(
-                                      Icons.search,
-                                      color: widget.iconColor,
-                                    ),
-                                  )
-                                : const Icon(Icons.search, color: transparent),
                             if (widget.onSort != null)
                               IconButton(
                                 onPressed: () {

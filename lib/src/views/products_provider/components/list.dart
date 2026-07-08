@@ -1,15 +1,14 @@
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/components/card_product.dart';
-import 'package:profair/src/components/spacing.dart';
+import 'package:profair/src/components/tag_dialog.dart';
 import 'package:profair/src/controllers/products_provider.dart';
 import 'package:profair/src/repositories/products_provider_model.dart';
+import 'package:profair/src/repositories/trading_products_repository.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/components/loading_list.dart';
 import 'package:profair/src/components/header_list.dart';
 import 'package:profair/src/utils/format_currency.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +35,158 @@ class ComponentList extends StatefulWidget {
 }
 
 class _ComponentListState extends State<ComponentList> {
+  final TradingProductsRepository _merchRepository = TradingProductsRepository();
+  final Set<int> _selected = {};
+  bool _saving = false;
+
+  List<ProductsProviderModel> get _products => widget.productsProviderController.productsProvider;
+
+  List<ProductsProviderModel> get _selectedProducts => _products.where((p) => _selected.contains(p.codeProduct)).toList();
+
+  void _toggleSelection(ProductsProviderModel product) {
+    final code = product.codeProduct;
+    if (code == null) return;
+    setState(() {
+      if (_selected.contains(code)) {
+        _selected.remove(code);
+      } else {
+        _selected.add(code);
+      }
+    });
+  }
+
+  void _showSnack(String message, bool success) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: success ? colorSecondary : colorRed,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  Future<void> _applyHighlight(bool highlight) async {
+    if (_selected.isEmpty || _saving) return;
+    setState(() => _saving = true);
+
+    final codes = _selected.toList();
+    final success = await _merchRepository.updateHighlight(codes, highlight);
+
+    if (!mounted) return;
+    setState(() {
+      if (success) {
+        for (final product in _products) {
+          if (_selected.contains(product.codeProduct)) product.highlight = highlight;
+        }
+        _selected.clear();
+      }
+      _saving = false;
+    });
+
+    _showSnack(
+      success ? (highlight ? "Produtos marcados como destaque" : "Destaque removido") : "Não foi possível atualizar o destaque",
+      success,
+    );
+  }
+
+  Future<void> _openTagDialog() async {
+    if (_selected.isEmpty || _saving) return;
+
+    final selectedProducts = _selectedProducts;
+
+    // Pré-preenche caso todos os selecionados compartilhem a mesma tag
+    String initial = "";
+    final first = selectedProducts.first.tag ?? "";
+    if (selectedProducts.every((p) => (p.tag ?? "") == first)) initial = first;
+
+    // Sugestões: tags já usadas em outros produtos
+    final suggestions = _products.map((p) => p.tag).whereType<String>().map((t) => t.trim()).where((t) => t.isNotEmpty).toSet().toList()..sort();
+
+    final String? result = await showDialog<String>(
+      context: context,
+      builder: (context) => TagDialog(
+        initialTag: initial,
+        selectedCount: selectedProducts.length,
+        suggestions: suggestions,
+      ),
+    );
+
+    if (result == null) return; // cancelado
+    await _applyTag(result);
+  }
+
+  Future<void> _applyTag(String? tag) async {
+    if (_selected.isEmpty || _saving) return;
+    setState(() => _saving = true);
+
+    final codes = _selected.toList();
+    final String? normalized = (tag == null || tag.trim().isEmpty) ? null : tag.trim();
+    final success = await _merchRepository.updateTag(codes, normalized);
+
+    if (!mounted) return;
+    setState(() {
+      if (success) {
+        for (final product in _products) {
+          if (_selected.contains(product.codeProduct)) product.tag = normalized;
+        }
+        _selected.clear();
+      }
+      _saving = false;
+    });
+
+    _showSnack(
+      success ? (normalized == null ? "Tag removida" : "Tag aplicada aos produtos") : "Não foi possível atualizar a tag",
+      success,
+    );
+  }
+
+  Widget? _buildMenu() {
+    if (_saving) {
+      return const Padding(
+        padding: EdgeInsets.all(14),
+        child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: colorSecondary)),
+      );
+    }
+
+    if (_selected.isEmpty) return null;
+
+    final selectedProducts = _selectedProducts;
+    final bool allHighlighted = selectedProducts.isNotEmpty && selectedProducts.every((p) => p.highlight == true);
+
+    return PopupMenuButton<int>(
+      icon: const Icon(Icons.more_vert),
+      onSelected: (value) {
+        if (value == 0) {
+          _openTagDialog();
+        } else if (value == 1) {
+          _applyHighlight(!allHighlighted);
+        }
+      },
+      itemBuilder: (context) => [
+        const PopupMenuItem(
+          value: 0,
+          child: Row(
+            children: [
+              Icon(Icons.sell_outlined, size: 20, color: colorSecondary),
+              SizedBox(width: 10),
+              Text("Adicionar tag"),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: 1,
+          child: Row(
+            children: [
+              Icon(allHighlighted ? Icons.star_rounded : Icons.star_border_rounded, size: 20, color: colorSecondary),
+              const SizedBox(width: 10),
+              Text(allHighlighted ? "Remover destaque" : "Marcar destaque"),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -50,16 +201,20 @@ class _ComponentListState extends State<ComponentList> {
             onSearch: (String? value) {
               widget.productsProviderController.search(value);
             },
-            onSort: () {
-              widget.productsProviderController.sort();
-            },
+            activeSearch: _selected.isEmpty,
+            onSort: _selected.isEmpty
+                ? () {
+                    widget.productsProviderController.sort();
+                  }
+                : null,
             label: "Produtos disponíveis",
+            aditionAction: _buildMenu(),
           ),
           ValueListenableBuilder(
               valueListenable: widget.productsProviderController.stateSearchProducts,
               builder: (context, value, child) {
                 return Column(
-                    children: widget.productsProviderController.productsProvider.map((e) {
+                    children: _products.map((e) {
                   return CardProduct(
                       description: e.nameProduct!,
                       barcode: e.barcode,
@@ -72,7 +227,16 @@ class _ComponentListState extends State<ComponentList> {
                       unitPrice: formatCurrency(e.unitPrice!),
                       amount: e.totalVolume!,
                       total: formatCurrency(e.totalValue!),
+                      highlight: e.highlight ?? false,
+                      tag: e.tag,
+                      selected: _selected.contains(e.codeProduct),
+                      onLongPress: () => _toggleSelection(e),
                       action: () {
+                        // Em modo de seleção, o toque alterna a seleção
+                        if (_selected.isNotEmpty) {
+                          _toggleSelection(e);
+                          return;
+                        }
                         if (widget.nextScreen) {
                           if (e.totalVolume != "0") {
                             Navigator.of(context).pushNamed(
@@ -91,120 +255,6 @@ class _ComponentListState extends State<ComponentList> {
                           }
                         }
                       });
-
-                  // InkWell(
-                  //   onTap: () {
-                  //     if (widget.nextScreen) {
-                  //       if (e.totalVolume != "0") {
-                  //         Navigator.of(context).pushNamed(
-                  //           "/clientsproduct",
-                  //           arguments: e.codeProduct,
-                  //         );
-                  //       } else {
-                  //         Fluttertoast.showToast(
-                  //             msg: "Produto não possui pedidos!",
-                  //             toastLength: Toast.LENGTH_SHORT,
-                  //             gravity: ToastGravity.CENTER,
-                  //             timeInSecForIosWeb: 1,
-                  //             backgroundColor: Colors.red,
-                  //             textColor: Colors.white,
-                  //             fontSize: 16.0);
-                  //       }
-                  //     }
-                  //   },
-                  //   child: Container(
-                  //     width: width,
-                  //     padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appPadding),
-                  //     margin: const EdgeInsets.symmetric(horizontal: appMargin),
-                  //     decoration: const BoxDecoration(
-                  //       border: Border(bottom: BorderSide(color: colorGrey)),
-                  //     ),
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //       children: [
-                  //         Row(
-                  //           children: [
-                  //             Container(
-                  //               width: 80,
-                  //               height: 80,
-                  //               decoration: BoxDecoration(
-                  //                 color: e.totalVolume != "0" ? colorSecondary : colorGreyLigth,
-                  //                 borderRadius: const BorderRadius.all(Radius.circular(appRadius)),
-                  //               ),
-                  //               child: Image.network(
-                  //                 "http://www.eanpictures.com.br:9000/api/gtin/${e.barcode}",
-                  //                 fit: BoxFit.cover,
-                  //               ),
-                  //             ),
-                  //             // Container(
-                  //             //   decoration: BoxDecoration(color: Colors.orange, borderRadius: BorderRadius.all(Radius.circular(50))),
-                  //             //   width: 50,
-                  //             //   child: Image.network("https://gifs.eco.br/wp-content/uploads/2023/05/imagens-de-agua-mineral-png-0.png"),
-                  //             // ),
-                  //             const SizedBox(width: 10),
-                  //             Column(
-                  //               crossAxisAlignment: CrossAxisAlignment.start,
-                  //               children: [
-                  //                 Text(
-                  //                   // e.nameProduct!.length < 35 ? '${e.nameProduct}' : "${e.nameProduct!.substring(0, 35)}...",
-                  //                   "${e.nameProduct}",
-                  //                   style: const TextStyle(fontWeight: FontWeight.bold),
-                  //                 ),
-                  //                 const SizedBox(height: 8),
-                  //                 Text(
-                  //                   // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
-                  //                   "${e.packing!} | ${e.coefficient} | ${formatCurrency(e.unitPrice!)}",
-                  //                   style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
-                  //                 ),
-                  //                 // const SizedBox(height: 5),
-                  //                 // Text(
-                  //                 //   // '${e.packing} | ${e.coefficient} | ${e.productPrice}',
-                  //                 //   formatCurrency(e.productPrice!),
-                  //                 //   style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
-                  //                 // ),
-                  //               ],
-                  //             ),
-                  //           ],
-                  //         ),
-                  //         const AppSpacing(),
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             Text(
-                  //               // '${e.totalVolume} | R\$ ${e.totalValue}',
-                  //               // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
-                  //               "${formatCurrency(e.productPrice!)} | ${e.totalVolume}",
-                  //               style: const TextStyle(fontWeight: FontWeight.w500),
-                  //             ),
-                  //             Text(
-                  //               // '${e.totalVolume} | R\$ ${e.totalValue}',
-                  //               // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
-                  //               formatCurrency(e.totalValue!),
-                  //               style: const TextStyle(
-                  //                 fontWeight: FontWeight.w500,
-                  //               ),
-                  //             ),
-                  //           ],
-                  //         )
-                  //         // Flexible(
-                  //         //   flex: 1,
-                  //         //   child: Row(
-                  //         //     mainAxisAlignment: MainAxisAlignment.end,
-                  //         //     children: [
-                  //         //       Text(
-                  //         //         // '${e.totalVolume} | R\$ ${e.totalValue}',
-                  //         //         // '${e.totalVolume ?? 0} | R\$ ${formatCurrency(e.totalValue!)}',
-                  //         //         formatCurrency(e.totalValue!),
-                  //         //         style: const TextStyle(fontWeight: FontWeight.bold),
-                  //         //       ),
-                  //         //     ],
-                  //         //   ),
-                  //         // ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // );
                 }).toList());
               })
         ],

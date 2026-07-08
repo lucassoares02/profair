@@ -40,6 +40,13 @@ class _ComponentListState extends State<ComponentList> {
               widget.tradingsController.search(value);
             },
             label: "Negociações",
+            aditionAction: IconButton(
+              tooltip: "Ordenar negociações",
+              onPressed: () {
+                Navigator.of(context).pushNamed('reordertradings', arguments: widget.homeController);
+              },
+              icon: const Icon(Icons.settings_outlined),
+            ),
           ),
           ValueListenableBuilder(
               valueListenable: widget.tradingsController.stateSearchTrandings,
