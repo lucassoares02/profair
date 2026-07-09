@@ -87,7 +87,12 @@ class _ComponentListState extends State<ComponentList> {
                     onTap: () {
                       Navigator.of(context).pushNamed(
                         "mapevent",
-                        arguments: {"map": widget.providersController.mapUrl},
+                        arguments: {
+                          "map": widget.providersController.mapUrl,
+                          "codOrg": widget.providersController.codOrg,
+                          "providers": widget.providersController.providers,
+                          "codeBranch": widget.codeBranch,
+                        },
                       );
                     },
                     child: Ink(

@@ -252,6 +252,9 @@ class AppModule extends Module {
         ChildRoute('/mapevent',
             child: (context, args) => MapEventDynamic(
                   map: args.data["map"],
+                  codOrg: args.data["codOrg"],
+                  providers: args.data["providers"],
+                  codeBranch: args.data["codeBranch"],
                 )),
         ChildRoute(
           '/notifications',

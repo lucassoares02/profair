@@ -14,6 +14,7 @@ class ProvidersController extends ValueNotifier<StateApp> {
   final stateProviders = ValueNotifier<StateApp>(StateApp.start);
   final stateMap = ValueNotifier<StateApp>(StateApp.start);
   String? mapUrl;
+  int? codOrg;
 
   final ProvidersRepository _providersRepository;
 
@@ -50,8 +51,10 @@ class ProvidersController extends ValueNotifier<StateApp> {
   Future findMap() async {
     stateMap.value = StateApp.loading;
     try {
-      mapUrl = await _providersRepository.getMap();
-      print("Map URL: $mapUrl");
+      final mapData = await _providersRepository.getMapData();
+      mapUrl = mapData["map"];
+      codOrg = mapData["codOrg"];
+      print("Map URL: $mapUrl | codOrg: $codOrg");
 
       stateMap.value = StateApp.success;
     } catch (e) {

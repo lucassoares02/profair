@@ -47,4 +47,20 @@ class ProvidersRepository {
       rethrow;
     }
   }
+
+  /// Retorna a URL do mapa e o código da organização.
+  Future<Map<String, dynamic>> getMapData() async {
+    ResponseModel? response;
+    try {
+      response = await clientDio.get("find-map");
+      final row = response.data[0];
+      return {
+        "map": row["mapa"]?.toString(),
+        "codOrg": row["codOrg"] is num ? (row["codOrg"] as num).toInt() : int.tryParse("${row["codOrg"]}"),
+      };
+    } catch (e) {
+      print("Error getMapData: $e");
+      rethrow;
+    }
+  }
 }

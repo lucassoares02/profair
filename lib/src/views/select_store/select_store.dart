@@ -23,7 +23,17 @@ class _SelectStoreState extends State<SelectStore> {
 
   @override
   void initState() {
-    storesController.findStores(widget.client!.userCode.toString(), widget.codeConsult!, widget.codeProvider!);
+    // Blindagem: navegar até aqui com dados nulos derrubava a tela no primeiro
+    // frame (null check operator), virando tela cinza em release no iOS.
+    if (widget.client != null && widget.codeConsult != null && widget.codeProvider != null) {
+      storesController.findStores(widget.client!.userCode.toString(), widget.codeConsult!, widget.codeProvider!);
+    } else {
+      debugPrint("SelectStore: argumentos nulos (client/consult/provider) — voltando para a home.");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (!mounted) return;
+        Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+      });
+    }
     storesController.codeProvider = widget.codeProvider;
     super.initState();
   }

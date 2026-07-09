@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/login_model.dart';
-import 'package:profair/src/state/state_app.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
 
@@ -214,7 +212,9 @@ class _TradingSucessState extends State<TradingSucess> {
                         builder: (context, value, child) {
                           final client = widget.clientModel ?? widget.finishTradingController.client;
 
-                          return value != null
+                          // Só exibe "Novo pedido" com o cliente carregado; navegar
+                          // com client nulo derruba a SelectStore (tela cinza no iOS).
+                          return client != null
                               ? Column(
                                   children: [
                                     _outlinedButton(
