@@ -255,16 +255,20 @@ class _ComponentListState extends State<ComponentList> {
                                                 children: [
                                                   if (e.value.tag != null && e.value.tag!.trim().isNotEmpty) ...[
                                                     Container(
-                                                      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                                                      decoration: BoxDecoration(color: colorSecondary, borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                                      padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 7),
+                                                      decoration: BoxDecoration(
+                                                        color: colorSecondary.withValues(alpha: 0.1),
+                                                        borderRadius: const BorderRadius.all(Radius.circular(6)),
+                                                        border: Border.all(color: colorSecondary.withValues(alpha: 0.25)),
+                                                      ),
                                                       child: Row(
                                                         mainAxisSize: MainAxisSize.min,
                                                         children: [
-                                                          const Icon(Icons.local_offer, color: colorWhite, size: 12),
-                                                          const SizedBox(width: 4),
+                                                          const Icon(Icons.local_offer_outlined, color: colorSecondary, size: 10),
+                                                          const SizedBox(width: 3),
                                                           Text(
                                                             e.value.tag!,
-                                                            style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                                                            style: const TextStyle(color: colorSecondary, fontWeight: FontWeight.w600, fontSize: 10),
                                                           ),
                                                         ],
                                                       ),

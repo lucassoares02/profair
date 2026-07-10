@@ -88,7 +88,7 @@ class _TagDialogState extends State<TagDialog> {
               controller: _controller,
               autofocus: true,
               maxLength: 20,
-              textCapitalization: TextCapitalization.characters,
+              textCapitalization: TextCapitalization.sentences,
               textInputAction: TextInputAction.done,
               onChanged: (_) => setState(() {}),
               onSubmitted: (_) => _save(),

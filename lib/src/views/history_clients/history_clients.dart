@@ -24,6 +24,7 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
   );
 
   TabController? _tabController;
+  int? _selectedEvent;
 
   @override
   void initState() {
@@ -133,6 +134,7 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
                 provider: widget.provider,
                 client: list[index],
                 rank: index + 1,
+                selectedEvent: _selectedEvent,
               );
             },
           );
@@ -151,6 +153,7 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
                 provider: widget.provider,
                 client: list[index],
                 rank: index + 1,
+                selectedEvent: _selectedEvent,
               );
             },
           );
@@ -229,6 +232,7 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
                       provider: widget.provider,
                       client: list[index],
                       rank: index + 1,
+                      selectedEvent: _selectedEvent,
                     );
                   },
                 ),
@@ -285,74 +289,85 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
 
   Widget _buildSummaryCard(dynamic summary, ColorScheme colorScheme) {
     final eventNum = summary.event as int? ?? 1;
+    final isSelected = _selectedEvent == eventNum;
     final color = eventNum == 1 ? colorScheme.primary : colorScheme.tertiary;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
+    return Material(
+      color: isSelected ? color : color.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(14),
+      child: InkWell(
+        onTap: () => setState(() {
+          _selectedEvent = isSelected ? null : eventNum;
+        }),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: color.withValues(alpha: 0.18)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 22,
-                height: 22,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Text(
-                  '$eventNum',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: color,
+              Row(
+                children: [
+                  Container(
+                    width: 22,
+                    height: 22,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.white.withValues(alpha: 0.22) : color.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text(
+                      '$eventNum',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ? Colors.white : color,
+                      ),
+                    ),
                   ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      summary.description ?? 'Evento $eventNum',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: isSelected ? Colors.white.withValues(alpha: 0.85) : color.withValues(alpha: 0.8),
+                        height: 1.2,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                'Total',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: 0.3,
+                  color: isSelected ? Colors.white.withValues(alpha: 0.65) : colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
               ),
-              const SizedBox(width: 6),
-              Expanded(
+              const SizedBox(height: 2),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
                 child: Text(
-                  summary.description ?? 'Evento $eventNum',
+                  formatCurrency(summary.total ?? 0),
+                  maxLines: 1,
                   style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w600,
-                    color: colorScheme.onSurface.withValues(alpha: 0.55),
-                    height: 1.2,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.4,
+                    color: isSelected ? Colors.white : color,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          Text(
-            'Total',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.3,
-              color: colorScheme.onSurface.withValues(alpha: 0.38),
-            ),
-          ),
-          const SizedBox(height: 2),
-          Text(
-            formatCurrency(summary.total ?? 0),
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              letterSpacing: -0.4,
-              color: color,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -458,18 +473,23 @@ class _HistoryClientCard extends StatelessWidget {
   final int provider;
   final int rank;
   final bool isProvider;
+  final int? selectedEvent;
 
   const _HistoryClientCard({
     required this.client,
     required this.rank,
     required this.provider,
     required this.isProvider,
+    this.selectedEvent,
   });
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final bool hasValue = (client.total ?? 0) > 0;
+
+    // Valor exibido conforme o evento selecionado no topo (ou total geral).
+    final double displayValue = client.valueForEvent(selectedEvent);
+    final bool hasValue = displayValue > 0;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: 5),
@@ -558,7 +578,7 @@ class _HistoryClientCard extends StatelessWidget {
                             ),
                             const SizedBox(height: 3),
                             Text(
-                              formatCurrency(client.total ?? 0),
+                              formatCurrency(displayValue),
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,

@@ -444,7 +444,6 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                                                           child: ValueListenableBuilder(
                                                                             valueListenable: tradingsProviderController.stateTradings,
                                                                             builder: (context, bool stateValue, child) {
-                                                                              inspect(e.value);
                                                                               return AnimatedContainer(
                                                                                 duration: const Duration(milliseconds: 180),
                                                                                 margin: const EdgeInsets.only(bottom: 8),
@@ -452,7 +451,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                                                                 decoration: BoxDecoration(
                                                                                   color: e.value.checked!
                                                                                       ? colorSecondary.withValues(alpha: 0.07)
-                                                                                      : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.03),
+                                                                                      : Theme.of(context).colorScheme.background.withValues(alpha: 0.03),
                                                                                   borderRadius: BorderRadius.circular(appRadius),
                                                                                   border: Border.all(
                                                                                     color: e.value.checked!
@@ -485,13 +484,7 @@ class _TradingsProviderState extends State<TradingsProvider> with SingleTickerPr
                                                                                         children: [
                                                                                           Text(
                                                                                             '${e.value.nameCompany}',
-                                                                                            style: TextStyle(
-                                                                                              fontSize: 13,
-                                                                                              fontWeight: FontWeight.w600,
-                                                                                              color: e.value.checked!
-                                                                                                  ? Theme.of(context).colorScheme.onSurface
-                                                                                                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
-                                                                                            ),
+                                                                                            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.onSurface),
                                                                                             overflow: TextOverflow.ellipsis,
                                                                                             maxLines: 1,
                                                                                           ),

@@ -62,7 +62,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
       ),
       _TabItem(label: "Negociações", icon: Icons.handshake_outlined),
       _TabItem(label: "Consultores", icon: Icons.people_outline_rounded),
-      _TabItem(label: "Histórico", icon: Icons.timeline_rounded),
+      // _TabItem(label: "Histórico", icon: Icons.timeline_rounded),
     ];
 
     return AnnotatedRegion(

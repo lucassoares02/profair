@@ -9,7 +9,11 @@ import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
 
 class NegotiationProducts extends StatefulWidget {
-  const NegotiationProducts({super.key, required this.codeProvider, required this.codeTrading, this.title});
+  const NegotiationProducts(
+      {super.key,
+      required this.codeProvider,
+      required this.codeTrading,
+      this.title});
 
   final int? codeProvider;
   final int? codeTrading;
@@ -21,7 +25,9 @@ class NegotiationProducts extends StatefulWidget {
 
 class _NegotiationProductsState extends State<NegotiationProducts> {
   final TradingProductsRepository _repository = TradingProductsRepository();
-  final NumberFormat _currency = NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+  final NumberFormat _currency =
+      NumberFormat.currency(locale: 'pt_BR', symbol: 'R\$');
+  static const Color _gold = Color(0xFFE0A400);
 
   List<ProductModel> _products = [];
   final Set<int> _selected = {};
@@ -42,9 +48,11 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
     });
     try {
       // codeClient e codeBranch = 0 direcionam para a rota merchandisenegotiationprovider/:provider/:negotiation
-      final result = await _repository.getTradingProducts(0, widget.codeProvider, widget.codeTrading, 0);
+      final result = await _repository.getTradingProducts(
+          0, widget.codeProvider, widget.codeTrading, 0);
       setState(() {
-        _products = result is List ? result.cast<ProductModel>() : <ProductModel>[];
+        _products =
+            result is List ? result.cast<ProductModel>() : <ProductModel>[];
         _loading = false;
       });
     } catch (e) {
@@ -90,7 +98,9 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(success
-            ? (highlight ? "Produtos marcados como destaque" : "Destaque removido")
+            ? (highlight
+                ? "Produtos marcados como destaque"
+                : "Destaque removido")
             : "Não foi possível atualizar o destaque"),
         backgroundColor: success ? colorSecondary : colorRed,
         behavior: SnackBarBehavior.floating,
@@ -101,7 +111,8 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
   Future<void> _openTagDialog() async {
     if (_selected.isEmpty || _saving) return;
 
-    final selectedProducts = _products.where((p) => _selected.contains(p.codeProduct)).toList();
+    final selectedProducts =
+        _products.where((p) => _selected.contains(p.codeProduct)).toList();
 
     // Pré-preenche caso todos os selecionados compartilhem a mesma tag
     String initial = "";
@@ -136,7 +147,8 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
     setState(() => _saving = true);
 
     final codes = _selected.toList();
-    final String? normalized = (tag == null || tag.trim().isEmpty) ? null : tag.trim();
+    final String? normalized =
+        (tag == null || tag.trim().isEmpty) ? null : tag.trim();
     final success = await _repository.updateTag(codes, normalized);
 
     if (!mounted) return;
@@ -155,7 +167,9 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(success
-            ? (normalized == null ? "Tag removida" : "Tag aplicada aos produtos")
+            ? (normalized == null
+                ? "Tag removida"
+                : "Tag aplicada aos produtos")
             : "Não foi possível atualizar a tag"),
         backgroundColor: success ? colorSecondary : colorRed,
         behavior: SnackBarBehavior.floating,
@@ -171,7 +185,8 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
           children: [
             HeaderList(
               icon: Icons.inventory_2_outlined,
-              label: widget.title?.isNotEmpty == true ? widget.title! : "Produtos",
+              label:
+                  widget.title?.isNotEmpty == true ? widget.title! : "Produtos",
               activeSearch: false,
               aditionAction: _buildActions(),
             ),
@@ -186,16 +201,22 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
     if (_saving) {
       return const Padding(
         padding: EdgeInsets.all(14),
-        child: SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: colorSecondary)),
+        child: SizedBox(
+            width: 18,
+            height: 18,
+            child: CircularProgressIndicator(
+                strokeWidth: 2, color: colorSecondary)),
       );
     }
 
-    final selectedProducts = _products.where((p) => _selected.contains(p.codeProduct)).toList();
+    final selectedProducts =
+        _products.where((p) => _selected.contains(p.codeProduct)).toList();
 
     // Ações aparecem apenas quando há produtos selecionados
     if (selectedProducts.isEmpty) return const SizedBox.shrink();
 
-    final bool allHighlighted = selectedProducts.every((p) => p.highlight == true);
+    final bool allHighlighted =
+        selectedProducts.every((p) => p.highlight == true);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -231,7 +252,8 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: 10),
       itemCount: _products.length,
-      itemBuilder: (context, index) => _buildProductCard(context, _products[index]),
+      itemBuilder: (context, index) =>
+          _buildProductCard(context, _products[index]),
     );
   }
 
@@ -240,11 +262,20 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.inventory_2_outlined, size: 48, color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.25)),
+          Icon(Icons.inventory_2_outlined,
+              size: 48,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.25)),
           const SizedBox(height: 12),
           Text(
             message,
-            style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55)),
+            style: TextStyle(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.55)),
           ),
         ],
       ),
@@ -252,7 +283,9 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
   }
 
   Widget _buildProductCard(BuildContext context, ProductModel product) {
-    final String subtitle = [product.brand, product.complement].where((e) => e != null && e.trim().isNotEmpty).join(' • ');
+    final String subtitle = [product.brand, product.complement]
+        .where((e) => e != null && e.trim().isNotEmpty)
+        .join(' • ');
     final bool isSelected = _selected.contains(product.codeProduct);
     final bool isHighlighted = product.highlight == true;
     final bool hasTag = product.tag != null && product.tag!.trim().isNotEmpty;
@@ -268,14 +301,25 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(appRadius),
-              color: Theme.of(context).colorScheme.surface,
+              color: isHighlighted
+                  ? Colors.transparent
+                  : Theme.of(context).colorScheme.surface,
               border: Border.all(
-                color: isSelected ? colorSecondary : Colors.transparent,
-                width: 1.6,
+                color: isSelected
+                    ? colorSecondary
+                    : isHighlighted
+                        ? _gold.withValues(alpha: 0.55)
+                        : Colors.transparent,
+                width: isSelected
+                    ? 1.6
+                    : isHighlighted
+                        ? 1.3
+                        : 1,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.06),
+                  color: (isHighlighted ? _gold : Colors.black)
+                      .withValues(alpha: isHighlighted ? 0.12 : 0.06),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -287,7 +331,9 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Container(width: 4, color: isHighlighted ? colorTertiary : colorSecondary),
+                    Container(
+                        width: 4,
+                        color: isHighlighted ? _gold : colorSecondary),
                     // Indicador de seleção (aparece apenas quando o item está selecionado)
                     if (isSelected)
                       const Padding(
@@ -300,7 +346,8 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
                       ),
                     Expanded(
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -312,7 +359,9 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.w700,
                                       fontSize: 15,
-                                      color: Theme.of(context).colorScheme.onSurface,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface,
                                       height: 1.3,
                                     ),
                                   ),
@@ -320,7 +369,8 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
                                 if (isHighlighted)
                                   const Padding(
                                     padding: EdgeInsets.only(left: 6),
-                                    child: Icon(Icons.star_rounded, size: 18, color: colorTertiary),
+                                    child: Icon(Icons.star_rounded,
+                                        size: 18, color: _gold),
                                   ),
                               ],
                             ),
@@ -330,46 +380,40 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
                                 subtitle,
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.55),
-                                ),
-                              ),
-                            ],
-                            if (hasTag) ...[
-                              const SizedBox(height: 6),
-                              Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(
-                                  color: colorSecondary.withValues(alpha: 0.1),
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(Icons.sell_rounded, size: 12, color: colorSecondary),
-                                    const SizedBox(width: 4),
-                                    Text(
-                                      product.tag!,
-                                      style: const TextStyle(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.w600,
-                                        color: colorSecondary,
-                                        letterSpacing: 0.3,
-                                      ),
-                                    ),
-                                  ],
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withValues(alpha: 0.55),
                                 ),
                               ),
                             ],
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                _InfoChip(icon: Icons.sell_outlined, label: _currency.format(product.price ?? 0)),
+                                _InfoChip(
+                                    icon: Icons.sell_outlined,
+                                    label:
+                                        _currency.format(product.price ?? 0)),
                                 const SizedBox(width: 12),
-                                _InfoChip(icon: Icons.inventory_2_outlined, label: '${product.amount ?? '0'} un.'),
+                                _InfoChip(
+                                    icon: Icons.inventory_2_outlined,
+                                    label: '${product.amount ?? '0'} un.'),
                                 const Spacer(),
+                                if (hasTag) ...[
+                                  Flexible(
+                                    child: Align(
+                                      alignment: Alignment.centerRight,
+                                      child: _TagChip(label: product.tag!),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
                                 Text(
                                   _currency.format(product.total ?? 0),
-                                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: colorSecondary),
+                                  style: const TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w700,
+                                      color: colorSecondary),
                                 ),
                               ],
                             ),
@@ -386,7 +430,44 @@ class _NegotiationProductsState extends State<NegotiationProducts> {
       ),
     );
   }
+}
 
+class _TagChip extends StatelessWidget {
+  const _TagChip({required this.label});
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: colorSecondary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(color: colorSecondary.withValues(alpha: 0.25)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.local_offer_outlined,
+              size: 11, color: colorSecondary),
+          const SizedBox(width: 4),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: colorSecondary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _InfoChip extends StatelessWidget {
@@ -397,7 +478,8 @@ class _InfoChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color color = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7);
+    final Color color =
+        Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -405,7 +487,8 @@ class _InfoChip extends StatelessWidget {
         const SizedBox(width: 3),
         Text(
           label,
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500, color: color),
+          style: TextStyle(
+              fontSize: 12, fontWeight: FontWeight.w500, color: color),
         ),
       ],
     );

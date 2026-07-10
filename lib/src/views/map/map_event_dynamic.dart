@@ -6,6 +6,11 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/format_currency.dart';
 
 const _colorOrdered = Color(0xFF22C55E);
+const _colorWithoutOrder = colorBlue;
+const _colorWithoutProvider = colorRed;
+const _markerBorder = Border.fromBorderSide(
+  BorderSide(color: Color(0x33000000), width: 0.7),
+);
 
 class MapEventDynamic extends StatefulWidget {
   const MapEventDynamic({
@@ -43,7 +48,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
       if (p.codeProvider != null) p.codeProvider!: p,
   };
 
-  ProvidersModel? _providerOf(StandModel stand) => stand.codForn == null ? null : _providersByCode[stand.codForn!];
+  ProvidersModel? _providerOf(StandModel stand) =>
+      stand.codForn == null ? null : _providersByCode[stand.codForn!];
 
   bool _hasOrder(StandModel stand) => (_providerOf(stand)?.totalValue ?? 0) > 0;
 
@@ -120,7 +126,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                           builder: (context, constraints) {
                             // Retângulo real onde a imagem é desenhada (BoxFit.contain),
                             // usado como referência para posicionar os stands.
-                            final rect = _fittedImageRect(constraints.biggest, _imageSize!);
+                            final rect = _fittedImageRect(
+                                constraints.biggest, _imageSize!);
                             return Stack(
                               children: [
                                 Positioned(
@@ -128,9 +135,11 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                                   top: rect.top,
                                   width: rect.width,
                                   height: rect.height,
-                                  child: Image.network(widget.map, fit: BoxFit.fill),
+                                  child: Image.network(widget.map,
+                                      fit: BoxFit.fill),
                                 ),
-                                ..._stands.map((stand) => _buildStandMarker(stand, rect)),
+                                ..._stands.map(
+                                    (stand) => _buildStandMarker(stand, rect)),
                               ],
                             );
                           },
@@ -146,7 +155,10 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
               child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Material(
-                  color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.92),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .surface
+                      .withValues(alpha: 0.92),
                   shape: const CircleBorder(),
                   elevation: 3,
                   child: InkWell(
@@ -171,9 +183,10 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
     if (image.width == 0 || image.height == 0) {
       return Rect.fromLTWH(0, 0, container.width, container.height);
     }
-    final scale = (container.width / image.width) < (container.height / image.height)
-        ? container.width / image.width
-        : container.height / image.height;
+    final scale =
+        (container.width / image.width) < (container.height / image.height)
+            ? container.width / image.width
+            : container.height / image.height;
     final drawnW = image.width * scale;
     final drawnH = image.height * scale;
     final offsetX = (container.width - drawnW) / 2;
@@ -197,7 +210,9 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
       height: height,
       child: GestureDetector(
         onTap: () => _mostrarDetalhesDoStand(stand),
-        child: ordered ? _orderedMarker(stand, logo, width, height) : _defaultMarker(stand, logo, width, height),
+        child: ordered
+            ? _orderedMarker(stand, logo, width, height)
+            : _defaultMarker(stand, logo, width, height),
       ),
     );
   }
@@ -217,13 +232,18 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
   }
 
   // Stand com pedido feito: card verde com check (e logo, quando houver).
-  Widget _orderedMarker(StandModel stand, String? logo, double width, double height) {
+  Widget _orderedMarker(
+      StandModel stand, String? logo, double width, double height) {
     final small = width < 34 || height < 34;
     return Container(
       decoration: BoxDecoration(
         color: _colorOrdered.withValues(alpha: 0.82),
+        border: _markerBorder,
         boxShadow: [
-          BoxShadow(color: _colorOrdered.withValues(alpha: 0.4), blurRadius: 6, offset: const Offset(0, 2)),
+          BoxShadow(
+              color: _colorOrdered.withValues(alpha: 0.4),
+              blurRadius: 6,
+              offset: const Offset(0, 2)),
         ],
       ),
       alignment: Alignment.center,
@@ -252,9 +272,12 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                     decoration: const BoxDecoration(
                       color: _colorOrdered,
                       shape: BoxShape.circle,
-                      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 3)],
+                      boxShadow: [
+                        BoxShadow(color: Colors.black26, blurRadius: 3)
+                      ],
                     ),
-                    child: const Icon(Icons.check_rounded, color: colorWhite, size: 6),
+                    child: const Icon(Icons.check_rounded,
+                        color: colorWhite, size: 6),
                   ),
                 ),
               ],
@@ -262,14 +285,18 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
     );
   }
 
-  // Stand sem pedido: cor do fornecedor + logo (se houver) + nome.
-  Widget _defaultMarker(StandModel stand, String? logo, double width, double height) {
+  // Stand sem pedido: azul com fornecedor, vermelho sem fornecedor.
+  Widget _defaultMarker(
+      StandModel stand, String? logo, double width, double height) {
     final hasName = stand.nome != null && stand.nome!.trim().isNotEmpty;
     // O nome só acompanha a logo quando há espaço; senão a logo domina o card.
     final showName = hasName && (logo == null || height >= 44);
+    final markerColor =
+        stand.codForn == null ? _colorWithoutProvider : _colorWithoutOrder;
     return Container(
       decoration: BoxDecoration(
-        color: stand.fillColor,
+        color: markerColor,
+        border: _markerBorder,
       ),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(2),
@@ -289,7 +316,10 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                 child: Text(
                   stand.nome!,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: colorWhite, fontWeight: FontWeight.bold, fontSize: 10),
+                  style: const TextStyle(
+                      color: colorWhite,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 10),
                 ),
               ),
             ),
@@ -335,13 +365,15 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
     final provider = _providerOf(stand);
     final ordered = _hasOrder(stand);
     final logo = _logoOf(stand);
-    final hasProvider = stand.codForn != null;
     final nomeForn = provider?.nameProvider ?? stand.nomeForn;
+    final hasProvider = stand.codForn != null;
 
-    // Cor de destaque: verde se já pediu; senão a cor do fornecedor (opaca).
+    // Cor de destaque: verde se já pediu, azul sem pedido e vermelho sem fornecedor.
     final accent = ordered
         ? _colorOrdered
-        : StandModel.parseColor(provider?.color ?? stand.cor, colorSecondary).withAlpha(255);
+        : hasProvider
+            ? _colorWithoutOrder
+            : _colorWithoutProvider;
     final accentDark = Color.lerp(accent, Colors.black, 0.3)!;
 
     showDialog(
@@ -349,7 +381,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
       builder: (dialogContext) {
         final onSurface = Theme.of(dialogContext).colorScheme.onSurface;
         return Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
           clipBehavior: Clip.antiAlias,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -380,9 +413,13 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                           ? Image.network(
                               logo,
                               fit: BoxFit.contain,
-                              errorBuilder: (_, __, ___) => Icon(Icons.storefront_rounded, color: accent, size: 26),
+                              errorBuilder: (_, __, ___) => Icon(
+                                  Icons.storefront_rounded,
+                                  color: accent,
+                                  size: 26),
                             )
-                          : Icon(Icons.storefront_rounded, color: accent, size: 26),
+                          : Icon(Icons.storefront_rounded,
+                              color: accent, size: 26),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -390,7 +427,9 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            nomeForn?.isNotEmpty == true ? nomeForn! : (stand.nome ?? "Stand"),
+                            nomeForn?.isNotEmpty == true
+                                ? nomeForn!
+                                : (stand.nome ?? "Stand"),
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
@@ -400,13 +439,17 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                               height: 1.2,
                             ),
                           ),
-                          if (stand.nome != null && stand.nome!.trim().isNotEmpty && nomeForn?.isNotEmpty == true) ...[
+                          if (stand.nome != null &&
+                              stand.nome!.trim().isNotEmpty &&
+                              nomeForn?.isNotEmpty == true) ...[
                             const SizedBox(height: 3),
                             Text(
                               stand.nome!,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(color: colorWhite.withValues(alpha: 0.8), fontSize: 12.5),
+                              style: TextStyle(
+                                  color: colorWhite.withValues(alpha: 0.8),
+                                  fontSize: 12.5),
                             ),
                           ],
                         ],
@@ -414,7 +457,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                     ),
                     IconButton(
                       onPressed: () => Navigator.pop(dialogContext),
-                      icon: Icon(Icons.close_rounded, color: colorWhite.withValues(alpha: 0.9)),
+                      icon: Icon(Icons.close_rounded,
+                          color: colorWhite.withValues(alpha: 0.9)),
                     ),
                   ],
                 ),
@@ -428,22 +472,28 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                   children: [
                     // Status
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
                       decoration: BoxDecoration(
-                        color: (ordered ? _colorOrdered : colorGreyDark).withValues(alpha: 0.12),
+                        color: (ordered ? _colorOrdered : colorGreyDark)
+                            .withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(30),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            ordered ? Icons.check_circle_rounded : Icons.schedule_rounded,
+                            ordered
+                                ? Icons.check_circle_rounded
+                                : Icons.schedule_rounded,
                             size: 15,
                             color: ordered ? _colorOrdered : colorGreyDark,
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            ordered ? "Você já fez pedido aqui" : "Ainda sem pedido",
+                            ordered
+                                ? "Você já fez pedido aqui"
+                                : "Ainda sem pedido",
                             style: TextStyle(
                               fontSize: 12.5,
                               fontWeight: FontWeight.w700,
@@ -463,7 +513,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                         decoration: BoxDecoration(
                           color: onSurface.withValues(alpha: 0.04),
                           borderRadius: BorderRadius.circular(14),
-                          border: Border.all(color: onSurface.withValues(alpha: 0.08)),
+                          border: Border.all(
+                              color: onSurface.withValues(alpha: 0.08)),
                         ),
                         child: Row(
                           children: [
@@ -473,7 +524,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                                 color: accent.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Icon(Icons.payments_outlined, size: 18, color: accent),
+                              child: Icon(Icons.payments_outlined,
+                                  size: 18, color: accent),
                             ),
                             const SizedBox(width: 12),
                             Column(
@@ -508,7 +560,9 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                       const SizedBox(height: 14),
                       Text(
                         "Nenhum fornecedor vinculado a este stand.",
-                        style: TextStyle(fontSize: 13, color: onSurface.withValues(alpha: 0.55)),
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: onSurface.withValues(alpha: 0.55)),
                       ),
                     ],
 
@@ -523,7 +577,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                           style: TextButton.styleFrom(
                             backgroundColor: colorSecondary,
                             foregroundColor: colorWhite,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                           ),
                           onPressed: () {
                             Navigator.pop(dialogContext);
@@ -541,7 +596,8 @@ class _MapEventDynamicState extends State<MapEventDynamic> {
                           icon: const Icon(Icons.storefront_outlined, size: 18),
                           label: const Text(
                             "Ver fornecedor",
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 14),
                           ),
                         ),
                       )

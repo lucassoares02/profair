@@ -125,9 +125,9 @@ class _TradingSucessState extends State<TradingSucess> {
                             color: colorSecondary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          child: Text(
-                            "Pedido #${widget.trading}",
-                            style: const TextStyle(
+                          child: const Text(
+                            "Pedido realizado",
+                            style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w600,
                               color: colorSecondary,
@@ -145,20 +145,6 @@ class _TradingSucessState extends State<TradingSucess> {
                             height: 1,
                           ),
                         ),
-                        if (widget.clientModel?.nameCompany != null) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            widget.clientModel!.nameCompany!,
-                            textAlign: TextAlign.center,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
                         const SizedBox(height: 36),
                         Container(
                           width: double.infinity,
@@ -173,16 +159,16 @@ class _TradingSucessState extends State<TradingSucess> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              _infoCell(
-                                icon: Icons.receipt_long_rounded,
-                                label: "Número",
-                                value: "#${widget.trading}",
-                              ),
-                              Container(
-                                width: 1,
-                                height: 36,
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
-                              ),
+                              // _infoCell(
+                              //   icon: Icons.receipt_long_rounded,
+                              //   label: "Número",
+                              //   value: "#${widget.trading}",
+                              // ),
+                              // Container(
+                              //   width: 1,
+                              //   height: 36,
+                              //   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                              // ),
                               _infoCell(
                                 icon: Icons.check_circle_outline_rounded,
                                 label: "Status",
@@ -222,7 +208,13 @@ class _TradingSucessState extends State<TradingSucess> {
                                       icon: Icons.add_rounded,
                                       color: colorSecondary,
                                       onPressed: () {
-                                        // Modular.to.navigate(
+                                        // Volta até a base da pilha (home) e então abre a
+                                        // seleção de loja. Diferente do pushNamedAndRemoveUntil
+                                        // com (route) => false, a pilha nunca fica vazia —
+                                        // era isso que causava a tela cinza no iOS.
+                                        // final navigator = Navigator.of(context);
+                                        // navigator.popUntil((route) => route.isFirst);
+                                        // navigator.pushNamed(
                                         //   "/selectstore",
                                         //   arguments: {
                                         //     "client": client,
@@ -230,15 +222,9 @@ class _TradingSucessState extends State<TradingSucess> {
                                         //     "consult": widget.consult,
                                         //   },
                                         // );
-                                        Navigator.of(context).pushNamedAndRemoveUntil(
-                                          "/selectstore",
-                                          (route) => false,
-                                          arguments: {
-                                            "client": client,
-                                            "codeProvider": widget.provider,
-                                            "consult": widget.consult,
-                                          },
-                                        );
+                                        if (!context.mounted) return;
+                                        Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil("/selectstore", (route) => false,
+                                            arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult});
                                       },
                                     ),
                                     const SizedBox(height: 12),

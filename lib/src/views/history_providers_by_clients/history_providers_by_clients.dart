@@ -237,15 +237,6 @@ class _HistoryProvidersByClientsState extends State<HistoryProvidersByClients> {
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  if (isSelected)
-                    Padding(
-                      padding: const EdgeInsets.only(left: 4),
-                      child: Icon(
-                        Icons.check_circle_rounded,
-                        size: 14,
-                        color: Colors.white.withValues(alpha: 0.8),
-                      ),
-                    ),
                 ],
               ),
               const SizedBox(height: 10),
@@ -259,13 +250,18 @@ class _HistoryProvidersByClientsState extends State<HistoryProvidersByClients> {
                 ),
               ),
               const SizedBox(height: 2),
-              Text(
-                formatCurrency(summary.total ?? 0),
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: -0.4,
-                  color: isSelected ? Colors.white : color,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  formatCurrency(summary.total ?? 0),
+                  maxLines: 1,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: -0.4,
+                    color: isSelected ? Colors.white : color,
+                  ),
                 ),
               ),
             ],
@@ -390,15 +386,7 @@ class _ProviderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    final double displayValue;
-    if (selectedEvent == 1) {
-      displayValue = item.totalEvent1 ?? 0;
-    } else if (selectedEvent == 2) {
-      displayValue = item.totalEvent2 ?? 0;
-    } else {
-      displayValue = item.total ?? 0;
-    }
-
+    final double displayValue = item.valueForEvent(selectedEvent);
     final bool hasValue = displayValue > 0;
 
     return InkWell(

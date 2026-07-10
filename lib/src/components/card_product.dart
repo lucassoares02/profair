@@ -48,7 +48,6 @@ class CardProduct extends StatefulWidget {
 class _CardProductState extends State<CardProduct> {
   // Tons dourados para o destaque premium
   static const Color _gold = Color(0xFFE0A400);
-  static const Color _goldBg = Color(0xFFFFFBEF);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +64,7 @@ class _CardProductState extends State<CardProduct> {
       );
     } else if (isHighlight) {
       decoration = BoxDecoration(
-        color: _goldBg,
+        color: Colors.transparent,
         borderRadius: BorderRadius.circular(appRadius),
         border: Border.all(color: _gold.withOpacity(0.55), width: 1.3),
         boxShadow: [
@@ -87,7 +86,8 @@ class _CardProductState extends State<CardProduct> {
       onLongPress: widget.onLongPress,
       child: Container(
         padding: const EdgeInsets.all(appMargin),
-        margin: const EdgeInsets.only(left: appMargin, right: appMargin, top: appMargin),
+        margin: const EdgeInsets.only(
+            left: appMargin, right: appMargin, top: appMargin),
         decoration: decoration,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,11 +98,13 @@ class _CardProductState extends State<CardProduct> {
               children: [
                 Text(
                   "${widget.code} - ${widget.complement}",
-                  style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      color: colorGreyDark, fontWeight: FontWeight.w500),
                 ),
                 Text(
                   "${widget.packing} | ${widget.factor}",
-                  style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                  style: const TextStyle(
+                      color: colorGreyDark, fontWeight: FontWeight.w500),
                 ),
               ],
             ),
@@ -111,7 +113,8 @@ class _CardProductState extends State<CardProduct> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (isSelected) ...[
-                  const Icon(Icons.check_circle_rounded, size: 18, color: colorSecondary),
+                  const Icon(Icons.check_circle_rounded,
+                      size: 18, color: colorSecondary),
                   const SizedBox(width: 4),
                 ] else if (isHighlight) ...[
                   const Icon(Icons.star_rounded, size: 18, color: _gold),
@@ -120,57 +123,54 @@ class _CardProductState extends State<CardProduct> {
                 Expanded(
                   child: Text(
                     widget.description,
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                 ),
               ],
             ),
-            if (hasTag && !isHighlight) ...[
-              const SizedBox(height: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
-                decoration: BoxDecoration(color: colorSecondary.withOpacity(0.12), borderRadius: const BorderRadius.all(Radius.circular(8))),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.sell_rounded, size: 12, color: colorSecondary),
-                    const SizedBox(width: 3),
-                    Text(
-                      widget.tag!,
-                      style: const TextStyle(color: colorSecondary, fontSize: 11, fontWeight: FontWeight.w600, letterSpacing: 0.3),
-                    ),
-                  ],
-                ),
-              ),
-            ],
             const SizedBox(height: 5),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: BoxDecoration(color: colorGreen.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  decoration: BoxDecoration(
+                      color: colorGreen.withOpacity(0.5),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.brand,
-                    style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        color: colorWhite, fontWeight: FontWeight.w500),
                   ),
                 ),
                 const SizedBox(width: 5),
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: BoxDecoration(color: colorBlue.withOpacity(0.5), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  decoration: BoxDecoration(
+                      color: colorBlue.withOpacity(0.5),
+                      borderRadius:
+                          const BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.unitPrice,
-                    style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        color: colorWhite, fontWeight: FontWeight.w500),
                   ),
                 ),
                 const SizedBox(width: 5),
                 Container(
-                  padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
-                  decoration: const BoxDecoration(color: colorBlue, borderRadius: BorderRadius.all(Radius.circular(10))),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 3, horizontal: 10),
+                  decoration: const BoxDecoration(
+                      color: colorBlue,
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
                   child: Text(
                     widget.price,
-                    style: const TextStyle(color: colorWhite, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        color: colorWhite, fontWeight: FontWeight.w500),
                   ),
                 ),
                 const SizedBox(width: 5),
@@ -194,22 +194,61 @@ class _CardProductState extends State<CardProduct> {
                               children: [
                                 const Text(
                                   "Quantidade: ",
-                                  style: TextStyle(color: colorGreyDark, fontWeight: FontWeight.w500),
+                                  style: TextStyle(
+                                      color: colorGreyDark,
+                                      fontWeight: FontWeight.w500),
                                 ),
                                 Text(
                                   widget.amount,
-                                  style: const TextStyle(color: colorGreyDark, fontWeight: FontWeight.bold),
+                                  style: const TextStyle(
+                                      color: colorGreyDark,
+                                      fontWeight: FontWeight.bold),
                                 ),
                               ],
                             ),
                           ],
                         ),
-                        Text(
-                          widget.total,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14,
-                          ),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (hasTag) ...[
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 2, horizontal: 7),
+                                decoration: BoxDecoration(
+                                  color: colorSecondary.withValues(alpha: 0.1),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(6)),
+                                  border: Border.all(
+                                      color: colorSecondary.withValues(
+                                          alpha: 0.25)),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.local_offer_outlined,
+                                        color: colorSecondary, size: 10),
+                                    const SizedBox(width: 3),
+                                    Text(
+                                      widget.tag!,
+                                      style: const TextStyle(
+                                          color: colorSecondary,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 10),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                            ],
+                            Text(
+                              widget.total,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
