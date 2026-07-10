@@ -12,7 +12,20 @@ class HistoryClientsModel {
   int? event;
   String? descriptionEvent;
 
-  HistoryClientsModel({this.id, this.razao, this.total, this.totalEvent1, this.totalEvent2, this.event, this.descriptionEvent});
+  HistoryClientsModel(
+      {this.id,
+      this.razao,
+      this.total,
+      this.totalEvent1,
+      this.totalEvent2,
+      this.event,
+      this.descriptionEvent});
+
+  static int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is num) return value.toInt();
+    return int.tryParse(value.toString());
+  }
 
   static double _toDouble(dynamic value) {
     if (value == null) return 0.0;
@@ -21,12 +34,13 @@ class HistoryClientsModel {
   }
 
   HistoryClientsModel.fromJson(Map<String, dynamic> json) {
-    id = json['codAssociadoEvent'] ?? json['codFornEvent'];
+    id = _toInt(json['codAssociadoEvent'] ?? json['codFornEvent']);
     razao = json['razaoAssociado'] ?? json['nomeForn'];
-    total = json['valorTotal']?.toDouble();
-    volume = json['volumeTotal'];
-    event = json['idEvento'];
-    descriptionEvent = json['descricaoEvento'];
+    total = _toDouble(json['valorTotal']);
+    volume = json['volumeTotal']?.toString();
+    event = _toInt(json['idEvento'] ?? json['event'] ?? json['id']);
+    descriptionEvent =
+        json['descricaoEvento'] ?? json['descricao'] ?? json['description'];
 
     // Mapeia dinamicamente todos os campos valorEvento1, valorEvento2, valorEvento3, ...
     // (antes só existiam 1 e 2, então o evento 3 caía no total geral).
@@ -40,6 +54,30 @@ class HistoryClientsModel {
       }
     });
 
+    if (event != null && eventValues.isEmpty) {
+      eventValues[event!] = total ?? 0;
+    }
+
+    totalEvent1 = eventValues[1];
+    totalEvent2 = eventValues[2];
+  }
+
+  void completeMissingEventValues(Iterable<int> events) {
+    if (event != null && eventValues.isEmpty) {
+      eventValues[event!] = total ?? 0;
+    }
+
+    final eventIds = events.where((event) => event > 0).toSet();
+    final missingEvents =
+        eventIds.where((event) => !eventValues.containsKey(event)).toList();
+    if (missingEvents.length != 1) return;
+
+    final knownTotal =
+        eventValues.values.fold<double>(0, (sum, value) => sum + value);
+    final remainingTotal = (total ?? 0) - knownTotal;
+    if (remainingTotal <= 0) return;
+
+    eventValues[missingEvents.first] = remainingTotal;
     totalEvent1 = eventValues[1];
     totalEvent2 = eventValues[2];
   }

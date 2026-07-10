@@ -17,7 +17,8 @@ class HistoryClients extends StatefulWidget {
   State<HistoryClients> createState() => _HistoryClientsState();
 }
 
-class _HistoryClientsState extends State<HistoryClients> with SingleTickerProviderStateMixin {
+class _HistoryClientsState extends State<HistoryClients>
+    with SingleTickerProviderStateMixin {
   HistoryClientsController historyClientsController = HistoryClientsController(
     StateApp.start,
     HistoryClientsRepository(),
@@ -25,6 +26,7 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
 
   TabController? _tabController;
   int? _selectedEvent;
+  int _currentTabIndex = 0;
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
     historyClientsController.findHistorySummaryClients(widget.provider);
     if (widget.provider == 158) {
       _tabController = TabController(length: 2, vsync: this);
+      _tabController!.addListener(_handleTabChange);
       historyClientsController.findHistoryProviders();
     }
     super.initState();
@@ -39,8 +42,23 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
 
   @override
   void dispose() {
+    _tabController?.removeListener(_handleTabChange);
     _tabController?.dispose();
     super.dispose();
+  }
+
+  void _handleTabChange() {
+    final controller = _tabController;
+    if (controller == null || controller.index == _currentTabIndex) return;
+
+    _currentTabIndex = controller.index;
+    if (_currentTabIndex == 1) {
+      historyClientsController.searchProviders("");
+    } else {
+      historyClientsController.search("");
+    }
+
+    if (mounted) setState(() {});
   }
 
   @override
@@ -57,13 +75,24 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
               return AnimatedBuilder(
                 animation: _tabController!,
                 builder: (context, _) {
-                  final isProviders = _tabController!.index == 1;
+                  final isProviders = _currentTabIndex == 1;
                   return Column(
                     children: [
                       HeaderList(
-                        icon: isProviders ? Icons.storefront_outlined : Icons.groups_2_sharp,
-                        onSort: isProviders ? () => historyClientsController.sortProviders() : () => historyClientsController.sort(),
-                        onSearch: isProviders ? (String? value) => historyClientsController.searchProviders(value) : (String? value) => historyClientsController.search(value),
+                        key: ValueKey(isProviders
+                            ? "history-providers"
+                            : "history-clients"),
+                        icon: isProviders
+                            ? Icons.storefront_outlined
+                            : Icons.groups_2_sharp,
+                        onSort: isProviders
+                            ? () => historyClientsController.sortProviders()
+                            : () => historyClientsController.sort(),
+                        onSearch: isProviders
+                            ? (String? value) =>
+                                historyClientsController.searchProviders(value)
+                            : (String? value) =>
+                                historyClientsController.search(value),
                         label: "Histórico",
                       ),
                       _buildSummaryBar(context),
@@ -80,11 +109,18 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
                           children: [
                             _buildClientsList(context),
                             ValueListenableBuilder<StateApp>(
-                              valueListenable: historyClientsController.stateHistoryProviders,
+                              valueListenable: historyClientsController
+                                  .stateHistoryProviders,
                               builder: (context, state, child) {
-                                if (state == StateApp.loading) return _buildSkeleton(context);
-                                if (state == StateApp.error) return _buildError(context);
-                                if (state != StateApp.success) return const SizedBox.shrink();
+                                if (state == StateApp.loading) {
+                                  return _buildSkeleton(context);
+                                }
+                                if (state == StateApp.error) {
+                                  return _buildError(context);
+                                }
+                                if (state != StateApp.success) {
+                                  return const SizedBox.shrink();
+                                }
                                 return _buildProvidersList(context);
                               },
                             ),
@@ -141,7 +177,12 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
   }
 
   Widget _buildProvidersList(BuildContext context) {
-    final list = historyClientsController.historyProvidersList;
+    final sourceList = historyClientsController.historyProvidersList;
+    final list = _selectedEvent == null
+        ? sourceList
+        : sourceList
+            .where((provider) => provider.valueForEvent(_selectedEvent) > 0)
+            .toList();
     return list.isEmpty
         ? _buildEmptyState(context)
         : ListView.builder(
@@ -197,7 +238,8 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
           ),
           Expanded(
             child: ListView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: appMargin, vertical: 4),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: appMargin, vertical: 4),
               itemCount: 7,
               itemBuilder: (_, __) => const _SkeletonCard(),
             ),
@@ -252,7 +294,7 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
             padding: const EdgeInsets.fromLTRB(appMargin, 8, appMargin, 4),
             child: Row(
               children: List.generate(
-                2,
+                3,
                 (i) => Expanded(
                   child: Container(
                     height: 80,
@@ -312,7 +354,9 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
                     height: 22,
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
-                      color: isSelected ? Colors.white.withValues(alpha: 0.22) : color.withValues(alpha: 0.15),
+                      color: isSelected
+                          ? Colors.white.withValues(alpha: 0.22)
+                          : color.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: Text(
@@ -331,7 +375,9 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color: isSelected ? Colors.white.withValues(alpha: 0.85) : color.withValues(alpha: 0.8),
+                        color: isSelected
+                            ? Colors.white.withValues(alpha: 0.85)
+                            : color.withValues(alpha: 0.8),
                         height: 1.2,
                       ),
                       maxLines: 2,
@@ -347,7 +393,9 @@ class _HistoryClientsState extends State<HistoryClients> with SingleTickerProvid
                   fontSize: 10,
                   fontWeight: FontWeight.w500,
                   letterSpacing: 0.3,
-                  color: isSelected ? Colors.white.withValues(alpha: 0.65) : colorScheme.onSurface.withValues(alpha: 0.4),
+                  color: isSelected
+                      ? Colors.white.withValues(alpha: 0.65)
+                      : colorScheme.onSurface.withValues(alpha: 0.4),
                 ),
               ),
               const SizedBox(height: 2),
@@ -572,7 +620,8 @@ class _HistoryClientCard extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w500,
-                                color: colorScheme.onSurface.withValues(alpha: 0.4),
+                                color: colorScheme.onSurface
+                                    .withValues(alpha: 0.4),
                                 letterSpacing: 0.3,
                               ),
                             ),
@@ -583,7 +632,10 @@ class _HistoryClientCard extends StatelessWidget {
                                 fontSize: 17,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: -0.4,
-                                color: hasValue ? colorScheme.primary : colorScheme.onSurface.withValues(alpha: 0.3),
+                                color: hasValue
+                                    ? colorScheme.primary
+                                    : colorScheme.onSurface
+                                        .withValues(alpha: 0.3),
                               ),
                             ),
                           ],
@@ -625,7 +677,9 @@ class _RankBadge extends StatelessWidget {
       height: 36,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: isTopThree ? colorScheme.primary.withValues(alpha: 0.12) : colorScheme.onSurface.withValues(alpha: 0.05),
+        color: isTopThree
+            ? colorScheme.primary.withValues(alpha: 0.12)
+            : colorScheme.onSurface.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Text(
@@ -633,7 +687,9 @@ class _RankBadge extends StatelessWidget {
         style: TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w700,
-          color: isTopThree ? colorScheme.primary : colorScheme.onSurface.withValues(alpha: 0.3),
+          color: isTopThree
+              ? colorScheme.primary
+              : colorScheme.onSurface.withValues(alpha: 0.3),
         ),
       ),
     );

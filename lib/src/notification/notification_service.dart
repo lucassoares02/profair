@@ -88,7 +88,12 @@ class NotificationService {
 
     final String title = message.data['title'] ?? notification?.title ?? 'Notificação Profair';
     final String body = message.data['body'] ?? notification?.body ?? 'Abra e veja mais detalhes.';
-    final String? imageUrl = message.data['imageUrl'];
+
+    // A imagem própria da notificação (tabela notifications) tem prioridade;
+    // se for nula/vazia, usa a imagem do fornecedor.
+    final String? notificationImage = message.data['notificationImage'];
+    final String? providerImage = message.data['imageUrl'];
+    final String? imageUrl = (notificationImage != null && notificationImage.isNotEmpty) ? notificationImage : providerImage;
 
     try {
       NotificationDetails details;

@@ -20,11 +20,60 @@ class HistoryClientsController extends ValueNotifier<StateApp> {
   final stateHistorySummaryClients = ValueNotifier<StateApp>(StateApp.start);
   int sortInt = 0;
 
+  String _sumVolumes(String? first, String? second) {
+    final firstValue = int.tryParse(first ?? "0") ?? 0;
+    final secondValue = int.tryParse(second ?? "0") ?? 0;
+    return (firstValue + secondValue).toString();
+  }
+
+  List<HistoryClientsModel> _aggregateByEntityAndEvent(
+      List<HistoryClientsModel> items) {
+    final grouped = <int, HistoryClientsModel>{};
+    final withoutId = <HistoryClientsModel>[];
+
+    for (final item in items) {
+      final id = item.id;
+      if (id == null) {
+        withoutId.add(item);
+        continue;
+      }
+
+      final current = grouped[id];
+      if (current == null) {
+        grouped[id] = item;
+        continue;
+      }
+
+      current.total = (current.total ?? 0) + (item.total ?? 0);
+      current.volume = _sumVolumes(current.volume, item.volume);
+      item.eventValues.forEach((event, value) {
+        current.eventValues[event] = (current.eventValues[event] ?? 0) + value;
+      });
+      current.totalEvent1 = current.eventValues[1];
+      current.totalEvent2 = current.eventValues[2];
+    }
+
+    return [...grouped.values, ...withoutId];
+  }
+
+  void _completeEventValues() {
+    final events =
+        historySummaryClients.map((summary) => summary.event).whereType<int>();
+    for (final client in historyClients) {
+      client.completeMissingEventValues(events);
+    }
+    for (final provider in historyProviders) {
+      provider.completeMissingEventValues(events);
+    }
+  }
+
   Future findHistoryClients(int provider) async {
     stateHistoryClients.value = StateApp.loading;
     try {
-      historyClientsList = await _historyClientsRepository.findHistoryClients(provider);
+      historyClientsList =
+          await _historyClientsRepository.findHistoryClients(provider);
       historyClients = historyClientsList;
+      _completeEventValues();
       stateHistoryClients.value = StateApp.success;
     } catch (e) {
       stateHistoryClients.value = StateApp.error;
@@ -34,8 +83,11 @@ class HistoryClientsController extends ValueNotifier<StateApp> {
   Future findHistoryProviders() async {
     stateHistoryProviders.value = StateApp.loading;
     try {
-      historyProvidersList = await _historyClientsRepository.findHistoryProviders();
+      final providerRows =
+          await _historyClientsRepository.findHistoryProviders();
+      historyProvidersList = _aggregateByEntityAndEvent(providerRows);
       historyProviders = historyProvidersList;
+      _completeEventValues();
       stateHistoryProviders.value = StateApp.success;
     } catch (e) {
       stateHistoryProviders.value = StateApp.error;
@@ -45,7 +97,9 @@ class HistoryClientsController extends ValueNotifier<StateApp> {
   Future findHistorySummaryClients(int provider) async {
     stateHistorySummaryClients.value = StateApp.loading;
     try {
-      historySummaryClients = await _historyClientsRepository.findHistorySummaryClients(provider);
+      historySummaryClients =
+          await _historyClientsRepository.findHistorySummaryClients(provider);
+      _completeEventValues();
       stateHistorySummaryClients.value = StateApp.success;
     } catch (e) {
       stateHistorySummaryClients.value = StateApp.error;
@@ -57,12 +111,14 @@ class HistoryClientsController extends ValueNotifier<StateApp> {
   search(String? value) async {
     stateHistoryClients.value = StateApp.loading;
     try {
-      if (value! == "") {
+      final query = (value ?? "").toLowerCase();
+      if (query.isEmpty) {
         historyClientsList = historyClients;
+      } else {
+        historyClientsList = historyClients.where((item) {
+          return (item.razao ?? "").toLowerCase().contains(query);
+        }).toList();
       }
-      historyClientsList = historyClients.where((item) {
-        return item.razao!.toLowerCase().contains(value.toLowerCase());
-      }).toList();
 
       stateHistoryClients.value = StateApp.success;
     } catch (e) {
@@ -73,11 +129,12 @@ class HistoryClientsController extends ValueNotifier<StateApp> {
   searchProviders(String? value) async {
     stateHistoryProviders.value = StateApp.loading;
     try {
-      if (value! == "") {
+      final query = (value ?? "").toLowerCase();
+      if (query.isEmpty) {
         historyProvidersList = historyProviders;
       } else {
         historyProvidersList = historyProviders.where((item) {
-          return item.razao!.toLowerCase().contains(value.toLowerCase());
+          return (item.razao ?? "").toLowerCase().contains(query);
         }).toList();
       }
       stateHistoryProviders.value = StateApp.success;
@@ -102,7 +159,13 @@ class HistoryClientsController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       stateHistoryClients.value = StateApp.success;
     } catch (e) {
@@ -126,7 +189,13 @@ class HistoryClientsController extends ValueNotifier<StateApp> {
       } else {
         sortProvidersInt += 1;
       }
-      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       stateHistoryProviders.value = StateApp.success;
     } catch (e) {
