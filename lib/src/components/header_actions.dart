@@ -19,6 +19,7 @@ class HeaderActions extends StatefulWidget {
     this.addIcon,
     this.menu = false,
     this.alertClose = false,
+    this.onSettings,
   });
 
   String? label;
@@ -27,6 +28,7 @@ class HeaderActions extends StatefulWidget {
   Function()? onSort;
   Function()? onCloseInfo;
   Function()? onOpenSearch;
+  Function()? onSettings;
   Color? color;
   Color? iconColor;
   IconData? icon;
@@ -98,6 +100,9 @@ class _HeaderActionsState extends State<HeaderActions> {
                   children: [
                     Row(
                       children: [
+                        if (!widget.activePop)
+                          // Espaço equivalente ao botão de voltar para manter o título alinhado.
+                          const SizedBox(width: 48, height: 48),
                         if (widget.activePop)
                           IconButton(
                             onPressed: () {
@@ -165,6 +170,15 @@ class _HeaderActionsState extends State<HeaderActions> {
                                 ),
                               )
                             : const Icon(Icons.search, color: transparent),
+                        if (widget.onSettings != null)
+                          IconButton(
+                            tooltip: "Configurações",
+                            onPressed: () => widget.onSettings!(),
+                            icon: Icon(
+                              Icons.settings_outlined,
+                              color: widget.iconColor,
+                            ),
+                          ),
                         if (widget.onSort != null)
                           IconButton(
                             onPressed: () {

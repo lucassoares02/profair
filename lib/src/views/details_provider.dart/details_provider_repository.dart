@@ -17,7 +17,8 @@ class DetailsProviderRepository {
 
   getNegotiations(int codeBranch, int codeProvider) async {
     try {
-      final response = await clientDio.get("negotiationclient/$codeBranch/$codeProvider");
+      final response =
+          await clientDio.get("negotiationclient/$codeBranch/$codeProvider");
       List list = response.data as List;
 
       return list.map((json) => NegotiationModel.fromJson(json)).toList();
@@ -29,7 +30,8 @@ class DetailsProviderRepository {
 
   getMerchandises(int codeClient, int codeProvider, int codeNegotiation) async {
     try {
-      final response = await clientDio.get("merchandiseperclient/$codeClient/$codeProvider/$codeNegotiation");
+      final response = await clientDio.get(
+          "merchandiseperclient/$codeClient/$codeProvider/$codeNegotiation");
       List list = response.data as List;
       return list.map((json) => ProductsProviderModel.fromJson(json)).toList();
     } catch (e) {
@@ -40,7 +42,8 @@ class DetailsProviderRepository {
 
   getTopMerchandises(int codeProvider) async {
     try {
-      final response = await clientDio.get("merchandisetoptenprovider/$codeProvider");
+      final response =
+          await clientDio.get("merchandisetoptenprovider/$codeProvider");
       // final response = await clientDio.get("merchandiseprovider/$codeProvider");
       List list = response.data as List;
       inspect(list);
@@ -55,7 +58,8 @@ class DetailsProviderRepository {
   getRequestsStores(int? codeProvider, int? userCode) async {
     ResponseModel? response;
     try {
-      response = await clientDio.get('requestsnegotiationbyclient/$codeProvider');
+      response =
+          await clientDio.get('requestsnegotiationbyclient/$codeProvider');
       List list = response.data as List;
       inspect(list);
       return list.map((json) => RequestsStoresModel.fromJson(json)).toList();
@@ -67,11 +71,29 @@ class DetailsProviderRepository {
   getNegotiationPerClient(int provider, int? client) async {
     ResponseModel? response;
     try {
-      response = await clientDio.get('requestsnegotiationclientororg/$client/$provider');
+      response = await clientDio
+          .get('requestsnegotiationclientororg/$client/$provider');
       List list = response.data as List;
       return list.map((json) => RequestsStoresModel.fromJson(json)).toList();
     } catch (e) {
       debugPrint("Get Request Stores (Details Balance Repository) Error: $e");
+    }
+  }
+
+  Future<String> getOrderObservation({
+    required int codeBranch,
+    required int codeProvider,
+  }) async {
+    try {
+      final response = await clientDio.get(
+        "requestobservation/$codeBranch/$codeProvider/0/0",
+      );
+
+      return (response.data["observacao"] ?? "").toString();
+    } catch (e) {
+      debugPrint(
+          "Get Order Observation (Details Provider Repository) Error: $e");
+      return "";
     }
   }
 
@@ -90,9 +112,12 @@ class DetailsProviderRepository {
     print(client);
     print(provider);
     try {
-      final response = await clientDioHistory.get("history/details/client/$provider/$client");
+      final response = await clientDioHistory
+          .get("history/details/client/$provider/$client");
       List list = response.data as List;
-      return list.map((json) => HistoryClientsTradingsModel.fromJson(json)).toList();
+      return list
+          .map((json) => HistoryClientsTradingsModel.fromJson(json))
+          .toList();
     } catch (e) {
       debugPrint("Get History (Details Provider Repository) Error: $e");
       return e;

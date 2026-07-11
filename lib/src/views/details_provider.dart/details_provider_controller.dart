@@ -25,18 +25,23 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
   final stateMerchandises = ValueNotifier<StateApp>(StateApp.start);
   final stateTopMerchandises = ValueNotifier<StateApp>(StateApp.start);
   final stateRequestStores = ValueNotifier<StateApp>(StateApp.start);
+  final stateOrderObservation = ValueNotifier<StateApp>(StateApp.start);
   final stateHistory = ValueNotifier<StateApp>(StateApp.start);
   ValueNotifier<int> indexNegotiationSelected = ValueNotifier(0);
   final DetailsProviderRepository _detailsProviderRepository;
+  String orderObservation = "";
   int sortInt = 0;
 
   Future findNegotiations(int codeBranch, int codeProvider) async {
     stateNegotiations.value = StateApp.loading;
     try {
-      negotiations = await _detailsProviderRepository.getNegotiations(codeBranch, codeProvider);
+      negotiations = await _detailsProviderRepository.getNegotiations(
+          codeBranch, codeProvider);
       stateNegotiations.value = StateApp.success;
-      if (negotiations.isNotEmpty && negotiations[indexNegotiationSelected.value].negotiation != null) {
-        findMerchandises(codeBranch, codeProvider, negotiations[indexNegotiationSelected.value].negotiation!);
+      if (negotiations.isNotEmpty &&
+          negotiations[indexNegotiationSelected.value].negotiation != null) {
+        findMerchandises(codeBranch, codeProvider,
+            negotiations[indexNegotiationSelected.value].negotiation!);
         findRequestStores(codeBranch, codeProvider);
       }
     } catch (e) {
@@ -45,10 +50,12 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future findMerchandises(int codeBranch, int codeProvider, int codeNegotiation) async {
+  Future findMerchandises(
+      int codeBranch, int codeProvider, int codeNegotiation) async {
     stateMerchandises.value = StateApp.loading;
     try {
-      merchandises = await _detailsProviderRepository.getMerchandises(codeBranch, codeProvider, codeNegotiation);
+      merchandises = await _detailsProviderRepository.getMerchandises(
+          codeBranch, codeProvider, codeNegotiation);
       merchandisesBackup = merchandises;
       stateMerchandises.value = StateApp.success;
     } catch (e) {
@@ -60,7 +67,8 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
   Future findTopMerchandises(int codeProvider) async {
     stateTopMerchandises.value = StateApp.loading;
     try {
-      topMerchandises = await _detailsProviderRepository.getTopMerchandises(codeProvider);
+      topMerchandises =
+          await _detailsProviderRepository.getTopMerchandises(codeProvider);
 
       // Ordena os produtos pelo valor de venda (total), do maior para o menor
       topMerchandises.sort((a, b) => b.total!.compareTo(a.total!));
@@ -75,7 +83,9 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
   Future findRequestStores(int codeBranch, int codeProvider) async {
     stateRequestStores.value = StateApp.loading;
     try {
-      requestsStores = await _detailsProviderRepository.getRequestsStores(codeBranch, codeProvider);
+      requestsStores = await _detailsProviderRepository.getRequestsStores(
+          codeBranch, codeProvider);
+      await findOrderObservation(codeProvider);
       if (negotiations.isNotEmpty) {
         searchNegotiation(negotiations[0].negotiation!);
       }
@@ -89,7 +99,9 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
   Future findRequestStoresOrOrg(int? codeBranch, int codeProvider) async {
     stateRequestStores.value = StateApp.loading;
     try {
-      requestsStores = await _detailsProviderRepository.getNegotiationPerClient(codeProvider, codeBranch);
+      requestsStores = await _detailsProviderRepository.getNegotiationPerClient(
+          codeProvider, codeBranch);
+      await findOrderObservation(codeProvider);
       if (negotiations.isNotEmpty) {
         searchNegotiation(negotiations[0].negotiation!);
       }
@@ -97,6 +109,45 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
     } catch (e) {
       debugPrint("Find Request Stores (Details Provider Controller) Error: $e");
       stateRequestStores.value = StateApp.error;
+    }
+  }
+
+  Future findOrderObservation(int codeProvider) async {
+    final providerRequests = requestsStores
+        .where((request) => request.codeForn == codeProvider)
+        .toList();
+
+    if (providerRequests.isEmpty) {
+      orderObservation = "";
+      stateOrderObservation.value = StateApp.success;
+      return;
+    }
+
+    stateOrderObservation.value = StateApp.loading;
+    try {
+      orderObservation = "";
+      for (final request in providerRequests) {
+        final codeBranch = request.codeClient ?? request.codeBranch;
+        if (codeBranch == null) continue;
+
+        final observation =
+            (await _detailsProviderRepository.getOrderObservation(
+          codeBranch: codeBranch,
+          codeProvider: codeProvider,
+        ))
+                .trim();
+
+        if (observation.isNotEmpty) {
+          orderObservation = observation;
+          break;
+        }
+      }
+      stateOrderObservation.value = StateApp.success;
+    } catch (e) {
+      debugPrint(
+          "Find Order Observation (Details Provider Controller) Error: $e");
+      orderObservation = "";
+      stateOrderObservation.value = StateApp.error;
     }
   }
 
@@ -162,7 +213,8 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
         merchandises.sort(((a, b) => b.totalValue!.compareTo(a.totalValue!)));
         message = "Ordenado por valor total de vendas!";
       } else if (sortInt == 1) {
-        merchandises.sort(((a, b) => int.parse(b.totalVolume!) - int.parse(a.totalVolume!)));
+        merchandises.sort(
+            ((a, b) => int.parse(b.totalVolume!) - int.parse(a.totalVolume!)));
         message = "Ordenado volume vendido!";
       } else if (sortInt == 2) {
         merchandises.sort(((a, b) => a.nameProduct!.compareTo(b.nameProduct!)));
@@ -173,7 +225,13 @@ class DetailsProviderController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       stateMerchandises.value = StateApp.success;
     } catch (e) {

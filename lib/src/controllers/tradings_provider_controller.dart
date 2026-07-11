@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:profair/src/models/clients_select_stores_model.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
@@ -14,7 +13,12 @@ class NegotiationResume {
   final double value;
   final int volume;
 
-  NegotiationResume({required this.negotiation, required this.title, required this.description, required this.value, required this.volume});
+  NegotiationResume(
+      {required this.negotiation,
+      required this.title,
+      required this.description,
+      required this.value,
+      required this.volume});
 }
 
 class TradingsProviderController extends ValueNotifier<StateApp> {
@@ -25,7 +29,8 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
   ValueNotifier<bool> visibleText = ValueNotifier(false);
   ValueNotifier<bool> stateTradings = ValueNotifier(false);
   ValueNotifier<StateApp> stateCheckList = ValueNotifier(StateApp.start);
-  ValueNotifier<StateApp> stateSearchProductsTrading = ValueNotifier(StateApp.start);
+  ValueNotifier<StateApp> stateSearchProductsTrading =
+      ValueNotifier(StateApp.start);
   final itemTotal = ValueNotifier<StateApp>(StateApp.start);
   ValueNotifier<int> itemSelected = ValueNotifier(-1);
   late TabController tabController;
@@ -44,15 +49,19 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
   Future findTradingsProvider(int codeBranch, int codeProvider) async {
     stateRequest.value = StateApp.loading;
     try {
-      negotiations = await tradingsProviderRepository.getTradingProvider(codeBranch, codeProvider);
+      negotiations = await tradingsProviderRepository.getTradingProvider(
+          codeBranch, codeProvider);
       // negotiationsProductsTrading = await tradingsProviderRepository.getTradingProvider(codeBranch, codeProvider);
-      negotiations.add(NegotiationModel(title: "Resumo do pedido", merchandises: []));
+      negotiations
+          .add(NegotiationModel(title: "Resumo do pedido", merchandises: []));
       negotiationsProductsTrading = negotiations.map((e) => e.clone()).toList();
-      negotiationsProductsTradingImutable = negotiations.map((e) => e.copyWith()).toList();
+      negotiationsProductsTradingImutable =
+          negotiations.map((e) => e.copyWith()).toList();
       makeSum();
       stateRequest.value = StateApp.success;
     } catch (e) {
-      debugPrint("Find Tradings Provider (Tradings Provider Controller) Error: $e");
+      debugPrint(
+          "Find Tradings Provider (Tradings Provider Controller) Error: $e");
       stateRequest.value = StateApp.error;
     }
   }
@@ -66,7 +75,8 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     itemTotal.value = StateApp.loading;
     try {
       value = value != "" ? value : "0";
-      negotiations[indexNegotiation].merchandises!.elementAt(index).amount = value;
+      negotiations[indexNegotiation].merchandises!.elementAt(index).amount =
+          value;
       makeSum();
       itemTotal.value = StateApp.success;
     } catch (e) {
@@ -83,7 +93,8 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     if (negotiationsProductsTrading.isEmpty) return;
 
     for (var negotiation in negotiationsProductsTrading) {
-      if (negotiation.negotiation == null || negotiation.merchandises == null) continue;
+      if (negotiation.negotiation == null || negotiation.merchandises == null)
+        continue;
 
       double totalNegotiation = 0.0;
       int volumeNegotiation = 0;
@@ -120,12 +131,23 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     itemTotal.value = StateApp.success;
   }
 
-  insertInList(int codeBranch, int codeProvider, int codeClient, List<ClientsSelectStoreModel> listBranchs, int codeConsult) async {
+  insertInList(
+    int codeBranch,
+    int codeProvider,
+    int codeClient,
+    List<ClientsSelectStoreModel> listBranchs,
+    int codeConsult,
+    String observation,
+  ) async {
     stateFinishTrading.value = StateApp.loading;
     for (int i = 0; i < negotiations.length; i++) {
       List<dynamic> teste = [];
       for (int j = 0; j < negotiations[i].merchandises!.length; j++) {
-        if (int.parse(negotiations[i].merchandises![j].amount!) > 0 || int.parse(negotiationsProductsTradingImutable[i].merchandises![j].amount!) > 0) {
+        if (int.parse(negotiations[i].merchandises![j].amount!) > 0 ||
+            int.parse(negotiationsProductsTradingImutable[i]
+                    .merchandises![j]
+                    .amount!) >
+                0) {
           teste.add(ProductModel(
                   codeProduct: negotiations[i].merchandises![j].codeProduct,
                   amount: negotiations[i].merchandises![j].amount,
@@ -142,7 +164,8 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
       }
       if (teste.isNotEmpty) {
         try {
-          await sendOrder(teste, negotiations[i].negotiation!, codeBranch, codeProvider, codeClient, listBranchs, codeConsult);
+          await sendOrder(teste, negotiations[i].negotiation!, codeBranch,
+              codeProvider, codeClient, listBranchs, codeConsult, observation);
           // stateFinishTrading.value = StateApp.success;
         } catch (e) {
           stateFinishTrading.value = StateApp.error;
@@ -152,7 +175,16 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future sendOrder(List<dynamic> products, int trading, int? codeBranch, int? codeProvider, int? codeClient, List<ClientsSelectStoreModel> listBranchs, int? codeConsult) async {
+  Future sendOrder(
+    List<dynamic> products,
+    int trading,
+    int? codeBranch,
+    int? codeProvider,
+    int? codeClient,
+    List<ClientsSelectStoreModel> listBranchs,
+    int? codeConsult,
+    String observation,
+  ) async {
     try {
       return await tradingsProviderRepository.postTradingNew(
         products: products,
@@ -162,6 +194,7 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
         codeClient: codeClient,
         listBranchs: listBranchs,
         codeConsult: codeConsult,
+        observation: observation,
       );
     } catch (e) {
       debugPrint("Tradings Provider Controller Error: $e");
@@ -175,28 +208,44 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     stateSearchProductsTrading.value = StateApp.loading;
     try {
       if (value == null || value.isEmpty) {
-        negotiations[tabSelected].merchandises = negotiationsProductsTrading[tabSelected].merchandises!.toList();
+        negotiations[tabSelected].merchandises =
+            negotiationsProductsTrading[tabSelected].merchandises!.toList();
       } else {
-        negotiations[tabSelected].merchandises = negotiationsProductsTrading[tabSelected].merchandises!.where((item) {
+        negotiations[tabSelected].merchandises =
+            negotiationsProductsTrading[tabSelected]
+                .merchandises!
+                .where((item) {
           return item.title!.toLowerCase().contains(value.toLowerCase());
         }).toList();
         if (negotiations[tabSelected].merchandises!.isEmpty) {
-          negotiations[tabSelected].merchandises = negotiationsProductsTrading[tabSelected].merchandises!.where((item) {
+          negotiations[tabSelected].merchandises =
+              negotiationsProductsTrading[tabSelected]
+                  .merchandises!
+                  .where((item) {
             return item.brand!.toLowerCase().contains(value.toLowerCase());
           }).toList();
         }
         if (negotiations[tabSelected].merchandises!.isEmpty) {
-          negotiations[tabSelected].merchandises = negotiationsProductsTrading[tabSelected].merchandises!.where((item) {
+          negotiations[tabSelected].merchandises =
+              negotiationsProductsTrading[tabSelected]
+                  .merchandises!
+                  .where((item) {
             return item.complement!.toLowerCase().contains(value.toLowerCase());
           }).toList();
         }
         if (negotiations[tabSelected].merchandises!.isEmpty) {
-          negotiations[tabSelected].merchandises = negotiationsProductsTrading[tabSelected].merchandises!.where((item) {
+          negotiations[tabSelected].merchandises =
+              negotiationsProductsTrading[tabSelected]
+                  .merchandises!
+                  .where((item) {
             return item.codeProduct.toString().contains(value);
           }).toList();
         }
         if (negotiations[tabSelected].merchandises!.isEmpty) {
-          negotiations[tabSelected].merchandises = negotiationsProductsTrading[tabSelected].merchandises!.where((item) {
+          negotiations[tabSelected].merchandises =
+              negotiationsProductsTrading[tabSelected]
+                  .merchandises!
+                  .where((item) {
             return (item.tag ?? "").toLowerCase().contains(value.toLowerCase());
           }).toList();
         }
@@ -236,13 +285,19 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     print(sortInt);
     try {
       if (sortInt == 0) {
-        negotiations[tabSelected].merchandises!.sort(((a, b) => (double.parse(b.amount!) * b.price!).compareTo(double.parse(a.amount!) * a.price!)));
+        negotiations[tabSelected].merchandises!.sort(((a, b) =>
+            (double.parse(b.amount!) * b.price!)
+                .compareTo(double.parse(a.amount!) * a.price!)));
         message = "Ordenado por valor total de vendas!";
       } else if (sortInt == 1) {
-        negotiations[tabSelected].merchandises!.sort(((a, b) => int.parse(b.amount!) - int.parse(a.amount!)));
+        negotiations[tabSelected]
+            .merchandises!
+            .sort(((a, b) => int.parse(b.amount!) - int.parse(a.amount!)));
         message = "Ordenado volume vendido!";
       } else if (sortInt == 2) {
-        negotiations[tabSelected].merchandises!.sort(((a, b) => a.title!.compareTo(b.title!)));
+        negotiations[tabSelected]
+            .merchandises!
+            .sort(((a, b) => a.title!.compareTo(b.title!)));
         message = "Ordenado por ordem alfabética!";
       }
       if (sortInt == 2) {
@@ -250,7 +305,13 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       stateSearchProductsTrading.value = StateApp.success;
     } catch (e) {

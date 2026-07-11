@@ -31,12 +31,23 @@ class SelectNegotiationGroup extends StatefulWidget {
 }
 
 class _SelectNegotiationGroupState extends State<SelectNegotiationGroup> {
-  final NegotiationController negotiationController = NegotiationController(StateApp.start, NegotiationRepository());
+  final NegotiationController negotiationController =
+      NegotiationController(StateApp.start, NegotiationRepository());
 
   @override
   void initState() {
-    negotiationController.findNegotiationsGroup(widget.codeGroup, widget.codeProvider);
     super.initState();
+    _loadNegotiations();
+  }
+
+  Future<void> _loadNegotiations() async {
+    await negotiationController.findNegotiationsGroup(
+        widget.codeGroup, widget.codeProvider);
+    await negotiationController.findOrderObservation(
+      codeProvider: widget.codeProvider,
+      codeConsultSeller: widget.codeConsult,
+      codeConsultBuyer: widget.codeClient,
+    );
   }
 
   @override
@@ -49,6 +60,10 @@ class _SelectNegotiationGroupState extends State<SelectNegotiationGroup> {
             builder: (context, value, child) {
               return ComponentList(
                 listItems: negotiationController.negotiations,
+                getOrderObservation: () =>
+                    negotiationController.orderObservation,
+                stateOrderObservation:
+                    negotiationController.stateOrderObservation,
                 state: negotiationController.stateNegotiations,
                 description: "Selecione a Filial",
                 codeGroup: widget.codeGroup,

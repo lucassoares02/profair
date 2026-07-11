@@ -30,12 +30,16 @@ class TradingProductsController extends ValueNotifier<StateApp> {
 
   TradingProductsController(super.value, this._negotiationsRepository);
 
-  Future findTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading, int? codeClient) async {
+  Future findTradingProducts(int? codeBranch, int? codeProvider,
+      int? codeTrading, int? codeClient) async {
     stateProductsTrading.value = StateApp.loading;
     try {
-      productsTrading = await _negotiationsRepository.getTradingProducts(codeBranch, codeProvider, codeTrading, codeClient);
+      productsTrading = await _negotiationsRepository.getTradingProducts(
+          codeBranch, codeProvider, codeTrading, codeClient);
       products = productsTrading;
-      initialListproducts = productsTrading.map<ProductModel>((product) => ProductModel.clone(product)).toList();
+      initialListproducts = productsTrading
+          .map<ProductModel>((product) => ProductModel.clone(product))
+          .toList();
       for (var element in products) {
         detailsSell!.volume = detailsSell!.volume! + int.parse(element.amount!);
       }
@@ -46,12 +50,16 @@ class TradingProductsController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future findTradingProductsHistory(int? codeBranch, int? codeProvider, int? codeTrading) async {
+  Future findTradingProductsHistory(
+      int? codeBranch, int? codeProvider, int? codeTrading) async {
     stateProductsTrading.value = StateApp.loading;
     try {
-      productsTrading = await _negotiationsRepository.findTradingProductsHistory(codeBranch, codeProvider, codeTrading);
+      productsTrading = await _negotiationsRepository
+          .findTradingProductsHistory(codeBranch, codeProvider, codeTrading);
       products = productsTrading;
-      initialListproducts = productsTrading.map<ProductModel>((product) => ProductModel.clone(product)).toList();
+      initialListproducts = productsTrading
+          .map<ProductModel>((product) => ProductModel.clone(product))
+          .toList();
       for (var element in products) {
         detailsSell!.volume = detailsSell!.volume! + int.parse(element.amount!);
       }
@@ -116,10 +124,12 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       print("SortInt: $sortInt");
       if (sortInt == 0) {
         message = "Ordenado por valor de vendas!";
-        productsTrading.sort(((a, b) => (double.parse(b.amount!) * b.price!).compareTo(double.parse(a.amount!) * a.price!)));
+        productsTrading.sort(((a, b) => (double.parse(b.amount!) * b.price!)
+            .compareTo(double.parse(a.amount!) * a.price!)));
       } else if (sortInt == 1) {
         message = "Ordenado volume vendido!";
-        productsTrading.sort(((a, b) => int.parse(b.amount!) - int.parse(a.amount!)));
+        productsTrading
+            .sort(((a, b) => int.parse(b.amount!) - int.parse(a.amount!)));
       } else if (sortInt == 2) {
         message = "Ordem alfabética!";
         productsTrading.sort(((a, b) => a.title!.compareTo(b.title!)));
@@ -129,7 +139,13 @@ class TradingProductsController extends ValueNotifier<StateApp> {
       } else {
         sortInt += 1;
       }
-      Fluttertoast.showToast(msg: message, toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
+      Fluttertoast.showToast(
+          msg: message,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.white,
+          fontSize: 16.0);
 
       stateProductsTrading.value = StateApp.success;
     } catch (e) {
@@ -138,10 +154,15 @@ class TradingProductsController extends ValueNotifier<StateApp> {
     }
   }
 
-  Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch, BuildContext? context) async {
+  Future exportData(int? codeProvider, int? codeNegotiation, int? codeBranch,
+      BuildContext? context) async {
     stateShare.value = StateApp.loading;
     try {
-      await _negotiationsRepository.exportDataProvider(codeProvider: codeProvider, codeNegotiation: codeNegotiation, codeBranch: codeBranch, context: context);
+      await _negotiationsRepository.exportDataProvider(
+          codeProvider: codeProvider,
+          codeNegotiation: codeNegotiation,
+          codeBranch: codeBranch,
+          context: context);
     } catch (e) {
       stateShare.value = StateApp.error;
     }

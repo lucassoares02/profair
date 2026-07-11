@@ -437,6 +437,56 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
     );
   }
 
+  Widget _buildOrderObservation() {
+    return ValueListenableBuilder(
+      valueListenable: widget.detailsProviderController.stateOrderObservation,
+      builder: (context, value, child) {
+        final observation =
+            widget.detailsProviderController.orderObservation.trim();
+        if (observation.isEmpty) return const SizedBox.shrink();
+
+        final colorScheme = Theme.of(context).colorScheme;
+        return Container(
+          width: double.maxFinite,
+          margin: const EdgeInsets.only(bottom: 14),
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                color: colorScheme.onSurface.withValues(alpha: 0.08),
+              ),
+              bottom: BorderSide(
+                color: colorScheme.onSurface.withValues(alpha: 0.08),
+              ),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Observação",
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: colorScheme.onSurface.withValues(alpha: 0.82),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                observation,
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.35,
+                  color: colorScheme.onSurface.withValues(alpha: 0.68),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   // ─────────────────────────────────────────────
   // TAB CONTENT
   // ─────────────────────────────────────────────
@@ -912,6 +962,7 @@ class _DetailsProviderState extends State<DetailsProviderScreen> {
         children: [
           _sectionTitle("Pedidos"),
           const SizedBox(height: 14),
+          _buildOrderObservation(),
           ValueListenableBuilder(
             valueListenable:
                 widget.detailsProviderController.stateRequestStores,

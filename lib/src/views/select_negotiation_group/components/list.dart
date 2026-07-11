@@ -6,7 +6,6 @@ import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/views/home/state_management.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:profair/src/utils/colors.dart';
-import 'package:profair/generated/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -22,6 +21,8 @@ class ComponentList extends StatefulWidget {
     this.codeClient,
     this.nameBranch,
     this.codeConsult,
+    this.getOrderObservation,
+    this.stateOrderObservation,
     required this.state,
     this.balance = true,
     required this.listBranchs,
@@ -32,6 +33,8 @@ class ComponentList extends StatefulWidget {
   final ValueListenable state;
   final int? codeGroup;
   final int? codeConsult;
+  final String Function()? getOrderObservation;
+  final ValueListenable? stateOrderObservation;
   final String? nameBranch;
   final int? codeProvider;
   final int? codeClient;
@@ -43,13 +46,64 @@ class ComponentList extends StatefulWidget {
 }
 
 class _ComponentListState extends State<ComponentList> {
+  Widget _buildOrderObservation(BuildContext context) {
+    final listenable = widget.stateOrderObservation;
+    if (listenable == null) return const SizedBox.shrink();
+
+    return ValueListenableBuilder(
+      valueListenable: listenable,
+      builder: (context, value, child) {
+        final observation = widget.getOrderObservation?.call().trim() ?? "";
+        if (observation.isEmpty) return const SizedBox.shrink();
+
+        final colorScheme = Theme.of(context).colorScheme;
+        return Container(
+          width: double.maxFinite,
+          margin: const EdgeInsets.fromLTRB(appMargin, 0, appMargin, appMargin),
+          padding: const EdgeInsets.symmetric(vertical: appPadding),
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(
+                  color: colorScheme.onSurface.withValues(alpha: 0.08)),
+              bottom: BorderSide(
+                  color: colorScheme.onSurface.withValues(alpha: 0.08)),
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Observação",
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: colorScheme.onSurface.withValues(alpha: 0.82),
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                observation,
+                style: TextStyle(
+                  fontSize: 13,
+                  height: 1.35,
+                  color: colorScheme.onSurface.withValues(alpha: 0.68),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(icon: Icons.swap_horiz_rounded, label: "Negociações"),
+      widgetLoading:
+          LoadingList(icon: Icons.swap_horiz_rounded, label: "Negociações"),
       component: Column(
         children: [
           HeaderList(
@@ -57,17 +111,22 @@ class _ComponentListState extends State<ComponentList> {
             activeSearch: false,
             label: "Negociações",
           ),
+          _buildOrderObservation(context),
           Column(
               children: widget.listItems.asMap().entries.map((e) {
             return e.value.confirm == null && widget.balance
                 ? Container()
                 : Container(
-                    margin: const EdgeInsets.symmetric(horizontal: appMargin, vertical: appMargin * 0.3),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: appMargin, vertical: appMargin * 0.3),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
-                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.08),
                         width: 1,
                       ),
                     ),
@@ -87,7 +146,8 @@ class _ComponentListState extends State<ComponentList> {
                             }
                           }
                           if (e.value.confirm != null) {
-                            Navigator.of(context).pushNamed('tradingproducts', arguments: {
+                            Navigator.of(context)
+                                .pushNamed('tradingproducts', arguments: {
                               "codeProvider": widget.codeProvider,
                               "codeBranch": e.value.codAssoc,
                               "nameBranch": widget.nameBranch,
@@ -109,7 +169,9 @@ class _ComponentListState extends State<ComponentList> {
                           }
                         },
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: appMargin * 1.1, vertical: appMargin * 0.9),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: appMargin * 1.1,
+                              vertical: appMargin * 0.9),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -119,12 +181,14 @@ class _ComponentListState extends State<ComponentList> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           '${e.value.negotiation}',
                                           style: TextStyle(
-                                            color: colorGreyDark.withOpacity(0.7),
+                                            color:
+                                                colorGreyDark.withOpacity(0.7),
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
                                             letterSpacing: 0.4,
@@ -132,16 +196,24 @@ class _ComponentListState extends State<ComponentList> {
                                         ),
                                         if (e.value.confirm != null)
                                           Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 7, vertical: 3),
                                             decoration: BoxDecoration(
-                                              color: colorGreen.withOpacity(0.1),
-                                              borderRadius: BorderRadius.circular(20),
-                                              border: Border.all(color: colorGreen.withOpacity(0.2), width: 1),
+                                              color:
+                                                  colorGreen.withOpacity(0.1),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              border: Border.all(
+                                                  color: colorGreen
+                                                      .withOpacity(0.2),
+                                                  width: 1),
                                             ),
                                             child: Row(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                                Icon(Icons.check_circle_rounded, color: colorGreen, size: 10),
+                                                Icon(Icons.check_circle_rounded,
+                                                    color: colorGreen,
+                                                    size: 10),
                                                 const SizedBox(width: 3),
                                                 Text(
                                                   'Confirmado',
@@ -179,10 +251,13 @@ class _ComponentListState extends State<ComponentList> {
                                     Row(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 6, vertical: 2),
                                           decoration: BoxDecoration(
-                                            color: colorSecondary.withOpacity(0.08),
-                                            borderRadius: BorderRadius.circular(6),
+                                            color: colorSecondary
+                                                .withOpacity(0.08),
+                                            borderRadius:
+                                                BorderRadius.circular(6),
                                           ),
                                           child: Text(
                                             '${e.value.codAssoc}',
@@ -199,7 +274,8 @@ class _ComponentListState extends State<ComponentList> {
                                           child: Text(
                                             '${e.value.razaoAssociado}',
                                             style: TextStyle(
-                                              color: colorGreyDark.withOpacity(0.85),
+                                              color: colorGreyDark
+                                                  .withOpacity(0.85),
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -215,12 +291,17 @@ class _ComponentListState extends State<ComponentList> {
                                     // Linha 4: Data
                                     Row(
                                       children: [
-                                        Icon(Icons.calendar_today_outlined, size: 11, color: colorGreyDark.withOpacity(0.5)),
+                                        Icon(Icons.calendar_today_outlined,
+                                            size: 11,
+                                            color:
+                                                colorGreyDark.withOpacity(0.5)),
                                         const SizedBox(width: 4),
                                         Text(
-                                          DateFormat("dd/MM/yyyy").format(DateTime.parse(e.value.term!)),
+                                          DateFormat("dd/MM/yyyy").format(
+                                              DateTime.parse(e.value.term!)),
                                           style: TextStyle(
-                                            color: colorGreyDark.withOpacity(0.6),
+                                            color:
+                                                colorGreyDark.withOpacity(0.6),
                                             fontSize: 11,
                                             fontWeight: FontWeight.w500,
                                           ),
@@ -232,7 +313,9 @@ class _ComponentListState extends State<ComponentList> {
                               ),
 
                               const SizedBox(width: appMargin * 0.5),
-                              Icon(Icons.chevron_right_rounded, color: colorGreyDark.withOpacity(0.3), size: 18),
+                              Icon(Icons.chevron_right_rounded,
+                                  color: colorGreyDark.withOpacity(0.3),
+                                  size: 18),
                             ],
                           ),
                         ),

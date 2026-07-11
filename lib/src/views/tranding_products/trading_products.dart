@@ -1,4 +1,3 @@
-import 'package:profair/generated/l10n.dart';
 import 'package:profair/src/controllers/trading_products_controller.dart';
 import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/repositories/trading_products_repository.dart';
@@ -35,11 +34,13 @@ class TradingProducts extends StatefulWidget {
 }
 
 class _TradingProductsState extends State<TradingProducts> {
-  final TradingProductsController tradingProductsController = TradingProductsController(StateApp.start, TradingProductsRepository());
+  final TradingProductsController tradingProductsController =
+      TradingProductsController(StateApp.start, TradingProductsRepository());
 
   @override
   void initState() {
-    tradingProductsController.findTradingProducts(widget.codeBranch, widget.codeProvider, widget.codeTrading, widget.codeClient);
+    tradingProductsController.findTradingProducts(widget.codeBranch,
+        widget.codeProvider, widget.codeTrading, widget.codeClient);
     super.initState();
   }
 

@@ -16,19 +16,24 @@ class TradingProductsRepository {
   final clientDio = HttpService();
   final clientDioHistory = HttpServiceHistory();
 
-  getTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading, int? codeClient) async {
+  getTradingProducts(int? codeBranch, int? codeProvider, int? codeTrading,
+      int? codeClient) async {
     ResponseModel? response;
     try {
       if (codeClient == 0 && codeBranch == 0) {
         print("etapa 1");
-        response = await clientDio.get("merchandisenegotiationprovider/$codeProvider/$codeTrading");
+        response = await clientDio
+            .get("merchandisenegotiationprovider/$codeProvider/$codeTrading");
       } else if (codeClient == 0) {
         print("etapa 2");
-        print("codeBranch: $codeBranch, codeProvider: $codeProvider, codeTrading: $codeTrading");
-        response = await clientDio.get("merchandiseclientprovidernegotiation/$codeBranch/$codeProvider/$codeTrading");
+        print(
+            "codeBranch: $codeBranch, codeProvider: $codeProvider, codeTrading: $codeTrading");
+        response = await clientDio.get(
+            "merchandiseclientprovidernegotiation/$codeBranch/$codeProvider/$codeTrading");
       } else {
         print("etapa 3");
-        response = await clientDio.get("merchandiseproviderifclient/$codeBranch/$codeProvider/$codeTrading");
+        response = await clientDio.get(
+            "merchandiseproviderifclient/$codeBranch/$codeProvider/$codeTrading");
       }
       List list = response.data as List;
       return list.map((json) => ProductModel.fromJson(json)).toList();
@@ -63,10 +68,12 @@ class TradingProductsRepository {
     }
   }
 
-  findTradingProductsHistory(int? codeBranch, int? codeProvider, int? codeTrading) async {
+  findTradingProductsHistory(
+      int? codeBranch, int? codeProvider, int? codeTrading) async {
     ResponseModel? response;
     try {
-      response = await clientDioHistory.get("history/details/negotiation/$codeProvider/$codeBranch/$codeTrading");
+      response = await clientDioHistory.get(
+          "history/details/negotiation/$codeProvider/$codeBranch/$codeTrading");
       List list = response.data as List;
       return list.map((json) => ProductModel.fromJson(json)).toList();
     } catch (e) {
@@ -82,7 +89,8 @@ class TradingProductsRepository {
     var center = screenSize?.center(Offset.zero) ?? const Offset(1, 1);
 
     if (renderObject is RenderBox && renderObject.hasSize) {
-      center = renderObject.localToGlobal(renderObject.size.center(Offset.zero));
+      center =
+          renderObject.localToGlobal(renderObject.size.center(Offset.zero));
     }
 
     if (screenSize != null) {
@@ -100,7 +108,12 @@ class TradingProductsRepository {
     return value.clamp(0.5, max - 0.5).toDouble();
   }
 
-  exportDataProvider({int? codeProvider, int? codeBuyer, int? codeNegotiation, int? codeBranch, BuildContext? context}) async {
+  exportDataProvider(
+      {int? codeProvider,
+      int? codeBuyer,
+      int? codeNegotiation,
+      int? codeBranch,
+      BuildContext? context}) async {
     Response? response;
     final shareOrigin = _sharePositionOrigin(context);
 
@@ -112,11 +125,13 @@ class TradingProductsRepository {
 
       if (response.statusCode == 200) {
         Directory tempDir = await getTemporaryDirectory();
-        final fileName = 'negociacao_profair_${DateTime.now().millisecondsSinceEpoch}.pdf';
+        final fileName =
+            'negociacao_profair_${DateTime.now().millisecondsSinceEpoch}.pdf';
         File tempFile = File('${tempDir.path}/$fileName');
         await tempFile.writeAsBytes(List<int>.from(response.data));
 
-        final xFile = XFile(tempFile.path, mimeType: 'application/pdf', name: fileName);
+        final xFile =
+            XFile(tempFile.path, mimeType: 'application/pdf', name: fileName);
 
         await Share.shareXFiles(
           [xFile],

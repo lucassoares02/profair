@@ -59,7 +59,8 @@ class _ComponentListState extends State<ComponentList> {
     return StateManagement(
       width: width,
       listenable: widget.state,
-      widgetLoading: LoadingList(icon: Icons.shopping_basket_rounded, label: "Produtos"),
+      widgetLoading:
+          LoadingList(icon: Icons.shopping_basket_rounded, label: "Produtos"),
       component: Column(
         children: [
           HeaderList(
@@ -70,12 +71,17 @@ class _ComponentListState extends State<ComponentList> {
             },
             aditionAction: Row(
               children: [
-                if (widget.codeClient == 0 && widget.tradingProductsController.detailsSell!.quantity != 0)
+                if (widget.codeClient == 0 &&
+                    widget.tradingProductsController.detailsSell!.quantity != 0)
                   Builder(
                     builder: (shareContext) {
                       return IconButton(
                         onPressed: () {
-                          widget.tradingProductsController.exportData(widget.codeProvider, widget.codeTrading, widget.codeBranch, shareContext);
+                          widget.tradingProductsController.exportData(
+                              widget.codeProvider,
+                              widget.codeTrading,
+                              widget.codeBranch,
+                              shareContext);
                         },
                         icon: const Icon(Icons.share_rounded),
                       );
@@ -97,21 +103,30 @@ class _ComponentListState extends State<ComponentList> {
                 margin: EdgeInsets.symmetric(horizontal: appPadding),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(appRadius),
-                  border: Border.all(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.08)),
+                  border: Border.all(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.08)),
                   color: Theme.of(context).colorScheme.surface,
                 ),
                 child: Column(
                   children: [
                     // Cabeçalho do card
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding * 0.9),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: appPadding, vertical: appPadding * 0.9),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(appRadius),
                           topRight: Radius.circular(appRadius),
                         ),
                         border: Border(
-                          bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.07)),
+                          bottom: BorderSide(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.07)),
                         ),
                       ),
                       child: Row(
@@ -122,21 +137,27 @@ class _ComponentListState extends State<ComponentList> {
                               color: colorSecondary.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Icon(Icons.receipt_long_rounded, size: 16, color: colorSecondary),
+                            child: Icon(Icons.receipt_long_rounded,
+                                size: 16, color: colorSecondary),
                           ),
                           const SizedBox(width: 10),
                           const Text(
                             "Detalhes da venda",
-                            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                            style: TextStyle(
+                                fontWeight: FontWeight.w700, fontSize: 15),
                           ),
                           const SizedBox(width: 8),
                           AppBadge(
                             borderRadius: 8,
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 3),
                             color: colorQuartiary.withOpacity(0.12),
                             child: const Text(
                               "Produtos",
-                              style: TextStyle(color: colorQuartiary, fontWeight: FontWeight.w600, fontSize: 11),
+                              style: TextStyle(
+                                  color: colorQuartiary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 11),
                             ),
                           ),
                         ],
@@ -146,7 +167,9 @@ class _ComponentListState extends State<ComponentList> {
                     // Gráfico
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: appPadding),
-                      child: PieChartSample2(products: widget.tradingProductsController.productsTrading),
+                      child: PieChartSample2(
+                          products:
+                              widget.tradingProductsController.productsTrading),
                     ),
 
                     // Label resumo
@@ -159,25 +182,40 @@ class _ComponentListState extends State<ComponentList> {
                             style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.5),
                             ),
                           ),
                           const SizedBox(width: 5),
                           Tooltip(
-                            message: "O gráfico mostra os 10 primeiros itens do pedido.",
-                            child: Icon(Icons.info_outline, size: 14, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.35)),
+                            message:
+                                "O gráfico mostra os 10 primeiros itens do pedido.",
+                            child: Icon(Icons.info_outline,
+                                size: 14,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withOpacity(0.35)),
                           ),
                         ],
                       ),
                     ),
 
                     const SizedBox(height: 10),
-                    Divider(height: 1, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.07)),
+                    Divider(
+                        height: 1,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.07)),
                     const SizedBox(height: 4),
 
                     // Linha: Quantidade de itens
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding * 0.6),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: appPadding, vertical: appPadding * 0.6),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -189,20 +227,25 @@ class _ComponentListState extends State<ComponentList> {
                                   color: colorSecondary.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(7),
                                 ),
-                                child: const Icon(Icons.numbers, size: 15, color: colorSecondary),
+                                child: const Icon(Icons.numbers,
+                                    size: 15, color: colorSecondary),
                               ),
                               const SizedBox(width: 10),
                               Text(
                                 "Quantidade de itens",
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.75),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.75),
                                 ),
                               ),
                             ],
                           ),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
                               color: colorSecondary.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(20),
@@ -220,11 +263,19 @@ class _ComponentListState extends State<ComponentList> {
                       ),
                     ),
 
-                    Divider(height: 1, indent: appPadding, endIndent: appPadding, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05)),
+                    Divider(
+                        height: 1,
+                        indent: appPadding,
+                        endIndent: appPadding,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.05)),
 
                     // Linha: Volume
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding * 0.6),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: appPadding, vertical: appPadding * 0.6),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -236,14 +287,18 @@ class _ComponentListState extends State<ComponentList> {
                                   color: colorTertiary.withOpacity(0.12),
                                   borderRadius: BorderRadius.circular(7),
                                 ),
-                                child: const Icon(Icons.bolt, size: 15, color: colorTertiary),
+                                child: const Icon(Icons.bolt,
+                                    size: 15, color: colorTertiary),
                               ),
                               const SizedBox(width: 10),
                               Text(
                                 "Volume",
                                 style: TextStyle(
                                   fontSize: 13,
-                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.75),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.75),
                                 ),
                               ),
                             ],
@@ -251,21 +306,27 @@ class _ComponentListState extends State<ComponentList> {
                           Row(
                             children: [
                               Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 3),
                                 decoration: BoxDecoration(
                                   color: colorBlue.withOpacity(0.08),
                                   borderRadius: BorderRadius.circular(20),
-                                  border: Border.all(color: colorBlue.withOpacity(0.3)),
+                                  border: Border.all(
+                                      color: colorBlue.withOpacity(0.3)),
                                 ),
                                 child: const Text(
                                   "Agregado",
-                                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 11, color: colorBlue),
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 11,
+                                      color: colorBlue),
                                 ),
                               ),
                               const SizedBox(width: 8),
                               Text(
                                 "${widget.tradingProductsController.detailsSell!.volume}",
-                                style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 13),
                               ),
                             ],
                           ),
@@ -279,13 +340,18 @@ class _ComponentListState extends State<ComponentList> {
 
               // ── Lista de Produtos ───────────────────────────────────
               ValueListenableBuilder(
-                valueListenable: widget.tradingProductsController.stateSearchProductsTrading,
+                valueListenable:
+                    widget.tradingProductsController.stateSearchProductsTrading,
                 builder: (context, value, child) {
                   return Column(
-                    children: widget.tradingProductsController.productsTrading.asMap().entries.map((e) {
+                    children: widget.tradingProductsController.productsTrading
+                        .asMap()
+                        .entries
+                        .map((e) {
                       return InkWell(
                         onTap: () {
-                          if (widget.codeBranch == 0 || widget.listBranchs == null) {
+                          if (widget.codeBranch == 0 ||
+                              widget.listBranchs == null) {
                             if (widget.codeClient != 0) {
                               if (e.value.amount == "0") {
                                 Fluttertoast.showToast(
@@ -299,59 +365,95 @@ class _ComponentListState extends State<ComponentList> {
                               } else {
                                 Navigator.of(context).pushNamed(
                                   "clients",
-                                  arguments: {"merchandise": e.value.codeProduct, "codeProvider": 0, "accessTargenting": 0, "codeTrading": widget.codeTrading},
+                                  arguments: {
+                                    "merchandise": e.value.codeProduct,
+                                    "codeProvider": 0,
+                                    "accessTargenting": 0,
+                                    "codeTrading": widget.codeTrading
+                                  },
                                 );
                               }
                             }
                           } else {
                             FocusManager.instance.primaryFocus?.unfocus();
-                            amountItem.text = e.value.amount == "0" ? "" : "${e.value.amount}";
-                            if (e.key != widget.tradingProductsController.itemSelected.value) {
-                              widget.tradingProductsController.itemSelected.value = e.key;
-                              widget.tradingProductsController.visibleText.value = false;
-                              widget.tradingProductsController.visibleText.value = true;
+                            amountItem.text = e.value.amount == "0"
+                                ? ""
+                                : "${e.value.amount}";
+                            if (e.key !=
+                                widget.tradingProductsController.itemSelected
+                                    .value) {
+                              widget.tradingProductsController.itemSelected
+                                  .value = e.key;
+                              widget.tradingProductsController.visibleText
+                                  .value = false;
+                              widget.tradingProductsController.visibleText
+                                  .value = true;
                             } else {
-                              widget.tradingProductsController.visibleText.value = !widget.tradingProductsController.visibleText.value;
+                              widget.tradingProductsController.visibleText
+                                      .value =
+                                  !widget.tradingProductsController.visibleText
+                                      .value;
                             }
                           }
                         },
                         child: Container(
-                          margin: const EdgeInsets.only(left: appMargin, right: appMargin, top: appMargin * 0.5),
+                          margin: const EdgeInsets.only(
+                              left: appMargin,
+                              right: appMargin,
+                              top: appMargin * 0.5),
                           decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(14),
                             border: Border.all(
-                              color: double.parse(e.value.amount!) > 0 ? colorSecondary.withOpacity(0.2) : Theme.of(context).colorScheme.onSurface.withOpacity(0.07),
+                              color: double.parse(e.value.amount!) > 0
+                                  ? colorSecondary.withOpacity(0.2)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.07),
                             ),
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: appMargin * 1.1, vertical: appMargin * 0.9),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: appMargin * 1.1,
+                                vertical: appMargin * 0.9),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 // Linha 1: código/complemento + embalagem/coeficiente
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "${e.value.codeProduct} - ${e.value.complement!}",
                                       style: TextStyle(
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.45),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withOpacity(0.45),
                                         fontWeight: FontWeight.w500,
                                         fontSize: 11,
                                         letterSpacing: 0.2,
                                       ),
                                     ),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 7, vertical: 2),
                                       decoration: BoxDecoration(
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface
+                                            .withOpacity(0.05),
                                         borderRadius: BorderRadius.circular(6),
                                       ),
                                       child: Text(
                                         "${e.value.packing} | ${e.value.coefficient}",
                                         style: TextStyle(
-                                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withOpacity(0.5),
                                           fontWeight: FontWeight.w500,
                                           fontSize: 11,
                                         ),
@@ -365,7 +467,10 @@ class _ComponentListState extends State<ComponentList> {
                                 // Linha 2: título
                                 Text(
                                   e.value.title!,
-                                  style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 15, letterSpacing: 0.1),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: 15,
+                                      letterSpacing: 0.1),
                                 ),
 
                                 const SizedBox(height: 8),
@@ -375,73 +480,114 @@ class _ComponentListState extends State<ComponentList> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3, horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: colorGreen.withOpacity(0.12),
-                                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(8)),
                                       ),
                                       child: Text(
                                         e.value.brand!,
-                                        style: TextStyle(color: colorGreen, fontWeight: FontWeight.w600, fontSize: 11),
+                                        style: TextStyle(
+                                            color: colorGreen,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 11),
                                       ),
                                     ),
                                     const SizedBox(width: 5),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3, horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: colorBlue.withOpacity(0.08),
-                                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(8)),
                                       ),
                                       child: Text(
-                                        widget.tradingProductsController.formatCurrency(e.value.unitPrice!),
-                                        style: TextStyle(color: colorBlue, fontWeight: FontWeight.w600, fontSize: 11),
+                                        widget.tradingProductsController
+                                            .formatCurrency(e.value.unitPrice!),
+                                        style: TextStyle(
+                                            color: colorBlue,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 11),
                                       ),
                                     ),
                                     const SizedBox(width: 5),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 3, horizontal: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 3, horizontal: 8),
                                       decoration: BoxDecoration(
                                         color: colorBlue.withOpacity(0.15),
-                                        borderRadius: const BorderRadius.all(Radius.circular(8)),
+                                        borderRadius: const BorderRadius.all(
+                                            Radius.circular(8)),
                                       ),
                                       child: Text(
-                                        widget.tradingProductsController.formatCurrency(e.value.price!),
-                                        style: const TextStyle(color: colorBlue, fontWeight: FontWeight.w700, fontSize: 11),
+                                        widget.tradingProductsController
+                                            .formatCurrency(e.value.price!),
+                                        style: const TextStyle(
+                                            color: colorBlue,
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 11),
                                       ),
                                     ),
                                   ],
                                 ),
 
                                 const SizedBox(height: 10),
-                                Divider(height: 1, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.06)),
+                                Divider(
+                                    height: 1,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.06)),
                                 const SizedBox(height: 10),
 
                                 // Linha 4: quantidade + total
                                 ValueListenableBuilder(
-                                  valueListenable: widget.tradingProductsController.visibleText,
+                                  valueListenable: widget
+                                      .tradingProductsController.visibleText,
                                   builder: (context, value, child) {
-                                    return value == false || widget.tradingProductsController.itemSelected.value != e.key
+                                    return value == false ||
+                                            widget.tradingProductsController
+                                                    .itemSelected.value !=
+                                                e.key
                                         ? Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               Row(
                                                 children: [
-                                                  Icon(Icons.layers_outlined, size: 13, color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4)),
+                                                  Icon(Icons.layers_outlined,
+                                                      size: 13,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withOpacity(0.4)),
                                                   const SizedBox(width: 5),
                                                   Text(
                                                     "Quantidade: ",
                                                     style: TextStyle(
-                                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                                                      fontWeight: FontWeight.w500,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withOpacity(0.5),
+                                                      fontWeight:
+                                                          FontWeight.w500,
                                                       fontSize: 12,
                                                     ),
                                                   ),
                                                   Text(
                                                     e.value.amount!,
                                                     style: TextStyle(
-                                                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.85),
-                                                      fontWeight: FontWeight.w700,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface
+                                                          .withOpacity(0.85),
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                       fontSize: 12,
                                                     ),
                                                   ),
@@ -449,58 +595,134 @@ class _ComponentListState extends State<ComponentList> {
                                               ),
                                               widget.codeClient == 0
                                                   ? Text(
-                                                      widget.tradingProductsController.formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                      widget
+                                                          .tradingProductsController
+                                                          .formatCurrency(
+                                                              (double.parse(e
+                                                                      .value
+                                                                      .amount!) *
+                                                                  e.value
+                                                                      .price!)),
                                                       style: TextStyle(
                                                         fontSize: 14,
-                                                        fontWeight: FontWeight.w600,
-                                                        color: double.parse(e.value.amount!) > 0 ? colorSecondary : Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        color: double.parse(e
+                                                                    .value
+                                                                    .amount!) >
+                                                                0
+                                                            ? colorSecondary
+                                                            : Theme.of(context)
+                                                                .colorScheme
+                                                                .onSurface
+                                                                .withOpacity(
+                                                                    0.4),
                                                       ),
                                                     )
                                                   : Text(
-                                                      widget.tradingProductsController.formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                      widget
+                                                          .tradingProductsController
+                                                          .formatCurrency(
+                                                              (double.parse(e
+                                                                      .value
+                                                                      .amount!) *
+                                                                  e.value
+                                                                      .price!)),
                                                       style: TextStyle(
-                                                        fontWeight: (double.parse(e.value.amount!) * e.value.price!) == 0.0 ? FontWeight.w400 : FontWeight.w700,
+                                                        fontWeight: (double.parse(e
+                                                                        .value
+                                                                        .amount!) *
+                                                                    e.value
+                                                                        .price!) ==
+                                                                0.0
+                                                            ? FontWeight.w400
+                                                            : FontWeight.w700,
                                                         fontSize: 14,
-                                                        color: (double.parse(e.value.amount!) * e.value.price!) == 0.0 ? Theme.of(context).colorScheme.onSurface.withOpacity(0.35) : colorSecondary,
+                                                        color: (double.parse(e
+                                                                        .value
+                                                                        .amount!) *
+                                                                    e.value
+                                                                        .price!) ==
+                                                                0.0
+                                                            ? Theme.of(context)
+                                                                .colorScheme
+                                                                .onSurface
+                                                                .withOpacity(
+                                                                    0.35)
+                                                            : colorSecondary,
                                                       ),
                                                     ),
                                             ],
                                           )
                                         : Row(
-                                            crossAxisAlignment: CrossAxisAlignment.center,
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               SizedBox(
                                                 width: width / 3,
                                                 child: TextField(
                                                   controller: amountItem,
                                                   autofocus: true,
-                                                  inputFormatters: <TextInputFormatter>[FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))],
+                                                  inputFormatters: <TextInputFormatter>[
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp(r'[0-9]'))
+                                                  ],
                                                   decoration: InputDecoration(
-                                                    fillColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                                                    fillColor: Theme.of(context)
+                                                        .colorScheme
+                                                        .onSurface
+                                                        .withOpacity(0.05),
                                                     filled: true,
-                                                    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
+                                                    contentPadding:
+                                                        const EdgeInsets
+                                                            .symmetric(
+                                                            vertical: 0,
+                                                            horizontal: 12),
                                                     hintText: "0",
-                                                    hintStyle: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3)),
+                                                    hintStyle: TextStyle(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurface
+                                                            .withOpacity(0.3)),
                                                     border: OutlineInputBorder(
-                                                      borderRadius: BorderRadius.circular(10),
-                                                      borderSide: BorderSide.none,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      borderSide:
+                                                          BorderSide.none,
                                                     ),
                                                   ),
-                                                  keyboardType: TextInputType.number,
+                                                  keyboardType:
+                                                      TextInputType.number,
                                                   onChanged: (value) {
-                                                    widget.tradingProductsController.updateProductsTrading(value, e.key);
+                                                    widget
+                                                        .tradingProductsController
+                                                        .updateProductsTrading(
+                                                            value, e.key);
                                                   },
                                                 ),
                                               ),
                                               ValueListenableBuilder(
-                                                valueListenable: widget.tradingProductsController.itemTotal,
-                                                builder: (context, values, child) {
+                                                valueListenable: widget
+                                                    .tradingProductsController
+                                                    .itemTotal,
+                                                builder:
+                                                    (context, values, child) {
                                                   return Text(
-                                                    widget.tradingProductsController.formatCurrency((double.parse(e.value.amount!) * e.value.price!)),
+                                                    widget
+                                                        .tradingProductsController
+                                                        .formatCurrency(
+                                                            (double.parse(e
+                                                                    .value
+                                                                    .amount!) *
+                                                                e.value
+                                                                    .price!)),
                                                     style: TextStyle(
                                                       fontSize: 14,
-                                                      fontWeight: FontWeight.w700,
+                                                      fontWeight:
+                                                          FontWeight.w700,
                                                       color: colorSecondary,
                                                     ),
                                                   );
@@ -525,12 +747,14 @@ class _ComponentListState extends State<ComponentList> {
           // ── Botão Próximo ───────────────────────────────────────────
           Container(
             width: width,
-            padding: const EdgeInsets.symmetric(horizontal: appPadding, vertical: appPadding * 3),
+            padding: const EdgeInsets.symmetric(
+                horizontal: appPadding, vertical: appPadding * 3),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.codeBranch != 0 && widget.listBranchs != null) const AppSpacing(),
+                if (widget.codeBranch != 0 && widget.listBranchs != null)
+                  const AppSpacing(),
                 if (widget.codeBranch != 0 && widget.listBranchs != null)
                   AppButton(
                     label: "Próximo",
@@ -538,22 +762,29 @@ class _ComponentListState extends State<ComponentList> {
                     iconButton: Icons.check,
                     onPressButton: () {
                       bool filled = false;
-                      for (var i = 0; i < widget.tradingProductsController.products.length; i++) {
-                        if (int.parse(widget.tradingProductsController.products[i].amount!) > 0) {
+                      for (var i = 0;
+                          i < widget.tradingProductsController.products.length;
+                          i++) {
+                        if (int.parse(widget.tradingProductsController
+                                .products[i].amount!) >
+                            0) {
                           filled = true;
                           break;
                         }
                       }
                       if (filled) {
-                        Navigator.of(context).pushNamed('finishtrading', arguments: {
+                        Navigator.of(context)
+                            .pushNamed('finishtrading', arguments: {
                           "codeProvider": widget.codeProvider,
                           "codeBranch": widget.codeBranch,
                           "nameBranch": widget.nameBranch,
                           "codeClient": widget.codeClient,
                           "codeTrading": widget.codeTrading,
                           "codeConsult": widget.codeConsult,
-                          "productsTrading": widget.tradingProductsController.products,
-                          "initialListProducts": widget.tradingProductsController.initialListproducts,
+                          "productsTrading":
+                              widget.tradingProductsController.products,
+                          "initialListProducts": widget
+                              .tradingProductsController.initialListproducts,
                           "tradings": widget.tradings,
                           "listBranchs": widget.listBranchs,
                         });
