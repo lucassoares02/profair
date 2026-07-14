@@ -16,7 +16,6 @@ class ComponentList extends StatefulWidget {
     required this.codeProvider,
     this.consult,
     required this.client,
-    this.fromSuccess = false,
   });
 
   final List<ClientsSelectStoreModel> listItems;
@@ -25,10 +24,6 @@ class ComponentList extends StatefulWidget {
   final int? codeProvider;
   final int? consult;
   final LoginModel? client;
-
-  /// true quando a tela veio do "Novo pedido" (usuário concluiu um pedido):
-  /// o botão voltar vai para "/home" em vez de dar pop.
-  final bool fromSuccess;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -119,15 +114,11 @@ class _ComponentListState extends State<ComponentList> with SingleTickerProvider
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-                      // Decide o voltar pela ORIGEM (não por canPop, que dependia
-                      // do estado da pilha e quebrava): se o usuário veio de "Novo
-                      // pedido" (concluiu um pedido), vai para a home; se veio da
-                      // home pelo fluxo normal, dá pop.
-                      if (widget.fromSuccess) {
-                        Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
-                      } else {
-                        Navigator.pop(context);
-                      }
+                      // Voltar SEMPRE vai para a home, independente da origem
+                      // (câmera, código digitado ou "Novo pedido"). O removeUntil
+                      // também limpa qualquer rota acumulada na pilha (dialog do
+                      // scanner, preorder), eliminando o bug de pilha do iOS.
+                      Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
                     },
                     child: const Padding(
                       padding: EdgeInsets.all(10),

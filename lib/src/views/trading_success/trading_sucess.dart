@@ -217,11 +217,10 @@ class _TradingSucessState extends State<TradingSucess> {
                                         // Reseta a pilha para a home e empilha a seleção de
                                         // loja por cima -> [home, selectstore]. Como a home
                                         // fica IMEDIATAMENTE abaixo, o gesto de arrastar do iOS
-                                        // (que é sempre "pop desta tela") cai na home, ficando
-                                        // igual ao botão voltar. A flag "fromSuccess" mantém o
-                                        // botão explícito indo para "/home". NavigatorState é
-                                        // estável entre pushes/pops, então as duas chamadas na
-                                        // mesma referência são seguras.
+                                        // (que é sempre "pop desta tela") cai na home, igual ao
+                                        // botão voltar (que sempre vai para "/home").
+                                        // NavigatorState é estável entre pushes/pops, então as
+                                        // duas chamadas na mesma referência são seguras.
                                         final navigator = Navigator.of(context);
                                         navigator.pushNamedAndRemoveUntil("/home", (route) => false);
                                         navigator.pushNamed(
@@ -230,7 +229,6 @@ class _TradingSucessState extends State<TradingSucess> {
                                             "client": client,
                                             "codeProvider": widget.provider,
                                             "consult": widget.consult,
-                                            "fromSuccess": true,
                                           },
                                         );
                                       },
