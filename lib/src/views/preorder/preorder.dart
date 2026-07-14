@@ -27,7 +27,13 @@ class _PreOrderState extends State<PreOrder> {
 
   String codes = "";
 
+  // Impede double-tap em "Acessar" durante o await: cada tap extra fazia um
+  // pushNamed a mais, duplicando a /selectstore na pilha (voltar caía na cópia).
+  bool _submitting = false;
+
   loginCode() async {
+    if (_submitting) return;
+    _submitting = true;
     try {
       LoginModel? response = await widget.homeController.findClient(codigo.text);
       int codeUser = response!.userCode ?? 0;
@@ -53,6 +59,8 @@ class _PreOrderState extends State<PreOrder> {
     } catch (e) {
       debugPrint('Error scanning qrcodesssss: $e');
       Fluttertoast.showToast(msg: "Código inválido!", toastLength: Toast.LENGTH_SHORT, gravity: ToastGravity.CENTER, timeInSecForIosWeb: 1, textColor: Colors.white, fontSize: 16.0);
+    } finally {
+      _submitting = false;
     }
   }
 

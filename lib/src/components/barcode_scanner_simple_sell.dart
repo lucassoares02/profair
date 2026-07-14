@@ -21,23 +21,20 @@ class _BarcodeScannerSimpleSellState extends State<BarcodeScannerSimpleSell> {
   // Barcode? _barcode;
   bool _scanned = false;
 
-  @override
-  void setState(VoidCallback fn) {
-    _scanned = false;
-    super.setState(fn);
-  }
-
   void _handleBarcode(BarcodeCapture barcodes) async {
-    print(barcodes);
     if (_scanned) return; // impede múltiplas leituras
-
-    // setState(() => _scanned = true); // marca como já escaneado
 
     final String codeD = barcodes.barcodes.first.rawValue ?? "-1";
     if (codeD == "-1") return;
 
+    // Trava ANTES do await: no iOS a câmera continua detectando o mesmo QR
+    // durante a chamada de rede, e cada detecção fazia pop() + pushNamed(),
+    // duplicando a /selectstore na pilha (voltar caía na cópia duplicada).
+    _scanned = true;
+
     String code = codeD.replaceAll("0x9E89738274392874.", "").replaceAll(".9327329847372939", "");
     LoginModel? response = await widget.homeController.findClient(code);
+    if (!mounted) return;
     int codeUser = response?.userCode ?? 0;
     int active = response?.active ?? 0;
 
@@ -56,8 +53,11 @@ class _BarcodeScannerSimpleSellState extends State<BarcodeScannerSimpleSell> {
   }
 
   navigatorRoutes(route, data) {
+    if (!mounted) return;
+    // Fecha o scanner (dialog da home ou página vinda do preorder) e abre a
+    // seleção de loja — uma única vez, garantido pelo guard _scanned.
     Navigator.of(context).pop();
-    Navigator.of(context).pushNamed(route, arguments: data).then((_) {});
+    Navigator.of(context).pushNamed(route, arguments: data);
   }
 
   @override
