@@ -208,23 +208,26 @@ class _TradingSucessState extends State<TradingSucess> {
                                       icon: Icons.add_rounded,
                                       color: colorSecondary,
                                       onPressed: () {
-                                        // Volta até a base da pilha (home) e então abre a
-                                        // seleção de loja. Diferente do pushNamedAndRemoveUntil
-                                        // com (route) => false, a pilha nunca fica vazia —
-                                        // era isso que causava a tela cinza no iOS.
-                                        // final navigator = Navigator.of(context);
-                                        // navigator.popUntil((route) => route.isFirst);
-                                        // navigator.pushNamed(
-                                        //   "/selectstore",
-                                        //   arguments: {
-                                        //     "client": client,
-                                        //     "codeProvider": widget.provider,
-                                        //     "consult": widget.consult,
-                                        //   },
-                                        // );
                                         if (!context.mounted) return;
-                                        Navigator.of(context, rootNavigator: true).pushNamedAndRemoveUntil("/selectstore", (route) => false,
-                                            arguments: {"client": widget.clientModel!, "codeProvider": widget.provider, "consult": widget.consult});
+                                        // Correção nº 1: usa o client resolvido (o mesmo que
+                                        // liberou o botão), nunca widget.clientModel! — que é
+                                        // nulo no fluxo principal (finish_trading não envia
+                                        // "clientModel"), causando crash/tela cinza no iOS.
+                                        //
+                                        // Correção nº 2 (Opção A): volta até a base da pilha
+                                        // (home) e empilha a seleção de loja por cima. A pilha
+                                        // nunca fica vazia — era isso que causava a tela preta
+                                        // no gesto de voltar do iOS.
+                                        final navigator = Navigator.of(context);
+                                        navigator.popUntil((route) => route.isFirst);
+                                        navigator.pushNamed(
+                                          "/selectstore",
+                                          arguments: {
+                                            "client": client,
+                                            "codeProvider": widget.provider,
+                                            "consult": widget.consult,
+                                          },
+                                        );
                                       },
                                     ),
                                     const SizedBox(height: 12),

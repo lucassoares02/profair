@@ -41,13 +41,19 @@ class _SelectStoreState extends State<SelectStore> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      // Se houver tela anterior, deixa o pop normal acontecer; se a tela está
-      // sozinha na pilha (fluxo "Novo pedido"), intercepta para ir à home e
-      // evitar a tela preta.
-      canPop: Navigator.of(context).canPop(),
+      // Correção nº 3 (blindagem): sempre intercepta e nós mesmos decidimos para
+      // onde ir. Não depende de canPop (avaliado só no build e por isso stale) e
+      // cobre o caso de a tela estar sozinha na pilha (fluxo "Novo pedido"),
+      // evitando o frame preto no gesto de voltar do iOS.
+      canPop: false,
       onPopInvoked: (didPop) {
         if (didPop) return;
-        Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+        final navigator = Navigator.of(context);
+        if (navigator.canPop()) {
+          navigator.pop();
+        } else {
+          navigator.pushNamedAndRemoveUntil("/home", (route) => false);
+        }
       },
       child: Scaffold(
         body: AnnotatedRegion<SystemUiOverlayStyle>(
