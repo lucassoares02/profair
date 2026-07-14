@@ -40,38 +40,27 @@ class _SelectStoreState extends State<SelectStore> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      // Correção nº 3 (blindagem): sempre intercepta e nós mesmos decidimos para
-      // onde ir. Não depende de canPop (avaliado só no build e por isso stale) e
-      // cobre o caso de a tela estar sozinha na pilha (fluxo "Novo pedido"),
-      // evitando o frame preto no gesto de voltar do iOS.
-      canPop: false,
-      onPopInvoked: (didPop) {
-        if (didPop) return;
-        final navigator = Navigator.of(context);
-        if (navigator.canPop()) {
-          navigator.pop();
-        } else {
-          navigator.pushNamedAndRemoveUntil("/home", (route) => false);
-        }
-      },
-      child: Scaffold(
-        body: AnnotatedRegion<SystemUiOverlayStyle>(
-          value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
-          child: SafeArea(
-            child: SingleChildScrollView(
-              child: ValueListenableBuilder(
-                valueListenable: storesController.stateStores,
-                builder: (context, value, child) {
-                  return ComponentList(
-                      description: "Selecione a Filial",
-                      state: storesController.stateStores,
-                      codeProvider: widget.codeProvider,
-                      listItems: storesController.stores,
-                      client: widget.client,
-                      consult: widget.codeConsult);
-                },
-              ),
+    // Sem PopScope: em todos os fluxos a SelectStore é empilhada por cima da
+    // home (scanner/QR e também o "Novo pedido", que reseta para [home,
+    // selectstore]). Assim o voltar nativo do iOS faz pop para a home real que
+    // está embaixo, renderizando-a normalmente — sem tela preta. Interceptar com
+    // canPop:false bloqueava o pop nativo e deixava a transição do gesto preta.
+    return Scaffold(
+      body: AnnotatedRegion<SystemUiOverlayStyle>(
+        value: SystemUiOverlayStyle.light.copyWith(statusBarColor: colorSecondary),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: ValueListenableBuilder(
+              valueListenable: storesController.stateStores,
+              builder: (context, value, child) {
+                return ComponentList(
+                    description: "Selecione a Filial",
+                    state: storesController.stateStores,
+                    codeProvider: widget.codeProvider,
+                    listItems: storesController.stores,
+                    client: widget.client,
+                    consult: widget.codeConsult);
+              },
             ),
           ),
         ),

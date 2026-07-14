@@ -214,12 +214,17 @@ class _TradingSucessState extends State<TradingSucess> {
                                         // nulo no fluxo principal (finish_trading não envia
                                         // "clientModel"), causando crash/tela cinza no iOS.
                                         //
-                                        // Correção nº 2 (Opção A): volta até a base da pilha
-                                        // (home) e empilha a seleção de loja por cima. A pilha
-                                        // nunca fica vazia — era isso que causava a tela preta
-                                        // no gesto de voltar do iOS.
+                                        // Correção nº 2: reseta a pilha para a home (mesmo
+                                        // padrão do "Concluir"/splash, comprovadamente estável
+                                        // com o flutter_modular) e empilha a seleção de loja
+                                        // por cima. A cada "Novo pedido" a pilha fica sempre
+                                        // [home, selectstore] — home embaixo evita a tela preta
+                                        // no voltar do iOS, e o reset evita o acúmulo de rotas.
+                                        // (popUntil desincronizava o RouterDelegate do Modular.)
+                                        // NavigatorState é estável entre pushes/pops, então as
+                                        // duas chamadas na mesma referência são seguras.
                                         final navigator = Navigator.of(context);
-                                        navigator.popUntil((route) => route.isFirst);
+                                        navigator.pushNamedAndRemoveUntil("/home", (route) => false);
                                         navigator.pushNamed(
                                           "/selectstore",
                                           arguments: {
