@@ -16,6 +16,7 @@ class ComponentList extends StatefulWidget {
     required this.codeProvider,
     this.consult,
     required this.client,
+    this.fromSuccess = false,
   });
 
   final List<ClientsSelectStoreModel> listItems;
@@ -24,6 +25,10 @@ class ComponentList extends StatefulWidget {
   final int? codeProvider;
   final int? consult;
   final LoginModel? client;
+
+  /// true quando a tela veio do "Novo pedido" (usuário concluiu um pedido):
+  /// o botão voltar vai para "/home" em vez de dar pop.
+  final bool fromSuccess;
 
   @override
   State<ComponentList> createState() => _ComponentListState();
@@ -114,13 +119,14 @@ class _ComponentListState extends State<ComponentList> with SingleTickerProvider
                   child: InkWell(
                     borderRadius: BorderRadius.circular(12),
                     onTap: () {
-                      // Quando a tela está sozinha na pilha (fluxo "Novo pedido"),
-                      // não há para onde dar pop — voltar deve ir para a home,
-                      // evitando a tela preta.
-                      if (Navigator.of(context).canPop()) {
-                        Navigator.pop(context);
-                      } else {
+                      // Decide o voltar pela ORIGEM (não por canPop, que dependia
+                      // do estado da pilha e quebrava): se o usuário veio de "Novo
+                      // pedido" (concluiu um pedido), vai para a home; se veio da
+                      // home pelo fluxo normal, dá pop.
+                      if (widget.fromSuccess) {
                         Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                      } else {
+                        Navigator.pop(context);
                       }
                     },
                     child: const Padding(

@@ -8,11 +8,15 @@ import 'package:profair/src/state/state_app.dart';
 import 'package:flutter/material.dart';
 
 class SelectStore extends StatefulWidget {
-  const SelectStore({super.key, required this.client, required this.codeProvider, required this.codeConsult});
+  const SelectStore({super.key, required this.client, required this.codeProvider, required this.codeConsult, this.fromSuccess = false});
 
   final LoginModel? client;
   final int? codeProvider;
   final int? codeConsult;
+
+  /// true quando a tela foi aberta pelo botão "Novo pedido" (o usuário concluiu
+  /// um pedido). Nesse caso o botão voltar vai para "/home" em vez de dar pop.
+  final bool fromSuccess;
 
   @override
   State<SelectStore> createState() => _SelectStoreState();
@@ -59,7 +63,8 @@ class _SelectStoreState extends State<SelectStore> {
                     codeProvider: widget.codeProvider,
                     listItems: storesController.stores,
                     client: widget.client,
-                    consult: widget.codeConsult);
+                    consult: widget.codeConsult,
+                    fromSuccess: widget.fromSuccess);
               },
             ),
           ),

@@ -55,6 +55,7 @@ class AppModule extends Module {
             client: args.data["client"],
             codeConsult: args.data["consult"],
             codeProvider: args.data["codeProvider"],
+            fromSuccess: args.data["fromSuccess"] ?? false,
           ),
         ),
         ChildRoute('/preorder', child: (context, args) => PreOrder(homeController: args.data)),
