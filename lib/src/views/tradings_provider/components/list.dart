@@ -22,6 +22,7 @@ class ComponentList extends StatefulWidget {
     required this.listBranchs,
     this.compactHeader = false,
     this.showTagFilters = false,
+    this.quantitySelector = false,
     this.simpleProductInfo = true,
     this.hideHeader = false,
   });
@@ -34,6 +35,7 @@ class ComponentList extends StatefulWidget {
   final List<ClientsSelectStoreModel>? listBranchs;
   final bool compactHeader;
   final bool showTagFilters;
+  final bool quantitySelector;
   final bool simpleProductInfo;
   final bool hideHeader;
 
@@ -174,7 +176,9 @@ class _ComponentListState extends State<ComponentList> {
                                             crossAxisAlignment: CrossAxisAlignment.center,
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Column(
+                                              widget.quantitySelector
+                                                  ? _buildQuantitySelector(e.value, e.key)
+                                                  : Column(
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
@@ -244,9 +248,15 @@ class _ComponentListState extends State<ComponentList> {
                                             crossAxisAlignment: CrossAxisAlignment.end,
                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              SizedBox(
-                                                width: width / 3,
-                                                child: TextField(
+                                              widget.quantitySelector
+                                                  ? _buildQuantitySelector(
+                                                      e.value,
+                                                      e.key,
+                                                      editable: true,
+                                                    )
+                                                  : SizedBox(
+                                                      width: width / 3,
+                                                      child: TextField(
                                                   // focusNode: selectedProduct,
                                                   controller: amountItem,
                                                   autofocus: true,
@@ -291,6 +301,188 @@ class _ComponentListState extends State<ComponentList> {
             },
           ),
         ],
+      ),
+    );
+  }
+
+  void _changeQuantity(ProductModel item, int itemIndex, int delta) {
+    final currentQuantity = int.tryParse(item.amount ?? "0") ?? 0;
+    final changedQuantity = currentQuantity + delta;
+    final quantity = changedQuantity < 0 ? 0 : changedQuantity;
+    final text = quantity.toString();
+
+    if (widget.tradingsProviderController.itemSelected.value == itemIndex) {
+      amountItem.value = TextEditingValue(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+      );
+    }
+    widget.tradingsProviderController
+        .updateProductsTrading(text, widget.index, itemIndex);
+  }
+
+  Widget _buildQuantitySelector(
+    ProductModel item,
+    int itemIndex, {
+    bool editable = false,
+  }) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: colorSecondary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: colorSecondary.withValues(alpha: 0.32),
+        ),
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ValueListenableBuilder<StateApp>(
+            valueListenable: widget.tradingsProviderController.itemTotal,
+            builder: (context, value, child) {
+              final quantity = int.tryParse(item.amount ?? "0") ?? 0;
+              return _quantityButton(
+                icon: Icons.remove_rounded,
+                tooltip: "Diminuir quantidade",
+                enabled: quantity > 0,
+                onPressed: () {
+                  if (quantity > 0) {
+                    _changeQuantity(item, itemIndex, -1);
+                  }
+                },
+              );
+            },
+          ),
+          Container(
+            width: 1,
+            height: 24,
+            color: onSurface.withValues(alpha: 0.1),
+          ),
+          _quantityInput(item, itemIndex, editable, onSurface),
+          Container(
+            width: 1,
+            height: 24,
+            color: onSurface.withValues(alpha: 0.1),
+          ),
+          _quantityButton(
+            icon: Icons.add_rounded,
+            tooltip: "Aumentar quantidade",
+            enabled: true,
+            onPressed: () => _changeQuantity(item, itemIndex, 1),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _openQuantityInput(ProductModel item, int itemIndex) {
+    amountItem.text = item.amount == "0" ? "" : item.amount ?? "";
+    amountItem.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: amountItem.text.length,
+    );
+    widget.tradingsProviderController.itemSelected.value = itemIndex;
+    widget.tradingsProviderController.visibleText.value = false;
+    widget.tradingsProviderController.visibleText.value = true;
+  }
+
+  Widget _quantityInput(
+    ProductModel item,
+    int itemIndex,
+    bool editable,
+    Color onSurface,
+  ) {
+    if (!editable) {
+      return SizedBox(
+        width: 52,
+        child: ValueListenableBuilder<StateApp>(
+          valueListenable: widget.tradingsProviderController.itemTotal,
+          builder: (context, value, child) {
+            final quantity = int.tryParse(item.amount ?? "0") ?? 0;
+            return InkWell(
+              onTap: () => _openQuantityInput(item, itemIndex),
+              child: Center(
+                child: Text(
+                  quantity.toString(),
+                  style: TextStyle(
+                    color: onSurface,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
+
+    return SizedBox(
+      width: 52,
+      child: TextField(
+        controller: amountItem,
+        autofocus: true,
+        textAlign: TextAlign.center,
+        cursorColor: colorSecondary,
+        keyboardType: TextInputType.number,
+        textInputAction: TextInputAction.done,
+        inputFormatters: <TextInputFormatter>[
+          FilteringTextInputFormatter.digitsOnly,
+        ],
+        style: TextStyle(
+          color: onSurface,
+          fontSize: 15,
+          fontWeight: FontWeight.w700,
+        ),
+        decoration: const InputDecoration(
+          isDense: true,
+          filled: false,
+          hintText: "0",
+          contentPadding: EdgeInsets.symmetric(vertical: 12),
+          border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
+        ),
+        onTap: () {
+          amountItem.selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: amountItem.text.length,
+          );
+        },
+        onChanged: (value) {
+          widget.tradingsProviderController
+              .updateProductsTrading(value, widget.index, itemIndex);
+        },
+      ),
+    );
+  }
+
+  Widget _quantityButton({
+    required IconData icon,
+    required String tooltip,
+    required bool enabled,
+    required VoidCallback onPressed,
+  }) {
+    final onSurface = Theme.of(context).colorScheme.onSurface;
+
+    return SizedBox(
+      width: 40,
+      height: 44,
+      child: IconButton(
+        tooltip: tooltip,
+        padding: EdgeInsets.zero,
+        onPressed: onPressed,
+        icon: Icon(
+          icon,
+          size: 19,
+          color: enabled
+              ? colorSecondary
+              : onSurface.withValues(alpha: 0.25),
+        ),
       ),
     );
   }

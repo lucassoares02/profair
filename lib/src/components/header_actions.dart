@@ -20,6 +20,7 @@ class HeaderActions extends StatefulWidget {
     this.menu = false,
     this.alertClose = false,
     this.onSettings,
+    this.onPrePedido,
   });
 
   String? label;
@@ -29,6 +30,7 @@ class HeaderActions extends StatefulWidget {
   Function()? onCloseInfo;
   Function()? onOpenSearch;
   Function()? onSettings;
+  Function()? onPrePedido;
   Color? color;
   Color? iconColor;
   IconData? icon;
@@ -170,15 +172,7 @@ class _HeaderActionsState extends State<HeaderActions> {
                                 ),
                               )
                             : const Icon(Icons.search, color: transparent),
-                        if (widget.onSettings != null)
-                          IconButton(
-                            tooltip: "Configurações",
-                            onPressed: () => widget.onSettings!(),
-                            icon: Icon(
-                              Icons.settings_outlined,
-                              color: widget.iconColor,
-                            ),
-                          ),
+                        if (widget.addIcon != null) widget.addIcon!,
                         if (widget.onSort != null)
                           IconButton(
                             onPressed: () {
@@ -189,7 +183,48 @@ class _HeaderActionsState extends State<HeaderActions> {
                               color: widget.iconColor,
                             ),
                           ),
-                        if (widget.addIcon != null) widget.addIcon!,
+                        // Menu no extremo direito, ao lado da ordenação.
+                        if (widget.onPrePedido != null)
+                          PopupMenuButton<String>(
+                            tooltip: "Menu",
+                            icon: Icon(Icons.more_vert, color: widget.iconColor),
+                            onSelected: (value) {
+                              if (value == "settings" && widget.onSettings != null) {
+                                widget.onSettings!();
+                              } else if (value == "prepedido") {
+                                widget.onPrePedido!();
+                              }
+                            },
+                            itemBuilder: (context) => <PopupMenuEntry<String>>[
+                              if (widget.onSettings != null)
+                                const PopupMenuItem<String>(
+                                  value: "settings",
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.zero,
+                                    leading: Icon(Icons.settings_outlined),
+                                    title: Text("Configurações"),
+                                  ),
+                                ),
+                              const PopupMenuItem<String>(
+                                value: "prepedido",
+                                child: ListTile(
+                                  contentPadding: EdgeInsets.zero,
+                                  leading: Icon(Icons.playlist_add_check_rounded),
+                                  title: Text("Pré pedido"),
+                                ),
+                              ),
+                            ],
+                          )
+                        // Sem pré-pedido: mantém o ícone de Configurações isolado.
+                        else if (widget.onSettings != null)
+                          IconButton(
+                            tooltip: "Configurações",
+                            onPressed: () => widget.onSettings!(),
+                            icon: Icon(
+                              Icons.settings_outlined,
+                              color: widget.iconColor,
+                            ),
+                          ),
                         if (widget.menu)
                           PopupMenuButton<String>(
                               color: Colors.white,

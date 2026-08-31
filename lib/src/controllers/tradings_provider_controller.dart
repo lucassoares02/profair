@@ -4,6 +4,7 @@ import 'package:profair/src/models/nogotiation_model.dart';
 import 'package:profair/src/models/product_model.dart';
 import 'package:profair/src/repositories/tradings_provider_repository.dart';
 import 'package:profair/src/state/state_app.dart';
+import 'package:profair/src/views/pre_pedido/pre_pedido_model.dart';
 import 'package:flutter/material.dart';
 
 class NegotiationResume {
@@ -71,6 +72,46 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     makeSum();
   }
 
+  /// Aplica um pré-pedido preenchendo as quantidades das mercadorias em todas as
+  /// negociações (abas). NÃO salva no banco — apenas altera o estado local.
+  /// Faz o match por (codNegociacao, codMercadoria).
+  /// [overwrite] = true sobrescreve quantidades já digitadas; false preenche só
+  /// as que estão vazias/zeradas.
+  /// Retorna quantas mercadorias foram preenchidas.
+  int applyPrePedido(List<PrePedidoItem> itens, {required bool overwrite}) {
+    if (itens.isEmpty) return 0;
+
+    // Índice rápido: "codNegociacao-codMercadoria" -> quantidade.
+    final Map<String, int> mapa = {
+      for (final it in itens) "${it.codNegociacao}-${it.codMercadoria}": it.quantidade,
+    };
+
+    int preenchidas = 0;
+
+    // Usa a lista estável (negotiationsProductsTrading) — os ProductModel são
+    // compartilhados com `negotiations` (clone raso), então a UI reflete.
+    for (final negotiation in negotiationsProductsTrading) {
+      if (negotiation.negotiation == null || negotiation.merchandises == null) continue;
+      for (final merchandise in negotiation.merchandises!) {
+        final key = "${negotiation.negotiation}-${merchandise.codeProduct}";
+        final qtd = mapa[key];
+        if (qtd == null || qtd <= 0) continue;
+
+        final atual = int.tryParse(merchandise.amount ?? "0") ?? 0;
+        if (!overwrite && atual > 0) continue;
+
+        merchandise.amount = qtd.toString();
+        preenchidas++;
+      }
+    }
+
+    // Recalcula totais e força a atualização da tela.
+    updateTrading();
+    itemTotal.value = StateApp.loading;
+    itemTotal.value = StateApp.success;
+    return preenchidas;
+  }
+
   updateProductsTrading(String? value, int indexNegotiation, int index) {
     itemTotal.value = StateApp.loading;
     try {
@@ -82,6 +123,20 @@ class TradingsProviderController extends ValueNotifier<StateApp> {
     } catch (e) {
       debugPrint("$e");
     }
+  }
+
+  bool hasOrderInNegotiation(NegotiationModel negotiation) {
+    if (negotiation.confirm != null) return true;
+
+    return negotiationsProductsTrading.any(
+      (item) =>
+          item.negotiation == negotiation.negotiation &&
+          (item.merchandises?.any(
+                (merchandise) =>
+                    (int.tryParse(merchandise.amount ?? "0") ?? 0) > 0,
+              ) ??
+              false),
+    );
   }
 
   Future<void> makeSum() async {

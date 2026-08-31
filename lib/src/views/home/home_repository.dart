@@ -36,6 +36,19 @@ class HomeRepository {
     return LoginModel.fromJson(item);
   }
 
+  /// Retorna 1 quando a função "Vendas com CNPJ" está ativa, 0 caso contrário.
+  Future<int> getVendaCnpjStatus() async {
+    try {
+      final response = await httpService.get("venda-cnpj/status");
+      final value = response.data["venda_cnpj_ativo"];
+      if (value is int) return value;
+      return int.tryParse("$value") ?? 0;
+    } catch (e) {
+      debugPrint("Get Venda CNPJ Status (Home Repository) Error: $e");
+      return 0;
+    }
+  }
+
   getCategoriesHome() async {
     final response = await httpService.post('categories', {});
     List list = response.data as List;

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 class LoginModel {
   String? codAccess;
   int? accessTargeting;
@@ -11,6 +9,7 @@ class LoginModel {
   String? documentUser;
   String? valueOrder;
   String? email;
+  String? phone;
   int? active;
   int? history;
   String? color;
@@ -27,6 +26,7 @@ class LoginModel {
     this.documentUser,
     this.valueOrder,
     this.email,
+    this.phone,
     this.active,
     this.history,
     this.color,
@@ -34,7 +34,6 @@ class LoginModel {
   });
 
   LoginModel.fromJson(Map<String, dynamic> json) {
-    print(json);
     codAccess = json["codAcesso"];
     accessTargeting = json["direcAcesso"];
     nameCompany = json["nomeForn"];
@@ -46,6 +45,7 @@ class LoginModel {
     documentUser = json["cpfConsult"];
     valueOrder = json["valorPedido"];
     email = json["emailConsult"];
+    phone = json["phone"]?.toString();
     history = json["history"];
     color = json["color"];
     image = json["image"];
@@ -65,6 +65,7 @@ class LoginModel {
     data["cpfConsult"] = documentUser;
     data["valorPedido"] = valueOrder;
     data["emailConsult"] = email;
+    data["phone"] = phone;
     return data;
   }
 }

@@ -94,6 +94,16 @@ class _TradingsSettingsScreenState extends State<TradingsSettingsScreen> {
                   }),
                 ),
                 _tile(
+                  icon: Icons.exposure_rounded,
+                  title: "Seletor de quantidade",
+                  subtitle: "Exibe os botões de menos e mais, mantendo o valor central editável pelo teclado.",
+                  value: _settings.quantitySelector,
+                  onChanged: (v) => setState(() {
+                    _settings.quantitySelector = v;
+                    _persist();
+                  }),
+                ),
+                _tile(
                   icon: Icons.notes_rounded,
                   title: "Marca e preços em texto",
                   subtitle: "Mostra marca, preço unitário e preço da embalagem em texto sutil separado por ponto, em vez de tags coloridas.",

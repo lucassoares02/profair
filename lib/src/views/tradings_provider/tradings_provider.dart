@@ -16,6 +16,8 @@ import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/format_currency.dart';
 import 'package:profair/src/utils/spacing.dart';
 import 'package:flutter/material.dart';
+import 'package:profair/src/views/pre_pedido/pre_pedido_model.dart';
+import 'package:profair/src/views/pre_pedido/pre_pedido_repository.dart';
 import 'package:profair/src/views/tradings_provider/components/list.dart';
 import 'package:profair/src/views/tradings_provider/tradings_list_settings.dart';
 import 'package:profair/src/views/tradings_provider/tradings_settings_screen.dart';
@@ -131,6 +133,112 @@ class _TradingsProviderState extends State<TradingsProvider>
     );
     // Recarrega as preferências ao voltar para refletir mudanças na hora.
     _loadSettings();
+  }
+
+  final PrePedidoRepository _prePedidoRepository = PrePedidoRepository();
+
+  // Abre o fluxo de "Pré pedido": busca os pré-pedidos do fornecedor, deixa o
+  // usuário escolher (se houver mais de um), pergunta sobre sobrescrever quando
+  // já há quantidades digitadas e preenche localmente (sem salvar no banco).
+  Future<void> _openPrePedido() async {
+    List<PrePedidoModel> prePedidos;
+    try {
+      prePedidos =
+          await _prePedidoRepository.byProvider(widget.codeProvider ?? 0);
+    } catch (e) {
+      if (!mounted) return;
+      _snack("Erro ao buscar os pré-pedidos.");
+      return;
+    }
+    if (!mounted) return;
+
+    if (prePedidos.isEmpty) {
+      _snack("Nenhum pré-pedido disponível para este fornecedor.");
+      return;
+    }
+
+    PrePedidoModel? escolhido = prePedidos.length == 1
+        ? prePedidos.first
+        : await _choosePrePedido(prePedidos);
+    if (escolhido == null || !mounted) return;
+
+    // Verifica se já há quantidades digitadas em qualquer negociação.
+    final temQuantidades = tradingsProviderController
+        .negotiationsProductsTrading
+        .any((n) => (n.merchandises ?? [])
+            .any((m) => (int.tryParse(m.amount ?? "0") ?? 0) > 0));
+
+    bool overwrite = true;
+    if (temQuantidades) {
+      final escolha = await _askOverwrite();
+      if (escolha == null) return; // cancelou
+      overwrite = escolha;
+    }
+
+    final preenchidas = tradingsProviderController
+        .applyPrePedido(escolhido.itens, overwrite: overwrite);
+    if (!mounted) return;
+    _snack(preenchidas > 0
+        ? "$preenchidas ${preenchidas == 1 ? "mercadoria preenchida" : "mercadorias preenchidas"} pelo pré-pedido."
+        : "Nenhuma mercadoria correspondente para preencher.");
+  }
+
+  Future<PrePedidoModel?> _choosePrePedido(List<PrePedidoModel> lista) {
+    return showModalBottomSheet<PrePedidoModel>(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.all(16),
+                child: Text("Selecione um pré-pedido",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              ),
+              ...lista.map((p) => ListTile(
+                    leading: const Icon(Icons.receipt_long_rounded,
+                        color: colorSecondary),
+                    title: Text(p.nome),
+                    subtitle: Text(
+                        "${p.itens.length} ${p.itens.length == 1 ? "item" : "itens"}"),
+                    onTap: () => Navigator.pop(context, p),
+                  )),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  // true = sobrescrever tudo, false = só os vazios, null = cancelar.
+  Future<bool?> _askOverwrite() {
+    return showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Já existem quantidades"),
+        content: const Text(
+            "Algumas mercadorias já têm quantidades digitadas. Como deseja aplicar o pré-pedido?"),
+        actions: [
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancelar")),
+          TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text("Preencher só os vazios")),
+          TextButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text("Sobrescrever tudo")),
+        ],
+      ),
+    );
+  }
+
+  void _snack(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   int _observationAssociatedCode() {
@@ -544,6 +652,13 @@ class _TradingsProviderState extends State<TradingsProvider>
                                                   1)
                                           ? null
                                           : () => _openSettings(),
+                                  onPrePedido:
+                                      tradingsProviderController.tabSelected ==
+                                              (tradingsProviderController
+                                                      .negotiations.length -
+                                                  1)
+                                          ? null
+                                          : () => _openPrePedido(),
                                   addIcon: history == 1
                                       ? Padding(
                                           padding:
@@ -629,14 +744,30 @@ class _TradingsProviderState extends State<TradingsProvider>
                                         ),
                                       ),
                                     ],
-                                    if (negotiation.value.confirm != null)
-                                      const SizedBox(width: 5),
-                                    if (negotiation.value.confirm != null)
-                                      Badge(
-                                          alignment: Alignment.centerLeft,
-                                          offset: Offset.fromDirection(3),
-                                          backgroundColor: colorRed,
-                                          smallSize: 8),
+                                    ValueListenableBuilder<StateApp>(
+                                      valueListenable:
+                                          tradingsProviderController.itemTotal,
+                                      builder: (context, value, child) {
+                                        final hasOrder =
+                                            tradingsProviderController
+                                                .hasOrderInNegotiation(
+                                                    negotiation.value);
+                                        if (!hasOrder) {
+                                          return const SizedBox.shrink();
+                                        }
+
+                                        return Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 5),
+                                          child: Badge(
+                                            alignment: Alignment.centerLeft,
+                                            offset: Offset.fromDirection(3),
+                                            backgroundColor: colorRed,
+                                            smallSize: 8,
+                                          ),
+                                        );
+                                      },
+                                    ),
                                   ],
                                 ),
                               );
@@ -766,39 +897,50 @@ class _TradingsProviderState extends State<TradingsProvider>
                                                                 CrossAxisAlignment
                                                                     .center,
                                                             children: [
-                                                              Row(
-                                                                children: [
-                                                                  Icon(
-                                                                      Icons
-                                                                          .person_outline,
-                                                                      size: 14,
-                                                                      color: Colors
-                                                                          .white
-                                                                          .withValues(
-                                                                              alpha: 0.75)),
-                                                                  const SizedBox(
-                                                                      width: 4),
-                                                                  Text(
-                                                                    "para ",
-                                                                    style: TextStyle(
-                                                                        fontSize:
-                                                                            13,
+                                                              Expanded(
+                                                                child: Row(
+                                                                  children: [
+                                                                    Icon(
+                                                                        Icons
+                                                                            .person_outline,
+                                                                        size:
+                                                                            14,
                                                                         color: Colors
                                                                             .white
-                                                                            .withValues(alpha: 0.7)),
-                                                                  ),
-                                                                  Text(
-                                                                    "${widget.listBranchs!.first.nameUser}",
-                                                                    style: const TextStyle(
-                                                                        fontSize:
-                                                                            13,
-                                                                        color: Colors
-                                                                            .white,
-                                                                        fontWeight:
-                                                                            FontWeight.w600),
-                                                                  ),
-                                                                ],
+                                                                            .withValues(alpha: 0.75)),
+                                                                    const SizedBox(
+                                                                        width:
+                                                                            4),
+                                                                    Text(
+                                                                      "para ",
+                                                                      style: TextStyle(
+                                                                          fontSize:
+                                                                              13,
+                                                                          color: Colors
+                                                                              .white
+                                                                              .withValues(alpha: 0.7)),
+                                                                    ),
+                                                                    Expanded(
+                                                                      child:
+                                                                          Text(
+                                                                        "${widget.listBranchs!.first.nameUser}",
+                                                                        maxLines:
+                                                                            1,
+                                                                        overflow:
+                                                                            TextOverflow.ellipsis,
+                                                                        style: const TextStyle(
+                                                                            fontSize:
+                                                                                13,
+                                                                            color:
+                                                                                Colors.white,
+                                                                            fontWeight: FontWeight.w600),
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                ),
                                                               ),
+                                                              const SizedBox(
+                                                                  width: 8),
                                                               Container(
                                                                 padding: const EdgeInsets
                                                                     .symmetric(
@@ -1455,6 +1597,8 @@ class _TradingsProviderState extends State<TradingsProvider>
                                     listBranchs: widget.listBranchs,
                                     compactHeader: _settings.compactHeader,
                                     showTagFilters: _settings.tagFilters,
+                                    quantitySelector:
+                                        _settings.quantitySelector,
                                     simpleProductInfo:
                                         _settings.simpleProductInfo,
                                     hideHeader: _settings.hideHeader,

@@ -8,10 +8,12 @@ class TradingsListSettings {
   static const _kTagFilters = 'tp_tag_filters';
   static const _kSimpleProductInfo = 'tp_simple_product_info';
   static const _kHideHeader = 'tp_hide_header';
+  static const _kQuantitySelector = 'tp_quantity_selector';
 
   bool showFloatingButton;
   bool compactHeader;
   bool tagFilters;
+  bool quantitySelector;
 
   /// true  = marca / preços em texto sutil separados por ponto
   /// false = valores dentro de tags coloridas (formato antigo)
@@ -23,9 +25,10 @@ class TradingsListSettings {
 
   TradingsListSettings({
     this.showFloatingButton = true,
-    this.compactHeader = true,
-    this.tagFilters = true,
-    this.simpleProductInfo = true,
+    this.compactHeader = false,
+    this.tagFilters = false,
+    this.quantitySelector = false,
+    this.simpleProductInfo = false,
     this.hideHeader = false,
   });
 
@@ -33,9 +36,10 @@ class TradingsListSettings {
     final prefs = await SharedPreferences.getInstance();
     return TradingsListSettings(
       showFloatingButton: prefs.getBool(_kFloatingButton) ?? true,
-      compactHeader: prefs.getBool(_kCompactHeader) ?? true,
-      tagFilters: prefs.getBool(_kTagFilters) ?? true,
-      simpleProductInfo: prefs.getBool(_kSimpleProductInfo) ?? true,
+      compactHeader: prefs.getBool(_kCompactHeader) ?? false,
+      tagFilters: prefs.getBool(_kTagFilters) ?? false,
+      quantitySelector: prefs.getBool(_kQuantitySelector) ?? false,
+      simpleProductInfo: prefs.getBool(_kSimpleProductInfo) ?? false,
       hideHeader: prefs.getBool(_kHideHeader) ?? false,
     );
   }
@@ -45,6 +49,7 @@ class TradingsListSettings {
     await prefs.setBool(_kFloatingButton, showFloatingButton);
     await prefs.setBool(_kCompactHeader, compactHeader);
     await prefs.setBool(_kTagFilters, tagFilters);
+    await prefs.setBool(_kQuantitySelector, quantitySelector);
     await prefs.setBool(_kSimpleProductInfo, simpleProductInfo);
     await prefs.setBool(_kHideHeader, hideHeader);
   }

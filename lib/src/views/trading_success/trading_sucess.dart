@@ -1,8 +1,11 @@
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:profair/src/controllers/finish_trading_controller.dart';
 import 'package:profair/src/models/login_model.dart';
+import 'package:profair/src/repositories/trading_products_repository.dart';
 import 'package:profair/src/utils/colors.dart';
 import 'package:profair/src/utils/spacing.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TradingSucess extends StatefulWidget {
   const TradingSucess({
@@ -33,6 +36,10 @@ class TradingSucess extends StatefulWidget {
 }
 
 class _TradingSucessState extends State<TradingSucess> {
+  final TradingProductsRepository _tradingProductsRepository =
+      TradingProductsRepository();
+  bool _isSharingPdf = false;
+
   @override
   void initState() {
     try {
@@ -41,6 +48,90 @@ class _TradingSucessState extends State<TradingSucess> {
       debugPrint("initState (Trading Success) Error: $e");
     }
     super.initState();
+  }
+
+  String? _whatsappNumber() {
+    final phones = [
+      widget.clientModel?.phone,
+      widget.finishTradingController.client?.phone,
+    ];
+
+    for (final rawPhone in phones) {
+      final digits = rawPhone?.replaceAll(RegExp("[^0-9]"), "") ?? "";
+      if (digits.startsWith("55") &&
+          (digits.length == 12 || digits.length == 13)) {
+        return digits;
+      }
+      if (digits.length == 10 || digits.length == 11) {
+        return "55$digits";
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> _shareOrder(BuildContext shareContext) async {
+    final phone = _whatsappNumber();
+    if (phone == null) {
+      await _sharePdf(shareContext);
+      return;
+    }
+    if (_isSharingPdf) return;
+
+    setState(() => _isSharingPdf = true);
+
+    final pdfUri = Uri.https(
+      "profair.click",
+      "/exportpdf/${widget.provider}/${widget.trading}/${widget.branch}",
+    );
+    final message = "Olá! Segue o PDF do pedido realizado na Profair:\n$pdfUri";
+    final whatsappUri = Uri.https(
+      "wa.me",
+      "/$phone",
+      {"text": message},
+    );
+
+    var opened = false;
+    try {
+      opened = await launchUrl(
+        whatsappUri,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (e) {
+      debugPrint("Erro ao abrir WhatsApp: $e");
+    }
+
+    if (!mounted || !shareContext.mounted) return;
+    setState(() => _isSharingPdf = false);
+
+    if (!opened) {
+      await _sharePdf(shareContext);
+    }
+  }
+
+  Future<void> _sharePdf(BuildContext shareContext) async {
+    if (_isSharingPdf) return;
+
+    setState(() => _isSharingPdf = true);
+
+    final response = await _tradingProductsRepository.exportDataProvider(
+      codeProvider: widget.provider,
+      codeNegotiation: widget.trading,
+      codeBranch: widget.branch,
+      context: shareContext,
+    );
+
+    if (!mounted) return;
+
+    setState(() => _isSharingPdf = false);
+
+    if (response == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Não foi possível gerar o PDF. Tente novamente."),
+        ),
+      );
+    }
   }
 
   @override
@@ -66,7 +157,8 @@ class _TradingSucessState extends State<TradingSucess> {
           ),
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: appPadding * 1.2, vertical: appPadding),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: appPadding * 1.2, vertical: appPadding),
               child: Column(
                 children: [
                   Expanded(
@@ -120,7 +212,8 @@ class _TradingSucessState extends State<TradingSucess> {
                         ),
                         const SizedBox(height: 28),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 5),
                           decoration: BoxDecoration(
                             color: colorSecondary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(20),
@@ -148,12 +241,19 @@ class _TradingSucessState extends State<TradingSucess> {
                         const SizedBox(height: 36),
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 20, horizontal: 16),
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.05),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.05),
                             borderRadius: BorderRadius.circular(20),
                             border: Border.all(
-                              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.07),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.07),
                             ),
                           ),
                           child: Row(
@@ -178,12 +278,47 @@ class _TradingSucessState extends State<TradingSucess> {
                               Container(
                                 width: 1,
                                 height: 36,
-                                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.08),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.08),
                               ),
                               _infoCell(
                                 icon: Icons.access_time_rounded,
                                 label: "Horário",
                                 value: widget.hour,
+                              ),
+                              Container(
+                                width: 1,
+                                height: 36,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.08),
+                              ),
+                              Builder(
+                                builder: (shareContext) {
+                                  return ValueListenableBuilder(
+                                    valueListenable: widget
+                                        .finishTradingController.stateClient,
+                                    builder: (context, state, child) {
+                                      final hasPhone =
+                                          _whatsappNumber() != null;
+                                      return _infoCell(
+                                        icon: _isSharingPdf
+                                            ? Icons.hourglass_top_rounded
+                                            : FontAwesomeIcons.whatsapp,
+                                        label: "Compartilhar",
+                                        value: hasPhone ? "WhatsApp" : "PDF",
+                                        iconColor: const Color(0xFF25D366),
+                                        valueColor: const Color(0xFF25D366),
+                                        onTap: _isSharingPdf
+                                            ? null
+                                            : () => _shareOrder(shareContext),
+                                      );
+                                    },
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -194,9 +329,11 @@ class _TradingSucessState extends State<TradingSucess> {
                   Column(
                     children: [
                       ValueListenableBuilder(
-                        valueListenable: widget.finishTradingController.stateClient,
+                        valueListenable:
+                            widget.finishTradingController.stateClient,
                         builder: (context, value, child) {
-                          final client = widget.clientModel ?? widget.finishTradingController.client;
+                          final client = widget.clientModel ??
+                              widget.finishTradingController.client;
 
                           // Só exibe "Novo pedido" com o cliente carregado; navegar
                           // com client nulo derruba a SelectStore (tela cinza no iOS).
@@ -222,7 +359,8 @@ class _TradingSucessState extends State<TradingSucess> {
                                         // NavigatorState é estável entre pushes/pops, então as
                                         // duas chamadas na mesma referência são seguras.
                                         final navigator = Navigator.of(context);
-                                        navigator.pushNamedAndRemoveUntil("/home", (route) => false);
+                                        navigator.pushNamedAndRemoveUntil(
+                                            "/home", (route) => false);
                                         navigator.pushNamed(
                                           "/selectstore",
                                           arguments: {
@@ -245,7 +383,8 @@ class _TradingSucessState extends State<TradingSucess> {
                         color: Colors.green,
                         onPressed: () {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.of(context).pushNamedAndRemoveUntil("/home", (route) => false);
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                                "/home", (route) => false);
                           });
                         },
                       ),
@@ -265,28 +404,41 @@ class _TradingSucessState extends State<TradingSucess> {
     required IconData icon,
     required String label,
     required String value,
+    Color? iconColor,
     Color? valueColor,
+    VoidCallback? onTap,
   }) {
     return Expanded(
-      child: Column(
-        children: [
-          Icon(icon, size: 16, color: Colors.grey),
-          const SizedBox(height: 6),
-          Text(
-            label,
-            style: const TextStyle(fontSize: 11, color: Colors.grey, height: 1),
-          ),
-          const SizedBox(height: 3),
-          Text(
-            value,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w700,
-              color: valueColor,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Column(
+          children: [
+            Icon(icon, size: 16, color: iconColor ?? Colors.grey),
+            const SizedBox(height: 6),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 11,
+                color: Colors.grey,
+                height: 1,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 3),
+            Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+                color: valueColor,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

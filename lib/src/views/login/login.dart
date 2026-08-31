@@ -20,7 +20,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LoginController? loginController;
   ValueNotifier<String> teste = ValueNotifier("");
-  ValueNotifier<bool> enterCode = ValueNotifier(true);
   TextEditingController codigo = TextEditingController();
   bool logoVisible = true;
   int count = 0;
@@ -220,12 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           padding: const EdgeInsets.fromLTRB(24, 28, 24, 8),
-                          child: ValueListenableBuilder(
-                            valueListenable: enterCode,
-                            builder: (context, bool value, child) {
-                              return value == true || width >= 700 ? _buildCodeInput(width) : _buildQrCode();
-                            },
-                          ),
+                          child: _buildCodeInput(width),
                         ),
                       ),
                     ),
@@ -324,116 +318,26 @@ class _LoginPageState extends State<LoginPage> {
           },
         ),
         // Secondary QR option
-        if (width < 700)
-          Center(
-            child: TextButton.icon(
-              onPressed: () {
-                enterCode.value = !enterCode.value;
-              },
-              icon: Icon(Icons.qr_code_rounded, size: 15, color: colorWhite.withValues(alpha: 0.9)),
-              label: Text(
-                "Acessar com QR Code",
-                style: TextStyle(
-                  color: colorWhite.withValues(alpha: 0.9),
-                  fontWeight: FontWeight.w500,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-          ),
-        // Privacy link
-        Center(
-          child: TextButton(
-            onPressed: () {
-              _launchPrivacyPolicyUrl();
-            },
-            child: Text(
-              'Termos e Privacidade',
-              style: TextStyle(
-                color: colorWhite.withValues(alpha: 0.3),
-                decoration: TextDecoration.underline,
-                decorationColor: colorWhite.withValues(alpha: 0.3),
-                fontSize: 11,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQrCode() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildBadge(Icons.qr_code_rounded, "QR Code"),
-        const SizedBox(height: 18),
-        const Text(
-          "Escanear QR Code",
-          style: TextStyle(
-            color: colorWhite,
-            fontSize: 28,
-            fontWeight: FontWeight.bold,
-            letterSpacing: -0.5,
-            height: 1.1,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Text(
-          "Aponte a câmera para o QR Code e acesse instantaneamente",
-          style: TextStyle(
-            color: colorWhite.withValues(alpha: 0.5),
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            height: 1.4,
-          ),
-        ),
-        const SizedBox(height: 24),
-        ValueListenableBuilder(
-          valueListenable: loginController!.stateLogin,
-          builder: (context, value, child) {
-            return Column(
-              children: [
-                AppButton(
-                  onPressButton: () {
-                    // loginFunc();
-                    // scannerQrCode();
-                    // testteInter();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BarcodeScannerSimple(loginController: loginController!),
-                      ),
-                    );
-                  },
-                  colorLoading: colorWhite,
-                  label: "Escanear QR Code",
-                  colorButton: colorWhite,
-                  iconButton: Icons.qr_code_scanner_rounded,
-                  loading: value == StateApp.loading,
-                ),
-                if (value != StateApp.loading)
-                  Center(
-                    child: TextButton.icon(
-                      onPressed: () {
-                        enterCode.value = !enterCode.value;
-                      },
-                      icon: Icon(Icons.pin_outlined, size: 15, color: colorWhite.withValues(alpha: 0.9)),
-                      label: Text(
-                        "Digitar o código",
-                        style: TextStyle(
-                          color: colorWhite.withValues(alpha: 0.9),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
+        if (width < 700) ...[
+          const SizedBox(height: 12),
+          AppButton(
+            onPressButton: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BarcodeScannerSimple(
+                    loginController: loginController!,
                   ),
-              ],
-            );
-          },
-        ),
+                ),
+              );
+            },
+            label: "Acessar com QR Code",
+            type: "filled",
+            colorButton: colorWhite,
+            iconButton: Icons.qr_code_scanner_rounded,
+          ),
+        ],
+        // Privacy link
         Center(
           child: TextButton(
             onPressed: () {

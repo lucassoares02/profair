@@ -39,6 +39,7 @@ import 'package:profair/src/views/home/home.dart';
 import 'package:profair/src/views/app.dart';
 import 'package:profair/src/views/tranding_products_history/trading_products_history.dart';
 import 'package:profair/src/views/users/users.dart';
+import 'package:profair/src/views/venda_cnpj/venda_cnpj.dart';
 
 class AppModule extends Module {
   @override
@@ -58,6 +59,7 @@ class AppModule extends Module {
           ),
         ),
         ChildRoute('/preorder', child: (context, args) => PreOrder(homeController: args.data)),
+        ChildRoute('/vendacnpj', child: (context, args) => VendaCnpj(homeController: args.data)),
         ChildRoute('/listrequestsstores',
             child: (context, args) => RequestsStores(
                   codeProvider: args.data["codeProvider"],

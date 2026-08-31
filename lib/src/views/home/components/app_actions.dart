@@ -26,6 +26,12 @@ class _AppActionsState extends State<AppActions> {
     if (route == "users") {
       navigatorRoutes(route, {});
     } else if (route == "selectstore") {
+      // Função "Vendas com CNPJ" ativa: em vez do scanner, abre o cadastro por
+      // CNPJ (que ao final segue para a mesma selectstore).
+      if (widget.homeController.vendaCnpjAtivo == 1) {
+        navigatorRoutes("vendacnpj", widget.homeController);
+        return;
+      }
       // scannerQrCode();
       // Navigator.push(
       //   context,

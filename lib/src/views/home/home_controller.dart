@@ -39,6 +39,9 @@ class HomeController extends ValueNotifier<StateApp> {
 
   int indexSelected = 0;
 
+  // Flag da função "Vendas com CNPJ" (organizador.venda_cnpj_ativo).
+  int vendaCnpjAtivo = 0;
+
   final stateCategories = ValueNotifier<StateApp>(StateApp.start);
   final stateBuyers = ValueNotifier<StateApp>(StateApp.start);
   final stateStore = ValueNotifier<StateApp>(StateApp.start);
@@ -91,6 +94,11 @@ class HomeController extends ValueNotifier<StateApp> {
       }
       // await findLastTradings(codeRequest, data!.accessTargeting);
       getCategories();
+      // Fornecedor: verifica se a função "Vendas com CNPJ" está ativa para
+      // decidir o comportamento do botão "Novo".
+      if (data!.accessTargeting == 1) {
+        getVendaCnpjStatus();
+      }
       if (data!.accessTargeting == 3 || data!.accessTargeting == 1) {
         if (data!.accessTargeting == 1) {
           findBuyers(codeProvider: data!.codCompany);
@@ -114,6 +122,14 @@ class HomeController extends ValueNotifier<StateApp> {
     final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.clear();
     return;
+  }
+
+  Future<void> getVendaCnpjStatus() async {
+    try {
+      vendaCnpjAtivo = await _homeRepository.getVendaCnpjStatus();
+    } catch (e) {
+      debugPrint("Get Venda CNPJ Status (Home Controller) Error: $e");
+    }
   }
 
   Future<LoginModel?> findClient(String id) async {
